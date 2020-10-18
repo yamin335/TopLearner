@@ -3,7 +3,8 @@ package com.rtchubs.engineerbooks.di
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
-import com.rtchubs.engineerbooks.local_db.AppDb
+import com.rtchubs.engineerbooks.local_db.dao.HistoryDao
+import com.rtchubs.engineerbooks.local_db.db.AppDatabase
 import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.util.AppConstants
@@ -26,11 +27,14 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideDb(app: Application): AppDb {
-        return Room
-            .databaseBuilder(app, AppDb::class.java, "psb.db")
-            .fallbackToDestructiveMigration()
-            .build()
+    fun provideDb(app: Application): AppDatabase {
+        return AppDatabase.getInstance(app)
+    }
+
+    @Singleton
+    @Provides
+    fun provideHistoryDao(db: AppDatabase): HistoryDao {
+        return db.historyDao()
     }
 
     @Singleton

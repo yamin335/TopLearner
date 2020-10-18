@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/payFragment"
-        android:name="com.rtchubs.engineerbooks.PayFragment"
+        android:name="com.rtchubs.engineerbooks.ui.history.HistoryFragment"
         android:label="Pay"
-        tools:layout="@layout/fragment_pay" />
+        tools:layout="@layout/fragment_history" />
 
     <include app:graph="@navigation/drawer_nav_graph" />
 </navigation>

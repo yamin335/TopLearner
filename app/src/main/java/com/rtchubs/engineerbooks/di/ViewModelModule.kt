@@ -11,6 +11,7 @@ import com.rtchubs.engineerbooks.ui.add_payment_methods.AddCardViewModel
 import com.rtchubs.engineerbooks.ui.add_payment_methods.AddPaymentMethodsViewModel
 import com.rtchubs.engineerbooks.ui.chapter_list.ChapterListViewModel
 import com.rtchubs.engineerbooks.ui.exams.ExamsViewModel
+import com.rtchubs.engineerbooks.ui.history.HistoryViewModel
 import com.rtchubs.engineerbooks.ui.home.*
 import com.rtchubs.engineerbooks.ui.how_works.HowWorksViewModel
 import com.rtchubs.engineerbooks.ui.info.InfoViewModel
@@ -67,6 +68,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MoreViewModel::class)
     abstract fun bindMoreViewModel(viewModel: MoreViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(HistoryViewModel::class)
+    abstract fun bindHistoryViewModel(viewModel: HistoryViewModel): ViewModel
 
     @Binds
     @IntoMap

@@ -6,6 +6,7 @@ import com.rtchubs.engineerbooks.ui.add_payment_methods.AddCardFragment
 import com.rtchubs.engineerbooks.ui.add_payment_methods.AddPaymentMethodsFragment
 import com.rtchubs.engineerbooks.ui.chapter_list.ChapterListFragment
 import com.rtchubs.engineerbooks.ui.exams.ExamsFragment
+import com.rtchubs.engineerbooks.ui.history.HistoryFragment
 import com.rtchubs.engineerbooks.ui.home.*
 import com.rtchubs.engineerbooks.ui.how_works.HowWorksFragment
 import com.rtchubs.engineerbooks.ui.info.InfoFragment
@@ -55,6 +56,9 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeInfoFragment(): InfoFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeHistoryFragment(): HistoryFragment
 
     @ContributesAndroidInjector
     abstract fun contributeNIDScanCameraXFragment(): NIDScanCameraXFragment

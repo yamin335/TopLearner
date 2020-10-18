@@ -1,18 +1,34 @@
-package com.rtchubs.engineerbooks
+package com.rtchubs.engineerbooks.ui.history
 
 import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import com.rtchubs.engineerbooks.BR
+import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.databinding.HistoryFragmentBinding
+import com.rtchubs.engineerbooks.databinding.WebViewBinding
 import com.rtchubs.engineerbooks.ui.LogoutHandlerCallback
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
+import com.rtchubs.engineerbooks.ui.common.BaseFragment
+import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewViewModel
 
-class PayFragment : Fragment() {
-
+class HistoryFragment: BaseFragment<HistoryFragmentBinding, HistoryViewModel>() {
+    override val bindingVariable: Int
+        get() = BR.viewModel
+    override val layoutId: Int
+        get() = R.layout.fragment_history
+    override val viewModel by viewModels<HistoryViewModel>{
+        viewModelFactory
+    }
     private var listener: LogoutHandlerCallback? = null
 
     private var drawerListener: NavDrawerHandlerCallback? = null
+
+    lateinit var historyListAdapter: HistoryListAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -40,14 +56,6 @@ class PayFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_pay, container, false)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.toolbar_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -56,9 +64,28 @@ class PayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<ImageView>(R.id.appLogo).setOnClickListener {
+        historyListAdapter = HistoryListAdapter(
+            appExecutors
+        ) { item ->
+
+        }
+
+        viewDataBinding.rvHistory.adapter = historyListAdapter
+
+        viewDataBinding.appLogo.setOnClickListener {
             drawerListener?.toggleNavDrawer()
         }
+
+        viewModel.historyItems.observe(viewLifecycleOwner, Observer {
+            it?.let { list ->
+                if (list.isEmpty()) {
+                    viewDataBinding.emptyHistoryView.visibility = View.VISIBLE
+                } else {
+                    viewDataBinding.emptyHistoryView.visibility = View.GONE
+                    historyListAdapter.submitList(list)
+                }
+            }
+        })
     }
 
 }
