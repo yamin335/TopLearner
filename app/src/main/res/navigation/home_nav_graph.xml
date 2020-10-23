@@ -71,6 +71,9 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/home_navigation" />
+        <argument
+            android:name="book"
+            app:argType="com.rtchubs.engineerbooks.models.Book" />
     </fragment>
 
 
@@ -89,6 +92,20 @@
         android:name="com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment"
         android:label="Video"
         tools:layout="@layout/fragment_load_web_view">
+        <argument
+            android:name="bookID"
+            app:argType="integer" />
+        <argument
+            android:name="bookTitle"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="chapterID"
+            app:argType="integer" />
+        <argument
+            android:name="chapterTitle"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 
     <fragment
@@ -219,6 +236,14 @@
     <fragment
         android:id="@+id/moreBookListFragment"
         android:name="com.rtchubs.engineerbooks.ui.home.MoreBookListFragment"
-        android:label="Book List" />
+        android:label="Book List" >
+        <action
+            android:id="@+id/action_moreBookListFragment_to_chapterListFragment"
+            app:destination="@id/chapterListFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
     <include app:graph="@navigation/exams_nav_graph" />
 </navigation>

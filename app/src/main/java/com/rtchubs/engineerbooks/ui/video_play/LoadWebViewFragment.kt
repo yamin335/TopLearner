@@ -18,11 +18,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.WebViewBinding
+import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.home.SetAFragment
 import com.rtchubs.engineerbooks.ui.home.SetBFragment
@@ -68,12 +70,16 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>() 
 
     private var isVideoStartedPlaying = false
 
+    private val args: LoadWebViewFragmentArgs by navArgs()
+
     @SuppressLint("SetJavaScriptEnabled", "ObsoleteSdkInt")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //activity?.title = title
 
         registerToolbar(viewDataBinding.toolbar)
+
+        viewDataBinding.toolbar.title = args.chapterTitle
 
         val externalStorageVolumes: Array<out File> =
             ContextCompat.getExternalFilesDirs(requireContext(), null)
@@ -104,12 +110,12 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>() 
 
         val title = "math_8_4_1_q_1_ka"
 
-        viewModel.doesItemExists(title).observe(viewLifecycleOwner, Observer {
-            it?.let { exists ->
-                if (exists.isNotEmpty()) {
-                    viewModel.updateToHistory(title)
+        viewModel.doesItemExists(args.bookID, args.chapterID).observe(viewLifecycleOwner, Observer {
+            it?.let { list ->
+                if (list.isNotEmpty()) {
+                    viewModel.updateToHistory(list[0].id)
                 } else {
-                    viewModel.addToHistory(title)
+                    viewModel.addToHistory(HistoryItem(0, args.bookID, args.bookTitle, args.chapterID, args.chapterTitle, 1))
                 }
             }
         })

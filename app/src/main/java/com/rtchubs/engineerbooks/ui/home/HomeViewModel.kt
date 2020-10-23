@@ -25,90 +25,90 @@ class HomeViewModel @Inject constructor(
     private val repository: HomeRepository
 ) : BaseViewModel(application) {
     val defaultResponse: MutableLiveData<DefaultResponse> = MutableLiveData()
-    val doctorList: List<Book>
-        get() = listOf(
-            Book(
-                "0",
-                "Top Rated",
-                listOf(
-                    SubBook(
-                        "1",
-                        "Angelica Hale",
-                        "Dhaka",
-                        "",
-                        R.drawable.book_1
-                    ),
-                    SubBook(
-                        "1",
-                        "Angelica Hale",
-                        "Dhaka",
-                        "",
-                        R.drawable.book_2
-                    ),
-                    SubBook(
-                        "1",
-                        "Angelica Hale",
-                        "Dhaka",
-                        "",
-                        R.drawable.book_3
-                    )
-                )
-            ),
-            Book(
-                "1",
-                "Favourites",
-                listOf(
-                    SubBook(
-                        "1",
-                        "Angelica Hale",
-                        "Dhaka",
-                        "",
-                        R.drawable.book_4
-                    ),
-                    SubBook(
-                        "1",
-                        "Angelica Hale",
-                        "Dhaka",
-                        "",
-                        R.drawable.book_13
-                    ),
-                    SubBook(
-                        "1",
-                        "Angelica Hale",
-                        "Dhaka",
-                        "",
-                        R.drawable.book_6
-                    )
-                )
-            ),
-            Book(
-                "2",
-                "Top Rated",
-                listOf(
-                    SubBook(
-                        "1",
-                        "Angelica Hale",
-                        "Dhaka",
-                        "",
-                        R.drawable.book_7
-                    ),
-                    SubBook(
-                        "1",
-                        "Angelica Hale",
-                        "Dhaka",
-                        "",
-                        R.drawable.book_8
-                    ),
-                    SubBook(
-                        "1",
-                        "Angelica Hale",
-                        "Dhaka",
-                        "",
-                        R.drawable.book_9
-                    )
-                )
-            )
-        )
+//    val doctorList: List<Book>
+//        get() = listOf(
+//            Book(
+//                "0",
+//                "Top Rated",
+//                listOf(
+//                    SubBook(
+//                        "1",
+//                        "Angelica Hale",
+//                        "Dhaka",
+//                        "",
+//                        R.drawable.book_1
+//                    ),
+//                    SubBook(
+//                        "1",
+//                        "Angelica Hale",
+//                        "Dhaka",
+//                        "",
+//                        R.drawable.book_2
+//                    ),
+//                    SubBook(
+//                        "1",
+//                        "Angelica Hale",
+//                        "Dhaka",
+//                        "",
+//                        R.drawable.book_3
+//                    )
+//                )
+//            ),
+//            Book(
+//                "1",
+//                "Favourites",
+//                listOf(
+//                    SubBook(
+//                        "1",
+//                        "Angelica Hale",
+//                        "Dhaka",
+//                        "",
+//                        R.drawable.book_4
+//                    ),
+//                    SubBook(
+//                        "1",
+//                        "Angelica Hale",
+//                        "Dhaka",
+//                        "",
+//                        R.drawable.book_13
+//                    ),
+//                    SubBook(
+//                        "1",
+//                        "Angelica Hale",
+//                        "Dhaka",
+//                        "",
+//                        R.drawable.book_6
+//                    )
+//                )
+//            ),
+//            Book(
+//                "2",
+//                "Top Rated",
+//                listOf(
+//                    SubBook(
+//                        "1",
+//                        "Angelica Hale",
+//                        "Dhaka",
+//                        "",
+//                        R.drawable.book_7
+//                    ),
+//                    SubBook(
+//                        "1",
+//                        "Angelica Hale",
+//                        "Dhaka",
+//                        "",
+//                        R.drawable.book_8
+//                    ),
+//                    SubBook(
+//                        "1",
+//                        "Angelica Hale",
+//                        "Dhaka",
+//                        "",
+//                        R.drawable.book_9
+//                    )
+//                )
+//            )
+//        )
 
 
     val paymentMethodList: List<PaymentMethod>

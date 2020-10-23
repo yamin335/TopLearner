@@ -60,9 +60,9 @@ class DoctorsListAdapter(
         val item = getItem(position)
         binding.tvTitle.text = item.title
         if (position == 0) {
-            topSpecialistAdapter.submitList(item.listOfSubDoctors)
+            //topSpecialistAdapter.submitList(item.listOfSubDoctors)
         } else {
-            subDoctorsListAdapter.submitList(item.listOfSubDoctors)
+            //subDoctorsListAdapter.submitList(item.listOfSubDoctors)
         }
         //(binding.rvDoctorsList.adapter as SubDoctorsListAdapter).submitList(item.listOfSubDoctors)
     }

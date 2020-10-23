@@ -22,7 +22,7 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
         }
     }
 
-    fun doesItemExists(title: String): LiveData<List<HistoryItem>> {
+    fun doesItemExists(bookId: Int, chapterId: Int): LiveData<List<HistoryItem>> {
         val doesExists: MutableLiveData<List<HistoryItem>> = MutableLiveData()
         try {
             val handler = CoroutineExceptionHandler { _, exception ->
@@ -30,7 +30,7 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
             }
 
             viewModelScope.launch(handler) {
-                doesExists.postValue(historyDao.doesItemExistsInHistory(title))
+                doesExists.postValue(historyDao.doesItemExistsInHistory(bookId, chapterId))
             }
         } catch (e: SQLiteException) {
             e.printStackTrace()
@@ -39,28 +39,28 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
         return doesExists
     }
 
-    fun updateToHistory(title: String) {
+    fun updateToHistory(id: Int) {
         try {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
             }
 
             viewModelScope.launch(handler) {
-                historyDao.updateHistoryItemViewCount(title)
+                historyDao.updateHistoryItemViewCount(id)
             }
         } catch (e: SQLiteException) {
             e.printStackTrace()
         }
     }
 
-    fun addToHistory(title: String) {
+    fun addToHistory(historyItem: HistoryItem) {
         try {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
             }
 
             viewModelScope.launch(handler) {
-                historyDao.addItemToHistory(HistoryItem(0, title, 1))
+                historyDao.addItemToHistory(historyItem)
             }
         } catch (e: SQLiteException) {
             e.printStackTrace()

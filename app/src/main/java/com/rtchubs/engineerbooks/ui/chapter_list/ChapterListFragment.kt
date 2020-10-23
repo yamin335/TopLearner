@@ -3,6 +3,7 @@ package com.rtchubs.engineerbooks.ui.chapter_list
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.FragmentChapterListBinding
@@ -17,19 +18,23 @@ class ChapterListFragment : BaseFragment<FragmentChapterListBinding, ChapterList
 
     lateinit var chapterListAdapter: ChapterListAdapter
 
+    val args: ChapterListFragmentArgs by navArgs()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         registerToolbar(viewDataBinding.toolbar)
 
-        chapterListAdapter = ChapterListAdapter(appExecutors) {
+        viewDataBinding.toolbar.title = args.book.title
+
+        chapterListAdapter = ChapterListAdapter(appExecutors) { chapter ->
             navController.navigate(
                 //ChapterListFragmentDirections.actionChapterListToVideoPlay("vedio_file")
-                ChapterListFragmentDirections.actionChapterListToWebView()
+                ChapterListFragmentDirections.actionChapterListToWebView(args.book.id, args.book.title, chapter.id, chapter.title)
             )
         }
 
         viewDataBinding.rvChapterList.adapter = chapterListAdapter
-        chapterListAdapter.submitList(viewModel.chapterListData)
+        chapterListAdapter.submitList(args.book.chapters)
     }
 }

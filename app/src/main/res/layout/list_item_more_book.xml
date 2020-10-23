@@ -8,7 +8,7 @@
         <import type="android.graphics.drawable.Drawable"/>
         <variable
             name="model"
-            type="com.rtchubs.engineerbooks.models.MoreBookItem" />
+            type="com.rtchubs.engineerbooks.models.Book" />
 
         <variable
             name="imageRequestListener"

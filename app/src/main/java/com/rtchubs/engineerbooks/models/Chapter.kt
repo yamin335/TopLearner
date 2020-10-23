@@ -2,23 +2,22 @@ package com.rtchubs.engineerbooks.models
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-class Chapter(
+data class Chapter(
     @SerializedName("id")
     @Expose
-    val id: String? = null,
+    val id: Int,
 
     @SerializedName("title")
     @Expose
-    val title: String? = null,
+    val title: String?,
 
-    @SerializedName("image")
+    @SerializedName("image_url")
     @Expose
-    val image: Int? = null,
-
+    val imageUrl: String?,
 
     @SerializedName("chapter_url")
     @Expose
-    val chapterVideoUrl: String? = null
-
-)
+    val chapterVideoUrl: String?
+) : Serializable

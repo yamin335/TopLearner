@@ -21,18 +21,18 @@ import com.rtchubs.engineerbooks.util.DataBoundListAdapter
 
 class MoreBookListAdapter(
     private val appExecutors: AppExecutors,
-    private val itemCallback: ((MoreBookItem) -> Unit)? = null
+    private val itemCallback: ((Book) -> Unit)? = null
 
-) : DataBoundListAdapter<MoreBookItem, MoreBookListItemBinding>(
-    appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<MoreBookItem>() {
-        override fun areItemsTheSame(oldItem: MoreBookItem, newItem: MoreBookItem): Boolean {
+) : DataBoundListAdapter<Book, MoreBookListItemBinding>(
+    appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<Book>() {
+        override fun areItemsTheSame(oldItem: Book, newItem: Book): Boolean {
             return oldItem.id == newItem.id
         }
 
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(
-            oldItem: MoreBookItem,
-            newItem: MoreBookItem
+            oldItem: Book,
+            newItem: Book
         ): Boolean {
             return oldItem == newItem
         }

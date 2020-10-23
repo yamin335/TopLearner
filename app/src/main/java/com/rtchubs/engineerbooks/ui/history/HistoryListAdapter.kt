@@ -48,8 +48,8 @@ class HistoryListAdapter(
         val item = getItem(position)
         binding.item = item
 
-//        binding.remove.setOnClickListener {
-//            itemCallback?.invoke(item)
-//        }
+        binding.root.setOnClickListener {
+            itemCallback?.invoke(item)
+        }
     }
 }

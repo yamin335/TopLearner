@@ -8,6 +8,8 @@ import androidx.fragment.app.viewModels
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.Home2Binding
+import com.rtchubs.engineerbooks.models.Book
+import com.rtchubs.engineerbooks.models.Chapter
 import com.rtchubs.engineerbooks.ui.LogoutHandlerCallback
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
@@ -76,6 +78,32 @@ class Home2Fragment : BaseFragment<Home2Binding, HomeViewModel>() {
 //
 //
 //
+
+        val chapterList = listOf(
+            Chapter(1, "Chapter One", null, null),
+            Chapter(2, "Chapter Two", null, null),
+            Chapter(3, "Chapter Three", null, null),
+            Chapter(4, "Chapter Four", null, null),
+            Chapter(5, "Chapter Five", null, null),
+            Chapter(6, "Chapter Six", null, null),
+            Chapter(7, "Chapter Seven", null, null),
+            Chapter(8, "Chapter Eight", null, null),
+            Chapter(9, "Chapter Nine", null, null),
+            Chapter(10, "Chapter Ten", null, null)
+        )
+
+        val book1 = Book(1, "Bangla", "", chapterList)
+        val book2 = Book(2, "English", "",chapterList)
+        val book3 = Book(3, "General Mathematics", "", chapterList)
+        val book4 = Book(4, "Biology", "", chapterList)
+        val book5 = Book(5, "Physics", "", chapterList)
+
+        viewDataBinding.book1 = book1
+        viewDataBinding.book2 = book2
+        viewDataBinding.book3 = book3
+        viewDataBinding.book4 = book4
+        viewDataBinding.book5 = book5
+
         viewDataBinding.appLogo.setOnClickListener {
             drawerListener?.toggleNavDrawer()
         }
@@ -89,7 +117,23 @@ class Home2Fragment : BaseFragment<Home2Binding, HomeViewModel>() {
         }
 
         viewDataBinding.item1.setOnClickListener {
-            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment())
+            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book1))
+        }
+
+        viewDataBinding.item2.setOnClickListener {
+            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book2))
+        }
+
+        viewDataBinding.item3.setOnClickListener {
+            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book3))
+        }
+
+        viewDataBinding.item4.setOnClickListener {
+            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book4))
+        }
+
+        viewDataBinding.item5.setOnClickListener {
+            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book5))
         }
 
         viewDataBinding.item6.setOnClickListener {

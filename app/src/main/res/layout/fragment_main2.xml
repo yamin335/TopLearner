@@ -7,6 +7,26 @@
         <variable
             name="viewModel"
             type="com.rtchubs.engineerbooks.ui.home.HomeViewModel" />
+        
+        <variable
+            name="book1"
+            type="com.rtchubs.engineerbooks.models.Book" />
+
+        <variable
+            name="book2"
+            type="com.rtchubs.engineerbooks.models.Book" />
+
+        <variable
+            name="book3"
+            type="com.rtchubs.engineerbooks.models.Book" />
+
+        <variable
+            name="book4"
+            type="com.rtchubs.engineerbooks.models.Book" />
+
+        <variable
+            name="book5"
+            type="com.rtchubs.engineerbooks.models.Book" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -92,7 +112,7 @@
                         android:layout_margin="8dp"
                         android:background="@drawable/spinner_background"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/payNow"
+                        app:layout_constraintEnd_toStartOf="@+id/item2"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -117,17 +137,19 @@
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
                             android:textSize="13sp"
-                            android:text="Bangla"
+                            android:text="@{book1.title}"
                             android:textColor="@color/gray"
+                            android:gravity="center"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/temp1" />
+                            app:layout_constraintTop_toBottomOf="@+id/temp1"
+                            tools:text="Bangla"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/payNow"
+                        android:id="@+id/item2"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:clickable="true"
@@ -159,13 +181,15 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:text="Bangladesh &amp; Global Studies"
+                            android:text="@{book2.title}"
                             android:textColor="@color/gray"
                             android:textSize="13sp"
+                            android:gravity="center"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/temp2" />
+                            app:layout_constraintTop_toBottomOf="@+id/temp2"
+                            tools:text="Bangladesh &amp; Global Studies"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -180,7 +204,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/payNow"
+                        app:layout_constraintStart_toEndOf="@+id/item2"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
@@ -202,13 +226,15 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:text="Biology"
+                            android:text="@{book3.title}"
                             android:textColor="@color/gray"
                             android:textSize="13sp"
+                            android:gravity="center"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/temp3" />
+                            app:layout_constraintTop_toBottomOf="@+id/temp3"
+                            tools:text="Biology"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -228,7 +254,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/packages"
+                        android:id="@+id/item4"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:clickable="true"
@@ -236,7 +262,7 @@
                         android:layout_margin="8dp"
                         android:background="@drawable/spinner_background"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/openTicket"
+                        app:layout_constraintEnd_toStartOf="@+id/item5"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -260,18 +286,20 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:text="Chemistry"
+                            android:text="@{book4.title}"
                             android:textColor="@color/gray"
                             android:textSize="13sp"
+                            android:gravity="center"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/temp4" />
+                            app:layout_constraintTop_toBottomOf="@+id/temp4"
+                            tools:text="Chemistry"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/openTicket"
+                        android:id="@+id/item5"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:clickable="true"
@@ -281,7 +309,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/item6"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/packages"
+                        app:layout_constraintStart_toEndOf="@+id/item4"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
@@ -303,13 +331,15 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:text="English"
+                            android:text="@{book5.title}"
                             android:textColor="@color/gray"
                             android:textSize="13sp"
+                            android:gravity="center"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/temp5" />
+                            app:layout_constraintTop_toBottomOf="@+id/temp5"
+                            tools:text="English"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -324,7 +354,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/openTicket"
+                        app:layout_constraintStart_toEndOf="@+id/item5"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
@@ -346,7 +376,8 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:text="More"
+                            android:text="More Books"
+                            android:gravity="center"
                             android:textColor="@color/gray"
                             android:textSize="13sp"
                             app:layout_constraintBottom_toBottomOf="parent"

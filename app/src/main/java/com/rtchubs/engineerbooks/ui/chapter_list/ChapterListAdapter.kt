@@ -39,7 +39,7 @@ class ChapterListAdapter(
 
     override fun bind(binding: ItemChapterListBinding, position: Int) {
         val item = getItem(position)
-        item.image?.let { binding.ivChapterImage.setImageResource(it) }
+        item.imageUrl?.let { binding.ivChapterImage.setImageResource(it.toInt()) }
         item.title?.let { binding.tvChapterName.text = it }
         binding.root.setOnClickListener {
             itemCallback?.invoke(item)

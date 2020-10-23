@@ -9,8 +9,8 @@ interface HistoryDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addItemToHistory(item: HistoryItem): Long
 
-    @Query("UPDATE history SET view_count = view_count + 1 WHERE title = :title")
-    suspend fun updateHistoryItemViewCount(title: String)
+    @Query("UPDATE history SET view_count = view_count + 1 WHERE id = :id")
+    suspend fun updateHistoryItemViewCount(id: Int)
 
     @Delete
     suspend fun deleteHistoryItem(cartItem: HistoryItem)
@@ -21,6 +21,6 @@ interface HistoryDao {
     @Query("SELECT COUNT(id) FROM history")
     fun getHistoryItemsCount(): Flow<Int>
 
-    @Query("SELECT * FROM history WHERE title = :title")
-    suspend fun doesItemExistsInHistory(title: String): List<HistoryItem>
+    @Query("SELECT * FROM history WHERE book_id = :bookId AND chapter_id=:chapterId")
+    suspend fun doesItemExistsInHistory(bookId: Int, chapterId: Int): List<HistoryItem>
 }
