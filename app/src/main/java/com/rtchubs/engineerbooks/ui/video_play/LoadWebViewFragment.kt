@@ -108,8 +108,6 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>() 
 //            }
 //        })
 
-        val title = "math_8_4_1_q_1_ka"
-
         viewModel.doesItemExists(args.bookID, args.chapterID).observe(viewLifecycleOwner, Observer {
             it?.let { list ->
                 if (list.isNotEmpty()) {
