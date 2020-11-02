@@ -73,13 +73,13 @@ abstract class FragmentBuildersModule {
     abstract fun contributeMoreFragment(): MoreFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeSetAFragment(): SetAFragment
+    abstract fun contributeVideoListFragment(): VideoListFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeSetBFragment(): SetBFragment
+    abstract fun contributeSetBFragment(): QuizListFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeSetCFragment(): SetCFragment
+    abstract fun contributeQuizListFragment(): SetCFragment
 
     @ContributesAndroidInjector
     abstract fun contributeHome2Fragment(): Home2Fragment

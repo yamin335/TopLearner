@@ -76,13 +76,13 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SetAViewModel::class)
-    abstract fun bindSetAViewModel(viewModel: SetAViewModel): ViewModel
+    @ViewModelKey(VideoListViewModel::class)
+    abstract fun bindVideoListViewModel(viewModel: VideoListViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(SetBViewModel::class)
-    abstract fun bindSetBViewModel(viewModel: SetBViewModel): ViewModel
+    @ViewModelKey(QuizListViewModel::class)
+    abstract fun bindQuizListViewModel(viewModel: QuizListViewModel): ViewModel
 
     @Binds
     @IntoMap
