@@ -182,7 +182,9 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>() 
             viewLifecycleOwner, FragmentResultListener { key, bundle ->
                 val videoItem = bundle.getSerializable("VideoItem") as VideoItem?
                 videoItem?.let {
-                    playVideo()
+                    lifecycleScope.launch {
+                        playVideo()
+                    }
                 }
             }
         )
