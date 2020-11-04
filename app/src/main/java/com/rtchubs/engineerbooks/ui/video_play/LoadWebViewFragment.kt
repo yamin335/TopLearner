@@ -4,8 +4,12 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.transition.Transition
+import android.transition.TransitionInflater
+import android.transition.TransitionManager
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -54,7 +58,6 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>() 
         //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).title }
     }
 
-    private lateinit var viewPagerFragments: Array<Fragment>
     private val viewPagerPageTitles = arrayOf("Video List", "Quiz", "Questions")
 
     private lateinit var pagerAdapter: VideoTabViewPagerAdapter
@@ -66,6 +69,30 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>() 
     private var isVideoStartedPlaying = false
 
     private val args: LoadWebViewFragmentArgs by navArgs()
+
+    private var expanded = true
+    private lateinit var toggle: Transition
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        toggle = TransitionInflater.from(requireContext()).inflateTransition(R.transition.search_bar_toogle)
+    }
+
+    private fun expand() {
+        toggle.duration = 150L
+        TransitionManager.beginDelayedTransition(viewDataBinding.webView as ViewGroup, toggle)
+        viewDataBinding.webView.onResume()
+        viewDataBinding.webView.visibility = View.VISIBLE
+        expanded = true
+    }
+
+    private fun collapse() {
+        toggle.duration = 200L
+        TransitionManager.beginDelayedTransition(viewDataBinding.webView as ViewGroup, toggle)
+        viewDataBinding.webView.onPause()
+        viewDataBinding.webView.visibility = View.GONE
+        expanded = true
+    }
 
     @SuppressLint("SetJavaScriptEnabled", "ObsoleteSdkInt")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -254,6 +281,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>() 
 
     private fun setCurrentPageItemPosition(position: Int) {
         viewPagerCurrentItem = position
+        if (viewPagerCurrentItem == 0) expand() else collapse()
     }
 }
 
