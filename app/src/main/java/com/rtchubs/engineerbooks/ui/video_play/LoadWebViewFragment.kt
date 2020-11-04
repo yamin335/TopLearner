@@ -55,17 +55,13 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>() 
     }
 
     private lateinit var viewPagerFragments: Array<Fragment>
-    private val viewPagerPageTitles = arrayOf("Video List", "Quiz", "Semantics")
+    private val viewPagerPageTitles = arrayOf("Video List", "Quiz", "Questions")
 
     private lateinit var pagerAdapter: VideoTabViewPagerAdapter
 
     private var viewPagerCurrentItem = 0
 
     private lateinit var viewPager2PageChangeCallback: ViewPager2PageChangeCallback
-
-    private val videoListFragment: VideoListFragment = VideoListFragment()
-    private val quizListFragment: QuizListFragment = QuizListFragment()
-    private val setCFragment: SetCFragment = SetCFragment()
 
     private var isVideoStartedPlaying = false
 
@@ -156,15 +152,15 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>() 
             }
         }
 
-        viewPagerFragments = arrayOf(videoListFragment, quizListFragment, setCFragment)
-
         pagerAdapter = VideoTabViewPagerAdapter(
-            viewPagerFragments,
-            childFragmentManager,
-            viewLifecycleOwner.lifecycle
+            3,
+            this
         )
 
         viewDataBinding.viewPager.adapter = pagerAdapter
+
+        viewDataBinding.viewPager.offscreenPageLimit = 3
+        viewDataBinding.viewPager.isUserInputEnabled = false
 
         viewPager2PageChangeCallback = ViewPager2PageChangeCallback {
             setCurrentPageItemPosition(it)

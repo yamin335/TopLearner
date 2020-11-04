@@ -277,5 +277,7 @@ dependencies {
     implementation 'gun0912.ted:tedpermission:2.2.3'
     implementation 'com.afollestad:viewpagerdots:1.0.0'
     implementation 'net.lingala.zip4j:zip4j:2.6.3'
+
+    // PDF File Viewer
+    implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
 }
-//apply plugin: 'com.google.gms.google-services'
