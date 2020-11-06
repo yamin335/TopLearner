@@ -1,53 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <com.google.android.material.card.MaterialCardView
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@color/white">
-
-        <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="0dp"
+        app:contentPadding="8dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white"
-            android:backgroundTint="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="wrap_content">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackground"
+                android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/book_6" />
 
-                <ImageView
-                    android:id="@+id/ivChapterImage"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/book_2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/tvChapterName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textColor="#404040"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@id/thumbnail"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Lesson Title" />
 
-                <TextView
-                    android:id="@+id/tvChapterName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:text="Chapter One"
-                    android:textColor="@color/black"
-                    app:layout_constraintBottom_toBottomOf="@+id/ivChapterImage"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/ivChapterImage"
-                    app:layout_constraintTop_toTopOf="@+id/ivChapterImage" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:textSize="12sp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/tvChapterName"
+                app:layout_constraintTop_toBottomOf="@+id/tvChapterName"
+                app:layout_constraintVertical_bias="0.0"
+                android:text="Video can be interlaced or progressive. In progressive scan systems, each refresh period updates all scan lines in each frame in sequence. When displaying a natively progressive broadcast or recorded signal, the result is optimum spatial resolution of both the stationary and moving parts of the image."/>
 
-        </com.google.android.material.card.MaterialCardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

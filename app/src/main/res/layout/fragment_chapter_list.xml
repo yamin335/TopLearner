@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@color/themeBackgroundColor"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -11,7 +12,10 @@
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
@@ -26,35 +30,19 @@
                 app:titleTextColor="@color/accent" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvChapterList"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:listitem="@layout/item_chapter_list" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.core.widget.NestedScrollView>
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvChapterList"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:paddingBottom="32dp"
+            android:clipToPadding="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appbar"
+            tools:listitem="@layout/item_chapter_list" />
 
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -68,7 +68,8 @@
             app:tabIndicatorColor="@color/themeColor"
             app:tabIndicatorGravity="bottom"
             app:tabMode="fixed"
-            app:tabTextColor="@color/tab_state_colors"/>
+            app:tabTextColor="@color/tab_state_colors"
+            app:tabTextAppearance="@style/MyCustomTabTextAppearance"/>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
