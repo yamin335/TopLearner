@@ -39,6 +39,7 @@
             android:name="com.rtchubs.engineerbooks.ui.MainActivity"
             android:clearTaskOnLaunch="true"
             android:rotationAnimation="seamless"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme"
             tools:targetApi="O">

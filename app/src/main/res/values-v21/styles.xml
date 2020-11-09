@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+<!--    <style name="AppTheme.SplashActivity">-->
+<!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+<!--        <item name="windowActionBar">false</item>-->
+<!--        <item name="windowNoTitle">true</item>-->
+<!--        &lt;!&ndash;<item name="android:windowFullscreen">true</item>&ndash;&gt;-->
+<!--        <item name="android:windowContentOverlay">@null</item>-->
+<!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
+<!--        <item name="windowActionBarOverlay">true</item>-->
+<!--        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+<!--        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>-->
+<!--        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="28">shortEdges</item>-->
+<!--    </style>-->
+</resources>

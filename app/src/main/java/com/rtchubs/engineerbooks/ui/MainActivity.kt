@@ -2,12 +2,14 @@ package com.rtchubs.engineerbooks.ui
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +20,7 @@ import com.google.android.material.navigation.NavigationView
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.MainActivityBinding
 import com.rtchubs.engineerbooks.ui.home.Home2FragmentDirections
+import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment
 import com.rtchubs.engineerbooks.util.hideKeyboard
 import com.rtchubs.engineerbooks.util.shouldCloseDrawerFromBackPress
 import dagger.android.support.DaggerAppCompatActivity
@@ -36,7 +39,15 @@ interface NavDrawerHandlerCallback {
     fun toggleNavDrawer()
 }
 
-class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawerHandlerCallback, NavigationHost, NavigationView.OnNavigationItemSelectedListener {
+interface ShowHideBottomNavCallback {
+    fun showOrHideBottomNav(showHide: Boolean)
+}
+
+interface ConfigurationChangeCallback {
+    fun onNewConfiguration(newConfig: Configuration)
+}
+
+class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawerHandlerCallback, ShowHideBottomNavCallback, NavigationHost, NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -62,9 +73,7 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawer
         R.id.profileSignInFragment
     )
 
-    private var navigatedFromDashboard = false
-
-    private var loginNavHostFragment: NavHostFragment? =null
+    var configurationChangeCallback: ConfigurationChangeCallback? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +88,11 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawer
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        configurationChangeCallback?.onNewConfiguration(newConfig)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -207,5 +221,9 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawer
         //close navigation drawer
         binding.navDrawer.closeDrawer(GravityCompat.START);
         return true
+    }
+
+    override fun showOrHideBottomNav(showHide: Boolean) {
+        binding.mainContainer.showBottomNav = showHide
     }
 }

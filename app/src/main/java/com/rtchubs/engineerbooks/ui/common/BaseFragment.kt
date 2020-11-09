@@ -373,7 +373,6 @@ abstract class BaseFragment<T : ViewDataBinding, V : ViewModel> : DaggerFragment
         })*/
     }
 
-
     companion object {
         const val REFRESH = "refresh"
     }

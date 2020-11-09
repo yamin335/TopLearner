@@ -26,7 +26,7 @@
 
             <ImageView
                 android:id="@+id/thumbnail"
-                android:layout_width="40dp"
+                android:layout_width="50dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackground"
                 android:padding="4dp"
@@ -36,6 +36,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/book_6" />
+
+            <ImageView
+                android:id="@+id/play"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="?attr/selectableItemBackground"
+                android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="@id/thumbnail"
+                app:layout_constraintEnd_toEndOf="@id/thumbnail"
+                app:layout_constraintStart_toStartOf="@id/thumbnail"
+                app:layout_constraintTop_toTopOf="@id/thumbnail"
+                app:srcCompat="@drawable/ic_outline_play_circle_filled_24px" />
 
             <TextView
                 android:id="@+id/title"

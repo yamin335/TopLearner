@@ -148,6 +148,17 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="AppTheme.SplashActivity">
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!--<item name="android:windowFullscreen">true</item>-->
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="windowActionBarOverlay">true</item>
     </style>
 
 
