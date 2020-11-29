@@ -14,9 +14,15 @@ class VideoTabViewPagerAdapter internal constructor(private val size: Int,
     }
 
     override fun createFragment(position: Int): Fragment {
+//        return when(position) {
+//            0 -> VideoListFragment()
+//            1 -> QuizListFragment()
+//            else -> SetCFragment()
+//        }
+
         return when(position) {
             0 -> VideoListFragment()
-            1 -> QuizListFragment()
+            1 -> SetCFragment()
             else -> SetCFragment()
         }
     }

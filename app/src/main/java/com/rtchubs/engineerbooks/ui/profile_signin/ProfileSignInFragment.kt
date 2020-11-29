@@ -11,11 +11,16 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.ProfileSignInBinding
+import com.rtchubs.engineerbooks.models.registration.City
+import com.rtchubs.engineerbooks.models.registration.Gender
+import com.rtchubs.engineerbooks.models.registration.Upazilla
 import com.rtchubs.engineerbooks.ui.LoginHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import timber.log.Timber
@@ -41,6 +46,19 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
 //    val args: ProfileSignInFragmentArgs by navArgs()
 
     private var listener: LoginHandlerCallback? = null
+
+    private val cityList = ArrayList<City>()
+    private var titleCityList = arrayOf("--Select City--")
+
+    private val upazillaList = ArrayList<Upazilla>()
+    private var titleUpazillaList = arrayOf("--Select Upazilla--")
+
+    private val genderList = ArrayList<Gender>()
+    private var titleGenderList = arrayOf("--Select Gender--")
+
+    lateinit var cityAdapter: ArrayAdapter<String>
+    lateinit var upazillaAdapter: ArrayAdapter<String>
+    lateinit var genderAdapter: ArrayAdapter<String>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -79,7 +97,94 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
         updateStatusBarBackgroundColor("#1E4356")
         registerToolbar(viewDataBinding.toolbar)
 
-        viewDataBinding.nameField.addTextChangedListener(object : TextWatcher {
+        val temp = Array(viewModel.cities.size + 1) {""}
+        temp[0] = "--Select City--"
+        viewModel.cities.forEachIndexed { index, city ->
+            temp[index + 1] = city.name ?: "Unknown"
+        }
+        titleCityList = temp
+
+        cityAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleCityList)
+        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        viewDataBinding.spCity.adapter = cityAdapter
+
+        viewDataBinding.spCity.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                if (position != 0) {
+                    try {
+                        val upazillaList = viewModel.getUpazzilla(viewModel.cities[position - 1].id)
+                        val tempUpazilla = Array(upazillaList.size + 1) {""}
+                        tempUpazilla[0] = "--Select Upazilla--"
+                        upazillaList.forEachIndexed { index, upazilla ->
+                            tempUpazilla[index + 1] = upazilla.name ?: "Unknown"
+                        }
+                        titleUpazillaList = tempUpazilla
+
+                        upazillaAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleUpazillaList)
+                        upazillaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        viewDataBinding.spUpazilla.adapter = upazillaAdapter
+                    } catch (e: IndexOutOfBoundsException) {
+
+                    }
+                } else {
+                    //viewModel.selectedTicketCategory.value = null
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        upazillaAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleUpazillaList)
+        upazillaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        viewDataBinding.spUpazilla.adapter = upazillaAdapter
+
+        viewDataBinding.spUpazilla.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                if (position != 0) {
+                    try {
+                        //viewModel.selectedTicketCategory.value = ticketCategoryList[position - 1]
+                    } catch (e: IndexOutOfBoundsException) {
+
+                    }
+                } else {
+                    //viewModel.selectedTicketCategory.value = null
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        val tempGender = Array(viewModel.allGender.size + 1) {""}
+        tempGender[0] = "--Select Gender--"
+        viewModel.allGender.forEachIndexed { index, gender ->
+            tempGender[index + 1] = gender.name ?: "Unknown"
+        }
+        titleGenderList = tempGender
+
+        genderAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleGenderList)
+        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        viewDataBinding.spGender.adapter = genderAdapter
+
+        viewDataBinding.spGender.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                if (position != 0) {
+                    try {
+                        //viewModel.selectedTicketCategory.value = ticketCategoryList[position - 1]
+                    } catch (e: IndexOutOfBoundsException) {
+
+                    }
+                } else {
+                    //viewModel.selectedTicketCategory.value = null
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        viewDataBinding.firstName.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
 

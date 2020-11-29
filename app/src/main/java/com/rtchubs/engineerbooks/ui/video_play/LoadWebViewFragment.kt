@@ -74,7 +74,8 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).title }
     }
 
-    private val viewPagerPageTitles = arrayOf("Video List", "Quiz", "Questions")
+    //private val viewPagerPageTitles = arrayOf("Video List", "Quiz", "Questions")
+    private val viewPagerPageTitles = arrayOf("Video List", "Questions")
 
     private lateinit var pagerAdapter: VideoTabViewPagerAdapter
 
@@ -288,7 +289,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
 
         pagerAdapter = VideoTabViewPagerAdapter(
-            3,
+            2,
             this
         )
 
@@ -445,7 +446,9 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
     }
 
     private fun restoreSystemUI() {
-        viewDataBinding.toolbar.visibility = View.VISIBLE
+        if (viewDataBinding.toolbar != null) {
+            viewDataBinding.toolbar.visibility = View.VISIBLE
+        }
         requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         requireActivity().window.decorView.systemUiVisibility = systemUIConfigurationBackup

@@ -20,7 +20,7 @@
         android:checked="false" />
     <item
         android:id="@+id/transaction_nav"
-        android:title="Service"
+        android:title="Transactions"
         android:icon="@drawable/transactions"
         app:showAsAction="always" />
     <item

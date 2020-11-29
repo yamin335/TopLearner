@@ -7,7 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.rtchubs.engineerbooks.api.*
+import com.rtchubs.engineerbooks.models.registration.City
 import com.rtchubs.engineerbooks.models.registration.DefaultResponse
+import com.rtchubs.engineerbooks.models.registration.Gender
+import com.rtchubs.engineerbooks.models.registration.Upazilla
 import com.rtchubs.engineerbooks.repos.RegistrationRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
 import com.rtchubs.engineerbooks.util.AppConstants.serverConnectionErrorMessage
@@ -19,6 +22,27 @@ import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class ProfileSignInViewModel @Inject constructor(private val application: Application, private val repository: RegistrationRepository) : BaseViewModel(application) {
+    val cities = arrayListOf(City(1, "Dhaka"), City(2, "Khulna"), City(3, "Chittagong"), City(4, "Sylhet"))
+
+    val allUpazilla = mapOf(1 to arrayListOf(
+        Upazilla(1, 1, "Dhaka NCC"),
+        Upazilla(2, 1, "Dhaka SCC"),
+        Upazilla(3, 1, "Gazipur")),
+        2 to arrayListOf(
+            Upazilla(1, 2, "Khulna Sadar"),
+            Upazilla(2, 2, "Rupsha"),
+            Upazilla(3, 2, "Batiaghata")),
+        3 to arrayListOf(
+            Upazilla(1, 3, "Cox's Bazar"),
+            Upazilla(2, 3, "Bandarban"),
+            Upazilla(3, 3, "Rangunia")),
+        4 to arrayListOf(
+            Upazilla(1, 4, "Sylhet Sadar"),
+            Upazilla(2, 4, "Srimangal"),
+            Upazilla(3, 4, "Moulovi Bazar")))
+
+    val allGender = arrayListOf(Gender(1, "Male"), Gender(2, "Female"), Gender(3, "Others"))
+
     fun registerNewUser(mobileNumber: String, otp: String, password: String, fullName: String,
                         mobileOperator: String, deviceId: String,
                         deviceName: String, deviceModel: String, nidNumber: String, nidFrontImage: Uri?,
@@ -56,5 +80,13 @@ class ProfileSignInViewModel @Inject constructor(private val application: Applic
         }
 
         return response
+    }
+
+    fun getUpazzilla(cityId: Int): ArrayList<Upazilla> {
+        return allUpazilla[cityId] ?: ArrayList()
+    }
+
+    fun getAllGenders(): ArrayList<Gender> {
+        return allGender
     }
 }
