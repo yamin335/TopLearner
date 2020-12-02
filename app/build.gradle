@@ -245,7 +245,6 @@ dependencies {
 
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 
-    implementation "com.android.support:support-v4:+"
     implementation 'com.squareup.picasso:picasso:2.3.2'
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.daimajia.slider:library:1.1.5@aar'
@@ -280,4 +279,7 @@ dependencies {
 
     // PDF File Viewer
     implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
+    implementation 'com.darwin.viola:still:1.0.1'
+
+    implementation 'com.android.support:support-v4:28.0.0'
 }
