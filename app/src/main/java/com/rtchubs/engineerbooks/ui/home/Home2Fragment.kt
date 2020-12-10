@@ -7,7 +7,7 @@ import android.view.WindowManager
 import androidx.fragment.app.viewModels
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
-import com.rtchubs.engineerbooks.databinding.Home2Binding
+import com.rtchubs.engineerbooks.databinding.HomeFragment2Binding
 import com.rtchubs.engineerbooks.models.Book
 import com.rtchubs.engineerbooks.models.Chapter
 import com.rtchubs.engineerbooks.ui.LogoutHandlerCallback
@@ -15,7 +15,7 @@ import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.login.SliderView
 
-class Home2Fragment : BaseFragment<Home2Binding, HomeViewModel>() {
+class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
     override val bindingVariable: Int
         get() = BR.viewModel
     override val layoutId: Int
@@ -92,53 +92,64 @@ class Home2Fragment : BaseFragment<Home2Binding, HomeViewModel>() {
             Chapter(10, "Chapter Ten", null, null)
         )
 
-        val book1 = Book(1, "Bangla", "", chapterList)
-        val book2 = Book(2, "English", "",chapterList)
-        val book3 = Book(3, "General Mathematics", "", chapterList)
-        val book4 = Book(4, "Biology", "", chapterList)
-        val book5 = Book(5, "Physics", "", chapterList)
-
-        viewDataBinding.book1 = book1
-        viewDataBinding.book2 = book2
-        viewDataBinding.book3 = book3
-        viewDataBinding.book4 = book4
-        viewDataBinding.book5 = book5
+        val bookList = listOf(
+            Book(1, "Class One", "", chapterList),
+            Book(1, "Class Two", "", chapterList),
+            Book(1, "Class Three", "", chapterList),
+            Book(1, "Class Four", "", chapterList),
+            Book(1, "Class Five", "", chapterList),
+            Book(1, "Class Six", "", chapterList),
+            Book(1, "Class Seven", "", chapterList),
+            Book(1, "Class Eight", "", chapterList),
+            Book(1, "Class Nine", "", chapterList),
+            Book(1, "Class Ten", "", chapterList),
+            Book(1, "HSC 1st Year", "", chapterList),
+            Book(1, "HSC 2nd Year", "", chapterList)
+        )
 
         viewDataBinding.appLogo.setOnClickListener {
             drawerListener?.toggleNavDrawer()
         }
 
-        viewModel.slideDataList.forEach { slideData ->
-            val slide = SliderView(requireContext())
-            slide.sliderTextTitle = slideData.textTitle
-            slide.sliderTextDescription = slideData.descText
-            slide.sliderImage(slideData.slideImage)
-            viewDataBinding.sliderLayout.addSlider(slide)
+        val homeClassListAdapter = HomeClassListAdapter(appExecutors) {
+            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
         }
 
-        viewDataBinding.item1.setOnClickListener {
-            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book1))
-        }
+        viewDataBinding.homeClassListRecycler.adapter = homeClassListAdapter
 
-        viewDataBinding.item2.setOnClickListener {
-            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book2))
-        }
+        homeClassListAdapter.submitList(bookList)
 
-        viewDataBinding.item3.setOnClickListener {
-            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book3))
-        }
-
-        viewDataBinding.item4.setOnClickListener {
-            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book4))
-        }
-
-        viewDataBinding.item5.setOnClickListener {
-            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book5))
-        }
-
-        viewDataBinding.item6.setOnClickListener {
-            navController.navigate(Home2FragmentDirections.actionHome2FragmentToMoreBookListFragment())
-        }
+//        viewModel.slideDataList.forEach { slideData ->
+//            val slide = SliderView(requireContext())
+//            slide.sliderTextTitle = slideData.textTitle
+//            slide.sliderTextDescription = slideData.descText
+//            slide.sliderImage(slideData.slideImage)
+//            viewDataBinding.sliderLayout.addSlider(slide)
+//        }
+//
+//        viewDataBinding.item1.setOnClickListener {
+//            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book1))
+//        }
+//
+//        viewDataBinding.item2.setOnClickListener {
+//            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book2))
+//        }
+//
+//        viewDataBinding.item3.setOnClickListener {
+//            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book3))
+//        }
+//
+//        viewDataBinding.item4.setOnClickListener {
+//            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book4))
+//        }
+//
+//        viewDataBinding.item5.setOnClickListener {
+//            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book5))
+//        }
+//
+//        viewDataBinding.item6.setOnClickListener {
+//            navController.navigate(Home2FragmentDirections.actionHome2FragmentToMoreBookListFragment())
+//        }
 //
 //        Log.e("res", preferencesHelper.getAccessTokenHeader())
 //        paymentListAdapter.submitList(viewModel.paymentMethodList)

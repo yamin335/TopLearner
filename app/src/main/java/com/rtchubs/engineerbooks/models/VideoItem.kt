@@ -19,3 +19,13 @@ data class VideoItem(
 
     val description: String?
 ) : Serializable
+
+data class HomeClassListItem(
+    @SerializedName("id")
+    @Expose
+    val id: Int,
+
+    @SerializedName("name")
+    @Expose
+    val name: String?
+) : Serializable
