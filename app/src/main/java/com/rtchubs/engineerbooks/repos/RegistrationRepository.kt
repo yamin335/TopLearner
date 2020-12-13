@@ -1,5 +1,6 @@
 package com.rtchubs.engineerbooks.repos
 
+import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.ApiService
 import com.rtchubs.engineerbooks.models.registration.InquiryResponse
 import com.rtchubs.engineerbooks.models.registration.DefaultResponse
@@ -15,10 +16,12 @@ import javax.inject.Singleton
 @Singleton
 class RegistrationRepository @Inject constructor(private val apiService: ApiService) {
 
-    suspend fun inquireRepo(mobileNumber: String, deviceId: String): Response<InquiryResponse> {
+    suspend fun inquireRepo(mobileNumber: String): Response<InquiryResponse> {
         return withContext(Dispatchers.IO) {
-            apiService.inquire(mobileNumber.toRequestBody("text/plain".toMediaTypeOrNull()),
-                deviceId.toRequestBody("text/plain".toMediaTypeOrNull()))
+            val jsonObject = JsonObject()
+            jsonObject.addProperty("mobile", mobileNumber)
+            val body = jsonObject.toString()
+            apiService.inquire(body)
         }
     }
 

@@ -17,9 +17,8 @@ import retrofit2.http.*
  */
 interface ApiService {
 
-    @Multipart
     @POST(ApiEndPoint.INQUIRE)
-    suspend fun inquire(@Part("PhoneNumber") mobileNumber: RequestBody, @Part("DeviceId") deviceId: RequestBody): Response<InquiryResponse>
+    suspend fun inquire(@Body jsonString: String): Response<InquiryResponse>
 
     @Multipart
     @POST(ApiEndPoint.REQUESTOTP)

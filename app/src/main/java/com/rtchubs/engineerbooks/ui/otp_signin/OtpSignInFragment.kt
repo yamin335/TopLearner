@@ -121,22 +121,22 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>(), 
         })
 
         viewModel.registeredOTP.observe(viewLifecycleOwner, Observer { response ->
-            response?.let {
-                when {
-                    it.isSuccess == true -> {
-                        viewDataBinding.tvOtpTextDescription.text = "An OTP Code has been sent to your mobile +88${args.registrationHelper.mobile}"
-                        viewDataBinding.etOtpCode.isEnabled = true
-                    }
-                    it.isSuccess == false && it.errorMessage != null -> {
-                        viewDataBinding.tvOtpTextDescription.text = it.errorMessage
-                        showWarningToast(mContext, it.errorMessage)
-                        viewDataBinding.etOtpCode.isEnabled = false
-                    }
-                    else -> {
-                        showWarningToast(mContext, "Please wait 5 minutes before you request a new OTP!")
-                    }
-                }
-            }
+//            response?.let {
+//                when {
+//                    it.isSuccess == true -> {
+//                        viewDataBinding.tvOtpTextDescription.text = "An OTP Code has been sent to your mobile +88${args.registrationHelper.mobile}"
+//                        viewDataBinding.etOtpCode.isEnabled = true
+//                    }
+//                    it.isSuccess == false && it.errorMessage != null -> {
+//                        viewDataBinding.tvOtpTextDescription.text = it.errorMessage
+//                        showWarningToast(mContext, it.errorMessage)
+//                        viewDataBinding.etOtpCode.isEnabled = false
+//                    }
+//                    else -> {
+//                        showWarningToast(mContext, "Please wait 5 minutes before you request a new OTP!")
+//                    }
+//                }
+//            }
         })
 
 //        if (helper.isRegistered) {

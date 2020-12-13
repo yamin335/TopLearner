@@ -13,14 +13,6 @@ import javax.inject.Singleton
 
 @Singleton
 class LoginRepository @Inject constructor(private val apiService: ApiService) {
-
-    suspend fun inquireRepo(mobileNumber: String, deviceId: String): Response<InquiryResponse> {
-        return withContext(Dispatchers.IO) {
-            apiService.inquire(mobileNumber.toRequestBody("text/plain".toMediaTypeOrNull()),
-                deviceId.toRequestBody("text/plain".toMediaTypeOrNull()))
-        }
-    }
-
     suspend fun requestOTPRepo(
         mobileNumber: String,
         hasGivenConsent: String

@@ -27,8 +27,7 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
         viewModelFactory
     }
 
-    val registrationHelper =
-        RegistrationHelperModel()
+    val registrationHelper = RegistrationHelperModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,10 +49,7 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
 
         viewDataBinding.btnProceed.setOnClickListener {
             hideKeyboard()
-            tempopenOperatorSelectionDialog()
-//            viewModel.mobileNo.value?.let { mobileNo ->
-//                inquireAccount(mobileNo, Build.ID)
-//            }
+            openOperatorSelectionDialog()
         }
     }
 
@@ -127,24 +123,30 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
         dialog.dismiss()
         registrationHelper.isRegistered = false
         registrationHelper.operator = operator
-        val action = SignInFragmentDirections.actionSignInFragmentToTermsFragment(registrationHelper)
-        navController.navigate(action)
+        inquireAccount()
     }
 
-    private fun inquireAccount(mobile: String, deviceId: String) {
-        viewModel.inquireAccount(mobile, deviceId).observe(viewLifecycleOwner, Observer {response ->
-            response?.body?.let {
+    private fun inquireAccount() {
+        viewModel.inquireAccount().observe(viewLifecycleOwner, Observer { response ->
+            response?.data?.Account?.let {
+                registrationHelper.mobile = it.mobile ?: return@Observer
                 if (it.isRegistered == false) {
-                    registrationHelper.mobile = mobile
-                    openOperatorSelectionDialog()
-                } else if (it.isRegistered == true && it.isAllowed == true) {
+                    val action = SignInFragmentDirections.actionSignInFragmentToTermsFragment(registrationHelper)
+                    navController.navigate(action)
+                    if (it.isAcceptedTandC == true) {
+
+                    } else {
+
+                    }
+                } else if (it.isRegistered == true && it.isMobileVerified == true) {
                     registrationHelper.isRegistered = true
                     registrationHelper.isTermsAccepted = true
-                    registrationHelper.mobile = mobile
+//                    val action = SignInFragmentDirections.actionSignInFragmentToTermsFragment(registrationHelper)
+//                    navController.navigate(action)
                     val action = SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(registrationHelper)
                     navController.navigate(action)
                 } else {
-                    showErrorToast(mContext, response.body.message ?: commonErrorMessage)
+                    showErrorToast(mContext, response.msg ?: commonErrorMessage)
                 }
             }
         })

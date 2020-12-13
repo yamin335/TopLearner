@@ -19,7 +19,7 @@ class SignInViewModel @Inject constructor(private val application: Application, 
         MutableLiveData<String>()
     }
 
-    fun inquireAccount(mobileNumber: String, deviceId: String): LiveData<InquiryResponse> {
+    fun inquireAccount(): LiveData<InquiryResponse> {
         val response: MutableLiveData<InquiryResponse> = MutableLiveData()
         if (checkNetworkStatus()) {
             val handler = CoroutineExceptionHandler { _, exception ->
@@ -28,9 +28,11 @@ class SignInViewModel @Inject constructor(private val application: Application, 
                 toastError.postValue(serverConnectionErrorMessage)
             }
 
+            val mobile = mobileNo.value ?: "0"
+
             apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.inquireRepo(mobileNumber, deviceId))) {
+                when (val apiResponse = ApiResponse.create(repository.inquireRepo(mobile))) {
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
                         response.postValue(apiResponse.body)

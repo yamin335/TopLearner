@@ -64,21 +64,21 @@ class OtpSignInViewModel @Inject constructor(private val application: Applicatio
             }
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
-            viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.inquireRepo(mobileNumber, deviceId))) {
-                    is ApiSuccessResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                        registeredOTP.postValue(apiResponse.body)
-                    }
-                    is ApiEmptyResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
-                    }
-                    is ApiErrorResponse -> {
-                        registeredOTP.postValue(Gson().fromJson(apiResponse.errorMessage, InquiryResponse::class.java))
-                        apiCallStatus.postValue(ApiCallStatus.ERROR)
-                    }
-                }
-            }
+//            viewModelScope.launch(handler) {
+//                when (val apiResponse = ApiResponse.create(repository.inquireRepo(mobileNumber, deviceId))) {
+//                    is ApiSuccessResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+//                        registeredOTP.postValue(apiResponse.body)
+//                    }
+//                    is ApiEmptyResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+//                    }
+//                    is ApiErrorResponse -> {
+//                        registeredOTP.postValue(Gson().fromJson(apiResponse.errorMessage, InquiryResponse::class.java))
+//                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                    }
+//                }
+//            }
         }
     }
 }
