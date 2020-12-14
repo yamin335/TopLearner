@@ -9,7 +9,20 @@
         android:id="@+id/moreFragment"
         android:name="com.rtchubs.engineerbooks.ui.more.MoreFragment"
         android:label="More"
-        tools:layout="@layout/fragment_more" />
+        tools:layout="@layout/fragment_more" >
+        <action
+            android:id="@+id/action_moreFragment_to_profileSettingsFragment"
+            app:destination="@id/profileSettingsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
 
+    <fragment
+        android:id="@+id/profileSettingsFragment"
+        android:name="com.rtchubs.engineerbooks.ui.more.ProfileSettingsFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile_sign_in" />
     <include app:graph="@navigation/drawer_nav_graph" />
 </navigation>

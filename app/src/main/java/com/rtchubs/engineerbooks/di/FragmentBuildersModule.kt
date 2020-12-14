@@ -25,6 +25,7 @@ import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment
 import com.rtchubs.engineerbooks.ui.video_play.VideoPlayFragment
 import com.rtchubs.engineerbooks.ui.login.ViewPagerFragment
 import com.rtchubs.engineerbooks.ui.more.MoreFragment
+import com.rtchubs.engineerbooks.ui.more.ProfileSettingsFragment
 import com.rtchubs.engineerbooks.ui.otp_signin.OtpSignInFragment
 import com.rtchubs.engineerbooks.ui.pin_number.PinNumberFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.ProfileSignInFragment
@@ -150,4 +151,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeTopUpBankCardFragment(): TopUpBankCardFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeProfileSettingsFragment(): ProfileSettingsFragment
 }

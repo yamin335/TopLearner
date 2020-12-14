@@ -49,6 +49,10 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewDataBinding.mProfile.setOnClickListener {
+            navigateTo(MoreFragmentDirections.actionMoreFragmentToProfileSettingsFragment())
+        }
+
         viewDataBinding.logout.setOnClickListener {
             SplashFragment.fromLogout = true
             preferencesHelper.isLoggedIn = false
