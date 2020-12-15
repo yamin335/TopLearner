@@ -7,6 +7,10 @@ import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CARD
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CONNECT
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_INQUIRE
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE_PHOTOS
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_REGISTER
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_REQUEST_OTP
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_VERIFY_OTP
 import com.rtchubs.engineerbooks.api.Api.REPO
 
 object Api {
@@ -16,6 +20,10 @@ object Api {
     const val REPO = "auth"
     const val API_VERSION = "v1"
     const val DIRECTORY_INQUIRE = "checkuser"
+    const val DIRECTORY_REQUEST_OTP = "sendotp"
+    const val DIRECTORY_VERIFY_OTP = "verifyotp"
+    const val DIRECTORY_PROFILE_PHOTOS = "uploadProfilePhotos"
+    const val DIRECTORY_REGISTER = "register"
     const val DIRECTORY_CONNECT = "connect"
     const val DIRECTORY_BANK_INFO = "bankinformation"
     const val DIRECTORY_CARD = "banklink"
@@ -27,6 +35,10 @@ object Api {
 object ApiEndPoint {
     /* Registration */
     const val INQUIRE = "$API_VERSION/$REPO/${DIRECTORY_INQUIRE}"
+    const val REQUEST_OTP = "$API_VERSION/$REPO/${DIRECTORY_REQUEST_OTP}"
+    const val VERIFY_OTP = "$API_VERSION/$REPO/${DIRECTORY_VERIFY_OTP}"
+    const val PROFILE_PHOTOS = "$API_VERSION/$REPO/${DIRECTORY_PROFILE_PHOTOS}"
+    const val REGISTER = "$API_VERSION/$REPO/${DIRECTORY_REGISTER}"
     const val REQUESTOTP = "/$REPO/$API_VERSION/${DIRECTORY_INQUIRE}/request-otp"
     const val REGISTRATION = "/$REPO/$API_VERSION/${DIRECTORY_INQUIRE}"
     const val CONNECT_TOKEN = "/$REPO/$API_VERSION/${DIRECTORY_CONNECT}/token"

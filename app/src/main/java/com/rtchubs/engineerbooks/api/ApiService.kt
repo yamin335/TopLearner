@@ -20,6 +20,18 @@ interface ApiService {
     @POST(ApiEndPoint.INQUIRE)
     suspend fun inquire(@Body jsonString: String): Response<InquiryResponse>
 
+    @POST(ApiEndPoint.REQUEST_OTP)
+    suspend fun requestOTPCode(@Body jsonString: String): Response<InquiryResponse>
+
+    @POST(ApiEndPoint.VERIFY_OTP)
+    suspend fun verifyOTPCode(@Body jsonString: String): Response<InquiryResponse>
+
+    @POST(ApiEndPoint.REQUEST_OTP)
+    suspend fun uploadProfilePhotos(@Body partFormData: RequestBody): Response<String>
+
+    @POST(ApiEndPoint.REGISTER)
+    suspend fun registerUser(@Body jsonString: String): Response<String>
+
     @Multipart
     @POST(ApiEndPoint.REQUESTOTP)
     suspend fun requestOTP(

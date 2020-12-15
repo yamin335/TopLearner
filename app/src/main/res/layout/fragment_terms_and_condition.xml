@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data class="TermsBinding">
-
         <variable
             name="viewModel"
             type="com.rtchubs.engineerbooks.ui.terms_and_conditions.TermsViewModel" />
@@ -30,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:id="@+id/webView"
-            android:layout_weight="1.0"></WebView>
+            android:layout_weight="1.0" />
 
 
         <com.google.android.material.button.MaterialButton

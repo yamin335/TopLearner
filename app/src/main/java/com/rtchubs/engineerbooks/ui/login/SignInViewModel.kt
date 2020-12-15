@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
+import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.models.registration.InquiryResponse
 import com.rtchubs.engineerbooks.repos.RegistrationRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
@@ -33,6 +34,38 @@ class SignInViewModel @Inject constructor(private val application: Application, 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
                 when (val apiResponse = ApiResponse.create(repository.inquireRepo(mobile))) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        response.postValue(apiResponse.body)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                    }
+                    is ApiErrorResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                    }
+                }
+            }
+        }
+
+        return response
+    }
+
+    fun requestOTPCode(registrationHelper: InquiryAccount): LiveData<InquiryResponse> {
+        val response: MutableLiveData<InquiryResponse> = MutableLiveData()
+        if (checkNetworkStatus()) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(serverConnectionErrorMessage)
+            }
+
+            val mobile = registrationHelper.mobile ?: "0"
+            val isAcceptedTandC = registrationHelper.isAcceptedTandC ?: false
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(repository.requestOTPCodeRepo(mobile, isAcceptedTandC))) {
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
                         response.postValue(apiResponse.body)

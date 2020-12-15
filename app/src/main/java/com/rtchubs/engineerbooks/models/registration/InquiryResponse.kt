@@ -1,14 +1,16 @@
 package com.rtchubs.engineerbooks.models.registration
 
-data class InquiryAccount(val udid: String?, val createdAt: String?, val updatedAt: String?,
-                          val firstName: String?, val lastName: String?, val mobile: String?,
-                          val nidnumber: String?, val mobileOperator: String?, val displayName: String?,
-                          val institute: String?, val upazila: String?, val city: String?, val nidFrontPic: String?,
-                          val nidBackPic: String?, val altContactPerson: String?, val customer_type_id: Int?,
-                          val email: String?, val pin: String?, val retypePin: String?, val gender: String?,
-                          val profilePic: String?, val otp: String?, val otpExpire: String?, val status: String?,
-                          val role: String?, val action: String?, val isRegistered: Boolean?,
-                          val isMobileVerified: Boolean?, val isAcceptedTandC: Boolean?, val Table: String?)
+import java.io.Serializable
+
+data class InquiryAccount(var udid: String?, var createdAt: String?, var updatedAt: String?,
+                          var firstName: String?, var lastName: String?, var mobile: String?,
+                          var nidnumber: String?, var mobileOperator: String?, var displayName: String?,
+                          var institute: String?, var upazila: String?, var city: String?, var nidFrontPic: String?,
+                          var nidBackPic: String?, var altContactPerson: String?, var customer_type_id: Int?,
+                          var email: String?, var pin: String?, var retypePin: String?, var gender: String?,
+                          var profilePic: String?, var otp: String?, var otpExpire: String?, var status: String?,
+                          var role: String?, var action: String?, var isRegistered: Boolean?,
+                          var isMobileVerified: Boolean?, var isAcceptedTandC: Boolean?, var Table: String?): Serializable
 
 data class InquiryResponse(val code: Int?, val data: InquiryData?, val msg: String?)
 

@@ -20,6 +20,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.GenericTransitionOptions.with
 import com.bumptech.glide.Glide
 import com.darwin.viola.still.FaceDetectionListener
@@ -85,6 +86,8 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
     lateinit var imageCropperListener: FaceDetectionListener
     lateinit var currentPhotoPath: String
 
+    val args: ProfileSignInFragmentArgs by navArgs()
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is LoginHandlerCallback) {
@@ -121,6 +124,11 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
         super.onViewCreated(view, savedInstanceState)
         updateStatusBarBackgroundColor("#1E4356")
         registerToolbar(viewDataBinding.toolbar)
+
+        if (args.registrationHelper.isRegistered == true) {
+            preferencesHelper.isLoggedIn = true
+            listener?.onLoggedIn()
+        }
 
         Glide.with(requireContext()).load(R.drawable.doctor_1).circleCrop().into(viewDataBinding.rivProfileImage)
 

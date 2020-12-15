@@ -11,6 +11,7 @@ import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.databinding.LayoutOperatorSelectionBinding
 import com.rtchubs.engineerbooks.databinding.SignInBinding
+import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.models.registration.RegistrationHelperModel
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.AppConstants.commonErrorMessage
@@ -26,8 +27,6 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
     override val viewModel: SignInViewModel by viewModels {
         viewModelFactory
     }
-
-    val registrationHelper = RegistrationHelperModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,42 +52,42 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
         }
     }
 
-    private fun tempopenOperatorSelectionDialog() {
-        val bottomSheetDialog = BottomSheetDialog(mActivity)
-        val binding = DataBindingUtil.inflate<LayoutOperatorSelectionBinding>(
-            layoutInflater,
-            R.layout.layout_operator_selection,
-            null,
-            false
-        )
-        bottomSheetDialog.setContentView(binding.root)
-
-
-        binding.btnBanglalink.setOnClickListener {
-            bottomSheetDialog.dismiss()
-            val action = SignInFragmentDirections.actionSignInFragmentToTermsFragment(registrationHelper)
-            navController.navigate(action)
-        }
-
-        binding.btnGrameenphone.setOnClickListener {
-            bottomSheetDialog.dismiss()
-            val action = SignInFragmentDirections.actionSignInFragmentToTermsFragment(registrationHelper)
-            navController.navigate(action)
-        }
-
-        binding.btnRobi.setOnClickListener {
-            bottomSheetDialog.dismiss()
-            val action = SignInFragmentDirections.actionSignInFragmentToTermsFragment(registrationHelper)
-            navController.navigate(action)
-        }
-
-        binding.btnTeletalk.setOnClickListener {
-            bottomSheetDialog.dismiss()
-            val action = SignInFragmentDirections.actionSignInFragmentToTermsFragment(registrationHelper)
-            navController.navigate(action)
-        }
-        bottomSheetDialog.show()
-    }
+//    private fun tempopenOperatorSelectionDialog() {
+//        val bottomSheetDialog = BottomSheetDialog(mActivity)
+//        val binding = DataBindingUtil.inflate<LayoutOperatorSelectionBinding>(
+//            layoutInflater,
+//            R.layout.layout_operator_selection,
+//            null,
+//            false
+//        )
+//        bottomSheetDialog.setContentView(binding.root)
+//
+//
+//        binding.btnBanglalink.setOnClickListener {
+//            bottomSheetDialog.dismiss()
+//            val action = SignInFragmentDirections.actionSignInFragmentToTermsFragment(registrationHelper)
+//            navController.navigate(action)
+//        }
+//
+//        binding.btnGrameenphone.setOnClickListener {
+//            bottomSheetDialog.dismiss()
+//            val action = SignInFragmentDirections.actionSignInFragmentToTermsFragment(registrationHelper)
+//            navController.navigate(action)
+//        }
+//
+//        binding.btnRobi.setOnClickListener {
+//            bottomSheetDialog.dismiss()
+//            val action = SignInFragmentDirections.actionSignInFragmentToTermsFragment(registrationHelper)
+//            navController.navigate(action)
+//        }
+//
+//        binding.btnTeletalk.setOnClickListener {
+//            bottomSheetDialog.dismiss()
+//            val action = SignInFragmentDirections.actionSignInFragmentToTermsFragment(registrationHelper)
+//            navController.navigate(action)
+//        }
+//        bottomSheetDialog.show()
+//    }
 
     private fun openOperatorSelectionDialog() {
         val bottomSheetDialog = BottomSheetDialog(mActivity)
@@ -121,30 +120,46 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
 
     private fun goForRegistration(dialog: BottomSheetDialog, operator: String) {
         dialog.dismiss()
-        registrationHelper.isRegistered = false
-        registrationHelper.operator = operator
         inquireAccount()
     }
 
     private fun inquireAccount() {
         viewModel.inquireAccount().observe(viewLifecycleOwner, Observer { response ->
             response?.data?.Account?.let {
-                registrationHelper.mobile = it.mobile ?: return@Observer
                 if (it.isRegistered == false) {
-                    val action = SignInFragmentDirections.actionSignInFragmentToTermsFragment(registrationHelper)
-                    navController.navigate(action)
                     if (it.isAcceptedTandC == true) {
-
+                        requestOTPCode(it)
                     } else {
-
+                        navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
                     }
                 } else if (it.isRegistered == true && it.isMobileVerified == true) {
-                    registrationHelper.isRegistered = true
-                    registrationHelper.isTermsAccepted = true
-//                    val action = SignInFragmentDirections.actionSignInFragmentToTermsFragment(registrationHelper)
-//                    navController.navigate(action)
-                    val action = SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(registrationHelper)
-                    navController.navigate(action)
+                    if (it.isAcceptedTandC == true) {
+                        requestOTPCode(it)
+                    } else {
+                        navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
+                    }
+                } else {
+                    showErrorToast(mContext, response.msg ?: commonErrorMessage)
+                }
+            }
+        })
+    }
+
+    private fun requestOTPCode(registrationHelper: InquiryAccount) {
+        viewModel.requestOTPCode(registrationHelper).observe(viewLifecycleOwner, Observer { response ->
+            response?.data?.Account?.let {
+                if (it.isRegistered == false) {
+                    if (it.isAcceptedTandC == true) {
+                        navigateTo(SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(it))
+                    } else {
+                        navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
+                    }
+                } else if (it.isRegistered == true && it.isMobileVerified == true) {
+                    if (it.isAcceptedTandC == true) {
+                        navigateTo(SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(it))
+                    } else {
+                        navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
+                    }
                 } else {
                     showErrorToast(mContext, response.msg ?: commonErrorMessage)
                 }

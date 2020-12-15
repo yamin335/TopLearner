@@ -41,8 +41,10 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>() {
         registerToolbar(viewDataBinding.toolbar)
 
         val helper = args.registrationHelper
+        helper.pin = "123456"
+        helper.retypePin = "123456"
 
-        if (helper.isRegistered) {
+        if (helper.isRegistered == true) {
             viewDataBinding.linearReTypePin.visibility = View.GONE
         }
 
@@ -71,7 +73,7 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>() {
 
         viewModel.pin.observe(viewLifecycleOwner, Observer { pin ->
             pin?.let {
-                if (helper.isRegistered) {
+                if (helper.isRegistered == true) {
                     viewDataBinding.btnSubmit.isEnabled = pin.length == 6
                 } else {
                     viewDataBinding.btnSubmit.isEnabled = pin.length == 6 && viewModel.rePin.value?.length == 6
@@ -89,43 +91,45 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>() {
             hideKeyboard()
             var pin = ""
             var rePin = ""
-
-            viewModel.pin.value?.let {
-                pin = it
-            }
-
-            viewModel.rePin.value?.let {
-                rePin = it
-            }
-
-            when {
-                helper.isRegistered && pin.isNotBlank() && rePin.isBlank() -> {
-                    viewModel.connectToken(
-                        helper.mobile,
-                        pin,
-                        "password",
-                        "offline_access",
-                        Build.ID,
-                        Build.MANUFACTURER,
-                        Build.MODEL,
-                        "qpayandroid",
-                        "07A96yr@!1t8r",
-                        helper.otp
-                    )
-                }
-                pin != rePin && !helper.isRegistered -> {
-                    viewDataBinding.etRepin.requestFocus()
-                    showErrorToast(requireContext(), "Both pin number does not match")
-                }
-                pin.isNotBlank() && rePin.isNotBlank() && pin == rePin && !helper.isRegistered -> {
-                    helper.pinNumber = pin
-                    val action =
-                        PinNumberFragmentDirections.actionPinNumberFragmentToPermissionsFragment(
-                            helper
-                        )
-                    navController.navigate(action)
-                }
-            }
+            navigateTo(PinNumberFragmentDirections.actionPinNumberFragmentToPermissionsFragment(
+                helper
+            ))
+//            viewModel.pin.value?.let {
+//                pin = it
+//            }
+//
+//            viewModel.rePin.value?.let {
+//                rePin = it
+//            }
+//
+//            when {
+//                helper.isRegistered == true && pin.isNotBlank() && rePin.isBlank() -> {
+//                    viewModel.connectToken(
+//                        helper.mobile ?: "",
+//                        pin,
+//                        "password",
+//                        "offline_access",
+//                        Build.ID,
+//                        Build.MANUFACTURER,
+//                        Build.MODEL,
+//                        "qpayandroid",
+//                        "07A96yr@!1t8r",
+//                        helper.otp ?: ""
+//                    )
+//                }
+//                pin != rePin && !helper.isRegistered!! -> {
+//                    viewDataBinding.etRepin.requestFocus()
+//                    showErrorToast(requireContext(), "Both pin number does not match")
+//                }
+//                pin.isNotBlank() && rePin.isNotBlank() && pin == rePin && !helper.isRegistered!! -> {
+//                    helper.pin = pin
+//                    val action =
+//                        PinNumberFragmentDirections.actionPinNumberFragmentToPermissionsFragment(
+//                            helper
+//                        )
+//                    navController.navigate(action)
+//                }
+//            }
         }
     }
 }

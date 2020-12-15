@@ -14,6 +14,7 @@ import com.gun0912.tedpermission.TedPermission
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.OtpSignInBinding
+import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.models.registration.RegistrationHelperModel
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.AppConstants.START_TIME_IN_MILLI_SECONDS
@@ -30,7 +31,7 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>(), 
     override val viewModel: OtpSignInViewModel by viewModels { viewModelFactory }
 
     val args: OtpSignInFragmentArgs by navArgs()
-    lateinit var helper: RegistrationHelperModel
+    lateinit var helper: InquiryAccount
 
     private var countdownTimer: CountDownTimer? = null
     var repeater = 0
@@ -52,10 +53,7 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>(), 
     }
 
     override fun onPermissionGranted() {
-        helper.otp = viewDataBinding.etOtpCode.text.toString()
-
-        val action = OtpSignInFragmentDirections.actionOtpSignInFragmentToPinNumberFragment(helper)
-        navController.navigate(action)
+        navigateTo(OtpSignInFragmentDirections.actionOtpSignInFragmentToPinNumberFragment(helper))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,56 +64,57 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>(), 
         helper = args.registrationHelper
         startTimer()
 
-        viewDataBinding.etOtpCode.isEnabled = true
-
         viewDataBinding.btnSubmit.setOnClickListener {
-            TedPermission.with(requireContext())
-                .setPermissionListener(this)
-                .setDeniedMessage(getString(R.string.if_you_reject_these_permission_the_app_wont_work_perfectly))
-                .setPermissions(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_CONTACTS,
-                    Manifest.permission.READ_SMS,
-                    Manifest.permission.RECEIVE_SMS
-                ).check()
+            viewDataBinding.etOtpCode.isEnabled = false
+            viewDataBinding.btnSubmit.isEnabled = false
+            viewModel.verifyOTPCode(helper)
         }
+
+        viewModel.registeredOTP.observe(viewLifecycleOwner, Observer { inquiryResponse ->
+            inquiryResponse?.data?.Account?.let {
+                helper = it
+                viewDataBinding.tvOtpTextDescription.text = "An OTP Code has been sent to your mobile +88${helper.mobile}"
+                viewDataBinding.etOtpCode.isEnabled = true
+                viewDataBinding.btnSubmit.isEnabled = true
+            }
+        })
 
         viewDataBinding.btnResend.setOnClickListener {
             startTimer()
-            if (helper.isRegistered) {
-                viewModel.requestOTPForRegisteredUser(args.registrationHelper.mobile, Build.ID)
-            } else {
-                viewModel.requestOTP(args.registrationHelper.mobile, args.registrationHelper.isTermsAccepted.toString())
-            }
+            viewModel.requestOTPCode(helper)
             viewDataBinding.tvOtpTextDescription.text = otpWaitMessage
             viewDataBinding.etOtpCode.setText("")
             viewDataBinding.etOtpCode.isEnabled = false
             viewDataBinding.btnSubmit.isEnabled = false
+            //showWarningToast(mContext, "Please wait 5 minutes before you request a new OTP!")
         }
 
         viewModel.otp.observe(viewLifecycleOwner, Observer { otp ->
             otp?.let {
-                viewDataBinding.btnSubmit.isEnabled = it.length == 6
+                viewDataBinding.btnSubmit.isEnabled = it.length == 3
             }
         })
 
-        viewModel.defaultResponse.observe(viewLifecycleOwner, Observer { response ->
-            response?.let {
-                when {
-                    it.isSuccess == true -> {
-                        viewDataBinding.tvOtpTextDescription.text = "An OTP Code has been sent to your mobile +88${args.registrationHelper.mobile}"
-                        viewDataBinding.etOtpCode.isEnabled = true
-                    }
-                    it.isSuccess == false && it.errorMessage != null -> {
-                        viewDataBinding.tvOtpTextDescription.text = it.errorMessage
-                        showWarningToast(mContext, it.errorMessage)
-                        viewDataBinding.etOtpCode.isEnabled = false
-                    }
-                    else -> {
-                        showWarningToast(mContext, "Please wait 5 minutes before you request a new OTP!")
-                    }
+        viewModel.verifiedOTP.observe(viewLifecycleOwner, Observer { response ->
+            response?.data?.Account?.let {
+                if (!it.otp.isNullOrBlank() && it.otp == viewModel.otp.value) {
+                    helper = it
+                    TedPermission.with(requireContext())
+                        .setPermissionListener(this)
+                        .setDeniedMessage(getString(R.string.if_you_reject_these_permission_the_app_wont_work_perfectly))
+                        .setPermissions(
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_CONTACTS,
+                            Manifest.permission.READ_SMS,
+                            Manifest.permission.RECEIVE_SMS
+                        ).check()
+                } else {
+                    viewDataBinding.tvOtpTextDescription.text = "You entered an invalid OTP code! please request a new code"
+                    viewDataBinding.etOtpCode.setText("")
+                    viewDataBinding.etOtpCode.isEnabled = false
+                    viewDataBinding.btnSubmit.isEnabled = false
                 }
             }
         })

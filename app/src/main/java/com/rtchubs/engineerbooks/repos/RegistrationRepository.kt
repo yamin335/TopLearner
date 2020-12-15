@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
 import javax.inject.Inject
@@ -22,6 +23,39 @@ class RegistrationRepository @Inject constructor(private val apiService: ApiServ
             jsonObject.addProperty("mobile", mobileNumber)
             val body = jsonObject.toString()
             apiService.inquire(body)
+        }
+    }
+
+    suspend fun requestOTPCodeRepo(mobileNumber: String, isAcceptedTAndC: Boolean): Response<InquiryResponse> {
+        return withContext(Dispatchers.IO) {
+            val jsonObject = JsonObject()
+            jsonObject.addProperty("mobile", mobileNumber)
+            jsonObject.addProperty("IsAcceptedTandC", isAcceptedTAndC)
+            val body = jsonObject.toString()
+            apiService.requestOTPCode(body)
+        }
+    }
+
+    suspend fun verifyOTPCodeRepo(mobileNumber: String, isAcceptedTAndC: Boolean, otp: String): Response<InquiryResponse> {
+        return withContext(Dispatchers.IO) {
+            val jsonObject = JsonObject()
+            jsonObject.addProperty("mobile", mobileNumber)
+            jsonObject.addProperty("IsAcceptedTandC", isAcceptedTAndC)
+            jsonObject.addProperty("otp", otp)
+            val body = jsonObject.toString()
+            apiService.verifyOTPCode(body)
+        }
+    }
+
+    suspend fun uploadProfilePhotosRepo(requestBody: RequestBody): Response<String> {
+        return withContext(Dispatchers.IO) {
+            apiService.uploadProfilePhotos(requestBody)
+        }
+    }
+
+    suspend fun registerUserRepo(body: String): Response<String> {
+        return withContext(Dispatchers.IO) {
+            apiService.registerUser(body)
         }
     }
 
