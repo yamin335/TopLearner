@@ -2,6 +2,7 @@ package com.rtchubs.engineerbooks.prefs
 
 import com.rtchubs.engineerbooks.api.ProfileInfo
 import com.rtchubs.engineerbooks.api.TokenInformation
+import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 
 
 interface PreferencesHelper {
@@ -51,6 +52,10 @@ interface PreferencesHelper {
     fun saveUserProfile(profile: ProfileInfo)
 
     fun getToken(): TokenInformation
+
+    fun saveUser(user: InquiryAccount)
+
+    fun getUser(): InquiryAccount
 
     var validityLimiterMap: MutableMap<String, Long>?
 

@@ -1,9 +1,10 @@
 package com.rtchubs.engineerbooks.repos
 
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.ApiService
-import com.rtchubs.engineerbooks.models.registration.InquiryResponse
-import com.rtchubs.engineerbooks.models.registration.DefaultResponse
+import com.rtchubs.engineerbooks.models.registration.*
+import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -15,7 +16,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RegistrationRepository @Inject constructor(private val apiService: ApiService) {
+class RegistrationRepository @Inject constructor(private val apiService: ApiService, private val preferencesHelper: PreferencesHelper) {
 
     suspend fun inquireRepo(mobileNumber: String): Response<InquiryResponse> {
         return withContext(Dispatchers.IO) {
@@ -47,17 +48,90 @@ class RegistrationRepository @Inject constructor(private val apiService: ApiServ
         }
     }
 
-    suspend fun uploadProfilePhotosRepo(requestBody: RequestBody): Response<String> {
+    suspend fun uploadProfilePhotosRepo(requestBody: RequestBody): Response<ProfileImageUploadResponse> {
         return withContext(Dispatchers.IO) {
             apiService.uploadProfilePhotos(requestBody)
         }
     }
 
-    suspend fun registerUserRepo(body: String): Response<String> {
+    suspend fun registerUserRepo(inquiryAccount: InquiryAccount): Response<UserRegistrationResponse> {
+        //val jsonObject = Gson().toJson(inquiryAccount) ?: ""
+        val jsonObject = JsonObject().apply {
+            addProperty("mobile", inquiryAccount.mobile)
+            addProperty("mobileOperator", preferencesHelper.operator)
+            addProperty("IsAcceptedTandC", inquiryAccount.isAcceptedTandC)
+            addProperty("OTP", inquiryAccount.otp)
+            //addProperty("OTP", "123")
+            addProperty("FirstName", inquiryAccount.firstName)
+            addProperty("LastName", inquiryAccount.lastName)
+//            addProperty("Pin", "123456")
+//            addProperty("RetypePin", "123456")
+            addProperty("Pin", inquiryAccount.pin)
+            addProperty("RetypePin", inquiryAccount.retypePin)
+            addProperty("Gender", inquiryAccount.gender)
+            //addProperty("Customer_type_id", inquiryAccount.customer_type_id)
+            addProperty("Customer_type_id", 1)
+            addProperty("address1", inquiryAccount.address)
+            addProperty("profilepic", inquiryAccount.profilePic)
+            addProperty("nidfront", inquiryAccount.nidFrontPic)
+            addProperty("nidback", inquiryAccount.nidBackPic)
+        }
         return withContext(Dispatchers.IO) {
-            apiService.registerUser(body)
+            apiService.registerUser(jsonObject.toString())
         }
     }
+
+    suspend fun updateUserProfileRepo(inquiryAccount: InquiryAccount, token: String): Response<UserRegistrationResponse> {
+        //val jsonObject = Gson().toJson(inquiryAccount) ?: ""
+        val jsonObject = JsonObject().apply {
+            addProperty("mobile", inquiryAccount.mobile)
+            addProperty("mobileOperator", preferencesHelper.operator)
+            addProperty("IsAcceptedTandC", inquiryAccount.isAcceptedTandC)
+            addProperty("OTP", inquiryAccount.otp)
+            //addProperty("OTP", "123")
+            addProperty("FirstName", inquiryAccount.firstName)
+            addProperty("LastName", inquiryAccount.lastName)
+//            addProperty("Pin", "123456")
+//            addProperty("RetypePin", "123456")
+            addProperty("Pin", inquiryAccount.pin)
+            addProperty("RetypePin", inquiryAccount.retypePin)
+            addProperty("Gender", inquiryAccount.gender)
+            //addProperty("Customer_type_id", inquiryAccount.customer_type_id)
+            addProperty("Customer_type_id", 1)
+            addProperty("address1", inquiryAccount.address)
+            addProperty("profilepic", inquiryAccount.profilePic)
+            addProperty("nidfront", inquiryAccount.nidFrontPic)
+            addProperty("nidback", inquiryAccount.nidBackPic)
+            addProperty("token", token)
+        }
+        return withContext(Dispatchers.IO) {
+            apiService.updateUserProfile(jsonObject.toString())
+        }
+    }
+
+    suspend fun getDistrictRepo(): Response<DistrictResponse> {
+        return withContext(Dispatchers.IO) {
+            apiService.getDistrict()
+        }
+    }
+
+    suspend fun getUpazillaRepo(districtID: String): Response<UpazillaResponse> {
+        return withContext(Dispatchers.IO) {
+            apiService.getUpazilla(districtID)
+        }
+    }
+
+    suspend fun getAcademicClassRepo(): Response<AcademicClassResponse> {
+        return withContext(Dispatchers.IO) {
+            apiService.getAcademicClasses()
+        }
+    }
+
+
+
+
+
+
 
     suspend fun requestOTPRepo(mobileNumber: String, hasGivenConsent: String): Response<DefaultResponse> {
         return withContext(Dispatchers.IO) {

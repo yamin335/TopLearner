@@ -12,7 +12,6 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.databinding.LayoutOperatorSelectionBinding
 import com.rtchubs.engineerbooks.databinding.SignInBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
-import com.rtchubs.engineerbooks.models.registration.RegistrationHelperModel
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.AppConstants.commonErrorMessage
 import com.rtchubs.engineerbooks.util.hideKeyboard
@@ -121,6 +120,7 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
     private fun goForRegistration(dialog: BottomSheetDialog, operator: String) {
         dialog.dismiss()
         inquireAccount()
+        preferencesHelper.operator = operator
     }
 
     private fun inquireAccount() {

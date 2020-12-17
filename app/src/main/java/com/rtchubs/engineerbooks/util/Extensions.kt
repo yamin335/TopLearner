@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -31,7 +32,10 @@ import com.rtchubs.engineerbooks.R
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
+import java.util.*
 
 val String.colorValue
     get() = Color.parseColor(this)
@@ -67,6 +71,25 @@ fun String?.userNameError() =
         this.length < 11 -> R.string.error_invalid_mobile_member
         else -> null
     }
+
+fun Bitmap.toFile(context: Context): File {
+    //create a file to write bitmap customerMenu
+    val f = File(context.cacheDir, "${UUID.randomUUID()}.jpg")
+    f.createNewFile()
+
+    //Convert bitmap to byte array
+    val os = ByteArrayOutputStream()
+    this.compress(Bitmap.CompressFormat.JPEG, 100, os)
+    val bitmapdata = os.toByteArray()
+
+    //write the bytes in file
+    val fos = FileOutputStream(f)
+    fos.write(bitmapdata)
+    fos.flush()
+    fos.close()
+
+    return f
+}
 
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {

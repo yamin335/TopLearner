@@ -5,8 +5,7 @@ import com.rtchubs.engineerbooks.api.Api.ContentType
 import com.rtchubs.engineerbooks.models.common.MyAccountListResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.AddCardOrBankResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.BankOrCardListResponse
-import com.rtchubs.engineerbooks.models.registration.InquiryResponse
-import com.rtchubs.engineerbooks.models.registration.DefaultResponse
+import com.rtchubs.engineerbooks.models.registration.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -26,11 +25,23 @@ interface ApiService {
     @POST(ApiEndPoint.VERIFY_OTP)
     suspend fun verifyOTPCode(@Body jsonString: String): Response<InquiryResponse>
 
-    @POST(ApiEndPoint.REQUEST_OTP)
-    suspend fun uploadProfilePhotos(@Body partFormData: RequestBody): Response<String>
+    @POST(ApiEndPoint.PROFILE_PHOTOS)
+    suspend fun uploadProfilePhotos(@Body partFormData: RequestBody): Response<ProfileImageUploadResponse>
 
     @POST(ApiEndPoint.REGISTER)
-    suspend fun registerUser(@Body jsonString: String): Response<String>
+    suspend fun registerUser(@Body jsonString: String): Response<UserRegistrationResponse>
+
+    @POST(ApiEndPoint.PROFILE_UPDATE)
+    suspend fun updateUserProfile(@Body jsonString: String): Response<UserRegistrationResponse>
+
+    @GET(ApiEndPoint.DISTRICT)
+    suspend fun getDistrict(): Response<DistrictResponse>
+
+    @GET(ApiEndPoint.UPAZILLA)
+    suspend fun getUpazilla(@Path("districtID") districtID: String): Response<UpazillaResponse>
+
+    @GET(ApiEndPoint.ACADEMIC_CLASS)
+    suspend fun getAcademicClasses(): Response<AcademicClassResponse>
 
     @Multipart
     @POST(ApiEndPoint.REQUESTOTP)

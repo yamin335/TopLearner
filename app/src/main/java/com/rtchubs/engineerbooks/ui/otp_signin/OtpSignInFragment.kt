@@ -1,7 +1,6 @@
 package com.rtchubs.engineerbooks.ui.otp_signin
 
 import android.Manifest
-import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -15,11 +14,9 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.OtpSignInBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
-import com.rtchubs.engineerbooks.models.registration.RegistrationHelperModel
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.AppConstants.START_TIME_IN_MILLI_SECONDS
 import com.rtchubs.engineerbooks.util.AppConstants.otpWaitMessage
-import com.rtchubs.engineerbooks.util.showWarningToast
 
 class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>(), PermissionListener {
 

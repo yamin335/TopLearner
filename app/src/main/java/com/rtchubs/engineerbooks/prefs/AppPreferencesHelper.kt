@@ -11,7 +11,9 @@ import com.google.gson.reflect.TypeToken
 import com.rtchubs.engineerbooks.api.ProfileInfo
 import com.rtchubs.engineerbooks.api.TokenInformation
 import com.rtchubs.engineerbooks.di.PreferenceInfo
+import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.worker.TokenRefreshWorker
+import java.lang.Exception
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.properties.ReadWriteProperty
@@ -50,6 +52,19 @@ class AppPreferencesHelper @Inject constructor(
     override var phoneNumber by StringPreference(prefs, KEY_PHONE_NUMBER, null, true)
 
     override var accessTokenExpiresIn by LongPreference(prefs, PREF_KEY_ACCESS_TOKEN_EXPIRES_IN, 0)
+
+    override fun saveUser(user: InquiryAccount) {
+        val userString = Gson().toJson(user)
+        prefs.value.edit(true) {
+            putString(userString, KEY_USER)
+        }
+    }
+
+    override fun getUser(): InquiryAccount {
+        val userString = prefs.value.getString(KEY_USER, "{}")
+        //val user = JsonParser().parse(userString).asJsonObject
+        return Gson().fromJson(userString, InquiryAccount::class.java)
+    }
 
     override fun logoutUser() {
         prefs.value.edit {
@@ -146,6 +161,7 @@ class AppPreferencesHelper @Inject constructor(
 
     companion object {
         // QPay
+        private const val KEY_USER = "UserData"
         private const val KEY_REG = "RegistrationStatus"
         private const val KEY_TERMS = "TermsAndConditionStatus"
         private const val KEY_PIN = "PinNumber"
