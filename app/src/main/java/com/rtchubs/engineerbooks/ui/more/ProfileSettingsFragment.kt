@@ -74,6 +74,8 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 
         userData = preferencesHelper.getUser()
 
+        prepareUserData(userData)
+
         Glide.with(requireContext()).load(R.drawable.doctor_1).circleCrop().into(viewDataBinding.rivProfileImage)
 
         imageCropperListener = object : FaceDetectionListener {
@@ -469,6 +471,15 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 
         viewModel.getDistricts()
         viewModel.getAcademicClass()
+    }
+
+    fun prepareUserData(user: InquiryAccount) {
+        viewDataBinding.firstName.setText(user.firstName)
+        viewDataBinding.lastName.setText(user.lastName)
+        viewDataBinding.fatherName.setText(user.altContactPerson)
+        viewDataBinding.emailField.setText(user.email)
+        viewDataBinding.nidField.setText(user.nidnumber)
+        viewDataBinding.addressField.setText(user.address1)
     }
 
 //    private fun takeProfileImageFromCamera() {

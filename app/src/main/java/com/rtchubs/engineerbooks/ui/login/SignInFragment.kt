@@ -41,7 +41,7 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
 
         viewModel.mobileNo.observe(viewLifecycleOwner, Observer {  mobileNo ->
             mobileNo?.let {
-                viewDataBinding.btnProceed.isEnabled = (it.length == 11) && (it[0] == '0')
+                viewDataBinding.btnProceed.isEnabled = (it.length == 11) && (it[0] == '0') && (it[1] == '1')
             }
         })
 
@@ -119,22 +119,22 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
 
     private fun goForRegistration(dialog: BottomSheetDialog, operator: String) {
         dialog.dismiss()
-        inquireAccount()
-        preferencesHelper.operator = operator
+        inquireAccount(operator)
     }
 
-    private fun inquireAccount() {
+    private fun inquireAccount(operator: String) {
         viewModel.inquireAccount().observe(viewLifecycleOwner, Observer { response ->
             response?.data?.Account?.let {
+                it.mobileOperator = operator
                 if (it.isRegistered == false) {
                     if (it.isAcceptedTandC == true) {
-                        requestOTPCode(it)
+                        requestOTPCode(it, operator)
                     } else {
                         navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
                     }
                 } else if (it.isRegistered == true && it.isMobileVerified == true) {
                     if (it.isAcceptedTandC == true) {
-                        requestOTPCode(it)
+                        requestOTPCode(it, operator)
                     } else {
                         navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
                     }
@@ -145,9 +145,10 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
         })
     }
 
-    private fun requestOTPCode(registrationHelper: InquiryAccount) {
+    private fun requestOTPCode(registrationHelper: InquiryAccount, operator: String) {
         viewModel.requestOTPCode(registrationHelper).observe(viewLifecycleOwner, Observer { response ->
             response?.data?.Account?.let {
+                it.mobileOperator = operator
                 if (it.isRegistered == false) {
                     if (it.isAcceptedTandC == true) {
                         navigateTo(SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(it))

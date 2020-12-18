@@ -55,8 +55,8 @@ class AppPreferencesHelper @Inject constructor(
 
     override fun saveUser(user: InquiryAccount) {
         val userString = Gson().toJson(user)
-        prefs.value.edit(true) {
-            putString(userString, KEY_USER)
+        prefs.value.edit {
+            putString(KEY_USER, userString)
         }
     }
 

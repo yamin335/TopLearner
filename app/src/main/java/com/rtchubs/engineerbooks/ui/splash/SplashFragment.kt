@@ -76,7 +76,7 @@ class SplashFragment : BaseFragment<SplashBinding, SplashViewModel>() {
                     if (preferencesHelper.isLoggedIn) {
                         listener?.onLoggedIn()
                     } else {
-                        findNavController().navigate(SplashFragmentDirections.actionSplashToLogin())
+                        navigateTo(SplashFragmentDirections.actionSplashToLogin())
                     }
                 }
             }

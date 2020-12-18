@@ -55,29 +55,29 @@ class RegistrationRepository @Inject constructor(private val apiService: ApiServ
     }
 
     suspend fun registerUserRepo(inquiryAccount: InquiryAccount): Response<UserRegistrationResponse> {
-        //val jsonObject = Gson().toJson(inquiryAccount) ?: ""
-        val jsonObject = JsonObject().apply {
-            addProperty("mobile", inquiryAccount.mobile)
-            addProperty("mobileOperator", preferencesHelper.operator)
-            addProperty("IsAcceptedTandC", inquiryAccount.isAcceptedTandC)
-            addProperty("OTP", inquiryAccount.otp)
-            //addProperty("OTP", "123")
-            addProperty("FirstName", inquiryAccount.firstName)
-            addProperty("LastName", inquiryAccount.lastName)
-//            addProperty("Pin", "123456")
-//            addProperty("RetypePin", "123456")
-            addProperty("Pin", inquiryAccount.pin)
-            addProperty("RetypePin", inquiryAccount.retypePin)
-            addProperty("Gender", inquiryAccount.gender)
-            //addProperty("Customer_type_id", inquiryAccount.customer_type_id)
-            addProperty("Customer_type_id", 1)
-            addProperty("address1", inquiryAccount.address)
-            addProperty("profilepic", inquiryAccount.profilePic)
-            addProperty("nidfront", inquiryAccount.nidFrontPic)
-            addProperty("nidback", inquiryAccount.nidBackPic)
-        }
+        val jsonObject = Gson().toJson(inquiryAccount) ?: ""
+//        val jsonObject = JsonObject().apply {
+//            addProperty("mobile", inquiryAccount.mobile)
+//            addProperty("mobileOperator", preferencesHelper.operator)
+//            addProperty("IsAcceptedTandC", inquiryAccount.isAcceptedTandC)
+//            addProperty("OTP", inquiryAccount.otp)
+//            //addProperty("OTP", "123")
+//            addProperty("FirstName", inquiryAccount.firstName)
+//            addProperty("LastName", inquiryAccount.lastName)
+////            addProperty("Pin", "123456")
+////            addProperty("RetypePin", "123456")
+//            addProperty("Pin", inquiryAccount.pin)
+//            addProperty("RetypePin", inquiryAccount.retypePin)
+//            addProperty("Gender", inquiryAccount.gender)
+//            //addProperty("Customer_type_id", inquiryAccount.customer_type_id)
+//            addProperty("Customer_type_id", 1)
+//            addProperty("address1", inquiryAccount.address1)
+//            addProperty("profilepic", inquiryAccount.profilePic)
+//            addProperty("nidfront", inquiryAccount.nidFrontPic)
+//            addProperty("nidback", inquiryAccount.nidBackPic)
+//        }
         return withContext(Dispatchers.IO) {
-            apiService.registerUser(jsonObject.toString())
+            apiService.registerUser(jsonObject)
         }
     }
 
@@ -98,12 +98,14 @@ class RegistrationRepository @Inject constructor(private val apiService: ApiServ
             addProperty("Gender", inquiryAccount.gender)
             //addProperty("Customer_type_id", inquiryAccount.customer_type_id)
             addProperty("Customer_type_id", 1)
-            addProperty("address1", inquiryAccount.address)
+            addProperty("address1", inquiryAccount.address1)
             addProperty("profilepic", inquiryAccount.profilePic)
             addProperty("nidfront", inquiryAccount.nidFrontPic)
             addProperty("nidback", inquiryAccount.nidBackPic)
             addProperty("token", token)
         }
+//        val tt = jsonObject
+//        val jj = tt
         return withContext(Dispatchers.IO) {
             apiService.updateUserProfile(jsonObject.toString())
         }

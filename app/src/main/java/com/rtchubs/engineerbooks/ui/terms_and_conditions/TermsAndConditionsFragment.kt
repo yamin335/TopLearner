@@ -29,6 +29,9 @@ class TermsAndConditionsFragment : BaseFragment<TermsBinding, TermsViewModel>() 
         viewModelFactory
     }
 
+    lateinit var registrationLocalHelper: InquiryAccount
+    lateinit var registrationRemoteHelper: InquiryAccount
+
     val args: TermsAndConditionsFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,10 +46,13 @@ class TermsAndConditionsFragment : BaseFragment<TermsBinding, TermsViewModel>() 
         updateStatusBarBackgroundColor("#1E4356")
         registerToolbar(viewDataBinding.toolbar)
 
+        registrationLocalHelper = args.registrationHelper
+        registrationRemoteHelper = args.registrationHelper
+
         viewDataBinding.btnAccept.setOnClickListener {
-            val helper = args.registrationHelper
-            helper.isAcceptedTandC = true
-            requestOTPCode(helper)
+            registrationLocalHelper.isAcceptedTandC = true
+            registrationRemoteHelper.isAcceptedTandC = true
+            requestOTPCode(registrationRemoteHelper)
         }
 
         viewDataBinding.webView.settings.javaScriptEnabled = true
@@ -64,7 +70,9 @@ class TermsAndConditionsFragment : BaseFragment<TermsBinding, TermsViewModel>() 
         viewModel.requestOTPCode(registrationHelper).observe(viewLifecycleOwner, Observer { response ->
             response?.data?.Account?.let {
                 if (it.isAcceptedTandC == true) {
-                    navController.navigate(TermsAndConditionsFragmentDirections.actionTermsAndConditionsToOtpSignInFragment3(it))
+                    registrationRemoteHelper = it
+                    registrationRemoteHelper.mobileOperator =registrationLocalHelper.mobileOperator
+                    navController.navigate(TermsAndConditionsFragmentDirections.actionTermsAndConditionsToOtpSignInFragment3(registrationRemoteHelper))
                 } else {
                     showErrorToast(mContext, response.msg ?: AppConstants.commonErrorMessage)
                 }

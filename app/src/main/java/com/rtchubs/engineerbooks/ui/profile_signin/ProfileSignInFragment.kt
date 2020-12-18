@@ -416,11 +416,14 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
                 showErrorToast(requireContext(), "Please enter father's name!")
                 return@setOnClickListener
             }
+            registrationHelper.altContactPerson = viewDataBinding.fatherName.text.toString()
+
             if (viewDataBinding.birthDayField.text.toString().isEmpty()) {
                 viewDataBinding.birthDayField.requestFocus()
                 showErrorToast(requireContext(), "Please enter birth date!")
                 return@setOnClickListener
             }
+
             if (viewDataBinding.nidField.text.toString().isEmpty()) {
                 viewDataBinding.nidField.requestFocus()
                 showErrorToast(requireContext(), "Please enter NID number!")
@@ -432,40 +435,49 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
                 return@setOnClickListener
             }
             registrationHelper.nidnumber = viewDataBinding.nidField.text.toString()
+
             if (viewDataBinding.emailField.text.toString().isEmpty()) {
                 viewDataBinding.emailField.requestFocus()
                 showErrorToast(requireContext(), "Please enter email address!")
                 return@setOnClickListener
             }
             registrationHelper.email = viewDataBinding.emailField.text.toString()
+
             if (viewDataBinding.addressField.text.toString().isEmpty()) {
                 viewDataBinding.addressField.requestFocus()
                 showErrorToast(requireContext(), "Please enter your address!")
                 return@setOnClickListener
             }
+            registrationHelper.address1 = viewDataBinding.addressField.text.toString()
+
             if (viewModel.selectedGender == null) {
                 viewDataBinding.spGender.requestFocus()
                 showErrorToast(requireContext(), "Please select your gender!")
                 return@setOnClickListener
             }
             registrationHelper.gender = viewModel.selectedGender?.name
+
             if (viewModel.selectedCity == null) {
                 viewDataBinding.spCity.requestFocus()
                 showErrorToast(requireContext(), "Please select your city!")
                 return@setOnClickListener
             }
             registrationHelper.city = viewModel.selectedCity?.name
+
             if (viewModel.selectedUpazilla == null) {
                 viewDataBinding.spUpazilla.requestFocus()
                 showErrorToast(requireContext(), "Please select your upazilla!")
                 return@setOnClickListener
             }
             registrationHelper.upazila = viewModel.selectedUpazilla?.name
+
             if (viewModel.selectedClass == null) {
                 viewDataBinding.spClass.requestFocus()
                 showErrorToast(requireContext(), "Please select your class!")
                 return@setOnClickListener
             }
+
+            registrationHelper.customer_type_id = 1
 
             if (viewModel.profileBitmap != null || viewModel.nidFrontBitmap != null || viewModel.nidBackBitmap != null) {
                 viewModel.uploadProfileImagesToServer()

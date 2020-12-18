@@ -28,7 +28,8 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>(), 
     override val viewModel: OtpSignInViewModel by viewModels { viewModelFactory }
 
     val args: OtpSignInFragmentArgs by navArgs()
-    lateinit var helper: InquiryAccount
+    lateinit var registrationLocalHelper: InquiryAccount
+    lateinit var registrationRemoteHelper: InquiryAccount
 
     private var countdownTimer: CountDownTimer? = null
     var repeater = 0
@@ -50,7 +51,7 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>(), 
     }
 
     override fun onPermissionGranted() {
-        navigateTo(OtpSignInFragmentDirections.actionOtpSignInFragmentToPinNumberFragment(helper))
+        navigateTo(OtpSignInFragmentDirections.actionOtpSignInFragmentToPinNumberFragment(registrationRemoteHelper))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,19 +59,20 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>(), 
         updateStatusBarBackgroundColor("#1E4356")
         registerToolbar(viewDataBinding.toolbar)
 
-        helper = args.registrationHelper
+        registrationLocalHelper = args.registrationHelper
+        registrationRemoteHelper = args.registrationHelper
         startTimer()
 
         viewDataBinding.btnSubmit.setOnClickListener {
             viewDataBinding.etOtpCode.isEnabled = false
             viewDataBinding.btnSubmit.isEnabled = false
-            viewModel.verifyOTPCode(helper)
+            viewModel.verifyOTPCode(registrationRemoteHelper)
         }
 
         viewModel.registeredOTP.observe(viewLifecycleOwner, Observer { inquiryResponse ->
             inquiryResponse?.data?.Account?.let {
-                helper = it
-                viewDataBinding.tvOtpTextDescription.text = "An OTP Code has been sent to your mobile +88${helper.mobile}"
+                registrationRemoteHelper = it
+                viewDataBinding.tvOtpTextDescription.text = "An OTP Code has been sent to your mobile +88${registrationRemoteHelper.mobile}"
                 viewDataBinding.etOtpCode.isEnabled = true
                 viewDataBinding.btnSubmit.isEnabled = true
             }
@@ -78,7 +80,7 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>(), 
 
         viewDataBinding.btnResend.setOnClickListener {
             startTimer()
-            viewModel.requestOTPCode(helper)
+            viewModel.requestOTPCode(registrationRemoteHelper)
             viewDataBinding.tvOtpTextDescription.text = otpWaitMessage
             viewDataBinding.etOtpCode.setText("")
             viewDataBinding.etOtpCode.isEnabled = false
@@ -95,7 +97,8 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>(), 
         viewModel.verifiedOTP.observe(viewLifecycleOwner, Observer { response ->
             response?.data?.Account?.let {
                 if (!it.otp.isNullOrBlank() && it.otp == viewModel.otp.value) {
-                    helper = it
+                    registrationRemoteHelper = it
+                    registrationRemoteHelper.mobileOperator = registrationLocalHelper.mobileOperator
                     TedPermission.with(requireContext())
                         .setPermissionListener(this)
                         .setDeniedMessage(getString(R.string.if_you_reject_these_permission_the_app_wont_work_perfectly))

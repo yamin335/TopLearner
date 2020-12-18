@@ -11,6 +11,7 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.TokenInformation
 import com.rtchubs.engineerbooks.databinding.PinNumberBinding
+import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.hideKeyboard
 import com.rtchubs.engineerbooks.util.showErrorToast
@@ -26,6 +27,9 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>() {
 
     override val viewModel: PinNumberViewModel by viewModels { viewModelFactory }
 
+    lateinit var registrationLocalHelper: InquiryAccount
+    lateinit var registrationRemoteHelper: InquiryAccount
+
     val args: PinNumberFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,11 +44,16 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>() {
         updateStatusBarBackgroundColor("#1E4356")
         registerToolbar(viewDataBinding.toolbar)
 
-        val helper = args.registrationHelper
-        helper.pin = "123456"
-        helper.retypePin = "123456"
+        registrationLocalHelper = args.registrationHelper
+        registrationRemoteHelper = args.registrationHelper
 
-        if (helper.isRegistered == true) {
+        registrationLocalHelper.pin = "123456"
+        registrationLocalHelper.retypePin = "123456"
+
+        registrationRemoteHelper.pin = "123456"
+        registrationRemoteHelper.retypePin = "123456"
+
+        if (registrationRemoteHelper.isRegistered == true) {
             viewDataBinding.linearReTypePin.visibility = View.GONE
         }
 
@@ -73,26 +82,24 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>() {
 
         viewModel.pin.observe(viewLifecycleOwner, Observer { pin ->
             pin?.let {
-                if (helper.isRegistered == true) {
+                if (registrationRemoteHelper.isRegistered == true) {
                     viewDataBinding.btnSubmit.isEnabled = pin.length == 6
                 } else {
-                    viewDataBinding.btnSubmit.isEnabled = pin.length == 6 && viewModel.rePin.value?.length == 6
+                    viewDataBinding.btnSubmit.isEnabled = pin.length == 6 && viewModel.rePin.value?.length == 6 && viewModel.rePin.value == pin
                 }
             }
         })
 
         viewModel.rePin.observe(viewLifecycleOwner, Observer { rePin ->
             rePin?.let {
-                viewDataBinding.btnSubmit.isEnabled = viewModel.pin.value?.length == 6 && rePin.length == 6
+                viewDataBinding.btnSubmit.isEnabled = viewModel.pin.value?.length == 6 && rePin.length == 6 && viewModel.pin.value == rePin
             }
         })
 
         viewDataBinding.btnSubmit.setOnClickListener {
             hideKeyboard()
-            var pin = ""
-            var rePin = ""
             navigateTo(PinNumberFragmentDirections.actionPinNumberFragmentToPermissionsFragment(
-                helper
+                registrationRemoteHelper
             ))
 //            viewModel.pin.value?.let {
 //                pin = it
