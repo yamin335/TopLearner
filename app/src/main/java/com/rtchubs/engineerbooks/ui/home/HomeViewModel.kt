@@ -10,6 +10,8 @@ import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.models.Book
 import com.rtchubs.engineerbooks.models.PaymentMethod
 import com.rtchubs.engineerbooks.models.SubBook
+import com.rtchubs.engineerbooks.models.home.ClassWiseBook
+import com.rtchubs.engineerbooks.models.registration.AcademicClass
 import com.rtchubs.engineerbooks.models.registration.DefaultResponse
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.repos.HomeRepository
@@ -25,90 +27,36 @@ class HomeViewModel @Inject constructor(
     private val repository: HomeRepository
 ) : BaseViewModel(application) {
     val defaultResponse: MutableLiveData<DefaultResponse> = MutableLiveData()
-//    val doctorList: List<Book>
-//        get() = listOf(
-//            Book(
-//                "0",
-//                "Top Rated",
-//                listOf(
-//                    SubBook(
-//                        "1",
-//                        "Angelica Hale",
-//                        "Dhaka",
-//                        "",
-//                        R.drawable.book_1
-//                    ),
-//                    SubBook(
-//                        "1",
-//                        "Angelica Hale",
-//                        "Dhaka",
-//                        "",
-//                        R.drawable.book_2
-//                    ),
-//                    SubBook(
-//                        "1",
-//                        "Angelica Hale",
-//                        "Dhaka",
-//                        "",
-//                        R.drawable.book_3
-//                    )
-//                )
-//            ),
-//            Book(
-//                "1",
-//                "Favourites",
-//                listOf(
-//                    SubBook(
-//                        "1",
-//                        "Angelica Hale",
-//                        "Dhaka",
-//                        "",
-//                        R.drawable.book_4
-//                    ),
-//                    SubBook(
-//                        "1",
-//                        "Angelica Hale",
-//                        "Dhaka",
-//                        "",
-//                        R.drawable.book_13
-//                    ),
-//                    SubBook(
-//                        "1",
-//                        "Angelica Hale",
-//                        "Dhaka",
-//                        "",
-//                        R.drawable.book_6
-//                    )
-//                )
-//            ),
-//            Book(
-//                "2",
-//                "Top Rated",
-//                listOf(
-//                    SubBook(
-//                        "1",
-//                        "Angelica Hale",
-//                        "Dhaka",
-//                        "",
-//                        R.drawable.book_7
-//                    ),
-//                    SubBook(
-//                        "1",
-//                        "Angelica Hale",
-//                        "Dhaka",
-//                        "",
-//                        R.drawable.book_8
-//                    ),
-//                    SubBook(
-//                        "1",
-//                        "Angelica Hale",
-//                        "Dhaka",
-//                        "",
-//                        R.drawable.book_9
-//                    )
-//                )
-//            )
-//        )
+
+    val allBooks: MutableLiveData<List<ClassWiseBook>> by lazy {
+        MutableLiveData<List<ClassWiseBook>>()
+    }
+
+    fun getAcademicBooks(mobile: String, class_id: Int) {
+        if (checkNetworkStatus()) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(repository.allBookRepo(mobile, class_id))) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        allBooks.postValue(apiResponse.body.data?.books)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                    }
+                    is ApiErrorResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                    }
+                }
+            }
+        }
+    }
 
 
     val paymentMethodList: List<PaymentMethod>
@@ -129,7 +77,7 @@ class HomeViewModel @Inject constructor(
         )
 
 
-    val slideDataList = listOf<SlideData>(
+    val slideDataList = listOf(
         SlideData(R.drawable.slider_image_1, "Ads1", "Easy, Fast and Secure Way"),
         SlideData(R.drawable.slider_image_1, "Ads2", "Easy, Fast and Secure Way"),
         SlideData(R.drawable.slider_image_1, "Ads3", "Easy, Fast and Secure Way"),

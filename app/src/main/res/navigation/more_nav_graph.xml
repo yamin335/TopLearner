@@ -17,12 +17,65 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_moreFragment_to_paymentFragment2"
+            app:destination="@id/paymentFragment2"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
         android:id="@+id/profileSettingsFragment"
         android:name="com.rtchubs.engineerbooks.ui.more.ProfileSettingsFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile_sign_in" />
+        tools:layout="@layout/fragment_profile_settings" >
+        <action
+            android:id="@+id/action_profileSettingsFragment_to_districtEditFragment"
+            app:destination="@id/districtEditFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_profileSettingsFragment_to_upazillaEditFragment"
+            app:destination="@id/upazillaEditFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_profileSettingsFragment_to_classEditFragment"
+            app:destination="@id/classEditFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
     <include app:graph="@navigation/drawer_nav_graph" />
+    <fragment
+        android:id="@+id/districtEditFragment"
+        android:name="com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment"
+        android:label="DistrictEditFragment"
+        tools:layout="@layout/fragment_district_edit"/>
+    <fragment
+        android:id="@+id/upazillaEditFragment"
+        android:name="com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment"
+        android:label="UpazillaEditFragment"
+        tools:layout="@layout/fragment_upazilla_edit">
+        <argument
+            android:name="cityId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/classEditFragment"
+        android:name="com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment"
+        android:label="ClassEditFragment"
+        tools:layout="@layout/fragment_class_edit"/>
+    <fragment
+        android:id="@+id/paymentFragment2"
+        android:name="com.rtchubs.engineerbooks.ui.payment.PaymentFragment"
+        android:label="PaymentFragment"
+        tools:layout="@layout/fragment_payment"/>
 </navigation>

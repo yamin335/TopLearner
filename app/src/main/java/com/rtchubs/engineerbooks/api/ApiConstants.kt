@@ -1,15 +1,18 @@
 package com.rtchubs.engineerbooks.api
 
+import com.rtchubs.engineerbooks.api.Api.ACCOUNT_REPO
 import com.rtchubs.engineerbooks.api.Api.API_VERSION
 import com.rtchubs.engineerbooks.api.Api.AUTH_REPO
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_BANK
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_BANK_INFO
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_BOOKS
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CARD
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CLASS
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CONNECT
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_DISTRICT
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_INQUIRE
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE_INFO
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE_PHOTOS
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_REGISTER
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_REQUEST_OTP
@@ -24,6 +27,7 @@ object Api {
     const val API_ROOT_URL = "$PROTOCOL://$API_ROOT/"
     const val AUTH_REPO = "auth"
     const val PUBLIC_REPO = "public"
+    const val ACCOUNT_REPO = "account"
     const val API_VERSION = "v1"
     const val DIRECTORY_INQUIRE = "checkuser"
     const val DIRECTORY_REQUEST_OTP = "sendotp"
@@ -34,6 +38,8 @@ object Api {
     const val DIRECTORY_UPAZILLA = "getUpazilasby"
     const val DIRECTORY_CLASS = "getClasses"
     const val DIRECTORY_UPDATE_PROFILE = "updateprofile"
+    const val DIRECTORY_PROFILE_INFO = "info"
+    const val DIRECTORY_BOOKS = "books"
 
     const val DIRECTORY_CONNECT = "connect"
     const val DIRECTORY_BANK_INFO = "bankinformation"
@@ -53,7 +59,9 @@ object ApiEndPoint {
     const val DISTRICT = "$API_VERSION/$PUBLIC_REPO/${DIRECTORY_DISTRICT}"
     const val UPAZILLA = "$API_VERSION/$PUBLIC_REPO/${DIRECTORY_UPAZILLA}/{districtID}"
     const val ACADEMIC_CLASS = "$API_VERSION/$PUBLIC_REPO/${DIRECTORY_CLASS}"
-    const val PROFILE_UPDATE = "$API_VERSION/$AUTH_REPO/${DIRECTORY_UPDATE_PROFILE}"
+    const val PROFILE_UPDATE = "$API_VERSION/$ACCOUNT_REPO/${DIRECTORY_UPDATE_PROFILE}"
+    const val PROFILE_INFO = "$API_VERSION/$ACCOUNT_REPO/${DIRECTORY_PROFILE_INFO}"
+    const val BOOKS = "$API_VERSION/$ACCOUNT_REPO/${DIRECTORY_BOOKS}"
 
     const val REQUESTOTP = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}/request-otp"
     const val REGISTRATION = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}"

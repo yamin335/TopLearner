@@ -27,8 +27,12 @@ import com.rtchubs.engineerbooks.ui.login.ViewPagerFragment
 import com.rtchubs.engineerbooks.ui.more.MoreFragment
 import com.rtchubs.engineerbooks.ui.more.ProfileSettingsFragment
 import com.rtchubs.engineerbooks.ui.otp_signin.OtpSignInFragment
+import com.rtchubs.engineerbooks.ui.payment.PaymentFragment
 import com.rtchubs.engineerbooks.ui.pin_number.PinNumberFragment
+import com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment
+import com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.ProfileSignInFragment
+import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment
 import com.rtchubs.engineerbooks.ui.topup.TopUpAmountFragment
 import com.rtchubs.engineerbooks.ui.topup.TopUpBankCardFragment
 import com.rtchubs.engineerbooks.ui.topup.TopUpMobileFragment
@@ -154,4 +158,16 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeProfileSettingsFragment(): ProfileSettingsFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeClassEditFragment(): ClassEditFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeDistrictEditFragment(): DistrictEditFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeUpazillaEditFragment(): UpazillaEditFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributePaymentFragment(): PaymentFragment
 }

@@ -2,6 +2,7 @@ package com.rtchubs.engineerbooks.ui.home
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
@@ -11,21 +12,22 @@ import com.rtchubs.engineerbooks.AppExecutors
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.HomeClassListItemBinding
 import com.rtchubs.engineerbooks.models.Book
+import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.util.DataBoundListAdapter
 
 class HomeClassListAdapter(
     private val appExecutors: AppExecutors,
-    private val itemCallback: ((Book) -> Unit)? = null
-) : DataBoundListAdapter<Book, HomeClassListItemBinding>(
-    appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<Book>() {
-        override fun areItemsTheSame(oldItem: Book, newItem: Book): Boolean {
-            return oldItem.id == newItem.id
+    private val itemCallback: ((ClassWiseBook) -> Unit)? = null
+) : DataBoundListAdapter<ClassWiseBook, HomeClassListItemBinding>(
+    appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<ClassWiseBook>() {
+        override fun areItemsTheSame(oldItem: ClassWiseBook, newItem: ClassWiseBook): Boolean {
+            return oldItem.udid == newItem.udid
         }
 
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(
-            oldItem: Book,
-            newItem: Book
+            oldItem: ClassWiseBook,
+            newItem: ClassWiseBook
         ): Boolean {
             return oldItem == newItem
         }
@@ -34,7 +36,7 @@ class HomeClassListAdapter(
 
     // Properties
     private val viewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool()
-    val onClicked = MutableLiveData<Book>()
+    val onClicked = MutableLiveData<ClassWiseBook>()
     override fun createBinding(parent: ViewGroup): HomeClassListItemBinding {
         return DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
@@ -46,7 +48,10 @@ class HomeClassListAdapter(
         val item = getItem(position)
         binding.item = item
 
-        binding.root.setOnClickListener {
+        val isPaid = item.isPaid ?: false
+        binding.lockView.visibility = if (isPaid) View.GONE else View.VISIBLE
+
+        binding.rootCard.setOnClickListener {
             itemCallback?.invoke(item)
         }
     }

@@ -46,6 +46,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_home2Fragment_to_paymentFragment"
+            app:destination="@id/paymentFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -246,4 +253,13 @@
             app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <include app:graph="@navigation/exams_nav_graph" />
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.rtchubs.engineerbooks.ui.payment.PaymentFragment"
+        android:label="PaymentFragment"
+        tools:layout="@layout/fragment_payment">
+        <argument
+            android:name="bookId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

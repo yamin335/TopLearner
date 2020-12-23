@@ -53,6 +53,10 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
             navigateTo(MoreFragmentDirections.actionMoreFragmentToProfileSettingsFragment())
         }
 
+        viewDataBinding.mPayment.setOnClickListener {
+            navigateTo(MoreFragmentDirections.actionMoreFragmentToPaymentFragment2())
+        }
+
         viewDataBinding.logout.setOnClickListener {
             SplashFragment.fromLogout = true
             preferencesHelper.isLoggedIn = false

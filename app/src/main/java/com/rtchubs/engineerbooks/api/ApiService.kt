@@ -3,6 +3,8 @@ package com.rtchubs.engineerbooks.api
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.Api.ContentType
 import com.rtchubs.engineerbooks.models.common.MyAccountListResponse
+import com.rtchubs.engineerbooks.models.home.ClassWiseBook
+import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.AddCardOrBankResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.BankOrCardListResponse
 import com.rtchubs.engineerbooks.models.registration.*
@@ -32,7 +34,13 @@ interface ApiService {
     suspend fun registerUser(@Body jsonString: String): Response<UserRegistrationResponse>
 
     @POST(ApiEndPoint.PROFILE_UPDATE)
-    suspend fun updateUserProfile(@Body jsonString: String): Response<UserRegistrationResponse>
+    suspend fun updateUserProfile(@Body jsonString: String, @Header("Authorization") token: String): Response<UserRegistrationResponse>
+
+    @POST(ApiEndPoint.PROFILE_INFO)
+    suspend fun getUserInfo(@Body jsonString: String, @Header("Authorization") token: String): Response<UserRegistrationResponse>
+
+    @POST(ApiEndPoint.BOOKS)
+    suspend fun getBooks(@Body jsonString: String): Response<ClassWiseBookResponse>
 
     @GET(ApiEndPoint.DISTRICT)
     suspend fun getDistrict(): Response<DistrictResponse>

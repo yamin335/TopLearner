@@ -1,5 +1,6 @@
 package com.rtchubs.engineerbooks.di
 
+import android.util.Log
 import com.rtchubs.engineerbooks.api.Api
 import com.rtchubs.engineerbooks.api.TokenAuthenticator
 import com.rtchubs.engineerbooks.api.ApiService
@@ -120,13 +121,11 @@ class NetworkModule {
     ): Interceptor =
         Interceptor { chain ->
             val request = chain.request()
-
             val newBuilder = request.newBuilder()
             // let's add token if we got one
             preferencesHelper.accessToken?.let {
-                newBuilder.header("AUTH_HEADER_NAME", preferencesHelper.getAccessTokenHeader())
+                newBuilder.header("Authorization", preferencesHelper.getAccessTokenHeader())
             }
-
             chain.proceed(newBuilder.build())
         }
 
@@ -159,6 +158,18 @@ class NetworkModule {
     @Singleton
     fun provideApiService(
         okHttpClient: OkHttpClient,
+        retrofitBuilder: Retrofit.Builder
+    ): ApiService {
+        return retrofitBuilder
+            .client(okHttpClient).build()
+            .create(ApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    @Named("auth")
+    fun provideAuthApiService(
+        @Named("auth") okHttpClient: OkHttpClient,
         retrofitBuilder: Retrofit.Builder
     ): ApiService {
         return retrofitBuilder

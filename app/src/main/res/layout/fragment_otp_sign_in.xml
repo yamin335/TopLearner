@@ -214,6 +214,7 @@
                             android:enabled="false"
                             android:insetBottom="0dp"
                             android:text="Submit"
+                            app:cornerRadius="0dp"
                             android:textAllCaps="false"
                             android:textColor="@color/button_text_enable_disable_colors"
                             android:textSize="18sp" />

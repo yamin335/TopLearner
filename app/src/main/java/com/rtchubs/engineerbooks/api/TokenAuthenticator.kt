@@ -19,7 +19,7 @@ class TokenAuthenticator(
 
         synchronized(this) {
             // Check if the request made was previously made as an authenticated request.
-            if (response.request.header("AUTH_HEADER_NAME") != null) {
+            if (response.request.header("Authorization") != null) {
                 val newToken = try {
                     refreshToken(token)
                 } catch (e: Exception) {
@@ -30,7 +30,7 @@ class TokenAuthenticator(
                 // Retry the request with the new token.
                 return response.request
                     .newBuilder()
-                    .header("AUTH_HEADER_NAME", preferencesHelper.getAuthHeader(newToken))
+                    .header("Authorization", preferencesHelper.getAuthHeader(newToken))
                     .build()
             }
         }

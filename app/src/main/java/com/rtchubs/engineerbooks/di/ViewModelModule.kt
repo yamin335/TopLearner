@@ -29,9 +29,14 @@ import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewViewModel
 import com.rtchubs.engineerbooks.ui.video_play.VideoPlayViewModel
 import com.rtchubs.engineerbooks.ui.login.ViewPagerViewModel
 import com.rtchubs.engineerbooks.ui.more.MoreViewModel
+import com.rtchubs.engineerbooks.ui.more.ProfileSettingsViewModel
 import com.rtchubs.engineerbooks.ui.otp_signin.OtpSignInViewModel
+import com.rtchubs.engineerbooks.ui.payment.PaymentViewModel
 import com.rtchubs.engineerbooks.ui.pin_number.PinNumberViewModel
+import com.rtchubs.engineerbooks.ui.profile_signin.ClassEditViewModel
+import com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditViewModel
 import com.rtchubs.engineerbooks.ui.profile_signin.ProfileSignInViewModel
+import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditViewModel
 import com.rtchubs.engineerbooks.ui.terms_and_conditions.TermsViewModel
 import com.rtchubs.engineerbooks.ui.topup.TopUpAmountViewModel
 import com.rtchubs.engineerbooks.ui.topup.TopUpBankCardViewModel
@@ -242,4 +247,28 @@ abstract class ViewModelModule {
     @ViewModelKey(TopUpBankCardViewModel::class)
     abstract fun bindTopUpBankCardViewModel(viewModel: TopUpBankCardViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(ProfileSettingsViewModel::class)
+    abstract fun bindProfileSettingsViewModel(viewModel: ProfileSettingsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ClassEditViewModel::class)
+    abstract fun bindClassEditViewModel(viewModel: ClassEditViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DistrictEditViewModel::class)
+    abstract fun bindDistrictEditViewModel(viewModel: DistrictEditViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UpazillaEditViewModel::class)
+    abstract fun bindUpazillaEditViewModel(viewModel: UpazillaEditViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PaymentViewModel::class)
+    abstract fun bindPaymentViewModel(viewModel: PaymentViewModel): ViewModel
 }

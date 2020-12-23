@@ -27,18 +27,23 @@ import com.google.android.gms.vision.face.FaceDetector
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.BuildConfig
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.databinding.ProfileSettingsFragmentBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
+import com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment
+import com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.ProfileSignInViewModel
+import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment
 import com.rtchubs.engineerbooks.util.BitmapUtilss
 import com.rtchubs.engineerbooks.util.showErrorToast
+import kotlinx.coroutines.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, ProfileSignInViewModel>() {
+class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, ProfileSettingsViewModel>() {
 
 
     override val bindingVariable: Int
@@ -46,17 +51,11 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
     override val layoutId: Int
         get() = R.layout.fragment_profile_settings
 
-    override val viewModel: ProfileSignInViewModel by viewModels { viewModelFactory }
+    override val viewModel: ProfileSettingsViewModel by viewModels { viewModelFactory }
 
-    private var titleCityList = arrayOf("--Select City--")
-    private var titleUpazillaList = arrayOf("--Select Upazilla--")
     private var titleGenderList = arrayOf("--Select Gender--")
-    private var titleClassList = arrayOf("--Select Class--")
 
-    lateinit var cityAdapter: ArrayAdapter<String>
-    lateinit var upazillaAdapter: ArrayAdapter<String>
     lateinit var genderAdapter: ArrayAdapter<String>
-    lateinit var classAdapter: ArrayAdapter<String>
 
     lateinit var profileCameraLauncher: ActivityResultLauncher<Intent>
     lateinit var nidFrontCameraLauncher: ActivityResultLauncher<Intent>
@@ -67,14 +66,25 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 
     lateinit var userData: InquiryAccount
 
+    override fun onResume() {
+        super.onResume()
+        ClassEditFragment.selectedClass?.name?.let {
+            viewDataBinding.tvClass.text = it
+        }
+        DistrictEditFragment.selectedCity?.name?.let {
+            viewDataBinding.city.text = it
+        }
+        UpazillaEditFragment.selectedUpazilla?.name?.let {
+            viewDataBinding.tvUpazilla.text = it
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateStatusBarBackgroundColor("#1E4356")
         registerToolbar(viewDataBinding.toolbar)
 
         userData = preferencesHelper.getUser()
-
-        prepareUserData(userData)
 
         Glide.with(requireContext()).load(R.drawable.doctor_1).circleCrop().into(viewDataBinding.rivProfileImage)
 
@@ -127,26 +137,6 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             viewDataBinding.rivNidBackImage.setImageBitmap(bitmap)
         }
 
-        val tempDistricts = Array(viewModel.allDistricts.value?.size ?: 0 + 1) {""}
-        tempDistricts[0] = "--Select City--"
-        viewModel.allDistricts.value?.forEachIndexed { index, city ->
-            tempDistricts[index + 1] = city.name ?: "Unknown"
-        }
-        titleCityList = tempDistricts
-        cityAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleCityList)
-        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        viewDataBinding.spCity.adapter = cityAdapter
-
-        val tempUpazilla = Array(viewModel.allUpazilla.value?.size ?: 0 + 1) {""}
-        tempUpazilla[0] = "--Select Upazilla--"
-        viewModel.allUpazilla.value?.forEachIndexed { index, upazilla ->
-            tempUpazilla[index + 1] = upazilla.name ?: "Unknown"
-        }
-        titleUpazillaList = tempUpazilla
-        upazillaAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleUpazillaList)
-        upazillaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        viewDataBinding.spUpazilla.adapter = upazillaAdapter
-
         val tempGender = Array(viewModel.allGender.size + 1) {""}
         tempGender[0] = "--Select Gender--"
         viewModel.allGender.forEachIndexed { index, gender ->
@@ -156,70 +146,6 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         genderAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleGenderList)
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         viewDataBinding.spGender.adapter = genderAdapter
-
-        val tempClass = Array(viewModel.allAcademicClass.value?.size ?: 0 + 1) {""}
-        tempClass[0] = "--Select Class--"
-        viewModel.allAcademicClass.value?.forEachIndexed { index, academicClass ->
-            tempClass[index + 1] = academicClass.name ?: "Unknown"
-        }
-        titleClassList = tempClass
-        classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
-        classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        viewDataBinding.spClass.adapter = classAdapter
-
-        viewDataBinding.spCity.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                if (position > 0) {
-                    try {
-                        viewModel.allDistricts.value?.let {
-                            if (it.isNotEmpty()) {
-                                viewModel.selectedCity = it[position - 1]
-                                viewModel.getUpazilla(viewModel.selectedCity?.id ?: "0")
-                            }
-                        }
-
-                    } catch (e: IndexOutOfBoundsException) {
-                        e.printStackTrace()
-                    }
-                } else {
-                    viewModel.selectedCity = null
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-
-        viewDataBinding.spUpazilla.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                if (position > 0) {
-                    try {
-                        viewModel.allUpazilla.value?.let {
-                            if (it.isNotEmpty()) {
-                                viewModel.selectedUpazilla = it[position - 1]
-                            }
-                        }
-                    } catch (e: IndexOutOfBoundsException) {
-                        e.printStackTrace()
-                    }
-                } else {
-                    viewModel.selectedUpazilla = null
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
 
         viewDataBinding.spGender.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
@@ -243,32 +169,6 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        viewDataBinding.spClass.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                if (position > 0) {
-                    try {
-                        viewModel.allAcademicClass.value?.let {
-                            if (it.isNotEmpty()) {
-                                viewModel.selectedClass = it[position - 1]
-                            }
-                        }
-                    } catch (e: IndexOutOfBoundsException) {
-                        e.printStackTrace()
-                    }
-                } else {
-                    viewModel.selectedClass = null
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-
 //        val nidFrontData = args.NIDData.frontData
 //        val nidBackData = args.NIDData.backData
 
@@ -276,48 +176,6 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 //        viewDataBinding.birthDayField.setText(nidFrontData.birthDate)
 //        viewDataBinding.nidField.setText(nidFrontData.nidNo)
 //        viewDataBinding.addressField.setText(nidBackData.birthPlace)
-
-        viewModel.allDistricts.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            it?.let {
-                val temp = Array(it.size + 1) {""}
-                temp[0] = "--Select City--"
-                it.forEachIndexed { index, city ->
-                    temp[index + 1] = city.name ?: "Unknown"
-                }
-                titleCityList = temp
-                cityAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleCityList)
-                cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                viewDataBinding.spCity.adapter = cityAdapter
-            }
-        })
-
-        viewModel.allUpazilla.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            it?.let {
-                val temp = Array(it.size + 1) {""}
-                temp[0] = "--Select Upazilla--"
-                it.forEachIndexed { index, upazilla ->
-                    temp[index + 1] = upazilla.name ?: "Unknown"
-                }
-                titleUpazillaList = temp
-                upazillaAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleUpazillaList)
-                upazillaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                viewDataBinding.spUpazilla.adapter = upazillaAdapter
-            }
-        })
-
-        viewModel.allAcademicClass.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            it?.let {
-                val temp = Array(it.size + 1) {""}
-                temp[0] = "--Select Class--"
-                it.forEachIndexed { index, academicClass ->
-                    temp[index + 1] = academicClass.name ?: "Unknown"
-                }
-                titleClassList = temp
-                classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
-                classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                viewDataBinding.spClass.adapter = classAdapter
-            }
-        })
 
         viewModel.profileUpdateResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let { data ->
@@ -339,6 +197,23 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             userData.nidBackPic = data.nidback
             viewModel.updateUserProfile(userData, preferencesHelper.accessToken ?: "")
         })
+
+        viewDataBinding.city.setOnClickListener {
+            navigateTo(ProfileSettingsFragmentDirections.actionProfileSettingsFragmentToDistrictEditFragment())
+        }
+
+        viewDataBinding.tvUpazilla.setOnClickListener {
+            val cityId = DistrictEditFragment.selectedCity?.id
+            if (cityId == null) {
+                showErrorToast(requireContext(), "Please select city first!")
+                return@setOnClickListener
+            }
+            navigateTo(ProfileSettingsFragmentDirections.actionProfileSettingsFragmentToUpazillaEditFragment(cityId))
+        }
+
+        viewDataBinding.tvClass.setOnClickListener {
+            navigateTo(ProfileSettingsFragmentDirections.actionProfileSettingsFragmentToClassEditFragment())
+        }
 
         viewDataBinding.btnSubmit.setOnClickListener {
             if (viewDataBinding.firstName.text.toString().isEmpty()) {
@@ -393,23 +268,24 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
                 return@setOnClickListener
             }
             userData.gender = viewModel.selectedGender?.name
+
             if (viewModel.selectedCity == null) {
-                viewDataBinding.spCity.requestFocus()
                 showErrorToast(requireContext(), "Please select your city!")
                 return@setOnClickListener
             }
             userData.city = viewModel.selectedCity?.name
-            if (viewModel.selectedUpazilla == null) {
-                viewDataBinding.spUpazilla.requestFocus()
-                showErrorToast(requireContext(), "Please select your upazilla!")
-                return@setOnClickListener
-            }
-            userData.upazila = viewModel.selectedUpazilla?.name
-            if (viewModel.selectedClass == null) {
-                viewDataBinding.spClass.requestFocus()
-                showErrorToast(requireContext(), "Please select your class!")
-                return@setOnClickListener
-            }
+
+//            if (viewModel.selectedUpazilla == null) {
+//                viewDataBinding.spUpazilla.requestFocus()
+//                showErrorToast(requireContext(), "Please select your upazilla!")
+//                return@setOnClickListener
+//            }
+//            userData.upazila = viewModel.selectedUpazilla?.name
+//            if (viewModel.selectedClass == null) {
+//                viewDataBinding.spClass.requestFocus()
+//                showErrorToast(requireContext(), "Please select your class!")
+//                return@setOnClickListener
+//            }
 
             if (viewModel.profileBitmap != null || viewModel.nidFrontBitmap != null || viewModel.nidBackBitmap != null) {
                 viewModel.uploadProfileImagesToServer()
@@ -469,17 +345,39 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             takeProfileImageFromCamera()
         }
 
-        viewModel.getDistricts()
-        viewModel.getAcademicClass()
+        CoroutineScope(Dispatchers.Main.immediate).launch {
+            //delay(1000)
+            viewModel.apiCallStatus.postValue(ApiCallStatus.LOADING)
+            prepareUserData(userData)
+            viewModel.apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+        }
     }
 
-    fun prepareUserData(user: InquiryAccount) {
+    private fun prepareUserData(user: InquiryAccount) {
         viewDataBinding.firstName.setText(user.firstName)
         viewDataBinding.lastName.setText(user.lastName)
         viewDataBinding.fatherName.setText(user.altContactPerson)
+        viewDataBinding.city.text = user.city
+        viewDataBinding.tvClass.text = user.class_id?.toString()
+        viewDataBinding.tvUpazilla.text = user.upazila
         viewDataBinding.emailField.setText(user.email)
         viewDataBinding.nidField.setText(user.nidnumber)
         viewDataBinding.addressField.setText(user.address1)
+        var genderIndex = 0
+        viewModel.allGender.forEachIndexed { index, gender ->
+            if (gender.name?.equals(user.gender ?: "N/A", true) == true) genderIndex = index + 1
+        }
+        viewDataBinding.spGender.setSelection(genderIndex, true)
+
+//        var districtIndex = 0
+//        viewModel.allDistricts.value?.forEachIndexed { index, district ->
+//            if (district.name?.equals(user.city ?: "N/A", true) == true) districtIndex = index + 1
+//        }
+//        viewDataBinding.spCity.setSelection(districtIndex, true)
+
+//        runBlocking {
+//
+//        }
     }
 
 //    private fun takeProfileImageFromCamera() {

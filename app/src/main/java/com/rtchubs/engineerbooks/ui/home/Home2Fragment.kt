@@ -5,17 +5,24 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import com.daimajia.slider.library.SliderLayout
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.HomeFragment2Binding
 import com.rtchubs.engineerbooks.models.Book
 import com.rtchubs.engineerbooks.models.Chapter
+import com.rtchubs.engineerbooks.models.home.ClassWiseBook
+import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.LogoutHandlerCallback
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.login.SliderView
 
 class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
+    companion object {
+        var allBookList = ArrayList<ClassWiseBook>()
+    }
     override val bindingVariable: Int
         get() = BR.viewModel
     override val layoutId: Int
@@ -29,6 +36,8 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
     private var listener: LogoutHandlerCallback? = null
 
     private var drawerListener: NavDrawerHandlerCallback? = null
+
+    lateinit var userData: InquiryAccount
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -62,6 +71,7 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        userData = preferencesHelper.getUser()
         //registerToolbar(viewDataBinding.toolbar)
 
 //        viewDataBinding.cardTopUp.setOnClickListener {
@@ -78,6 +88,17 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
 //
 //
 //
+        viewModel.slideDataList.forEach { slideData ->
+            val slide = SliderView(requireContext())
+            slide.sliderTextTitle = slideData.textTitle
+            slide.sliderTextDescription = slideData.descText
+            slide.sliderImage(slideData.slideImage)
+            viewDataBinding.sliderLayout.addSlider(slide)
+        }
+
+        // set Slider Transition Animation
+        viewDataBinding.sliderLayout.setPresetTransformer(SliderLayout.Transformer.Default)
+        viewDataBinding.sliderLayout.stopAutoCycle()
 
         val chapterList = listOf(
             Chapter(1, "Chapter One", null, null),
@@ -112,12 +133,31 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         }
 
         val homeClassListAdapter = HomeClassListAdapter(appExecutors) {
-            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
+            if (it.isPaid == true) {
+                navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(Book(it.id, it.title, "", chapterList)))
+            } else {
+                navigateTo(Home2FragmentDirections.actionHome2FragmentToPaymentFragment(it.id))
+            }
         }
 
         viewDataBinding.homeClassListRecycler.adapter = homeClassListAdapter
 
-        homeClassListAdapter.submitList(bookList)
+        viewModel.allBooks.observe(viewLifecycleOwner, Observer { books ->
+            books?.let {
+                val tempList = ArrayList<ClassWiseBook>()
+                var i = 1
+                it.forEach { book ->
+                    book.id = i++
+                    tempList.add(book)
+                }
+                allBookList = tempList
+                homeClassListAdapter.submitList(allBookList)
+            }
+        })
+
+        if (allBookList.isEmpty()) viewModel.getAcademicBooks(userData.mobile ?: "", 1)
+
+        homeClassListAdapter.submitList(allBookList)
 
 //        viewModel.slideDataList.forEach { slideData ->
 //            val slide = SliderView(requireContext())
