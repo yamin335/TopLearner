@@ -28,6 +28,7 @@ class DistrictEditFragment: BaseFragment<DistrictEditFragmentBinding, DistrictEd
     private var titleCityList = arrayOf("--Select City--")
     lateinit var cityAdapter: ArrayAdapter<String>
 
+    var tempSelectedCity: District? = null
     //val args: OtpSignInFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,7 +58,7 @@ class DistrictEditFragment: BaseFragment<DistrictEditFragmentBinding, DistrictEd
                     try {
                         viewModel.allDistricts.value?.let {
                             if (it.isNotEmpty()) {
-                                selectedCity = it[position - 1]
+                                tempSelectedCity = it[position - 1]
                                 viewDataBinding.btnSubmit.isEnabled = true
                             }
                         }
@@ -66,7 +67,7 @@ class DistrictEditFragment: BaseFragment<DistrictEditFragmentBinding, DistrictEd
                         e.printStackTrace()
                     }
                 } else {
-                    selectedCity = null
+                    tempSelectedCity = null
                     viewDataBinding.btnSubmit.isEnabled = false
                 }
             }
@@ -89,6 +90,7 @@ class DistrictEditFragment: BaseFragment<DistrictEditFragmentBinding, DistrictEd
         })
 
         viewDataBinding.btnSubmit.setOnClickListener {
+            selectedCity = tempSelectedCity
             navController.popBackStack()
         }
 

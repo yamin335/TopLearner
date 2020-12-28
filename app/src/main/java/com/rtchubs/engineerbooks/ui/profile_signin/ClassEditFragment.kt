@@ -29,6 +29,7 @@ class ClassEditFragment: BaseFragment<ClassEditFragmentBinding, ClassEditViewMod
     private var titleClassList = arrayOf("--Select Class--")
     lateinit var classAdapter: ArrayAdapter<String>
 
+    var tempSelectedClass: AcademicClass? = null
     //val args: OtpSignInFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,7 +59,7 @@ class ClassEditFragment: BaseFragment<ClassEditFragmentBinding, ClassEditViewMod
                     try {
                         viewModel.allAcademicClass.value?.let {
                             if (it.isNotEmpty()) {
-                                selectedClass = it[position - 1]
+                                tempSelectedClass = it[position - 1]
                                 viewDataBinding.btnSubmit.isEnabled = true
                             }
                         }
@@ -66,7 +67,7 @@ class ClassEditFragment: BaseFragment<ClassEditFragmentBinding, ClassEditViewMod
                         e.printStackTrace()
                     }
                 } else {
-                    selectedClass = null
+                    tempSelectedClass = null
                     viewDataBinding.btnSubmit.isEnabled = false
                 }
             }
@@ -89,6 +90,7 @@ class ClassEditFragment: BaseFragment<ClassEditFragmentBinding, ClassEditViewMod
         })
 
         viewDataBinding.btnSubmit.setOnClickListener {
+            selectedClass = tempSelectedClass
             navController.popBackStack()
         }
 

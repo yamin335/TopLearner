@@ -11,6 +11,7 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.PaymentFragmentBinding
 import com.rtchubs.engineerbooks.databinding.TransactionFragmentBinding
+import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.LogoutHandlerCallback
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
@@ -29,6 +30,8 @@ class TransactionFragment : BaseFragment<TransactionFragmentBinding, Transaction
     private var drawerListener: NavDrawerHandlerCallback? = null
 
     lateinit var transactionAdapter: TransactionListAdapter
+
+    lateinit var userData: InquiryAccount
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,7 +60,7 @@ class TransactionFragment : BaseFragment<TransactionFragmentBinding, Transaction
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        userData = preferencesHelper.getUser()
         transactionAdapter = TransactionListAdapter(appExecutors) {
 
         }
@@ -74,6 +77,6 @@ class TransactionFragment : BaseFragment<TransactionFragmentBinding, Transaction
             }
         })
 
-        viewModel.getAllTransaction(2)
+        viewModel.getAllTransaction(userData.id ?: 0)
     }
 }

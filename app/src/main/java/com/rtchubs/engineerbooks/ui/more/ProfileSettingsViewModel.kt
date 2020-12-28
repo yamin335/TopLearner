@@ -181,6 +181,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
                 toastError.postValue(serverConnectionErrorMessage)
+                allImageUrls.postValue(null)
             }
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
@@ -234,7 +235,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
-                toastError.postValue(serverConnectionErrorMessage)
+                profileUpdateResponse.postValue(null)
             }
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
@@ -246,9 +247,11 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                        profileUpdateResponse.postValue(null)
                     }
                     is ApiErrorResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
+                        profileUpdateResponse.postValue(null)
                     }
                 }
             }
@@ -261,6 +264,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
                 toastError.postValue(serverConnectionErrorMessage)
+                userProfileInfo.postValue(null)
             }
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
@@ -269,12 +273,15 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
                     is ApiSuccessResponse -> {
                         userProfileInfo.postValue(apiResponse.body.data?.Account)
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        userProfileInfo.postValue(null)
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                        userProfileInfo.postValue(null)
                     }
                     is ApiErrorResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
+                        userProfileInfo.postValue(null)
                     }
                 }
             }

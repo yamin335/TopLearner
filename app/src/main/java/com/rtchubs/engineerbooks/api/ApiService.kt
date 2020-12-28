@@ -32,6 +32,9 @@ interface ApiService {
     @POST(ApiEndPoint.REGISTER)
     suspend fun registerUser(@Body jsonString: String): Response<UserRegistrationResponse>
 
+    @POST(ApiEndPoint.LOGIN)
+    suspend fun loginUser(@Body jsonString: String): Response<UserRegistrationResponse>
+
     @POST(ApiEndPoint.PROFILE_UPDATE)
     suspend fun updateUserProfile(@Body jsonString: String): Response<UserRegistrationResponse>
 

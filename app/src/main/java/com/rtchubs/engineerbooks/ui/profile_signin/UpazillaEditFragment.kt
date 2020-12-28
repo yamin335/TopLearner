@@ -28,7 +28,7 @@ class UpazillaEditFragment: BaseFragment<UpazillaEditFragmentBinding, UpazillaEd
 
     private var titleUpazillaList = arrayOf("--Select Upazilla--")
     lateinit var upazillaAdapter: ArrayAdapter<String>
-
+    var tempSelectedUpazilla: Upazilla? = null
     val args: UpazillaEditFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,7 +58,7 @@ class UpazillaEditFragment: BaseFragment<UpazillaEditFragmentBinding, UpazillaEd
                     try {
                         viewModel.allUpazilla.value?.let {
                             if (it.isNotEmpty()) {
-                                selectedUpazilla = it[position - 1]
+                                tempSelectedUpazilla = it[position - 1]
                                 viewDataBinding.btnSubmit.isEnabled = true
                             }
                         }
@@ -66,7 +66,7 @@ class UpazillaEditFragment: BaseFragment<UpazillaEditFragmentBinding, UpazillaEd
                         e.printStackTrace()
                     }
                 } else {
-                    selectedUpazilla = null
+                    tempSelectedUpazilla = null
                     viewDataBinding.btnSubmit.isEnabled = false
                 }
             }
@@ -89,6 +89,7 @@ class UpazillaEditFragment: BaseFragment<UpazillaEditFragmentBinding, UpazillaEd
         })
 
         viewDataBinding.btnSubmit.setOnClickListener {
+            selectedUpazilla = tempSelectedUpazilla
             navController.popBackStack()
         }
 

@@ -10,6 +10,9 @@ import com.rtchubs.engineerbooks.databinding.MoreFragmentBinding
 import com.rtchubs.engineerbooks.ui.LogoutHandlerCallback
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
+import com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment
+import com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment
+import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment
 import com.rtchubs.engineerbooks.ui.splash.SplashFragment
 
 class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
@@ -48,8 +51,10 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewDataBinding.mProfile.setOnClickListener {
+            ClassEditFragment.selectedClass = null
+            DistrictEditFragment.selectedCity = null
+            UpazillaEditFragment.selectedUpazilla = null
             navigateTo(MoreFragmentDirections.actionMoreFragmentToProfileSettingsFragment())
         }
 

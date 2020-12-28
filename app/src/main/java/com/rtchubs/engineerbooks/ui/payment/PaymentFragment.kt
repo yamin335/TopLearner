@@ -21,6 +21,7 @@ import com.rtchubs.engineerbooks.ui.home.Home2Fragment
 import com.rtchubs.engineerbooks.util.AppConstants.commonErrorMessage
 import com.rtchubs.engineerbooks.util.hideKeyboard
 import com.rtchubs.engineerbooks.util.showErrorToast
+import com.rtchubs.engineerbooks.util.showSuccessToast
 
 class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>() {
 
@@ -48,21 +49,28 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewModel.salesInvoice.observe(viewLifecycleOwner, Observer { invoice ->
             invoice?.let {
-                Home2Fragment.allBookList.map { classWiseBook ->
-                    if(classWiseBook.id == it.BookID) classWiseBook.isPaid = true
-                }
+//                Home2Fragment.allBookList.map { classWiseBook ->
+//                    if(classWiseBook.id == it.BookID) classWiseBook.isPaid = true
+//                }
                 hideKeyboard()
-                navController.popBackStack()
+                if (args.bookId == it.BookID) {
+                    navController.popBackStack()
+                    showSuccessToast(requireContext(), "Successfully purchased")
+                } else {
+                    showErrorToast(requireContext(), "Purchase is not successful!")
+                }
             }
         })
 
         viewDataBinding.btnPayNow.setOnClickListener {
-            viewModel.createOrder(CreateOrderBody(2, userData.mobile ?: "",
+            val firstName = userData.firstName ?: ""
+            val lastName = userData.lastName ?: ""
+            viewModel.createOrder(CreateOrderBody(userData.id ?: 0, userData.mobile ?: "",
                 viewModel.amount.value?.toInt() ?: 0, 0, 0,
                 0, "", userData.upazila ?: "", userData.city ?: "",
                 userData.UpazilaID ?: 0, userData.CityID ?: 0, "",
                 "", "", args.bookId, userData.class_id ?: 0,
-                userData.displayName ?: "", args.bookName))
+                "$firstName $lastName", args.bookName))
         }
     }
 }

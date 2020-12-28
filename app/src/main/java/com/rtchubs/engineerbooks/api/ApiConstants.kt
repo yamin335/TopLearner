@@ -12,6 +12,7 @@ import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CLASS
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CONNECT
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_DISTRICT
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_INQUIRE
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_LOGIN
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_ORDER
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE_IMAGES
@@ -53,6 +54,7 @@ object Api {
     const val DIRECTORY_PROFILE_IMAGES = "profilephotos"
     const val DIRECTORY_TRANSACTION = "transactions"
     const val DIRECTORY_ORDER = "createorder"
+    const val DIRECTORY_LOGIN = "login"
 
     const val DIRECTORY_CONNECT = "connect"
     const val DIRECTORY_BANK_INFO = "bankinformation"
@@ -78,6 +80,7 @@ object ApiEndPoint {
     const val PROFILE_IMAGES = "$MEDIA_API_ROOT_URL$DIRECTORY_PROFILE_IMAGES"
     const val TRANSACTION = "$API_VERSION/$SALES_REPO/${DIRECTORY_TRANSACTION}"
     const val CREATE_ORDER = "$API_VERSION/$SALES_REPO/${DIRECTORY_ORDER}"
+    const val LOGIN = "$API_VERSION/$AUTH_REPO/${DIRECTORY_LOGIN}"
 
     const val REQUESTOTP = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}/request-otp"
     const val REGISTRATION = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}"

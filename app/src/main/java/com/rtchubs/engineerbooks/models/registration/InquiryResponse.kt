@@ -2,7 +2,7 @@ package com.rtchubs.engineerbooks.models.registration
 
 import java.io.Serializable
 
-data class InquiryAccount(var udid: String?, var createdAt: String?, var updatedAt: String?,
+data class InquiryAccount(var udid: String?, var createdAt: String?, var updatedAt: String?, var id: Int?,
                           var firstName: String?, var lastName: String?, var mobile: String?,
                           var nidnumber: String?, var mobileOperator: String?, var class_id: Int?, var displayName: String?,
                           var institute: String?, var upazila: String?, var city: String?, var CityID: Int?,
@@ -12,7 +12,7 @@ data class InquiryAccount(var udid: String?, var createdAt: String?, var updated
                           var profilePic: String?, var otp: String?, var otpExpire: String?, var status: String?,
                           var role: String?, var action: String?, var isRegistered: Boolean?,
                           var isMobileVerified: Boolean?, var isAcceptedTandC: Boolean?,
-                          var Table: String?, var address1: String?, var folder: String?): Serializable
+                          var Table: String?, var address1: String?, var Folder: String?): Serializable
 
 data class InquiryResponse(val code: Int?, val data: InquiryData?, val msg: String?)
 

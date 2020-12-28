@@ -77,6 +77,16 @@ class RegistrationRepository @Inject constructor(private val apiService: ApiServ
         }
     }
 
+    suspend fun loginUserRepo(inquiryAccount: InquiryAccount): Response<UserRegistrationResponse> {
+        val jsonObject = JsonObject().apply {
+            addProperty("mobile", inquiryAccount.mobile)
+            addProperty("Pin", inquiryAccount.pin)
+        }.toString()
+        return withContext(Dispatchers.IO) {
+            apiService.loginUser(jsonObject)
+        }
+    }
+
     suspend fun updateUserProfileRepo(inquiryAccount: InquiryAccount): Response<UserRegistrationResponse> {
         val jsonObject = Gson().toJson(inquiryAccount) ?: ""
         return withContext(Dispatchers.IO) {

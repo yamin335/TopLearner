@@ -1,5 +1,6 @@
 package com.rtchubs.engineerbooks.ui.pin_number
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -12,6 +13,7 @@ import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.TokenInformation
 import com.rtchubs.engineerbooks.databinding.PinNumberBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
+import com.rtchubs.engineerbooks.ui.LoginHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.hideKeyboard
 import com.rtchubs.engineerbooks.util.showErrorToast
@@ -29,8 +31,23 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>() {
 
     lateinit var registrationLocalHelper: InquiryAccount
     lateinit var registrationRemoteHelper: InquiryAccount
+    private var listener: LoginHandlerCallback? = null
 
     val args: PinNumberFragmentArgs by navArgs()
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is LoginHandlerCallback) {
+            listener = context
+        } else {
+            throw RuntimeException("$context must implement LoginHandlerCallback")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,11 +113,31 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>() {
             }
         })
 
+        viewModel.loginResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            it?.let { data ->
+                data.Account?.let { account ->
+                    if (account.isRegistered == true) {
+                        preferencesHelper.accessToken = data.Token?.AccessToken
+                        preferencesHelper.accessTokenExpiresIn = data.Token?.AtExpires ?: 0
+                        preferencesHelper.isLoggedIn = true
+                        preferencesHelper.saveUser(account)
+                        listener?.onLoggedIn()
+                    }
+                }
+            }
+        })
+
         viewDataBinding.btnSubmit.setOnClickListener {
             hideKeyboard()
-            navigateTo(PinNumberFragmentDirections.actionPinNumberFragmentToPermissionsFragment(
-                registrationRemoteHelper
-            ))
+            registrationRemoteHelper.pin = viewModel.pin.value
+            if (registrationRemoteHelper.isRegistered == false) {
+                navigateTo(PinNumberFragmentDirections.actionPinNumberFragmentToPermissionsFragment(
+                    registrationRemoteHelper
+                ))
+            } else {
+                viewModel.loginUser(registrationRemoteHelper)
+            }
+
 //            viewModel.pin.value?.let {
 //                pin = it
 //            }

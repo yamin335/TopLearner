@@ -183,6 +183,7 @@ class ProfileSignInViewModel @Inject constructor(
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
                 toastError.postValue(serverConnectionErrorMessage)
+                allImageUrls.postValue(null)
             }
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)

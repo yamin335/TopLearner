@@ -371,7 +371,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
         viewModel.registrationResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let { data ->
                 data.Account?.let { account ->
-                    if (account.isRegistered == false) {
+                    if (account.isRegistered == true) {
                         preferencesHelper.accessToken = data.Token?.AccessToken
                         preferencesHelper.accessTokenExpiresIn = data.Token?.AtExpires ?: 0
                         preferencesHelper.isLoggedIn = true
@@ -480,15 +480,16 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
             registrationHelper.ClassName = viewModel.selectedClass?.name
 
             registrationHelper.customer_type_id = 1
+            registrationHelper.isRegistered = true
             val selectionTime: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(
                 Date()
             )
             val random = "${1 + SecureRandom().nextInt(9999999)}"
             val folder = "media_folder_${selectionTime}_$random"
-            registrationHelper.folder = folder
+            registrationHelper.Folder = folder
 
             if (viewModel.profileBitmap != null || viewModel.nidFrontBitmap != null || viewModel.nidBackBitmap != null) {
-                viewModel.uploadProfileImagesToServer(registrationHelper.mobile ?: "", registrationHelper.folder ?: "")
+                viewModel.uploadProfileImagesToServer(registrationHelper.mobile ?: "", registrationHelper.Folder ?: "")
             } else {
                 viewModel.registerNewUser(registrationHelper)
             }

@@ -20,9 +20,9 @@ import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.login.SliderView
 
 class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
-    companion object {
-        var allBookList = ArrayList<ClassWiseBook>()
-    }
+//    companion object {
+//        var allBookList = ArrayList<ClassWiseBook>()
+//    }
     override val bindingVariable: Int
         get() = BR.viewModel
     override val layoutId: Int
@@ -150,14 +150,15 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
                     book.id = i++
                     tempList.add(book)
                 }
-                allBookList = tempList
-                homeClassListAdapter.submitList(allBookList)
+                //allBookList = tempList
+                homeClassListAdapter.submitList(tempList)
             }
         })
+        viewModel.getAcademicBooks(userData.mobile ?: "", userData.class_id ?: 0)
 
-        if (allBookList.isEmpty()) viewModel.getAcademicBooks(userData.mobile ?: "", 1)
-
-        homeClassListAdapter.submitList(allBookList)
+//        if (allBookList.isEmpty()) viewModel.getAcademicBooks(userData.mobile ?: "", 1)
+//
+//        homeClassListAdapter.submitList(allBookList)
 
 //        viewModel.slideDataList.forEach { slideData ->
 //            val slide = SliderView(requireContext())

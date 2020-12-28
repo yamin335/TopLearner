@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.darwin.viola.still.FaceDetectionListener
 import com.darwin.viola.still.Viola
 import com.darwin.viola.still.model.CropAlgorithm
@@ -27,7 +28,9 @@ import com.google.android.gms.vision.face.FaceDetector
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.BuildConfig
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.Api
 import com.rtchubs.engineerbooks.api.ApiCallStatus
+import com.rtchubs.engineerbooks.api.ApiEndPoint.PROFILE_IMAGES
 import com.rtchubs.engineerbooks.databinding.ProfileSettingsFragmentBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
@@ -37,6 +40,7 @@ import com.rtchubs.engineerbooks.ui.profile_signin.ProfileSignInViewModel
 import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment
 import com.rtchubs.engineerbooks.util.BitmapUtilss
 import com.rtchubs.engineerbooks.util.showErrorToast
+import com.rtchubs.engineerbooks.util.showSuccessToast
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.IOException
@@ -66,17 +70,11 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 
     lateinit var userData: InquiryAccount
 
-    override fun onResume() {
-        super.onResume()
-        ClassEditFragment.selectedClass?.name?.let {
-            viewDataBinding.tvClass.text = it
-        }
-        DistrictEditFragment.selectedCity?.name?.let {
-            viewDataBinding.city.text = it
-        }
-        UpazillaEditFragment.selectedUpazilla?.name?.let {
-            viewDataBinding.tvUpazilla.text = it
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        ClassEditFragment.selectedClass = null
+        DistrictEditFragment.selectedCity = null
+        UpazillaEditFragment.selectedUpazilla = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,8 +83,6 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         registerToolbar(viewDataBinding.toolbar)
 
         userData = preferencesHelper.getUser()
-
-        Glide.with(requireContext()).load(R.drawable.doctor_1).circleCrop().into(viewDataBinding.rivProfileImage)
 
         imageCropperListener = object : FaceDetectionListener {
             override fun onFaceDetected(result: com.darwin.viola.still.model.Result) {
@@ -180,9 +176,14 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         viewModel.profileUpdateResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let { data ->
                 data.Account?.let { account ->
+                    userData = account
                     preferencesHelper.saveUser(account)
+                    prepareUserData(userData)
+                    showSuccessToast(requireContext(), "Successfully profile updated.")
                 }
-                navController.popBackStack()
+            }
+            if (it == null) {
+                showErrorToast(requireContext(), "Couldn't update profile at this moment!")
             }
         })
 
@@ -192,9 +193,16 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
                 return@Observer
             }
 
-            userData.profilePic = data.profilepic
-            userData.nidFrontPic = data.nidfront
-            userData.nidBackPic = data.nidback
+            data.profilepic?.let {
+                userData.profilePic = it
+            }
+            data.nidfront?.let {
+                userData.nidFrontPic = it
+            }
+            data.nidback?.let {
+                userData.nidBackPic = it
+            }
+
             viewModel.updateUserProfile(userData)
         })
 
@@ -217,7 +225,13 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 
         viewModel.userProfileInfo.observe(viewLifecycleOwner, androidx.lifecycle.Observer { userInfo ->
             userInfo?.let {
+                userData = it
+                preferencesHelper.saveUser(it)
                 prepareUserData(it)
+            }
+
+            if (userInfo == null) {
+                prepareUserData(userData)
             }
         })
 
@@ -275,17 +289,26 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             }
             userData.gender = viewModel.selectedGender?.name
 
-            if (viewModel.selectedCity == null) {
-                showErrorToast(requireContext(), "Please select your city!")
+            if (DistrictEditFragment.selectedCity != null && UpazillaEditFragment.selectedUpazilla == null) {
+                showErrorToast(requireContext(), "Please select your upazilla!")
                 return@setOnClickListener
             }
             userData.city = viewModel.selectedCity?.name
 
-//            if (viewModel.selectedUpazilla == null) {
-//                viewDataBinding.spUpazilla.requestFocus()
-//                showErrorToast(requireContext(), "Please select your upazilla!")
-//                return@setOnClickListener
-//            }
+            ClassEditFragment.selectedClass?.let {
+                userData.class_id = it.id?.toInt() ?: 0
+                userData.ClassName = it.name
+            }
+
+            DistrictEditFragment.selectedCity?.let {
+                userData.CityID = it.id?.toInt() ?: 0
+                userData.city = it.name
+            }
+
+            UpazillaEditFragment.selectedUpazilla?.let {
+                userData.UpazilaID = it.id?.toInt() ?: 0
+                userData.upazila = it.name
+            }
 //            userData.upazila = viewModel.selectedUpazilla?.name
 //            if (viewModel.selectedClass == null) {
 //                viewDataBinding.spClass.requestFocus()
@@ -294,7 +317,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 //            }
 
             if (viewModel.profileBitmap != null || viewModel.nidFrontBitmap != null || viewModel.nidBackBitmap != null) {
-                viewModel.uploadProfileImagesToServer(userData.mobile ?: "", userData.folder ?: "")
+                viewModel.uploadProfileImagesToServer(userData.mobile ?: "", userData.Folder ?: "")
             } else {
                 viewModel.updateUserProfile(userData)
             }
@@ -351,17 +374,30 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             takeProfileImageFromCamera()
         }
 
-        CoroutineScope(Dispatchers.Main.immediate).launch {
-            //delay(1000)
-            viewModel.apiCallStatus.postValue(ApiCallStatus.LOADING)
+        if (checkNetworkStatus()) {
+            viewModel.getUserProfileInfo(userData.mobile ?: "")
+        } else {
             prepareUserData(userData)
-            viewModel.apiCallStatus.postValue(ApiCallStatus.SUCCESS)
         }
-
-        viewModel.getUserProfileInfo(userData.mobile ?: "")
     }
 
     private fun prepareUserData(user: InquiryAccount) {
+        Glide.with(requireContext())
+            .load("${PROFILE_IMAGES}/${user.Folder}/${user.profilePic}")
+            .placeholder(R.drawable.doctor_1)
+            .circleCrop()
+            .into(viewDataBinding.rivProfileImage)
+
+        Glide.with(requireContext())
+            .load("${PROFILE_IMAGES}/${user.Folder}/${user.nidFrontPic}")
+            .placeholder(R.drawable.doctor_1)
+            .into(viewDataBinding.rivNidFrontImage)
+
+        Glide.with(requireContext())
+            .load("${PROFILE_IMAGES}/${user.Folder}/${user.nidBackPic}")
+            .placeholder(R.drawable.doctor_1)
+            .into(viewDataBinding.rivNidBackImage)
+
         viewDataBinding.firstName.setText(user.firstName)
         viewDataBinding.lastName.setText(user.lastName)
         viewDataBinding.fatherName.setText(user.altContactPerson)
@@ -376,6 +412,19 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             if (gender.name?.equals(user.gender ?: "N/A", true) == true) genderIndex = index + 1
         }
         viewDataBinding.spGender.setSelection(genderIndex, true)
+
+        ClassEditFragment.selectedClass?.name?.let {
+            viewDataBinding.tvClass.text = it
+        }
+        DistrictEditFragment.selectedCity?.name?.let {
+            viewDataBinding.city.text = it
+            if (UpazillaEditFragment.selectedUpazilla == null) {
+                viewDataBinding.tvUpazilla.text = "-- Select Upazilla --"
+            }
+        }
+        UpazillaEditFragment.selectedUpazilla?.name?.let {
+            viewDataBinding.tvUpazilla.text = it
+        }
 
 //        var districtIndex = 0
 //        viewModel.allDistricts.value?.forEachIndexed { index, district ->
