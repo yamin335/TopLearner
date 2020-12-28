@@ -37,6 +37,7 @@ import com.rtchubs.engineerbooks.ui.topup.TopUpAmountFragment
 import com.rtchubs.engineerbooks.ui.topup.TopUpBankCardFragment
 import com.rtchubs.engineerbooks.ui.topup.TopUpMobileFragment
 import com.rtchubs.engineerbooks.ui.topup.TopUpPinFragment
+import com.rtchubs.engineerbooks.ui.transaction.TransactionFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -170,4 +171,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributePaymentFragment(): PaymentFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeTransactionFragment(): TransactionFragment
 }

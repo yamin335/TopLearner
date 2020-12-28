@@ -15,6 +15,7 @@ import com.rtchubs.engineerbooks.databinding.PaymentFragmentBinding
 import com.rtchubs.engineerbooks.databinding.SignInBinding
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
+import com.rtchubs.engineerbooks.models.transactions.CreateOrderBody
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.home.Home2Fragment
 import com.rtchubs.engineerbooks.util.AppConstants.commonErrorMessage
@@ -32,24 +33,36 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
     }
 
     val args: PaymentFragmentArgs by navArgs()
+    lateinit var userData: InquiryAccount
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateStatusBarBackgroundColor("#1E4356")
         registerToolbar(viewDataBinding.toolbar)
-
+        userData = preferencesHelper.getUser()
         viewModel.amount.observe(viewLifecycleOwner, Observer {  mobileNo ->
             mobileNo?.let {
                 viewDataBinding.btnPayNow.isEnabled = it.isNotEmpty() && it != "0"
             }
         })
 
-        viewDataBinding.btnPayNow.setOnClickListener {
-            Home2Fragment.allBookList.map { classWiseBook ->
-                if(classWiseBook.id == args.bookId) classWiseBook.isPaid = true
+        viewModel.salesInvoice.observe(viewLifecycleOwner, Observer { invoice ->
+            invoice?.let {
+                Home2Fragment.allBookList.map { classWiseBook ->
+                    if(classWiseBook.id == it.BookID) classWiseBook.isPaid = true
+                }
+                hideKeyboard()
+                navController.popBackStack()
             }
-            hideKeyboard()
-            navController.popBackStack()
+        })
+
+        viewDataBinding.btnPayNow.setOnClickListener {
+            viewModel.createOrder(CreateOrderBody(2, userData.mobile ?: "",
+                viewModel.amount.value?.toInt() ?: 0, 0, 0,
+                0, "", userData.upazila ?: "", userData.city ?: "",
+                userData.UpazilaID ?: 0, userData.CityID ?: 0, "",
+                "", "", args.bookId, userData.class_id ?: 0,
+                userData.displayName ?: "", args.bookName))
         }
     }
 }

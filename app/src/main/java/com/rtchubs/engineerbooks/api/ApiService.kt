@@ -8,6 +8,8 @@ import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.AddCardOrBankResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.BankOrCardListResponse
 import com.rtchubs.engineerbooks.models.registration.*
+import com.rtchubs.engineerbooks.models.transactions.PayInvoiceResponse
+import com.rtchubs.engineerbooks.models.transactions.TransactionHistoryResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -27,17 +29,14 @@ interface ApiService {
     @POST(ApiEndPoint.VERIFY_OTP)
     suspend fun verifyOTPCode(@Body jsonString: String): Response<InquiryResponse>
 
-    @POST(ApiEndPoint.PROFILE_PHOTOS)
-    suspend fun uploadProfilePhotos(@Body partFormData: RequestBody): Response<ProfileImageUploadResponse>
-
     @POST(ApiEndPoint.REGISTER)
     suspend fun registerUser(@Body jsonString: String): Response<UserRegistrationResponse>
 
     @POST(ApiEndPoint.PROFILE_UPDATE)
-    suspend fun updateUserProfile(@Body jsonString: String, @Header("Authorization") token: String): Response<UserRegistrationResponse>
+    suspend fun updateUserProfile(@Body jsonString: String): Response<UserRegistrationResponse>
 
     @POST(ApiEndPoint.PROFILE_INFO)
-    suspend fun getUserInfo(@Body jsonString: String, @Header("Authorization") token: String): Response<UserRegistrationResponse>
+    suspend fun getUserInfo(@Body jsonString: String): Response<UserRegistrationResponse>
 
     @POST(ApiEndPoint.BOOKS)
     suspend fun getBooks(@Body jsonString: String): Response<ClassWiseBookResponse>
@@ -50,6 +49,17 @@ interface ApiService {
 
     @GET(ApiEndPoint.ACADEMIC_CLASS)
     suspend fun getAcademicClasses(): Response<AcademicClassResponse>
+
+    @POST(ApiEndPoint.CREATE_ORDER)
+    suspend fun createOrder(@Body jsonString: String): Response<PayInvoiceResponse>
+
+    @POST(ApiEndPoint.TRANSACTION)
+    suspend fun transactionHistory(@Body jsonString: String): Response<TransactionHistoryResponse>
+
+
+
+
+
 
     @Multipart
     @POST(ApiEndPoint.REQUESTOTP)

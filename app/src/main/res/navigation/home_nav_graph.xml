@@ -261,5 +261,8 @@
         <argument
             android:name="bookId"
             app:argType="integer" />
+        <argument
+            android:name="bookName"
+            app:argType="string" />
     </fragment>
 </navigation>

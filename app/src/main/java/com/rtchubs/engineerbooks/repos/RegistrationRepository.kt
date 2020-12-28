@@ -13,10 +13,11 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class RegistrationRepository @Inject constructor(private val apiService: ApiService, private val preferencesHelper: PreferencesHelper) {
+class RegistrationRepository @Inject constructor(private val apiService: ApiService, @Named("auth") private val authApiService: ApiService) {
 
     suspend fun inquireRepo(mobileNumber: String): Response<InquiryResponse> {
         return withContext(Dispatchers.IO) {
@@ -48,14 +49,9 @@ class RegistrationRepository @Inject constructor(private val apiService: ApiServ
         }
     }
 
-    suspend fun uploadProfilePhotosRepo(requestBody: RequestBody): Response<ProfileImageUploadResponse> {
-        return withContext(Dispatchers.IO) {
-            apiService.uploadProfilePhotos(requestBody)
-        }
-    }
-
     suspend fun registerUserRepo(inquiryAccount: InquiryAccount): Response<UserRegistrationResponse> {
         val jsonObject = Gson().toJson(inquiryAccount) ?: ""
+        val tt = jsonObject
 //        val jsonObject = JsonObject().apply {
 //            addProperty("mobile", inquiryAccount.mobile)
 //            addProperty("mobileOperator", preferencesHelper.operator)
@@ -81,19 +77,19 @@ class RegistrationRepository @Inject constructor(private val apiService: ApiServ
         }
     }
 
-    suspend fun updateUserProfileRepo(inquiryAccount: InquiryAccount, token: String): Response<UserRegistrationResponse> {
+    suspend fun updateUserProfileRepo(inquiryAccount: InquiryAccount): Response<UserRegistrationResponse> {
         val jsonObject = Gson().toJson(inquiryAccount) ?: ""
         return withContext(Dispatchers.IO) {
-            apiService.updateUserProfile(jsonObject, token)
+            authApiService.updateUserProfile(jsonObject)
         }
     }
 
-    suspend fun getUserInfo(mobileNumber: String, token: String): Response<UserRegistrationResponse> {
+    suspend fun getUserInfo(mobileNumber: String): Response<UserRegistrationResponse> {
         val jsonObject = JsonObject().apply {
             addProperty("mobile", mobileNumber)
         }.toString()
         return withContext(Dispatchers.IO) {
-            apiService.getUserInfo(jsonObject, token)
+            authApiService.getUserInfo(jsonObject)
         }
     }
 

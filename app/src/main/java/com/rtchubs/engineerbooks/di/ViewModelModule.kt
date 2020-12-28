@@ -42,6 +42,7 @@ import com.rtchubs.engineerbooks.ui.topup.TopUpAmountViewModel
 import com.rtchubs.engineerbooks.ui.topup.TopUpBankCardViewModel
 import com.rtchubs.engineerbooks.ui.topup.TopUpMobileViewModel
 import com.rtchubs.engineerbooks.ui.topup.TopUpPinViewModel
+import com.rtchubs.engineerbooks.ui.transaction.TransactionViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -271,4 +272,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PaymentViewModel::class)
     abstract fun bindPaymentViewModel(viewModel: PaymentViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TransactionViewModel::class)
+    abstract fun bindTransactionViewModel(viewModel: TransactionViewModel): ViewModel
 }

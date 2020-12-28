@@ -4,6 +4,7 @@ import android.util.Log
 import com.rtchubs.engineerbooks.api.Api
 import com.rtchubs.engineerbooks.api.TokenAuthenticator
 import com.rtchubs.engineerbooks.api.ApiService
+import com.rtchubs.engineerbooks.api.MediaApiService
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.util.LiveDataCallAdapterFactory
 import dagger.Module
@@ -112,6 +113,22 @@ class NetworkModule {
             .addConverterFactory(nullOrEmptyConverterFactory)
             .addCallAdapterFactory(liveDataCallAdapterFactory)
 
+    @Provides
+    @Singleton
+    @Named("Media")
+    fun provideMediaRetrofitBuilder(
+        liveDataCallAdapterFactory: LiveDataCallAdapterFactory,
+        nullOrEmptyConverterFactory: Converter.Factory,
+        scalarsConverterFactory: ScalarsConverterFactory,
+        gsonConverterFactory: GsonConverterFactory
+    ): Retrofit.Builder =
+        Retrofit.Builder()
+            .baseUrl(Api.MEDIA_API_ROOT_URL)
+            .addConverterFactory(scalarsConverterFactory)
+            .addConverterFactory(gsonConverterFactory)
+            .addConverterFactory(nullOrEmptyConverterFactory)
+            .addCallAdapterFactory(liveDataCallAdapterFactory)
+
 
     @Provides
     @Singleton
@@ -163,6 +180,17 @@ class NetworkModule {
         return retrofitBuilder
             .client(okHttpClient).build()
             .create(ApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMediaApiService(
+        okHttpClient: OkHttpClient,
+        @Named("Media") retrofitBuilder: Retrofit.Builder
+    ): MediaApiService {
+        return retrofitBuilder
+            .client(okHttpClient).build()
+            .create(MediaApiService::class.java)
     }
 
     @Provides

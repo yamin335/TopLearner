@@ -1,4 +1,4 @@
-package com.rtchubs.engineerbooks.ui.payment
+package com.rtchubs.engineerbooks.ui.transaction
 
 import android.app.Application
 import androidx.lifecycle.LiveData
@@ -10,6 +10,7 @@ import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.models.registration.InquiryResponse
 import com.rtchubs.engineerbooks.models.transactions.CreateOrderBody
 import com.rtchubs.engineerbooks.models.transactions.Salesinvoice
+import com.rtchubs.engineerbooks.models.transactions.Transaction
 import com.rtchubs.engineerbooks.repos.RegistrationRepository
 import com.rtchubs.engineerbooks.repos.TransactionRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
@@ -19,17 +20,13 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class PaymentViewModel @Inject constructor(private val application: Application, private val repository: TransactionRepository) : BaseViewModel(application) {
+class TransactionViewModel @Inject constructor(private val application: Application, private val repository: TransactionRepository) : BaseViewModel(application) {
 
-    val amount: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
+    val salesInvoice: MutableLiveData<List<Transaction>> by lazy {
+        MutableLiveData<List<Transaction>>()
     }
 
-    val salesInvoice: MutableLiveData<Salesinvoice> by lazy {
-        MutableLiveData<Salesinvoice>()
-    }
-
-    fun createOrder(createOrderBody: CreateOrderBody) {
+    fun getAllTransaction(studentId: Int) {
         if (checkNetworkStatus()) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -39,10 +36,10 @@ class PaymentViewModel @Inject constructor(private val application: Application,
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.createOrderRepo(createOrderBody))) {
+                when (val apiResponse = ApiResponse.create(repository.transactionsRepo(studentId))) {
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                        salesInvoice.postValue(apiResponse.body.data?.salesinvoice)
+                        salesInvoice.postValue(apiResponse.body.data?.transactions)
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)

@@ -47,12 +47,10 @@ import com.rtchubs.engineerbooks.util.showErrorToast
 import com.squareup.picasso.Picasso
 import java.io.File
 import java.io.IOException
+import java.security.SecureRandom
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-
-private const val REQUEST_TAKE_PHOTO_NID_FRONT = 1
-private const val REQUEST_IMAGE_CAPTURE = 0x12345
 
 class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInViewModel>() {
 
@@ -463,6 +461,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
                 return@setOnClickListener
             }
             registrationHelper.city = viewModel.selectedCity?.name
+            registrationHelper.CityID = viewModel.selectedCity?.id?.toInt()
 
             if (viewModel.selectedUpazilla == null) {
                 viewDataBinding.spUpazilla.requestFocus()
@@ -470,17 +469,26 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
                 return@setOnClickListener
             }
             registrationHelper.upazila = viewModel.selectedUpazilla?.name
+            registrationHelper.UpazilaID = viewModel.selectedUpazilla?.id?.toInt()
 
             if (viewModel.selectedClass == null) {
                 viewDataBinding.spClass.requestFocus()
                 showErrorToast(requireContext(), "Please select your class!")
                 return@setOnClickListener
             }
+            registrationHelper.class_id = viewModel.selectedClass?.id?.toInt()
+            registrationHelper.ClassName = viewModel.selectedClass?.name
 
             registrationHelper.customer_type_id = 1
+            val selectionTime: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(
+                Date()
+            )
+            val random = "${1 + SecureRandom().nextInt(9999999)}"
+            val folder = "media_folder_${selectionTime}_$random"
+            registrationHelper.folder = folder
 
             if (viewModel.profileBitmap != null || viewModel.nidFrontBitmap != null || viewModel.nidBackBitmap != null) {
-                viewModel.uploadProfileImagesToServer()
+                viewModel.uploadProfileImagesToServer(registrationHelper.mobile ?: "", registrationHelper.folder ?: "")
             } else {
                 viewModel.registerNewUser(registrationHelper)
             }

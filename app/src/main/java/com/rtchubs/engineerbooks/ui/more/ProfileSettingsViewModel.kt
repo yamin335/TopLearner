@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.models.registration.*
+import com.rtchubs.engineerbooks.repos.MediaRepository
 import com.rtchubs.engineerbooks.repos.RegistrationRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
 import com.rtchubs.engineerbooks.util.AppConstants.serverConnectionErrorMessage
@@ -20,10 +21,11 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import javax.inject.Inject
 
-class ProfileSettingsViewModel @Inject constructor(private val application: Application, private val repository: RegistrationRepository) : BaseViewModel(application) {
+class ProfileSettingsViewModel @Inject constructor(private val application: Application, private val repository: RegistrationRepository, private val mediaRepository: MediaRepository) : BaseViewModel(application) {
 
     var profileBitmap: Bitmap? = null
     var nidFrontBitmap: Bitmap? = null
@@ -139,7 +141,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
         }
     }
 
-    fun uploadProfileImagesToServer() {
+    fun uploadProfileImagesToServer(mobile: String, folder: String) {
         if (checkNetworkStatus()) {
             val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM).apply {
                 profileBitmap?.let {
@@ -163,6 +165,8 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
 //                    val profileImagePart = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
 //                    addFormDataPart("nidback", it.name, profileImagePart)
                 }
+                addFormDataPart("mobile", mobile)
+                addFormDataPart("folder", folder)
 //                nidFrontBitmap?.let {
 //                    val profileImagePart = it.asRequestBody("multipart/form-data".toMediaTypeOrNull())
 //                    addFormDataPart("nidfront", it.name, profileImagePart)
@@ -181,7 +185,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.uploadProfilePhotosRepo(requestBody))) {
+                when (val apiResponse = ApiResponse.create(mediaRepository.uploadProfilePhotosRepo(requestBody))) {
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
                         allImageUrls.postValue(apiResponse.body.data)
@@ -225,7 +229,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
         }
     }
 
-    fun updateUserProfile(inquiryAccount: InquiryAccount, token: String) {
+    fun updateUserProfile(inquiryAccount: InquiryAccount) {
         if (checkNetworkStatus()) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -235,7 +239,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.updateUserProfileRepo(inquiryAccount, token))) {
+                when (val apiResponse = ApiResponse.create(repository.updateUserProfileRepo(inquiryAccount))) {
                     is ApiSuccessResponse -> {
                         profileUpdateResponse.postValue(apiResponse.body.data)
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
@@ -251,7 +255,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
         }
     }
 
-    fun getUserProfileInfo(mobileNumber: String, token: String) {
+    fun getUserProfileInfo(mobileNumber: String) {
         if (checkNetworkStatus()) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -261,7 +265,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.getUserInfo(mobileNumber, token))) {
+                when (val apiResponse = ApiResponse.create(repository.getUserInfo(mobileNumber))) {
                     is ApiSuccessResponse -> {
                         userProfileInfo.postValue(apiResponse.body.data?.Account)
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)

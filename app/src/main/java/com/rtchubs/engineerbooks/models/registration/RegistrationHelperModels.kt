@@ -26,6 +26,6 @@ data class UserRegistrationData(val Account: InquiryAccount?, val Token: Token?)
 
 data class Token(val AccessToken: String?, val RefreshToken: String?, val AccessUUID: String?, val RefreshUUID: String?, val AtExpires: Long?, val RtExpires: Long?)
 
-data class ProfileImageUploadResponse(val code: Int?, val data: ProfileImageUploadData?, val msg: String?)
+data class ProfileImageUploadResponse(val code: Int?, val status: String?, val message: String?, val data: ProfileImageUploadData?)
 
-data class ProfileImageUploadData(val nidback: String?, val nidfront: String?, val profilepic: String?)
+data class ProfileImageUploadData(val profilepic: String?, val nidfront: String?, val nidback: String?, val folder: String?)

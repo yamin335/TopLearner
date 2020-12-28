@@ -188,14 +188,14 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 
         viewModel.allImageUrls.observe(viewLifecycleOwner, androidx.lifecycle.Observer { data ->
             if (data == null) {
-                viewModel.updateUserProfile(userData, preferencesHelper.accessToken ?: "")
+                viewModel.updateUserProfile(userData)
                 return@Observer
             }
 
             userData.profilePic = data.profilepic
             userData.nidFrontPic = data.nidfront
             userData.nidBackPic = data.nidback
-            viewModel.updateUserProfile(userData, preferencesHelper.accessToken ?: "")
+            viewModel.updateUserProfile(userData)
         })
 
         viewDataBinding.city.setOnClickListener {
@@ -214,6 +214,12 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         viewDataBinding.tvClass.setOnClickListener {
             navigateTo(ProfileSettingsFragmentDirections.actionProfileSettingsFragmentToClassEditFragment())
         }
+
+        viewModel.userProfileInfo.observe(viewLifecycleOwner, androidx.lifecycle.Observer { userInfo ->
+            userInfo?.let {
+                prepareUserData(it)
+            }
+        })
 
         viewDataBinding.btnSubmit.setOnClickListener {
             if (viewDataBinding.firstName.text.toString().isEmpty()) {
@@ -288,9 +294,9 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 //            }
 
             if (viewModel.profileBitmap != null || viewModel.nidFrontBitmap != null || viewModel.nidBackBitmap != null) {
-                viewModel.uploadProfileImagesToServer()
+                viewModel.uploadProfileImagesToServer(userData.mobile ?: "", userData.folder ?: "")
             } else {
-                viewModel.updateUserProfile(userData, preferencesHelper.accessToken ?: "")
+                viewModel.updateUserProfile(userData)
             }
 
             //viewModel.uploadProfileImagesToServer()
@@ -351,6 +357,8 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             prepareUserData(userData)
             viewModel.apiCallStatus.postValue(ApiCallStatus.SUCCESS)
         }
+
+        viewModel.getUserProfileInfo(userData.mobile ?: "")
     }
 
     private fun prepareUserData(user: InquiryAccount) {
@@ -358,7 +366,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         viewDataBinding.lastName.setText(user.lastName)
         viewDataBinding.fatherName.setText(user.altContactPerson)
         viewDataBinding.city.text = user.city
-        viewDataBinding.tvClass.text = user.class_id?.toString()
+        viewDataBinding.tvClass.text = user.ClassName
         viewDataBinding.tvUpazilla.text = user.upazila
         viewDataBinding.emailField.setText(user.email)
         viewDataBinding.nidField.setText(user.nidnumber)
