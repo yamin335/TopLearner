@@ -50,8 +50,9 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         viewModel.salesInvoice.observe(viewLifecycleOwner, Observer { invoice ->
             invoice?.let {
                 Home2Fragment.allBookList.map { classWiseBook ->
-                    if(classWiseBook.id == it.BookID) classWiseBook.isPaid = true
+                    classWiseBook.isPaid = true
                 }
+                preferencesHelper.isBookPaid = true
                 hideKeyboard()
                 if (args.bookId == it.BookID) {
                     navController.popBackStack()

@@ -144,10 +144,12 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
 
         viewModel.allBooks.observe(viewLifecycleOwner, Observer { books ->
             books?.let {
+                val isPaid = preferencesHelper.isBookPaid
                 val tempList = ArrayList<ClassWiseBook>()
                 var i = 1
                 it.forEach { book ->
                     book.id = i++
+                    if (isPaid) book.isPaid = true
                     tempList.add(book)
                 }
                 allBookList = tempList

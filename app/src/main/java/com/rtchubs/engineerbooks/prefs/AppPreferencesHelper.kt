@@ -30,7 +30,7 @@ class AppPreferencesHelper @Inject constructor(
         context.applicationContext.getSharedPreferences(prefFileName, Context.MODE_PRIVATE)
     }
 
-    override var test by StringPreference(prefs, "test", defaultValue = null, commit = true)
+    override var isBookPaid by BooleanPreference(prefs, KEY_BOOK_PAY, defaultValue = false, commit = true)
     override var isRegistered by BooleanPreference(prefs, KEY_REG, defaultValue = false, commit = true)
     override var isTermsAccepted by BooleanPreference(prefs, KEY_TERMS, defaultValue = false, commit = true)
     override var pinNumber by StringPreference(prefs, KEY_PIN, defaultValue = null, commit = true)
@@ -161,6 +161,7 @@ class AppPreferencesHelper @Inject constructor(
 
     companion object {
         // QPay
+        private const val KEY_BOOK_PAY = "IsBookPaid"
         private const val KEY_USER = "UserData"
         private const val KEY_REG = "RegistrationStatus"
         private const val KEY_TERMS = "TermsAndConditionStatus"

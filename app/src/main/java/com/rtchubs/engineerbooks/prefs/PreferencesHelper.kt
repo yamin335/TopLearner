@@ -7,7 +7,7 @@ import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 
 interface PreferencesHelper {
 
-    var test: String?
+    var isBookPaid: Boolean
 
     var isRegistered: Boolean
 
