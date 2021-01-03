@@ -12,7 +12,7 @@ data class InquiryAccount(var udid: String?, var createdAt: String?, var updated
                           var profilePic: String?, var otp: String?, var otpExpire: String?, var status: String?,
                           var role: String?, var action: String?, var isRegistered: Boolean?,
                           var isMobileVerified: Boolean?, var isAcceptedTandC: Boolean?,
-                          var Table: String?, var address1: String?, var Folder: String?): Serializable
+                          var Table: String?, var address: String?, var Folder: String?): Serializable
 
 data class InquiryResponse(val code: Int?, val data: InquiryData?, val msg: String?)
 

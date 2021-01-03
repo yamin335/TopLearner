@@ -489,4 +489,14 @@
     <string name="select_account_type">Select Account Type</string>
     <string name="info">Info</string>
     <string name="exams">Exams</string>
+    <string name="first_name">First Name<b><i><font color='#FF3030'>* </font></i></b></string>
+    <string name="last_name">Last Name<b><i><font color='#FF3030'>* </font></i></b></string>
+    <string name="father_s_name">Father\'s Name<b><i><font color='#FF3030'>* </font></i></b></string>
+    <string name="gender">Gender<b><i><font color='#FF3030'>* </font></i></b></string>
+    <string name="academic_class">Academic Class<b><i><font color='#FF3030'>* </font></i></b></string>
+    <string name="city">City<b><i><font color='#FF3030'>* </font></i></b></string>
+    <string name="upazilla">Upazilla<b><i><font color='#FF3030'>* </font></i></b></string>
+    <string name="default_description">Default description</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="select_upazilla">-- Select Upazilla --</string>
 </resources>

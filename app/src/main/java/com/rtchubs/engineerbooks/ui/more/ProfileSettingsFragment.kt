@@ -49,7 +49,6 @@ import java.util.*
 
 class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, ProfileSettingsViewModel>() {
 
-
     override val bindingVariable: Int
         get() = BR.viewModel
     override val layoutId: Int
@@ -58,7 +57,6 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
     override val viewModel: ProfileSettingsViewModel by viewModels { viewModelFactory }
 
     private var titleGenderList = arrayOf("--Select Gender--")
-
     lateinit var genderAdapter: ArrayAdapter<String>
 
     lateinit var profileCameraLauncher: ActivityResultLauncher<Intent>
@@ -255,33 +253,33 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
                 showErrorToast(requireContext(), "Please enter father's name!")
                 return@setOnClickListener
             }
-            if (viewDataBinding.birthDayField.text.toString().isEmpty()) {
-                viewDataBinding.birthDayField.requestFocus()
-                showErrorToast(requireContext(), "Please enter birth date!")
-                return@setOnClickListener
-            }
-            if (viewDataBinding.nidField.text.toString().isEmpty()) {
-                viewDataBinding.nidField.requestFocus()
-                showErrorToast(requireContext(), "Please enter NID number!")
-                return@setOnClickListener
-            }
-            if (viewDataBinding.nidField.text.toString().length < 10) {
-                viewDataBinding.nidField.requestFocus()
-                showErrorToast(requireContext(), "Please enter valid NID number!")
-                return@setOnClickListener
-            }
-            userData.nidnumber = viewDataBinding.nidField.text.toString()
-            if (viewDataBinding.emailField.text.toString().isEmpty()) {
-                viewDataBinding.emailField.requestFocus()
-                showErrorToast(requireContext(), "Please enter email address!")
-                return@setOnClickListener
-            }
+//            if (viewDataBinding.birthDayField.text.toString().isEmpty()) {
+//                viewDataBinding.birthDayField.requestFocus()
+//                showErrorToast(requireContext(), "Please enter birth date!")
+//                return@setOnClickListener
+//            }
+//            if (viewDataBinding.nidField.text.toString().isEmpty()) {
+//                viewDataBinding.nidField.requestFocus()
+//                showErrorToast(requireContext(), "Please enter NID number!")
+//                return@setOnClickListener
+//            }
+//            if (viewDataBinding.nidField.text.toString().length < 10) {
+//                viewDataBinding.nidField.requestFocus()
+//                showErrorToast(requireContext(), "Please enter valid NID number!")
+//                return@setOnClickListener
+//            }
+//            userData.nidnumber = viewDataBinding.nidField.text.toString()
+//            if (viewDataBinding.emailField.text.toString().isEmpty()) {
+//                viewDataBinding.emailField.requestFocus()
+//                showErrorToast(requireContext(), "Please enter email address!")
+//                return@setOnClickListener
+//            }
             userData.email = viewDataBinding.emailField.text.toString()
-            if (viewDataBinding.addressField.text.toString().isEmpty()) {
-                viewDataBinding.addressField.requestFocus()
-                showErrorToast(requireContext(), "Please enter your address!")
-                return@setOnClickListener
-            }
+//            if (viewDataBinding.addressField.text.toString().isEmpty()) {
+//                viewDataBinding.addressField.requestFocus()
+//                showErrorToast(requireContext(), "Please enter your address!")
+//                return@setOnClickListener
+//            }
             if (viewModel.selectedGender == null) {
                 viewDataBinding.spGender.requestFocus()
                 showErrorToast(requireContext(), "Please select your gender!")
@@ -309,6 +307,11 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
                 userData.UpazilaID = it.id?.toInt() ?: 0
                 userData.upazila = it.name
             }
+
+            userData.email = viewDataBinding.emailField.text.toString()
+            userData.address = viewDataBinding.addressField.text.toString()
+            userData.institute = viewDataBinding.instituteField.text.toString()
+            userData.role = viewDataBinding.rollField.text.toString()
 //            userData.upazila = viewModel.selectedUpazilla?.name
 //            if (viewModel.selectedClass == null) {
 //                viewDataBinding.spClass.requestFocus()
@@ -405,8 +408,10 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         viewDataBinding.tvClass.text = user.ClassName
         viewDataBinding.tvUpazilla.text = user.upazila
         viewDataBinding.emailField.setText(user.email)
-        viewDataBinding.nidField.setText(user.nidnumber)
-        viewDataBinding.addressField.setText(user.address1)
+        //viewDataBinding.nidField.setText(user.nidnumber)
+        viewDataBinding.addressField.setText(user.address)
+        viewDataBinding.instituteField.setText(user.institute)
+        viewDataBinding.rollField.setText(user.role)
         var genderIndex = 0
         viewModel.allGender.forEachIndexed { index, gender ->
             if (gender.name?.equals(user.gender ?: "N/A", true) == true) genderIndex = index + 1
@@ -419,7 +424,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         DistrictEditFragment.selectedCity?.name?.let {
             viewDataBinding.city.text = it
             if (UpazillaEditFragment.selectedUpazilla == null) {
-                viewDataBinding.tvUpazilla.text = "-- Select Upazilla --"
+                viewDataBinding.tvUpazilla.text = getString(R.string.select_upazilla)
             }
         }
         UpazillaEditFragment.selectedUpazilla?.name?.let {

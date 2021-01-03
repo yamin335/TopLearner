@@ -57,12 +57,12 @@
     <fragment
         android:id="@+id/districtEditFragment"
         android:name="com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment"
-        android:label="DistrictEditFragment"
+        android:label="Select District"
         tools:layout="@layout/fragment_district_edit"/>
     <fragment
         android:id="@+id/upazillaEditFragment"
         android:name="com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment"
-        android:label="UpazillaEditFragment"
+        android:label="Select Upazilla"
         tools:layout="@layout/fragment_upazilla_edit">
         <argument
             android:name="cityId"
@@ -71,7 +71,7 @@
     <fragment
         android:id="@+id/classEditFragment"
         android:name="com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment"
-        android:label="ClassEditFragment"
+        android:label="Select Class"
         tools:layout="@layout/fragment_class_edit"/>
     <fragment
         android:id="@+id/paymentFragment2"

@@ -828,6 +828,30 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="classEditFragment1">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="2051" />
+                            <option name="y" value="-760" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="districtEditFragment1">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="2066" />
+                            <option name="y" value="-346" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="otpSignInFragment">
                     <value>
                       <LayoutPositions>
@@ -949,11 +973,6 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_splashFragment_to_profileSignInFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
                             <entry key="action_splash_to_login">
                               <value>
                                 <LayoutPositions />
@@ -981,6 +1000,18 @@
                               </value>
                             </entry>
                           </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="upazillaEditFragment1">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="2075" />
+                            <option name="y" value="46" />
+                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>

@@ -73,7 +73,8 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:riv_border_color="@color/blue_gray"
                         app:riv_border_width="2dp"
-                        app:riv_corner_radius="100dp" />
+                        app:riv_corner_radius="100dp"
+                        android:contentDescription="@string/default_description" />
 
                     <LinearLayout
                         android:id="@+id/linearLayoutFullName"
@@ -85,7 +86,8 @@
                         android:orientation="horizontal"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/rivProfileImage">
+                        app:layout_constraintTop_toBottomOf="@id/rivProfileImage"
+                        android:baselineAligned="true">
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -102,7 +104,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
-                                android:text="First Name"
+                                android:text="@string/first_name"
                                 android:textColor="@color/white"
                                 android:textSize="16sp" />
 
@@ -114,7 +116,9 @@
                                 android:hint="first name"
                                 android:textColor="@color/white"
                                 android:textSize="18sp"
-                                android:theme="@style/EditTextTheme" />
+                                android:inputType="text"
+                                android:theme="@style/EditTextTheme"
+                                android:importantForAutofill="no" />
 
                             <View
                                 android:layout_width="match_parent"
@@ -138,7 +142,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
-                                android:text="Last Name"
+                                android:text="@string/last_name"
                                 android:textColor="@color/white"
                                 android:textSize="16sp" />
 
@@ -148,9 +152,11 @@
                                 android:layout_height="wrap_content"
                                 android:background="@null"
                                 android:hint="last name"
+                                android:inputType="text"
                                 android:textColor="@color/white"
                                 android:textSize="18sp"
-                                android:theme="@style/EditTextTheme" />
+                                android:theme="@style/EditTextTheme"
+                                android:importantForAutofill="no" />
 
                             <View
                                 android:layout_width="match_parent"
@@ -178,7 +184,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            android:text="Father Name"
+                            android:text="@string/father_s_name"
                             android:textColor="@color/white"
                             android:textSize="16sp" />
 
@@ -190,7 +196,9 @@
                             android:hint="father name"
                             android:textColor="@color/white"
                             android:textSize="18sp"
-                            android:theme="@style/EditTextTheme" />
+                            android:inputType="text"
+                            android:theme="@style/EditTextTheme"
+                            android:importantForAutofill="no" />
 
                         <View
                             android:layout_width="match_parent"
@@ -212,53 +220,23 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/linearFatherName">
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/gender"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+
                         <Spinner
                             android:id="@+id/spGender"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:padding="5dp"
-                            android:layout_height="50dp"
-                            android:layout_marginEnd="8dp"
+                            android:layout_height="45dp"
+                            android:layout_marginEnd="0dp"
                             android:spinnerMode="dropdown"
                             android:background="@drawable/rounded_bd_spinner" />
-
-                        <LinearLayout
-                            android:id="@+id/linearLayoutBirthDate"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:orientation="vertical"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/guideline5"
-                            app:layout_constraintTop_toTopOf="@id/spGender">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:text="Birthday"
-                                android:textColor="@color/white"
-                                android:textSize="16sp" />
-
-                            <EditText
-                                android:id="@+id/birthDayField"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@null"
-                                android:hint="dd-mm-yyyy"
-                                android:inputType="date"
-                                android:textColor="@color/white"
-                                android:textSize="18sp"
-                                android:theme="@style/EditTextTheme" />
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="2dp"
-                                android:layout_marginTop="4dp"
-                                android:background="@color/albumColorPrimary" />
-
-                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
@@ -278,7 +256,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
-                            android:text="Academic Class"
+                            android:text="@string/academic_class"
                             android:textColor="@color/white"
                             android:textSize="16sp" />
 
@@ -286,97 +264,58 @@
                             android:id="@+id/tvClass"
                             android:layout_width="0dp"
                             android:layout_weight="1"
-                            android:layout_height="wrap_content"
+                            android:layout_height="45dp"
                             android:paddingStart="16dp"
                             android:paddingTop="8dp"
                             android:paddingBottom="8dp"
                             android:paddingEnd="0dp"
-                            android:textColor="#BBBBBB"
-                            android:textSize="18sp"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp"
                             android:gravity="center_vertical"
                             android:clickable="true"
                             android:focusable="true"
                             android:background="@drawable/rounded_bd_spinner" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/linearLayoutNid"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="8dp"
-                        android:orientation="vertical"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/linearClass">
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/linearLayoutNid"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginStart="8dp"-->
+<!--                        android:layout_marginTop="16dp"-->
+<!--                        android:layout_marginEnd="8dp"-->
+<!--                        android:orientation="vertical"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toBottomOf="@id/linearClass">-->
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="NID No"
-                            android:textColor="@color/white"
-                            android:textSize="16sp" />
+<!--                        <TextView-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginBottom="8dp"-->
+<!--                            android:text="NID No"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:textSize="16sp" />-->
 
-                        <EditText
-                            android:id="@+id/nidField"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:hint="NID number"
-                            android:maxLength="12"
-                            android:inputType="numberDecimal"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:theme="@style/EditTextTheme" />
+<!--                        <EditText-->
+<!--                            android:id="@+id/nidField"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="@null"-->
+<!--                            android:hint="NID number"-->
+<!--                            android:maxLength="12"-->
+<!--                            android:inputType="numberDecimal"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:textSize="18sp"-->
+<!--                            android:theme="@style/EditTextTheme" />-->
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_marginTop="4dp"
-                            android:background="@color/albumColorPrimary" />
+<!--                        <View-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="2dp"-->
+<!--                            android:layout_marginTop="4dp"-->
+<!--                            android:background="@color/albumColorPrimary" />-->
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/linearLayoutEmailAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="8dp"
-                        android:orientation="vertical"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/linearLayoutNid">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Email Address"
-                            android:textColor="@color/white"
-                            android:textSize="16sp" />
-
-                        <EditText
-                            android:id="@+id/emailField"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:hint="email address"
-                            android:inputType="textEmailAddress"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:theme="@style/EditTextTheme" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_marginTop="4dp"
-                            android:background="@color/albumColorPrimary" />
-
-                    </LinearLayout>
+<!--                    </LinearLayout>-->
 
                     <LinearLayout
                         android:id="@+id/linearCity"
@@ -389,13 +328,13 @@
                         android:layout_marginEnd="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/linearLayoutEmailAddress">
+                        app:layout_constraintTop_toBottomOf="@id/linearClass">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
-                            android:text="City"
+                            android:text="@string/city"
                             android:textColor="@color/white"
                             android:textSize="16sp" />
 
@@ -403,13 +342,13 @@
                             android:id="@+id/city"
                             android:layout_width="0dp"
                             android:layout_weight="1"
-                            android:layout_height="wrap_content"
+                            android:layout_height="45dp"
                             android:paddingStart="16dp"
                             android:paddingTop="8dp"
                             android:paddingBottom="8dp"
                             android:paddingEnd="0dp"
-                            android:textColor="#BBBBBB"
-                            android:textSize="18sp"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp"
                             android:gravity="center_vertical"
                             android:clickable="true"
                             android:focusable="true"
@@ -433,25 +372,150 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
-                            android:text="Upazilla"
+                            android:text="@string/upazilla"
                             android:textColor="@color/white"
                             android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/tvUpazilla"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="45dp"
                             android:paddingStart="16dp"
                             android:paddingTop="8dp"
                             android:paddingBottom="8dp"
                             android:paddingEnd="0dp"
-                            android:textColor="#BBBBBB"
-                            android:textSize="18sp"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp"
                             android:gravity="center_vertical"
                             android:layout_weight="1"
                             android:clickable="true"
                             android:focusable="true"
                             android:background="@drawable/rounded_bd_spinner" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearInstituteAndRoll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/linearUpazilla"
+                        android:baselineAligned="false">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="8dp"
+                            android:orientation="vertical"
+                            android:layout_weight="1.5">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:text="Institute"
+                                android:textColor="@color/white"
+                                android:textSize="16sp" />
+
+                            <EditText
+                                android:id="@+id/instituteField"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:hint="institute"
+                                android:inputType="text"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                android:theme="@style/EditTextTheme"
+                                android:importantForAutofill="no" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="2dp"
+                                android:layout_marginTop="4dp"
+                                android:background="@color/albumColorPrimary" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="0dp"
+                            android:orientation="vertical"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:text="Roll"
+                                android:textColor="@color/white"
+                                android:textSize="16sp" />
+
+                            <EditText
+                                android:id="@+id/rollField"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:hint="class roll"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                android:theme="@style/EditTextTheme"
+                                android:importantForAutofill="no" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="2dp"
+                                android:layout_marginTop="4dp"
+                                android:background="@color/albumColorPrimary" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearLayoutEmailAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/linearInstituteAndRoll">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="Email Address"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+
+                        <EditText
+                            android:id="@+id/emailField"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:importantForAutofill="yes"
+                            android:hint="email address"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:theme="@style/EditTextTheme" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@color/albumColorPrimary" />
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -464,7 +528,7 @@
                         android:orientation="vertical"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/linearUpazilla">
+                        app:layout_constraintTop_toBottomOf="@id/linearLayoutEmailAddress">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -482,7 +546,8 @@
                             android:hint="address"
                             android:textColor="@color/white"
                             android:textSize="18sp"
-                            android:theme="@style/EditTextTheme" />
+                            android:theme="@style/EditTextTheme"
+                            android:importantForAutofill="no" />
 
                         <View
                             android:layout_width="match_parent"
@@ -529,7 +594,8 @@
                         app:layout_constraintTop_toBottomOf="@+id/tvNidText"
                         app:layout_constraintVertical_bias="0.0"
                         app:riv_border_color="@color/blue_gray"
-                        app:riv_border_width="2dp" />
+                        app:riv_border_width="2dp"
+                        android:contentDescription="@string/default_description" />
 
                     <ImageView
                         android:id="@+id/rivNidBackImage"
@@ -547,7 +613,8 @@
                         app:layout_constraintTop_toBottomOf="@+id/tvNidText"
                         app:layout_constraintVertical_bias="0.0"
                         app:riv_border_color="@color/blue_gray"
-                        app:riv_border_width="2dp" />
+                        app:riv_border_width="2dp"
+                        android:contentDescription="@string/default_description"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSubmit"
@@ -555,7 +622,7 @@
                         android:layout_height="54dp"
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="32dp"
-                        android:text="Update Profile"
+                        android:text="@string/update_profile"
                         android:enabled="true"
                         android:backgroundTint="@color/button_enable_disable_colors"
                         android:textAllCaps="false"

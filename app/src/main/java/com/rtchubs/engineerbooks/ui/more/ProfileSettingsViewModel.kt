@@ -273,7 +273,6 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
                     is ApiSuccessResponse -> {
                         userProfileInfo.postValue(apiResponse.body.data?.Account)
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                        userProfileInfo.postValue(null)
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)

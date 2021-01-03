@@ -65,6 +65,7 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
         viewDataBinding.logout.setOnClickListener {
             SplashFragment.fromLogout = true
             preferencesHelper.isLoggedIn = false
+            preferencesHelper.isBookPaid = false
             listener?.onLoggedOut()
         }
 

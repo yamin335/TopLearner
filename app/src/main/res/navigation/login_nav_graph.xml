@@ -115,6 +115,27 @@
         <argument
             android:name="registrationHelper"
             app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />
+        <action
+            android:id="@+id/action_profileSignInFragment_to_classEditFragment1"
+            app:destination="@id/classEditFragment1"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_profileSignInFragment_to_districtEditFragment1"
+            app:destination="@id/districtEditFragment1"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_profileSignInFragment_to_upazillaEditFragment1"
+            app:destination="@id/upazillaEditFragment1"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/permissionsFragment"
@@ -149,5 +170,25 @@
             android:name="registrationHelper"
             app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />
     </fragment>
+
+    <fragment
+        android:id="@+id/districtEditFragment1"
+        android:name="com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment"
+        android:label="Select District"
+        tools:layout="@layout/fragment_district_edit"/>
+    <fragment
+        android:id="@+id/upazillaEditFragment1"
+        android:name="com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment"
+        android:label="Select Upazilla"
+        tools:layout="@layout/fragment_upazilla_edit">
+        <argument
+            android:name="cityId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/classEditFragment1"
+        android:name="com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment"
+        android:label="Select Class"
+        tools:layout="@layout/fragment_class_edit"/>
 
 </navigation>

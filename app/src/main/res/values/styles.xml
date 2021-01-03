@@ -125,14 +125,24 @@
         <item name="colorControlHighlight">@color/red</item>
     </style>
 
+    <style name="SearchBarTheme">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlHighlight">@android:color/white</item>
+        <item name="android:textColorHint">@color/green</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="fontFamily">@font/verdana</item>
         <!-- THIS is where you can color the arrow! -->
         <!-- <item name="android:textColorPrimary">@color/light_green</item>-->
-         <item name="colorControlNormal">@color/albumColorPrimary</item>
+        <item name="colorControlNormal">@color/albumColorPrimary</item>
+        <item name="android:colorControlActivated">@android:color/white</item>
+        <item name="android:textColorHint">#AAAAAA</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
     <style name="CustomActivityAnimation" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
