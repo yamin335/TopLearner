@@ -311,7 +311,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             userData.email = viewDataBinding.emailField.text.toString()
             userData.address = viewDataBinding.addressField.text.toString()
             userData.institute = viewDataBinding.instituteField.text.toString()
-            userData.role = viewDataBinding.rollField.text.toString()
+            userData.rollnumber = viewDataBinding.rollField.text.toString()
 //            userData.upazila = viewModel.selectedUpazilla?.name
 //            if (viewModel.selectedClass == null) {
 //                viewDataBinding.spClass.requestFocus()
@@ -411,7 +411,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         //viewDataBinding.nidField.setText(user.nidnumber)
         viewDataBinding.addressField.setText(user.address)
         viewDataBinding.instituteField.setText(user.institute)
-        viewDataBinding.rollField.setText(user.role)
+        viewDataBinding.rollField.setText(user.rollnumber)
         var genderIndex = 0
         viewModel.allGender.forEachIndexed { index, gender ->
             if (gender.name?.equals(user.gender ?: "N/A", true) == true) genderIndex = index + 1

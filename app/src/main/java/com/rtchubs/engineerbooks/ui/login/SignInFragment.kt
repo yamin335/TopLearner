@@ -156,11 +156,12 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
                         navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
                     }
                 } else if (it.isRegistered == true && it.isMobileVerified == true) {
-                    if (it.isAcceptedTandC == true) {
-                        navigateTo(SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(it))
-                    } else {
-                        navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
-                    }
+                    navigateTo(SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(it))
+//                    if (it.isAcceptedTandC == true) {
+//
+//                    } else {
+//                        navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
+//                    }
                 } else {
                     showErrorToast(mContext, response.msg ?: commonErrorMessage)
                 }

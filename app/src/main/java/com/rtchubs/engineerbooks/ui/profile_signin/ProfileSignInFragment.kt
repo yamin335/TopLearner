@@ -564,7 +564,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
             registrationHelper.ClassName = viewModel.selectedClass?.name
 
             registrationHelper.institute = viewDataBinding.instituteField.text.toString()
-            registrationHelper.role = viewDataBinding.rollField.text.toString()
+            registrationHelper.rollnumber = viewDataBinding.rollField.text.toString()
 
             registrationHelper.customer_type_id = 1
             registrationHelper.isRegistered = true
