@@ -45,6 +45,7 @@ import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.more.ProfileSettingsFragmentDirections
 import com.rtchubs.engineerbooks.util.BitmapUtilss
 import com.rtchubs.engineerbooks.util.showErrorToast
+import com.rtchubs.engineerbooks.util.showSuccessToast
 import com.squareup.picasso.Picasso
 import java.io.File
 import java.io.IOException
@@ -463,6 +464,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
                         preferencesHelper.accessTokenExpiresIn = data.Token?.AtExpires ?: 0
                         preferencesHelper.isLoggedIn = true
                         preferencesHelper.saveUser(account)
+                        showSuccessToast(requireContext(), "Registration successful!")
                         listener?.onLoggedIn()
                     }
                 }
