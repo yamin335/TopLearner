@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.ApiService
 import com.rtchubs.engineerbooks.api.MediaApiService
+import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
 import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
 import com.rtchubs.engineerbooks.models.registration.*
 import com.rtchubs.engineerbooks.models.transactions.CreateOrderBody
@@ -27,6 +28,12 @@ class MediaRepository @Inject constructor(private val mediaApiService: MediaApiS
     suspend fun uploadProfilePhotosRepo(requestBody: RequestBody): Response<ProfileImageUploadResponse> {
         return withContext(Dispatchers.IO) {
             mediaApiService.uploadProfilePhotos(requestBody)
+        }
+    }
+
+    suspend fun getChaptersRepo(bookID: String?): Response<ChapterResponse> {
+        return withContext(Dispatchers.IO) {
+            mediaApiService.getChapters(bookID)
         }
     }
 }

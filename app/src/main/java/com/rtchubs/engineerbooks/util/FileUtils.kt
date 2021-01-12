@@ -307,6 +307,41 @@ class FileUtils {
             return "com.android.providers.media.documents" == uri.authority
         }
 
+        fun getLocalStorageFilePath(applicationContext: Context, folderName: String): String {
+            //If your app is used on a device that runs Android 4.3 (API level 18) or lower,
+            // then the array contains just one element,
+            // which represents the primary external storage volume
+            val externalStorageVolumes: Array<out File> = ContextCompat.getExternalFilesDirs(
+                applicationContext,
+                null
+            )
+            val primaryExternalStorage = externalStorageVolumes[0]
+
+            return if (folderName == "")
+                primaryExternalStorage.absolutePath
+            else
+                "${primaryExternalStorage.absolutePath}/$folderName"
+        }
+
+        fun makeEmptyFolderIntoExternalStorageWithTitle(applicationContext: Context, folderName: String): Boolean {
+            //If your app is used on a device that runs Android 4.3 (API level 18) or lower,
+            // then the array contains just one element,
+            // which represents the primary external storage volume
+            val externalStorageVolumes: Array<out File> = ContextCompat.getExternalFilesDirs(
+                applicationContext,
+                null
+            )
+            val primaryExternalStorage = externalStorageVolumes[0]
+            //path = "$primaryExternalStorage/$realDocId"
+
+            //val root: String = Environment.getExternalStorageDirectory().getAbsolutePath()
+            val folder = File(primaryExternalStorage.absolutePath, folderName)
+            if (!folder.exists()) {
+                if (!folder.mkdir())
+                    return false
+            }
+            return true
+        }
 
         private fun makeEmptyFileIntoExternalStorageWithTitle(applicationContext: Context, title: String): File {
             //If your app is used on a device that runs Android 4.3 (API level 18) or lower,

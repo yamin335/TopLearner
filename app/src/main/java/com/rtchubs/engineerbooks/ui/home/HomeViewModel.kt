@@ -7,11 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.*
-import com.rtchubs.engineerbooks.models.Book
 import com.rtchubs.engineerbooks.models.PaymentMethod
-import com.rtchubs.engineerbooks.models.SubBook
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
-import com.rtchubs.engineerbooks.models.registration.AcademicClass
 import com.rtchubs.engineerbooks.models.registration.DefaultResponse
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.repos.HomeRepository

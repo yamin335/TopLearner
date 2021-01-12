@@ -2,7 +2,10 @@ package com.rtchubs.engineerbooks.ui.video_play
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -13,43 +16,46 @@ import android.os.Bundle
 import android.transition.Transition
 import android.transition.TransitionInflater
 import android.transition.TransitionManager
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.webkit.WebChromeClient
-import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.rtchubs.engineerbooks.AppGlobalValues
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiEndPoint.VIDEOS
 import com.rtchubs.engineerbooks.databinding.WebViewBinding
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
-import com.rtchubs.engineerbooks.models.VideoItem
+import com.rtchubs.engineerbooks.models.chapter.BookChapter
+import com.rtchubs.engineerbooks.models.chapter.ChapterField
+import com.rtchubs.engineerbooks.services.DownloadService
 import com.rtchubs.engineerbooks.ui.*
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
-import com.rtchubs.engineerbooks.ui.home.VideoListFragment
-import com.rtchubs.engineerbooks.ui.home.QuizListFragment
-import com.rtchubs.engineerbooks.ui.home.SetCFragment
 import com.rtchubs.engineerbooks.ui.home.VideoTabViewPagerAdapter
+import com.rtchubs.engineerbooks.util.AppConstants
+import com.rtchubs.engineerbooks.util.AppConstants.DOWNLOAD_COMPLETE
+import com.rtchubs.engineerbooks.util.AppConstants.FILE_NAME
+import com.rtchubs.engineerbooks.util.AppConstants.FILE_PATH
+import com.rtchubs.engineerbooks.util.AppConstants.downloadFolder
+import com.rtchubs.engineerbooks.util.FileUtils
 import kotlinx.android.synthetic.main.fragment_load_web_view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.exception.ZipException
 import net.lingala.zip4j.progress.ProgressMonitor
-import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -96,16 +102,21 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         return externalStorageVolumes[0].absolutePath
     }
 
-    private lateinit var source: String
-    private lateinit var destination: String
+//    private lateinit var source: String
+//    private lateinit var destination: String
     private val password = "1234".toCharArray()
 
     private var bottomNavShowHideCallback: ShowHideBottomNavCallback? = null
 
     private var systemUIConfigurationBackup: Int = 0
 
+    private lateinit var downloadCompleteReceiver: BroadcastReceiver
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
+        chapter = args.chapter
+
         if (context is ShowHideBottomNavCallback) {
             bottomNavShowHideCallback = context
         } else {
@@ -122,14 +133,43 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         super.onCreate(savedInstanceState)
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
         toggle = TransitionInflater.from(requireContext()).inflateTransition(R.transition.search_bar_toogle)
-        source = "$primaryExternalStorageAbsolutePath/math_8_4_1_q_1_ka.zip"
-        destination = "$primaryExternalStorageAbsolutePath/math_8_4_1_q_1_ka"
+        //source = "$primaryExternalStorageAbsolutePath/math_8_4_1_q_1_ka.zip"
+        //destination = "$primaryExternalStorageAbsolutePath/math_8_4_1_q_1_ka"
+
+        downloadCompleteReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                intent?.let {
+                    val filePath = it.getStringExtra(FILE_PATH)
+                    filePath?.let { path ->
+                        val fileName = it.getStringExtra(FILE_NAME)
+                        fileName?.let { name ->
+                            val file = File(path, name)
+                            if (file.exists()) {
+                                val temp = "$path/$name"
+                                val outputDirectoryPath = temp.substring(0, temp.lastIndexOf("."))
+                                lifecycleScope.launch {
+                                    unZipFile(file, outputDirectoryPath)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        // get notified when download is complete
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
+            downloadCompleteReceiver,
+            IntentFilter(DOWNLOAD_COMPLETE)
+        )
+    }
 
     override fun onPause() {
         super.onPause()
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(downloadCompleteReceiver)
 
 //        if (viewDataBinding.webView != null ) {
 //            viewDataBinding.webView.onPause()
@@ -186,7 +226,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
             activity.configurationChangeCallback = this
         }
 
-        viewDataBinding.toolbar.title = args.chapterTitle
+        viewDataBinding.toolbar.title = chapter.name
 
         val webSettings = viewDataBinding.webView.settings
         webSettings.javaScriptEnabled = true
@@ -212,15 +252,26 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 //            }
 //        })
 
-        viewModel.doesItemExists(args.bookID, args.chapterID).observe(viewLifecycleOwner, Observer {
-            it?.let { list ->
-                if (list.isNotEmpty()) {
-                    viewModel.updateToHistory(list[0].id)
-                } else {
-                    viewModel.addToHistory(HistoryItem(0, args.bookID, args.bookTitle, args.chapterID, args.chapterTitle, 1))
+        viewModel.doesItemExists(chapter.book_id ?: 0, chapter.id ?: 0).observe(
+            viewLifecycleOwner,
+            Observer {
+                it?.let { list ->
+                    if (list.isNotEmpty()) {
+                        viewModel.updateToHistory(list[0].id)
+                    } else {
+                        viewModel.addToHistory(
+                            HistoryItem(
+                                0,
+                                chapter.book_id ?: 0,
+                                "N/A",
+                                chapter.id ?: 0,
+                                chapter.name,
+                                1
+                            )
+                        )
+                    }
                 }
-            }
-        })
+            })
 
         viewDataBinding.webView.webChromeClient = object : WebChromeClient() {
             private var mCustomView: View? = null
@@ -244,7 +295,10 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                 this.mCustomViewCallback = null
             }
 
-            override fun onShowCustomView(paramView: View, paramCustomViewCallback: CustomViewCallback) {
+            override fun onShowCustomView(
+                paramView: View,
+                paramCustomViewCallback: CustomViewCallback
+            ) {
                 if (this.mCustomView != null) {
                     onHideCustomView()
                     return
@@ -253,7 +307,12 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                 this.mOriginalSystemUiVisibility = requireActivity().window.decorView.systemUiVisibility
                 this.mOriginalOrientation = requireActivity().requestedOrientation
                 this.mCustomViewCallback = paramCustomViewCallback
-                (requireActivity().window.decorView as FrameLayout).addView(this.mCustomView, FrameLayout.LayoutParams(-1, -1))
+                (requireActivity().window.decorView as FrameLayout).addView(
+                    this.mCustomView, FrameLayout.LayoutParams(
+                        -1,
+                        -1
+                    )
+                )
                 requireActivity().window.decorView.systemUiVisibility = 3846
             }
 
@@ -312,11 +371,32 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         childFragmentManager.setFragmentResultListener(
             "playVideo",
             viewLifecycleOwner, FragmentResultListener { key, bundle ->
-                val videoItem = bundle.getSerializable("VideoItem") as VideoItem?
+                val videoItem = bundle.getSerializable("VideoItem") as ChapterField?
                 videoItem?.let {
-                    lifecycleScope.launch {
-                        playVideo()
+                    val filepath = FileUtils.getLocalStorageFilePath(
+                        requireContext(),
+                        downloadFolder
+                    )
+                    val fileName = videoItem.video_filename ?: ""
+                    val videoFile = File(filepath, fileName)
+                    if (videoFile.exists()) {
+                        val temp = "$filepath/$fileName"
+                        val videoFolderPath = temp.substring(0, temp.lastIndexOf("."))
+                        val videoFolder = File(videoFolderPath)
+                        if (videoFolder.exists() && videoFolder.isDirectory) {
+                            playVideo(videoFolderPath)
+                        } else {
+                            lifecycleScope.launch {
+                                unZipFile(File(filepath, fileName), videoFolderPath)
+                            }
+                        }
+                    } else {
+                        val downloadUrl = "$VIDEOS/$fileName"
+                        downloadFile(downloadUrl, filepath, fileName)
                     }
+//                    lifecycleScope.launch {
+//                        playVideo()
+//                    }
                 }
             }
         )
@@ -330,28 +410,57 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 //        }
 
         if (savedInstanceState == null) {
-            lifecycleScope.launch {
-                unZipFile()
+            chapter.fields?.let { videoList ->
+                if (videoList.isNotEmpty()) {
+                    val filepath = FileUtils.getLocalStorageFilePath(
+                        requireContext(),
+                        downloadFolder
+                    )
+                    val fileName = videoList[0].video_filename ?: ""
+                    val videoFile = File(filepath, fileName)
+                    if (videoFile.exists()) {
+                        val temp = "$filepath/$fileName"
+                        val videoFolderPath = temp.substring(0, temp.lastIndexOf("."))
+                        val videoFolder = File(videoFolderPath)
+                        if (videoFolder.exists() && videoFolder.isDirectory) {
+                            playVideo(videoFolderPath)
+                        } else {
+                            lifecycleScope.launch {
+                                unZipFile(File(filepath, fileName), videoFolderPath)
+                            }
+                        }
+                    }
+                }
             }
         } else {
             viewDataBinding.webView.restoreState(savedInstanceState)
         }
-
-
-
     }
 
-    private fun unZipFile() {
+    private fun downloadFile(downloadUrl: String, filePath: String, fileName: String) {
+        val intent = Intent(requireContext(), DownloadService::class.java)
+        intent.putExtra(AppConstants.DOWNLOAD_URL, downloadUrl)
+        intent.putExtra(FILE_PATH, filePath)
+        intent.putExtra(FILE_NAME, fileName)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            requireContext().startForegroundService(intent)
+        } else {
+            requireContext().startService(intent)
+        }
+    }
+
+    private fun unZipFile(inputFile: File, outputFilePath: String) {
         viewDataBinding.progressBar.visibility = View.VISIBLE
         try {
-            val zipFile = ZipFile(File(source))
+            val zipFile = ZipFile(inputFile)
             if (zipFile.isEncrypted) {
                 zipFile.setPassword(password)
             }
             val progressMonitor: ProgressMonitor = zipFile.progressMonitor
 
             zipFile.isRunInThread = true
-            zipFile.extractAll(destination)
+            zipFile.extractAll(outputFilePath)
 
             while (progressMonitor.state != ProgressMonitor.State.READY) {
                 viewDataBinding.progressBar.progress = progressMonitor.percentDone
@@ -366,7 +475,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                 ProgressMonitor.Result.SUCCESS -> {
                     viewDataBinding.progressBar.visibility = View.GONE
                     lifecycleScope.launch(Dispatchers.Main.immediate) {
-                        playVideo()
+                        playVideo(outputFilePath)
                     }
                 }
                 ProgressMonitor.Result.ERROR -> {
@@ -386,9 +495,9 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
     }
 
-    fun playVideo() {
-        if (File("$primaryExternalStorageAbsolutePath/math_8_4_1_q_1_ka/math_8_4_1_q_1_ka/MATH8_4.1Q1KA_player.html").exists()) {
-            viewDataBinding.webView.post { viewDataBinding.webView.loadUrl("file:///$primaryExternalStorageAbsolutePath/math_8_4_1_q_1_ka/math_8_4_1_q_1_ka/MATH8_4.1Q1KA_player.html") }
+    fun playVideo(videoFolderPath: String) {
+        if (File("$videoFolderPath/math_8_4_1_q_1_ka/MATH8_4.1Q1KA_player.html").exists()) {
+            viewDataBinding.webView.post { viewDataBinding.webView.loadUrl("file:///$videoFolderPath/math_8_4_1_q_1_ka/MATH8_4.1Q1KA_player.html") }
         }
     }
 
@@ -453,6 +562,10 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         requireActivity().window.decorView.systemUiVisibility = systemUIConfigurationBackup
         requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
+    companion object {
+        lateinit var chapter: BookChapter
     }
 }
 

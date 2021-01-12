@@ -3,6 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data class="ItemChapterListBinding">
+        <import type="com.bumptech.glide.request.RequestListener"/>
+        <import type="android.graphics.drawable.Drawable"/>
+        <variable
+            name="imageRequestListener"
+            type="com.bumptech.glide.request.RequestListener&lt;Drawable>" />
+        <variable
+            name="url"
+            type="String" />
+    </data>
+
     <com.google.android.material.card.MaterialCardView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -21,10 +32,11 @@
 
             <ImageView
                 android:id="@+id/thumbnail"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:padding="4dp"
+                app:imageRequestListener="@{imageRequestListener}"
+                app:imageUrl="@{url}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

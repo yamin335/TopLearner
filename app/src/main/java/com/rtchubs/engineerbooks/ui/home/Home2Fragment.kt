@@ -134,7 +134,7 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
 
         val homeClassListAdapter = HomeClassListAdapter(appExecutors) {
             if (it.isPaid == true) {
-                navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(Book(it.id, it.title, "", chapterList)))
+                navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
             } else {
                 navigateTo(Home2FragmentDirections.actionHome2FragmentToPaymentFragment(it.id, it.name ?: ""))
             }

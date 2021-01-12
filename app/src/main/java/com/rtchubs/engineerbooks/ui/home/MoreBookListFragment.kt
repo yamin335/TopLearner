@@ -33,7 +33,7 @@ class MoreBookListFragment :
         moreBookListAdapter = MoreBookListAdapter(
                 appExecutors
             ) { item ->
-            navController.navigate(MoreBookListFragmentDirections.actionMoreBookListFragmentToChapterListFragment(item))
+            //navController.navigate(MoreBookListFragmentDirections.actionMoreBookListFragmentToChapterListFragment(item))
         }
 
         viewDataBinding.rvMoreBookList.addItemDecoration(GridRecyclerItemDecorator(2, 40, true))

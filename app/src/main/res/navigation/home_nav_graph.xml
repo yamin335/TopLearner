@@ -80,7 +80,7 @@
             app:popUpTo="@id/home_navigation" />
         <argument
             android:name="book"
-            app:argType="com.rtchubs.engineerbooks.models.Book" />
+            app:argType="com.rtchubs.engineerbooks.models.home.ClassWiseBook" />
     </fragment>
 
 
@@ -100,19 +100,8 @@
         android:label="Video"
         tools:layout="@layout/fragment_load_web_view">
         <argument
-            android:name="bookID"
-            app:argType="integer" />
-        <argument
-            android:name="bookTitle"
-            app:argType="string"
-            app:nullable="true" />
-        <argument
-            android:name="chapterID"
-            app:argType="integer" />
-        <argument
-            android:name="chapterTitle"
-            app:argType="string"
-            app:nullable="true" />
+            android:name="chapter"
+            app:argType="com.rtchubs.engineerbooks.models.chapter.BookChapter" />
     </fragment>
 
     <fragment

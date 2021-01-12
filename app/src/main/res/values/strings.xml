@@ -499,4 +499,6 @@
     <string name="default_description">Default description</string>
     <string name="update_profile">Update Profile</string>
     <string name="select_upazilla">-- Select Upazilla --</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="video_des_dummy_text">Video can be interlaced or progressive. In progressive scan systems, each refresh period updates all scan lines in each frame in sequence. When displaying a natively progressive broadcast or recorded signal, the result is optimum spatial resolution of both the stationary and moving parts of the image.</string>
 </resources>

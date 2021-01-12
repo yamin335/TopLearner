@@ -8,11 +8,13 @@ import com.rtchubs.engineerbooks.api.Api.DIRECTORY_BANK
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_BANK_INFO
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_BOOKS
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CARD
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CHAPTERS
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CLASS
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CONNECT
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_DISTRICT
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_INQUIRE
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_LOGIN
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_LOGO
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_ORDER
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE_IMAGES
@@ -23,7 +25,9 @@ import com.rtchubs.engineerbooks.api.Api.DIRECTORY_REQUEST_OTP
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_TRANSACTION
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_UPAZILLA
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_UPDATE_PROFILE
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_UPLOADS
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_VERIFY_OTP
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_VIDEOS
 import com.rtchubs.engineerbooks.api.Api.MEDIA_API_ROOT_URL
 import com.rtchubs.engineerbooks.api.Api.PUBLIC_REPO
 import com.rtchubs.engineerbooks.api.Api.SALES_REPO
@@ -40,6 +44,7 @@ object Api {
     const val ACCOUNT_REPO = "account"
     const val SALES_REPO = "sales"
     const val API_VERSION = "v1"
+    const val DIRECTORY_UPLOADS = "uploads"
     const val DIRECTORY_INQUIRE = "checkuser"
     const val DIRECTORY_REQUEST_OTP = "sendotp"
     const val DIRECTORY_VERIFY_OTP = "verifyotp"
@@ -55,6 +60,10 @@ object Api {
     const val DIRECTORY_TRANSACTION = "transactions"
     const val DIRECTORY_ORDER = "createorder"
     const val DIRECTORY_LOGIN = "login"
+    const val DIRECTORY_CHAPTERS = "chapters"
+    const val DIRECTORY_LOGO = "logo"
+    const val DIRECTORY_PDF = "pdf"
+    const val DIRECTORY_VIDEOS = "videos"
 
     const val DIRECTORY_CONNECT = "connect"
     const val DIRECTORY_BANK_INFO = "bankinformation"
@@ -81,6 +90,9 @@ object ApiEndPoint {
     const val TRANSACTION = "$API_VERSION/$SALES_REPO/${DIRECTORY_TRANSACTION}"
     const val CREATE_ORDER = "$API_VERSION/$SALES_REPO/${DIRECTORY_ORDER}"
     const val LOGIN = "$API_VERSION/$AUTH_REPO/${DIRECTORY_LOGIN}"
+    const val CHAPTERS = "$API_REPO/$DIRECTORY_CHAPTERS/{bookID}"
+    const val LOGO = "$MEDIA_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/$DIRECTORY_LOGO"
+    const val VIDEOS = "$MEDIA_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/$DIRECTORY_VIDEOS"
 
     const val REQUESTOTP = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}/request-otp"
     const val REGISTRATION = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}"

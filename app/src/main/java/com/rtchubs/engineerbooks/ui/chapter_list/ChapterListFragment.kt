@@ -1,15 +1,19 @@
 package com.rtchubs.engineerbooks.ui.chapter_list
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
-import com.rtchubs.engineerbooks.databinding.FragmentChapterListBinding
+import com.rtchubs.engineerbooks.databinding.ChapterListFragmentBinding
+import com.rtchubs.engineerbooks.services.DownloadService
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 
-class ChapterListFragment : BaseFragment<FragmentChapterListBinding, ChapterListViewModel>() {
+class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterListViewModel>() {
     override val bindingVariable: Int
         get() = BR.viewModel
     override val layoutId: Int
@@ -30,11 +34,18 @@ class ChapterListFragment : BaseFragment<FragmentChapterListBinding, ChapterList
         chapterListAdapter = ChapterListAdapter(appExecutors) { chapter ->
             navController.navigate(
                 //ChapterListFragmentDirections.actionChapterListToVideoPlay("vedio_file")
-                ChapterListFragmentDirections.actionChapterListToWebView(args.book.id, args.book.title, chapter.id, chapter.title)
+                ChapterListFragmentDirections.actionChapterListToWebView(chapter)
             )
         }
 
         viewDataBinding.rvChapterList.adapter = chapterListAdapter
-        chapterListAdapter.submitList(args.book.chapters)
+
+        viewModel.chapterList.observe(viewLifecycleOwner, Observer {
+            it?.let { chapters ->
+                chapterListAdapter.submitList(chapters)
+            }
+        })
+
+        viewModel.getChapterList(args.book.udid)
     }
 }

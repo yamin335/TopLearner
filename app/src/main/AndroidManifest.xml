@@ -3,9 +3,12 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.rtchubs.engineerbooks">
+
     <!-- Enable instant app support -->
     <dist:module dist:instant="true" /> <!-- Declare features -->
-    <uses-feature android:name="android.hardware.camera" android:required="true" /> <!-- Declare permissions -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" /> <!-- Declare permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -15,7 +18,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
-        android:name="com.rtchubs.engineerbooks.App"
+        android:name=".App"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,7 +29,13 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup"
         tools:targetApi="m">
-        <activity android:name="com.rtchubs.engineerbooks.ui.LoginActivity"
+        <service
+            android:name=".services.DownloadService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|adjustPan">
             <intent-filter>
@@ -36,10 +45,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.rtchubs.engineerbooks.ui.MainActivity"
+            android:name=".ui.MainActivity"
             android:clearTaskOnLaunch="true"
-            android:rotationAnimation="seamless"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:rotationAnimation="seamless"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme"
             tools:targetApi="O">
@@ -70,7 +79,6 @@
             <meta-data
                 android:name="android.notch_support"
                 android:value="true" />
-
         </activity>
 
         <meta-data
@@ -84,7 +92,7 @@
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="barcode,face,ocr,ica" />
 
-        <receiver android:name="com.rtchubs.engineerbooks.SyncOnConnectivityReceiver" /> <!-- to disable default workmanager initiation -->
+        <receiver android:name=".SyncOnConnectivityReceiver" /> <!-- to disable default workmanager initiation -->
         <provider
             android:name="androidx.work.impl.WorkManagerInitializer"
             android:authorities="${applicationId}.workmanager-init"
@@ -100,16 +108,15 @@
         <!-- android:resource="@xml/file_paths"/> -->
         <!-- </provider> -->
         <!-- FileProvider used to share photos with other apps -->
-<!--        <provider-->
-<!--            android:name="androidx.core.content.FileProvider"-->
-<!--            android:authorities="${applicationId}.provider"-->
-<!--            android:exported="false"-->
-<!--            android:grantUriPermissions="true">-->
-<!--            <meta-data-->
-<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
-<!--                android:resource="@xml/file_paths" />-->
-<!--        </provider>-->
-
+        <!-- <provider -->
+        <!-- android:name="androidx.core.content.FileProvider" -->
+        <!-- android:authorities="${applicationId}.provider" -->
+        <!-- android:exported="false" -->
+        <!-- android:grantUriPermissions="true"> -->
+        <!-- <meta-data -->
+        <!-- android:name="android.support.FILE_PROVIDER_PATHS" -->
+        <!-- android:resource="@xml/file_paths" /> -->
+        <!-- </provider> -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
