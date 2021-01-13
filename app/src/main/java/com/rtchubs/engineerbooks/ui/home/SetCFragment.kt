@@ -68,4 +68,9 @@ class SetCFragment : BaseFragment<SetCFragmentBinding, SetCViewModel>() {
     companion object {
         var pdfFilePath = ""
     }
+
+    override fun onDetach() {
+        super.onDetach()
+        pdfFilePath = ""
+    }
 }
