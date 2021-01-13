@@ -5,6 +5,7 @@ object AppConstants {
     const val DOWNLOAD_URL = "DownloadUrl"
     const val FILE_PATH = "FilePath"
     const val FILE_NAME = "FileName"
+    const val FILE_TYPE = "FileType"
     const val COUNTRY_CODE = "+88"
     const val TERMS_AND_CONDITIONS_URL =
     "https://rtchubs.com/privacypolicy/qrbarcodescanner"
@@ -18,4 +19,6 @@ object AppConstants {
     const val downloadServiceNotificationChannelID = "downloaded_service_notification_channel_id"
     const val downloadServiceNotificationChannelName = "File Downloader"
     const val downloadServiceNotificationChannelDescription = "Shows the progress of an ongoing download"
+    const val typePdf = "pdf"
+    const val typeVideo = "video"
 }

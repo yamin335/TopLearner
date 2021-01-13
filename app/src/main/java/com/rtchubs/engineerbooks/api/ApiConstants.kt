@@ -16,6 +16,7 @@ import com.rtchubs.engineerbooks.api.Api.DIRECTORY_INQUIRE
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_LOGIN
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_LOGO
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_ORDER
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PDF
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE_IMAGES
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE_INFO
@@ -93,6 +94,7 @@ object ApiEndPoint {
     const val CHAPTERS = "$API_REPO/$DIRECTORY_CHAPTERS/{bookID}"
     const val LOGO = "$MEDIA_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/$DIRECTORY_LOGO"
     const val VIDEOS = "$MEDIA_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/$DIRECTORY_VIDEOS"
+    const val PDF = "$MEDIA_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/$DIRECTORY_PDF"
 
     const val REQUESTOTP = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}/request-otp"
     const val REGISTRATION = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}"

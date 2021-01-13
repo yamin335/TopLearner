@@ -24,6 +24,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -35,6 +36,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.rtchubs.engineerbooks.AppGlobalValues
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiEndPoint.PDF
 import com.rtchubs.engineerbooks.api.ApiEndPoint.VIDEOS
 import com.rtchubs.engineerbooks.databinding.WebViewBinding
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
@@ -43,12 +45,16 @@ import com.rtchubs.engineerbooks.models.chapter.ChapterField
 import com.rtchubs.engineerbooks.services.DownloadService
 import com.rtchubs.engineerbooks.ui.*
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
+import com.rtchubs.engineerbooks.ui.home.SetCFragment
 import com.rtchubs.engineerbooks.ui.home.VideoTabViewPagerAdapter
 import com.rtchubs.engineerbooks.util.AppConstants
 import com.rtchubs.engineerbooks.util.AppConstants.DOWNLOAD_COMPLETE
 import com.rtchubs.engineerbooks.util.AppConstants.FILE_NAME
 import com.rtchubs.engineerbooks.util.AppConstants.FILE_PATH
+import com.rtchubs.engineerbooks.util.AppConstants.FILE_TYPE
 import com.rtchubs.engineerbooks.util.AppConstants.downloadFolder
+import com.rtchubs.engineerbooks.util.AppConstants.typePdf
+import com.rtchubs.engineerbooks.util.AppConstants.typeVideo
 import com.rtchubs.engineerbooks.util.FileUtils
 import kotlinx.android.synthetic.main.fragment_load_web_view.*
 import kotlinx.coroutines.Dispatchers
@@ -59,6 +65,9 @@ import net.lingala.zip4j.progress.ProgressMonitor
 import java.io.File
 import javax.inject.Inject
 
+interface DownloadPdfListener {
+    fun onPdfDownloaded()
+}
 
 class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(), ConfigurationChangeCallback {
     override val bindingVariable: Int
@@ -144,12 +153,17 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         val fileName = it.getStringExtra(FILE_NAME)
                         fileName?.let { name ->
                             val file = File(path, name)
-                            if (file.exists()) {
-                                val temp = "$path/$name"
-                                val outputDirectoryPath = temp.substring(0, temp.lastIndexOf("."))
-                                lifecycleScope.launch {
-                                    unZipFile(file, outputDirectoryPath)
+                            val fileType = it.getStringExtra(FILE_TYPE)
+                            if (fileType == typeVideo) {
+                                if (file.exists()) {
+                                    val temp = "$path/$name"
+                                    val outputDirectoryPath = temp.substring(0, temp.lastIndexOf("."))
+                                    lifecycleScope.launch {
+                                        unZipFile(file, outputDirectoryPath)
+                                    }
                                 }
+                            } else if (fileType == typePdf) {
+                                childFragmentManager.setFragmentResult("loadPdf", bundleOf("pdfFilePath" to "$path/$name"))
                             }
                         }
                     }
@@ -392,7 +406,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         }
                     } else {
                         val downloadUrl = "$VIDEOS/$fileName"
-                        downloadFile(downloadUrl, filepath, fileName)
+                        downloadFile(downloadUrl, filepath, fileName, typeVideo)
                     }
 //                    lifecycleScope.launch {
 //                        playVideo()
@@ -410,6 +424,18 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 //        }
 
         if (savedInstanceState == null) {
+            if (!chapter.pdf.isNullOrBlank()) {
+                val filepath = FileUtils.getLocalStorageFilePath(
+                    requireContext(),
+                    ""
+                )
+                SetCFragment.pdfFilePath = "$filepath/${chapter.pdf}"
+
+                if (!File(SetCFragment.pdfFilePath).exists()) {
+                    downloadFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!, typePdf)
+                }
+            }
+
             chapter.fields?.let { videoList ->
                 if (videoList.isNotEmpty()) {
                     val filepath = FileUtils.getLocalStorageFilePath(
@@ -437,11 +463,12 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
     }
 
-    private fun downloadFile(downloadUrl: String, filePath: String, fileName: String) {
+    private fun downloadFile(downloadUrl: String, filePath: String, fileName: String, fileType: String) {
         val intent = Intent(requireContext(), DownloadService::class.java)
         intent.putExtra(AppConstants.DOWNLOAD_URL, downloadUrl)
         intent.putExtra(FILE_PATH, filePath)
         intent.putExtra(FILE_NAME, fileName)
+        intent.putExtra(FILE_TYPE, fileType)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             requireContext().startForegroundService(intent)

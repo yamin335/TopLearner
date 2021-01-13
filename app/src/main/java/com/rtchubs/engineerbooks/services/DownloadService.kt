@@ -12,6 +12,7 @@ import com.rtchubs.engineerbooks.util.AppConstants
 import com.rtchubs.engineerbooks.util.AppConstants.DOWNLOAD_URL
 import com.rtchubs.engineerbooks.util.AppConstants.FILE_NAME
 import com.rtchubs.engineerbooks.util.AppConstants.FILE_PATH
+import com.rtchubs.engineerbooks.util.AppConstants.FILE_TYPE
 import com.rtchubs.engineerbooks.util.AtomicNumberGenerator
 import com.rtchubs.engineerbooks.util.FileUtils
 import com.rtchubs.engineerbooks.util.NotificationUtils
@@ -82,6 +83,7 @@ class DownloadService : Service() {
         val downloadUrl = intent?.getStringExtra(DOWNLOAD_URL) ?: ""
         val filePath = intent?.getStringExtra(FILE_PATH) ?: ""
         val fileName = intent?.getStringExtra(FILE_NAME) ?: ""
+        val fileType = intent?.getStringExtra(FILE_TYPE) ?: ""
 
         // Get the HandlerThread's Looper and use it for our Handler
         val serviceLooper = thread.looper
@@ -92,6 +94,7 @@ class DownloadService : Service() {
                 downloadUrl,
                 filePath,
                 fileName,
+                fileType,
                 notificationId,
                 builder
             )
@@ -114,6 +117,7 @@ class DownloadService : Service() {
         private val downloadUrl: String,
         private val storagePath: String,
         private val fileName: String,
+        private val fileType: String,
         private val notificationId: Int,
         private val notificationBuilder: NotificationCompat.Builder
     ) : Handler(looper) {
@@ -165,6 +169,7 @@ class DownloadService : Service() {
             val intent = Intent(AppConstants.DOWNLOAD_COMPLETE)
             intent.putExtra(FILE_PATH, storagePath)
             intent.putExtra(FILE_NAME, fileName)
+            intent.putExtra(FILE_TYPE, fileType)
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
 
             // Stop the service using the startId, so that we don't stop
