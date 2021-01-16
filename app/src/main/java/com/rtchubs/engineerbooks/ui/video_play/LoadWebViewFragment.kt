@@ -43,7 +43,9 @@ import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
 import com.rtchubs.engineerbooks.models.chapter.BookChapter
 import com.rtchubs.engineerbooks.models.chapter.ChapterField
 import com.rtchubs.engineerbooks.services.DownloadService
-import com.rtchubs.engineerbooks.ui.*
+import com.rtchubs.engineerbooks.ui.ConfigurationChangeCallback
+import com.rtchubs.engineerbooks.ui.MainActivity
+import com.rtchubs.engineerbooks.ui.ShowHideBottomNavCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.home.SetCFragment
 import com.rtchubs.engineerbooks.ui.home.VideoTabViewPagerAdapter
@@ -56,13 +58,16 @@ import com.rtchubs.engineerbooks.util.AppConstants.downloadFolder
 import com.rtchubs.engineerbooks.util.AppConstants.typePdf
 import com.rtchubs.engineerbooks.util.AppConstants.typeVideo
 import com.rtchubs.engineerbooks.util.FileUtils
-import kotlinx.android.synthetic.main.fragment_load_web_view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.exception.ZipException
 import net.lingala.zip4j.progress.ProgressMonitor
 import java.io.File
+import java.net.URI
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.stream.Collectors
 import javax.inject.Inject
 
 class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(), ConfigurationChangeCallback {
@@ -401,7 +406,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                             val temp = "$filepath/$fileName"
                             val videoFolderPath = temp.substring(0, temp.lastIndexOf("."))
                             var innerFolderName = videoItem.folder ?: ""
-                            innerFolderName = innerFolderName.substring(0, innerFolderName.lastIndexOf("."))
+                            //innerFolderName = innerFolderName.substring(0, innerFolderName.lastIndexOf("."))
 
                             val videoFolder = File(videoFolderPath)
                             if (videoFolder.exists() && videoFolder.isDirectory) {
@@ -541,8 +546,43 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
     }
 
     fun playVideo(videoFolderPath: String, innerFolderName: String) {
-        if (File("$videoFolderPath/$innerFolderName/MATH8_4.1Q1KA_player.html").exists()) {
-            viewDataBinding.webView.post { viewDataBinding.webView.loadUrl("file:///$videoFolderPath/$innerFolderName/MATH8_4.1Q1KA_player.html") }
+        //Check if the Path is a directory
+
+        val path = Paths.get("$videoFolderPath/")
+        var innerFolderName: String = ""
+        var playFileName: String = ""
+
+
+            //List all items in the directory. Note that we are using Java 8 streaming API to group the entries by
+            //directory and files
+            val fileDirMap1 = Files.list(path).collect(Collectors.partitioningBy( {it -> Files.isDirectory(it)}))
+
+            innerFolderName = fileDirMap1[true]?.first().toString()
+            println("Directories")
+
+
+        val newPath = Paths.get(innerFolderName)
+
+            //List all items in the directory. Note that we are using Java 8 streaming API to group the entries by
+            //directory and files
+            val fileDirMap = Files.list(newPath).collect(Collectors.partitioningBy( {it -> Files.isDirectory(it)}))
+
+            fileDirMap[false]?.forEach( {it ->
+                println("%-20s\t%-5b\t%-5b\t%b".format(
+                    it.fileName,
+                    Files.isReadable(it), //Read attribute
+                    Files.isWritable(it), //Write attribute
+                    Files.isExecutable(it))) //Execute attribute
+
+                if (it.fileName.toString().contains("player")) {
+                    playFileName =  it.fileName.toString()
+                }
+
+            })
+
+
+        if (File("$innerFolderName/$playFileName").exists()) {
+            viewDataBinding.webView.post { viewDataBinding.webView.loadUrl("file:///$innerFolderName/$playFileName") }
         }
     }
 
