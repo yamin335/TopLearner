@@ -1,9 +1,15 @@
 package com.rtchubs.engineerbooks.ui.profile_signin
 
+import android.app.SearchManager
+import android.content.Context
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import androidx.appcompat.widget.SearchView
 
 import androidx.fragment.app.viewModels
@@ -124,5 +130,49 @@ class UpazillaEditFragment: BaseFragment<UpazillaEditFragmentBinding, UpazillaEd
 //        }
 
         viewModel.getUpazilla(args.cityId)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.search_bar, menu)
+
+        // Associate searchable configuration with the SearchView
+        val searchManager = requireActivity().getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView = menu.findItem(R.id.action_search).actionView as SearchView
+        searchView.setSearchableInfo(
+            searchManager.getSearchableInfo(requireActivity().componentName)
+        )
+        searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text).setBackgroundResource(R.drawable.abc_textfield_search_default_mtrl_alpha)
+        searchView.maxWidth = Int.MAX_VALUE
+
+        // listening to search query text change
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // filter recycler view when query submitted
+                upazillaListAdapter.filter.filter(query)
+                return false
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                // filter recycler view when text is changed
+                upazillaListAdapter.filter.filter(query)
+                return false
+            }
+        })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.action_search -> {
+                return true
+            }
+
+            android.R.id.home -> {
+                navController.popBackStack()
+                return true
+            }
+        }
+        //if (item.itemId == R.id.action_search) return true
+        return super.onOptionsItemSelected(item)
     }
 }

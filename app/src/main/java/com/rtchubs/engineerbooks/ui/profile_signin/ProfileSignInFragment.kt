@@ -67,12 +67,12 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
 //    private var titleCityList = arrayOf("--Select City--")
 //    private var titleUpazillaList = arrayOf("--Select Upazilla--")
     private var titleGenderList = arrayOf("--Select Gender--")
-//    private var titleClassList = arrayOf("--Select Class--")
+    private var titleClassList = arrayOf("--Select Class--")
 
 //    lateinit var cityAdapter: ArrayAdapter<String>
 //    lateinit var upazillaAdapter: ArrayAdapter<String>
     lateinit var genderAdapter: ArrayAdapter<String>
-//    lateinit var classAdapter: ArrayAdapter<String>
+    lateinit var classAdapter: ArrayAdapter<String>
 
     lateinit var profileCameraLauncher: ActivityResultLauncher<Intent>
     lateinit var nidFrontCameraLauncher: ActivityResultLauncher<Intent>
@@ -86,7 +86,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        ClassEditFragment.selectedClass = null
+        //ClassEditFragment.selectedClass = null
         DistrictEditFragment.selectedCity = null
         UpazillaEditFragment.selectedUpazilla = null
         if (context is LoginHandlerCallback) {
@@ -98,7 +98,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
 
     override fun onDetach() {
         super.onDetach()
-        ClassEditFragment.selectedClass = null
+        //ClassEditFragment.selectedClass = null
         DistrictEditFragment.selectedCity = null
         UpazillaEditFragment.selectedUpazilla = null
         listener = null
@@ -222,13 +222,13 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
         }
         viewDataBinding.spGender.setSelection(genderIndex, true)
 
-        viewDataBinding.tvClass.text = "--Select Class--"
+//        viewDataBinding.tvClass.text = "--Select Class--"
         viewDataBinding.city.text = "--Select City--"
         viewDataBinding.tvUpazilla.text = "--Select Upazilla--"
 
-        ClassEditFragment.selectedClass?.let {
-            viewModel.selectedClass = it
-        }
+//        ClassEditFragment.selectedClass?.let {
+//            viewModel.selectedClass = it
+//        }
 
         DistrictEditFragment.selectedCity?.let {
             viewModel.selectedCity = it
@@ -241,7 +241,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
             viewModel.selectedUpazilla = it
         }
 
-        viewDataBinding.tvClass.text = viewModel.selectedClass?.name ?: "--Select Class--"
+//        viewDataBinding.tvClass.text = viewModel.selectedClass?.name ?: "--Select Class--"
         viewDataBinding.city.text = viewModel.selectedCity?.name ?: "--Select City--"
         viewDataBinding.tvUpazilla.text = viewModel.selectedUpazilla?.name ?: "--Select Upazilla--"
 
@@ -258,9 +258,9 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
             navigateTo(ProfileSignInFragmentDirections.actionProfileSignInFragmentToUpazillaEditFragment1(cityId))
         }
 
-        viewDataBinding.tvClass.setOnClickListener {
-            navigateTo(ProfileSignInFragmentDirections.actionProfileSignInFragmentToClassEditFragment1())
-        }
+//        viewDataBinding.tvClass.setOnClickListener {
+//            navigateTo(ProfileSignInFragmentDirections.actionProfileSignInFragmentToClassEditFragment1())
+//        }
 
 //        val tempDistricts = Array(viewModel.allDistricts.value?.size ?: 0 + 1) {""}
 //        tempDistricts[0] = "--Select City--"
@@ -294,15 +294,15 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
 //            viewDataBinding.spGender.adapter = genderAdapter
 //        }
 
-//        val tempClass = Array(viewModel.allAcademicClass.value?.size ?: 0 + 1) {""}
-//        tempClass[0] = "--Select Class--"
-//        viewModel.allAcademicClass.value?.forEachIndexed { index, academicClass ->
-//            tempClass[index + 1] = academicClass.name ?: "Unknown"
-//        }
-//        titleClassList = tempClass
-//        classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
-//        classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//        viewDataBinding.spClass.adapter = classAdapter
+        val tempClass = Array((viewModel.allAcademicClass.value?.size ?: 0) + 1) {""}
+        tempClass[0] = "--Select Class--"
+        viewModel.allAcademicClass.value?.forEachIndexed { index, academicClass ->
+            tempClass[index + 1] = academicClass.name ?: "Unknown"
+        }
+        titleClassList = tempClass
+        classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
+        classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        viewDataBinding.spClass.adapter = classAdapter
 
 //        viewDataBinding.spCity.onItemSelectedListener = object :
 //            AdapterView.OnItemSelectedListener {
@@ -380,31 +380,31 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
 //            override fun onNothingSelected(parent: AdapterView<*>?) {}
 //        }
 
-//        viewDataBinding.spClass.onItemSelectedListener = object :
-//            AdapterView.OnItemSelectedListener {
-//            override fun onItemSelected(
-//                parent: AdapterView<*>?,
-//                view: View,
-//                position: Int,
-//                id: Long
-//            ) {
-//                if (position > 0) {
-//                    try {
-//                        viewModel.allAcademicClass.value?.let {
-//                            if (it.isNotEmpty()) {
-//                                viewModel.selectedClass = it[position - 1]
-//                            }
-//                        }
-//                    } catch (e: IndexOutOfBoundsException) {
-//                        e.printStackTrace()
-//                    }
-//                } else {
-//                    viewModel.selectedClass = null
-//                }
-//            }
-//
-//            override fun onNothingSelected(parent: AdapterView<*>?) {}
-//        }
+        viewDataBinding.spClass.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                if (position > 0) {
+                    try {
+                        viewModel.allAcademicClass.value?.let {
+                            if (it.isNotEmpty()) {
+                                viewModel.selectedClass = it[position - 1]
+                            }
+                        }
+                    } catch (e: IndexOutOfBoundsException) {
+                        e.printStackTrace()
+                    }
+                } else {
+                    viewModel.selectedClass = null
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
 //        val nidFrontData = args.NIDData.frontData
 //        val nidBackData = args.NIDData.backData
@@ -442,19 +442,19 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
 //            }
 //        })
 
-//        viewModel.allAcademicClass.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-//            it?.let {
-//                val temp = Array(it.size + 1) {""}
-//                temp[0] = "--Select Class--"
-//                it.forEachIndexed { index, academicClass ->
-//                    temp[index + 1] = academicClass.name ?: "Unknown"
-//                }
-//                titleClassList = temp
-//                classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
-//                classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//                viewDataBinding.spClass.adapter = classAdapter
-//            }
-//        })
+        viewModel.allAcademicClass.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            it?.let {
+                val temp = Array(it.size + 1) {""}
+                temp[0] = "--Select Class--"
+                it.forEachIndexed { index, academicClass ->
+                    temp[index + 1] = academicClass.name ?: "Unknown"
+                }
+                titleClassList = temp
+                classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
+                classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                viewDataBinding.spClass.adapter = classAdapter
+            }
+        })
 
         viewModel.registrationResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let { data ->
@@ -636,7 +636,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
         }
 
         //viewModel.getDistricts()
-        //viewModel.getAcademicClass()
+        viewModel.getAcademicClass()
     }
 
 //    private fun takeProfileImageFromCamera() {

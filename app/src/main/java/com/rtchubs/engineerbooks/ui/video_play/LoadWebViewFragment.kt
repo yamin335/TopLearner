@@ -158,8 +158,14 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                                 if (file.exists()) {
                                     val temp = "$path/$name"
                                     val outputDirectoryPath = temp.substring(0, temp.lastIndexOf("."))
-                                    lifecycleScope.launch {
-                                        unZipFile(file, outputDirectoryPath)
+
+                                    val tempFolderArray = outputDirectoryPath.split("/")
+                                    val tempIndex = if (tempFolderArray.isEmpty()) -1 else tempFolderArray.size - 1
+                                    if (tempIndex >= 0) {
+                                        val innerFolderName = tempFolderArray[tempIndex]
+                                        lifecycleScope.launch {
+                                            unZipFile(file, outputDirectoryPath, innerFolderName)
+                                        }
                                     }
                                 }
                             } else if (fileType == typePdf) {
@@ -396,12 +402,17 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                     if (videoFile.exists()) {
                         val temp = "$filepath/$fileName"
                         val videoFolderPath = temp.substring(0, temp.lastIndexOf("."))
-                        val videoFolder = File(videoFolderPath)
-                        if (videoFolder.exists() && videoFolder.isDirectory) {
-                            playVideo(videoFolderPath)
-                        } else {
-                            lifecycleScope.launch {
-                                unZipFile(File(filepath, fileName), videoFolderPath)
+                        val tempFolderArray = videoFolderPath.split("/")
+                        val tempIndex = if (tempFolderArray.isEmpty()) -1 else tempFolderArray.size - 1
+                        if (tempIndex >= 0) {
+                            val innerFolderName = tempFolderArray[tempIndex]
+                            val videoFolder = File(videoFolderPath)
+                            if (videoFolder.exists() && videoFolder.isDirectory) {
+                                playVideo(videoFolderPath, innerFolderName)
+                            } else {
+                                lifecycleScope.launch {
+                                    unZipFile(File(filepath, fileName), videoFolderPath, innerFolderName)
+                                }
                             }
                         }
                     } else {
@@ -447,12 +458,18 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                     if (videoFile.exists()) {
                         val temp = "$filepath/$fileName"
                         val videoFolderPath = temp.substring(0, temp.lastIndexOf("."))
-                        val videoFolder = File(videoFolderPath)
-                        if (videoFolder.exists() && videoFolder.isDirectory) {
-                            playVideo(videoFolderPath)
-                        } else {
-                            lifecycleScope.launch {
-                                unZipFile(File(filepath, fileName), videoFolderPath)
+
+                        val tempFolderArray = videoFolderPath.split("/")
+                        val tempIndex = if (tempFolderArray.isEmpty()) -1 else tempFolderArray.size - 1
+                        if (tempIndex >= 0) {
+                            val innerFolderName = tempFolderArray[tempIndex]
+                            val videoFolder = File(videoFolderPath)
+                            if (videoFolder.exists() && videoFolder.isDirectory) {
+                                playVideo(videoFolderPath, innerFolderName)
+                            } else {
+                                lifecycleScope.launch {
+                                    unZipFile(File(filepath, fileName), videoFolderPath, innerFolderName)
+                                }
                             }
                         }
                     }
@@ -477,7 +494,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
     }
 
-    private fun unZipFile(inputFile: File, outputFilePath: String) {
+    private fun unZipFile(inputFile: File, outputFilePath: String, innerFolderName: String) {
         viewDataBinding.progressBar.visibility = View.VISIBLE
         try {
             val zipFile = ZipFile(inputFile)
@@ -502,7 +519,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                 ProgressMonitor.Result.SUCCESS -> {
                     viewDataBinding.progressBar.visibility = View.GONE
                     lifecycleScope.launch(Dispatchers.Main.immediate) {
-                        playVideo(outputFilePath)
+                        playVideo(outputFilePath, innerFolderName)
                     }
                 }
                 ProgressMonitor.Result.ERROR -> {
@@ -522,9 +539,9 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
     }
 
-    fun playVideo(videoFolderPath: String) {
-        if (File("$videoFolderPath/math_8_4_1_q_1_ka/MATH8_4.1Q1KA_player.html").exists()) {
-            viewDataBinding.webView.post { viewDataBinding.webView.loadUrl("file:///$videoFolderPath/math_8_4_1_q_1_ka/MATH8_4.1Q1KA_player.html") }
+    fun playVideo(videoFolderPath: String, innerFolderName: String) {
+        if (File("$videoFolderPath/$innerFolderName/MATH8_4.1Q1KA_player.html").exists()) {
+            viewDataBinding.webView.post { viewDataBinding.webView.loadUrl("file:///$videoFolderPath/$innerFolderName/MATH8_4.1Q1KA_player.html") }
         }
     }
 
