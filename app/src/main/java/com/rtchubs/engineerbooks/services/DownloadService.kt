@@ -84,6 +84,7 @@ class DownloadService : Service() {
         val filePath = intent?.getStringExtra(FILE_PATH) ?: ""
         val fileName = intent?.getStringExtra(FILE_NAME) ?: ""
         val fileType = intent?.getStringExtra(FILE_TYPE) ?: ""
+        val folder = intent?.getStringExtra("folder") ?: ""
 
         // Get the HandlerThread's Looper and use it for our Handler
         val serviceLooper = thread.looper
@@ -95,6 +96,7 @@ class DownloadService : Service() {
                 filePath,
                 fileName,
                 fileType,
+                folder,
                 notificationId,
                 builder
             )
@@ -118,6 +120,7 @@ class DownloadService : Service() {
         private val storagePath: String,
         private val fileName: String,
         private val fileType: String,
+        private val folder: String,
         private val notificationId: Int,
         private val notificationBuilder: NotificationCompat.Builder
     ) : Handler(looper) {
@@ -170,6 +173,7 @@ class DownloadService : Service() {
             intent.putExtra(FILE_PATH, storagePath)
             intent.putExtra(FILE_NAME, fileName)
             intent.putExtra(FILE_TYPE, fileType)
+            intent.putExtra("folder", folder)
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
 
             // Stop the service using the startId, so that we don't stop

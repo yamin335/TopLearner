@@ -23,20 +23,5 @@
     <fragment
         android:id="@+id/loadWebViewFragment2"
         android:name="com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment"
-        android:label="LoadWebViewFragment" >
-        <argument
-            android:name="bookID"
-            app:argType="integer" />
-        <argument
-            android:name="bookTitle"
-            app:argType="string"
-            app:nullable="true" />
-        <argument
-            android:name="chapterID"
-            app:argType="integer" />
-        <argument
-            android:name="chapterTitle"
-            app:argType="string"
-            app:nullable="true" />
-    </fragment>
+        android:label="LoadWebViewFragment" />
 </navigation>

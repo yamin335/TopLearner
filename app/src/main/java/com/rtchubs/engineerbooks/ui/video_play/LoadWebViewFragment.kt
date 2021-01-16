@@ -65,10 +65,6 @@ import net.lingala.zip4j.progress.ProgressMonitor
 import java.io.File
 import javax.inject.Inject
 
-interface DownloadPdfListener {
-    fun onPdfDownloaded()
-}
-
 class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(), ConfigurationChangeCallback {
     override val bindingVariable: Int
         get() = BR.viewModel
@@ -152,24 +148,25 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                     filePath?.let { path ->
                         val fileName = it.getStringExtra(FILE_NAME)
                         fileName?.let { name ->
-                            val file = File(path, name)
-                            val fileType = it.getStringExtra(FILE_TYPE)
-                            if (fileType == typeVideo) {
-                                if (file.exists()) {
-                                    val temp = "$path/$name"
-                                    val outputDirectoryPath = temp.substring(0, temp.lastIndexOf("."))
+                            try {
+                                val file = File(path, name)
+                                val fileType = it.getStringExtra(FILE_TYPE)
+                                var innerFolderName = it.getStringExtra("folder") ?: ""
+                                innerFolderName = innerFolderName.substring(0, innerFolderName.lastIndexOf("."))
+                                if (fileType == typeVideo) {
+                                    if (file.exists()) {
+                                        val temp = "$path/$name"
+                                        val outputDirectoryPath = temp.substring(0, temp.lastIndexOf("."))
 
-                                    val tempFolderArray = outputDirectoryPath.split("/")
-                                    val tempIndex = if (tempFolderArray.isEmpty()) -1 else tempFolderArray.size - 1
-                                    if (tempIndex >= 0) {
-                                        val innerFolderName = tempFolderArray[tempIndex]
                                         lifecycleScope.launch {
                                             unZipFile(file, outputDirectoryPath, innerFolderName)
                                         }
                                     }
+                                } else if (fileType == typePdf) {
+                                    childFragmentManager.setFragmentResult("loadPdf", bundleOf("pdfFilePath" to "$path/$name"))
                                 }
-                            } else if (fileType == typePdf) {
-                                childFragmentManager.setFragmentResult("loadPdf", bundleOf("pdfFilePath" to "$path/$name"))
+                            } catch (e: Exception) {
+                                e.printStackTrace()
                             }
                         }
                     }
@@ -393,19 +390,19 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
             viewLifecycleOwner, FragmentResultListener { key, bundle ->
                 val videoItem = bundle.getSerializable("VideoItem") as ChapterField?
                 videoItem?.let {
-                    val filepath = FileUtils.getLocalStorageFilePath(
-                        requireContext(),
-                        downloadFolder
-                    )
-                    val fileName = videoItem.video_filename ?: ""
-                    val videoFile = File(filepath, fileName)
-                    if (videoFile.exists()) {
-                        val temp = "$filepath/$fileName"
-                        val videoFolderPath = temp.substring(0, temp.lastIndexOf("."))
-                        val tempFolderArray = videoFolderPath.split("/")
-                        val tempIndex = if (tempFolderArray.isEmpty()) -1 else tempFolderArray.size - 1
-                        if (tempIndex >= 0) {
-                            val innerFolderName = tempFolderArray[tempIndex]
+                    try {
+                        val filepath = FileUtils.getLocalStorageFilePath(
+                            requireContext(),
+                            downloadFolder
+                        )
+                        val fileName = videoItem.video_filename ?: ""
+                        val videoFile = File(filepath, fileName)
+                        if (videoFile.exists()) {
+                            val temp = "$filepath/$fileName"
+                            val videoFolderPath = temp.substring(0, temp.lastIndexOf("."))
+                            var innerFolderName = videoItem.folder ?: ""
+                            innerFolderName = innerFolderName.substring(0, innerFolderName.lastIndexOf("."))
+
                             val videoFolder = File(videoFolderPath)
                             if (videoFolder.exists() && videoFolder.isDirectory) {
                                 playVideo(videoFolderPath, innerFolderName)
@@ -414,14 +411,16 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                                     unZipFile(File(filepath, fileName), videoFolderPath, innerFolderName)
                                 }
                             }
+                        } else {
+                            val downloadUrl = "$VIDEOS/$fileName"
+                            downloadFile(downloadUrl, filepath, fileName, typeVideo, videoItem.folder ?: "")
                         }
-                    } else {
-                        val downloadUrl = "$VIDEOS/$fileName"
-                        downloadFile(downloadUrl, filepath, fileName, typeVideo)
-                    }
 //                    lifecycleScope.launch {
 //                        playVideo()
 //                    }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
             }
         )
@@ -443,27 +442,26 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                 SetCFragment.pdfFilePath = "$filepath/${chapter.pdf}"
 
                 if (!File(SetCFragment.pdfFilePath).exists()) {
-                    downloadFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!, typePdf)
+                    downloadFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!, typePdf, "")
                 }
             }
 
             chapter.fields?.let { videoList ->
                 if (videoList.isNotEmpty()) {
-                    val filepath = FileUtils.getLocalStorageFilePath(
-                        requireContext(),
-                        downloadFolder
-                    )
-                    val fileName = videoList[0].video_filename ?: ""
-                    val videoFile = File(filepath, fileName)
-                    if (videoFile.exists()) {
-                        val temp = "$filepath/$fileName"
-                        val videoFolderPath = temp.substring(0, temp.lastIndexOf("."))
-
-                        val tempFolderArray = videoFolderPath.split("/")
-                        val tempIndex = if (tempFolderArray.isEmpty()) -1 else tempFolderArray.size - 1
-                        if (tempIndex >= 0) {
-                            val innerFolderName = tempFolderArray[tempIndex]
+                    try {
+                        val video = videoList[0]
+                        val filepath = FileUtils.getLocalStorageFilePath(
+                            requireContext(),
+                            downloadFolder
+                        )
+                        val fileName = video.video_filename ?: ""
+                        val videoFile = File(filepath, fileName)
+                        if (videoFile.exists()) {
+                            val temp = "$filepath/$fileName"
+                            val videoFolderPath = temp.substring(0, temp.lastIndexOf("."))
                             val videoFolder = File(videoFolderPath)
+                            var innerFolderName = video.folder ?: ""
+                            innerFolderName = innerFolderName.substring(0, innerFolderName.lastIndexOf("."))
                             if (videoFolder.exists() && videoFolder.isDirectory) {
                                 playVideo(videoFolderPath, innerFolderName)
                             } else {
@@ -472,6 +470,8 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                                 }
                             }
                         }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
             }
@@ -480,12 +480,13 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
     }
 
-    private fun downloadFile(downloadUrl: String, filePath: String, fileName: String, fileType: String) {
+    private fun downloadFile(downloadUrl: String, filePath: String, fileName: String, fileType: String, folder: String) {
         val intent = Intent(requireContext(), DownloadService::class.java)
         intent.putExtra(AppConstants.DOWNLOAD_URL, downloadUrl)
         intent.putExtra(FILE_PATH, filePath)
         intent.putExtra(FILE_NAME, fileName)
         intent.putExtra(FILE_TYPE, fileType)
+        intent.putExtra("folder", folder)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             requireContext().startForegroundService(intent)
