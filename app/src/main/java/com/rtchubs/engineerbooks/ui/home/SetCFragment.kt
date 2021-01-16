@@ -46,7 +46,12 @@ class SetCFragment : BaseFragment<SetCFragmentBinding, SetCViewModel>() {
             "loadPdf",
             viewLifecycleOwner, FragmentResultListener { key, bundle ->
                 pdfFilePath = bundle.getString("pdfFilePath") ?: ""
-                loadPDF(File(pdfFilePath))
+
+                if (pdfFilePath == "") {
+                    viewDataBinding.loader.visibility = View.GONE
+                } else {
+                    loadPDF(File(pdfFilePath))
+                }
             }
         )
 
@@ -61,6 +66,7 @@ class SetCFragment : BaseFragment<SetCFragmentBinding, SetCViewModel>() {
                     .enableSwipe(true)
                     .swipeHorizontal(false)
                     .load()
+                viewDataBinding.loader.visibility = View.GONE
             }
         }
     }

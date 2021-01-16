@@ -133,7 +133,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
             listener?.onLoggedIn()
         }
 
-        Glide.with(requireContext()).load(R.drawable.doctor_1).circleCrop().into(viewDataBinding.rivProfileImage)
+        Glide.with(requireContext()).load(viewModel.profileBitmap).placeholder(R.drawable.doctor_1).circleCrop().into(viewDataBinding.rivProfileImage)
 
         imageCropperListener = object : FaceDetectionListener {
             override fun onFaceDetected(result: com.darwin.viola.still.model.Result) {
@@ -294,9 +294,9 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
 //            viewDataBinding.spGender.adapter = genderAdapter
 //        }
 
-        val tempClass = Array((viewModel.allAcademicClass.value?.size ?: 0) + 1) {""}
+        val tempClass = Array(allClass.size + 1) {""}
         tempClass[0] = "--Select Class--"
-        viewModel.allAcademicClass.value?.forEachIndexed { index, academicClass ->
+        allClass.forEachIndexed { index, academicClass ->
             tempClass[index + 1] = academicClass.name ?: "Unknown"
         }
         titleClassList = tempClass
@@ -390,10 +390,8 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
             ) {
                 if (position > 0) {
                     try {
-                        viewModel.allAcademicClass.value?.let {
-                            if (it.isNotEmpty()) {
-                                viewModel.selectedClass = it[position - 1]
-                            }
+                        if (allClass.isNotEmpty()) {
+                            viewModel.selectedClass = allClass[position - 1]
                         }
                     } catch (e: IndexOutOfBoundsException) {
                         e.printStackTrace()
@@ -405,6 +403,12 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
+        var academicClassIndex = 0
+        allClass.forEachIndexed { index, academicClass ->
+            if (academicClass.id?.equals(viewModel.selectedClass?.id ?: "0", true) == true) academicClassIndex = index + 1
+        }
+        viewDataBinding.spClass.setSelection(academicClassIndex, true)
 
 //        val nidFrontData = args.NIDData.frontData
 //        val nidBackData = args.NIDData.backData
@@ -443,16 +447,19 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
 //        })
 
         viewModel.allAcademicClass.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            it?.let {
-                val temp = Array(it.size + 1) {""}
-                temp[0] = "--Select Class--"
-                it.forEachIndexed { index, academicClass ->
-                    temp[index + 1] = academicClass.name ?: "Unknown"
+            if (allClass.isEmpty()) {
+                it?.let {
+                    val temp = Array(it.size + 1) {""}
+                    temp[0] = "--Select Class--"
+                    it.forEachIndexed { index, academicClass ->
+                        temp[index + 1] = academicClass.name ?: "Unknown"
+                    }
+                    titleClassList = temp
+                    classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
+                    classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    viewDataBinding.spClass.adapter = classAdapter
+                    allClass = it as ArrayList<AcademicClass>
                 }
-                titleClassList = temp
-                classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
-                classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                viewDataBinding.spClass.adapter = classAdapter
             }
         })
 
@@ -636,7 +643,9 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
         }
 
         //viewModel.getDistricts()
-        viewModel.getAcademicClass()
+        if (allClass.isEmpty()) {
+            viewModel.getAcademicClass()
+        }
     }
 
 //    private fun takeProfileImageFromCamera() {
@@ -777,6 +786,10 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
             Log.e("GET_FACE", e.message)
         }
         return null
+    }
+
+    companion object {
+        var allClass = ArrayList<AcademicClass>()
     }
 
 }

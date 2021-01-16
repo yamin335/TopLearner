@@ -18,3 +18,5 @@ data class ChapterField(val id: Int?, val chapter_id: Int?, val book_id: Int?,
                         val height: Any?, val width: Any?, val visible: Int?,
                         val showOptions: Int?, val isHovered: Int?, val position: Any?,
                         val is_copied: Int?, val lang: String?, val created_at: String?, val updated_at: String?):Serializable
+
+

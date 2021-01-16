@@ -16,6 +16,7 @@ object AppConstants {
     const val registrationSuccessMessage = "Welcome! to QPay. Please login to continue."
     const val saveSuccessfulMessage = "Saved Successfully!"
     const val downloadFolder = "downloaded_files"
+    const val unzippedFolder = "unzipped_files"
     const val downloadServiceNotificationChannelID = "downloaded_service_notification_channel_id"
     const val downloadServiceNotificationChannelName = "File Downloader"
     const val downloadServiceNotificationChannelDescription = "Shows the progress of an ongoing download"

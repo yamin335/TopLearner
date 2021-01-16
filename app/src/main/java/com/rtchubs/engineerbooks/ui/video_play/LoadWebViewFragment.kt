@@ -36,6 +36,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.rtchubs.engineerbooks.AppGlobalValues
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.api.ApiEndPoint.PDF
 import com.rtchubs.engineerbooks.api.ApiEndPoint.VIDEOS
 import com.rtchubs.engineerbooks.databinding.WebViewBinding
@@ -57,6 +58,7 @@ import com.rtchubs.engineerbooks.util.AppConstants.FILE_TYPE
 import com.rtchubs.engineerbooks.util.AppConstants.downloadFolder
 import com.rtchubs.engineerbooks.util.AppConstants.typePdf
 import com.rtchubs.engineerbooks.util.AppConstants.typeVideo
+import com.rtchubs.engineerbooks.util.AppConstants.unzippedFolder
 import com.rtchubs.engineerbooks.util.FileUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -120,7 +122,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
     private var systemUIConfigurationBackup: Int = 0
 
-    private lateinit var downloadCompleteReceiver: BroadcastReceiver
+    //private lateinit var downloadCompleteReceiver: BroadcastReceiver
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -132,6 +134,12 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         } else {
             throw RuntimeException("$context must implement LoginHandlerCallback")
         }
+        FileUtils.makeEmptyFolderIntoExternalStorageWithTitle(requireContext(), AppConstants.unzippedFolder)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+
     }
 
     override fun onDestroy() {
@@ -146,52 +154,50 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         //source = "$primaryExternalStorageAbsolutePath/math_8_4_1_q_1_ka.zip"
         //destination = "$primaryExternalStorageAbsolutePath/math_8_4_1_q_1_ka"
 
-        downloadCompleteReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                intent?.let {
-                    val filePath = it.getStringExtra(FILE_PATH)
-                    filePath?.let { path ->
-                        val fileName = it.getStringExtra(FILE_NAME)
-                        fileName?.let { name ->
-                            try {
-                                val file = File(path, name)
-                                val fileType = it.getStringExtra(FILE_TYPE)
-                                var innerFolderName = it.getStringExtra("folder") ?: ""
-                                innerFolderName = innerFolderName.substring(0, innerFolderName.lastIndexOf("."))
-                                if (fileType == typeVideo) {
-                                    if (file.exists()) {
-                                        val temp = "$path/$name"
-                                        val outputDirectoryPath = temp.substring(0, temp.lastIndexOf("."))
-
-                                        lifecycleScope.launch {
-                                            unZipFile(file, outputDirectoryPath, innerFolderName)
-                                        }
-                                    }
-                                } else if (fileType == typePdf) {
-                                    childFragmentManager.setFragmentResult("loadPdf", bundleOf("pdfFilePath" to "$path/$name"))
-                                }
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        downloadCompleteReceiver = object : BroadcastReceiver() {
+//            override fun onReceive(context: Context?, intent: Intent?) {
+//                intent?.let {
+//                    val filePath = it.getStringExtra(FILE_PATH)
+//                    filePath?.let { path ->
+//                        val fileName = it.getStringExtra(FILE_NAME)
+//                        fileName?.let { name ->
+//                            try {
+//                                val file = File(path, name)
+//                                val fileType = it.getStringExtra(FILE_TYPE)
+//                                if (fileType == typeVideo) {
+//                                    if (file.exists()) {
+//                                        val outputDirectoryPath = name.substring(0, name.lastIndexOf("."))
+//
+//                                        lifecycleScope.launch {
+//                                            unZipFile(file, outputDirectoryPath)
+//                                        }
+//                                    }
+//                                } else if (fileType == typePdf) {
+//                                    childFragmentManager.setFragmentResult("loadPdf", bundleOf("pdfFilePath" to "$path/$name"))
+//                                }
+//                            } catch (e: Exception) {
+//                                e.printStackTrace()
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     override fun onResume() {
         super.onResume()
         // get notified when download is complete
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
-            downloadCompleteReceiver,
-            IntentFilter(DOWNLOAD_COMPLETE)
-        )
+//        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
+//            downloadCompleteReceiver,
+//            IntentFilter(DOWNLOAD_COMPLETE)
+//        )
     }
 
     override fun onPause() {
         super.onPause()
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(downloadCompleteReceiver)
+        FileUtils.deleteFolderWithAllFilesFromExternalStorage(requireContext(), unzippedFolder)
+        //LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(downloadCompleteReceiver)
 
 //        if (viewDataBinding.webView != null ) {
 //            viewDataBinding.webView.onPause()
@@ -242,6 +248,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         //activity?.title = title
 
         registerToolbar(viewDataBinding.toolbar)
+        viewModel.apiCallStatus.postValue(ApiCallStatus.SUCCESS)
 
         val activity = requireActivity()
         if (activity is MainActivity) {
@@ -249,6 +256,20 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
 
         viewDataBinding.toolbar.title = chapter.name
+
+        viewModel.videoFileDownloadResponse.observe(viewLifecycleOwner, Observer { value ->
+            value?.let {
+                viewModel.filesInDownloadPool.remove(it.second)
+                val file = File(it.first, it.second)
+                if (file.exists()) {
+                    val temp = it.second
+                    val outputDirectoryName = temp.substring(0, temp.lastIndexOf("."))
+                    lifecycleScope.launch {
+                        unZipFile(file, outputDirectoryName)
+                    }
+                }
+            }
+        })
 
         val webSettings = viewDataBinding.webView.settings
         webSettings.javaScriptEnabled = true
@@ -341,7 +362,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 try {
-                    viewDataBinding.progressBar.progress = newProgress
+                    //viewDataBinding.progressBar?.progress = newProgress
                 } catch (ex: Exception) {
                     ex.printStackTrace()
                 }
@@ -365,7 +386,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                viewDataBinding.progressBar.visibility = View.GONE
+                //viewDataBinding.progressBar.visibility = View.GONE
             }
         }
 
@@ -400,25 +421,29 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                             requireContext(),
                             downloadFolder
                         )
+                        val unzipFilepath = FileUtils.getLocalStorageFilePath(
+                            requireContext(),
+                            unzippedFolder
+                        )
                         val fileName = videoItem.video_filename ?: ""
                         val videoFile = File(filepath, fileName)
                         if (videoFile.exists()) {
-                            val temp = "$filepath/$fileName"
-                            val videoFolderPath = temp.substring(0, temp.lastIndexOf("."))
-                            var innerFolderName = videoItem.folder ?: ""
-                            //innerFolderName = innerFolderName.substring(0, innerFolderName.lastIndexOf("."))
+                            val videoFolderName = fileName.substring(0, fileName.lastIndexOf("."))
 
-                            val videoFolder = File(videoFolderPath)
+                            val videoFolder = File(unzipFilepath, videoFolderName)
                             if (videoFolder.exists() && videoFolder.isDirectory) {
-                                playVideo(videoFolderPath, innerFolderName)
+                                playVideo("$unzipFilepath/$videoFolderName")
                             } else {
                                 lifecycleScope.launch {
-                                    unZipFile(File(filepath, fileName), videoFolderPath, innerFolderName)
+                                    unZipFile(File(filepath, fileName), videoFolderName)
                                 }
                             }
-                        } else {
+                        } else if (!viewModel.filesInDownloadPool.contains(fileName)) {
                             val downloadUrl = "$VIDEOS/$fileName"
-                            downloadFile(downloadUrl, filepath, fileName, typeVideo, videoItem.folder ?: "")
+                            viewModel.filesInDownloadPool.add(fileName)
+                            viewModel.downloadVideoFile(downloadUrl, filepath, fileName)
+                        } else {
+                            print("")
                         }
 //                    lifecycleScope.launch {
 //                        playVideo()
@@ -438,17 +463,34 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 //            }
 //        }
 
+        viewModel.pdfFileDownloadResponse.observe(viewLifecycleOwner, Observer { value ->
+            value?.let {
+                childFragmentManager.setFragmentResult(
+                    "loadPdf",
+                    bundleOf("pdfFilePath" to "${it.first}/${it.second}")
+                )
+                viewModel.filesInDownloadPool.remove(it.second)
+            }
+        })
+
         if (savedInstanceState == null) {
             if (!chapter.pdf.isNullOrBlank()) {
                 val filepath = FileUtils.getLocalStorageFilePath(
                     requireContext(),
-                    ""
+                    unzippedFolder
                 )
                 SetCFragment.pdfFilePath = "$filepath/${chapter.pdf}"
 
-                if (!File(SetCFragment.pdfFilePath).exists()) {
-                    downloadFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!, typePdf, "")
+                if (!File(SetCFragment.pdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(chapter.pdf!!)) {
+                    viewModel.filesInDownloadPool.add(chapter.pdf!!)
+                    viewModel.downloadPdfFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!)
+                    //downloadFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!, typePdf)
                 }
+            } else {
+                childFragmentManager.setFragmentResult(
+                    "loadPdf",
+                    bundleOf("pdfFilePath" to "")
+                )
             }
 
             chapter.fields?.let { videoList ->
@@ -459,19 +501,20 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                             requireContext(),
                             downloadFolder
                         )
+                        val unzipFilepath = FileUtils.getLocalStorageFilePath(
+                            requireContext(),
+                            unzippedFolder
+                        )
                         val fileName = video.video_filename ?: ""
                         val videoFile = File(filepath, fileName)
                         if (videoFile.exists()) {
-                            val temp = "$filepath/$fileName"
-                            val videoFolderPath = temp.substring(0, temp.lastIndexOf("."))
-                            val videoFolder = File(videoFolderPath)
-                            var innerFolderName = video.folder ?: ""
-                            innerFolderName = innerFolderName.substring(0, innerFolderName.lastIndexOf("."))
+                            val videoFolderName = fileName.substring(0, fileName.lastIndexOf("."))
+                            val videoFolder = File(unzipFilepath, videoFolderName)
                             if (videoFolder.exists() && videoFolder.isDirectory) {
-                                playVideo(videoFolderPath, innerFolderName)
+                                playVideo("$unzipFilepath/$videoFolderName")
                             } else {
                                 lifecycleScope.launch {
-                                    unZipFile(File(filepath, fileName), videoFolderPath, innerFolderName)
+                                    unZipFile(File(filepath, fileName), videoFolderName)
                                 }
                             }
                         }
@@ -485,24 +528,25 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
     }
 
-    private fun downloadFile(downloadUrl: String, filePath: String, fileName: String, fileType: String, folder: String) {
-        val intent = Intent(requireContext(), DownloadService::class.java)
-        intent.putExtra(AppConstants.DOWNLOAD_URL, downloadUrl)
-        intent.putExtra(FILE_PATH, filePath)
-        intent.putExtra(FILE_NAME, fileName)
-        intent.putExtra(FILE_TYPE, fileType)
-        intent.putExtra("folder", folder)
+//    private fun downloadFile(downloadUrl: String, filePath: String, fileName: String, fileType: String) {
+//        val intent = Intent(requireContext(), DownloadService::class.java)
+//        intent.putExtra(AppConstants.DOWNLOAD_URL, downloadUrl)
+//        intent.putExtra(FILE_PATH, filePath)
+//        intent.putExtra(FILE_NAME, fileName)
+//        intent.putExtra(FILE_TYPE, fileType)
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            requireContext().startForegroundService(intent)
+//        } else {
+//            requireContext().startService(intent)
+//        }
+//    }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            requireContext().startForegroundService(intent)
-        } else {
-            requireContext().startService(intent)
-        }
-    }
-
-    private fun unZipFile(inputFile: File, outputFilePath: String, innerFolderName: String) {
-        viewDataBinding.progressBar.visibility = View.VISIBLE
+    private fun unZipFile(inputFile: File, outputFolderName: String) {
+        viewModel.apiCallStatus.postValue(ApiCallStatus.LOADING)
         try {
+            var outputFilePath = FileUtils.getLocalStorageFilePath(requireContext(), AppConstants.unzippedFolder)
+            outputFilePath = "$outputFilePath/$outputFolderName"
             val zipFile = ZipFile(inputFile)
             if (zipFile.isEncrypted) {
                 zipFile.setPassword(password)
@@ -513,7 +557,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
             zipFile.extractAll(outputFilePath)
 
             while (progressMonitor.state != ProgressMonitor.State.READY) {
-                viewDataBinding.progressBar.progress = progressMonitor.percentDone
+                //viewDataBinding.progressBar.progress = progressMonitor.percentDone
                 println("Percentage done: " + progressMonitor.percentDone)
                 println("Current file: " + progressMonitor.fileName)
                 println("Current task: " + progressMonitor.currentTask)
@@ -523,17 +567,17 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
             when (progressMonitor.result) {
                 ProgressMonitor.Result.SUCCESS -> {
-                    viewDataBinding.progressBar.visibility = View.GONE
+                    viewModel.apiCallStatus.postValue(ApiCallStatus.SUCCESS)
                     lifecycleScope.launch(Dispatchers.Main.immediate) {
-                        playVideo(outputFilePath, innerFolderName)
+                        playVideo(outputFilePath)
                     }
                 }
                 ProgressMonitor.Result.ERROR -> {
-                    viewDataBinding.progressBar.visibility = View.GONE
+                    viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
                     println("Error occurred. Error message: " + progressMonitor.exception.message)
                 }
                 ProgressMonitor.Result.CANCELLED -> {
-                    viewDataBinding.progressBar.visibility = View.GONE
+                    viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
                     println("Task cancelled")
                 }
                 else -> {
@@ -545,7 +589,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
     }
 
-    fun playVideo(videoFolderPath: String, innerFolderName: String) {
+    fun playVideo(videoFolderPath: String) {
         //Check if the Path is a directory
 
         val path = Paths.get("$videoFolderPath/")
@@ -568,11 +612,11 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
             val fileDirMap = Files.list(newPath).collect(Collectors.partitioningBy( {it -> Files.isDirectory(it)}))
 
             fileDirMap[false]?.forEach( {it ->
-                println("%-20s\t%-5b\t%-5b\t%b".format(
-                    it.fileName,
-                    Files.isReadable(it), //Read attribute
-                    Files.isWritable(it), //Write attribute
-                    Files.isExecutable(it))) //Execute attribute
+//                println("%-20s\t%-5b\t%-5b\t%b".format(
+//                    it.fileName,
+//                    Files.isReadable(it), //Read attribute
+//                    Files.isWritable(it), //Write attribute
+//                    Files.isExecutable(it))) //Execute attribute
 
                 if (it.fileName.toString().contains("player")) {
                     playFileName =  it.fileName.toString()
@@ -589,6 +633,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
     override fun onDestroyView() {
         //viewDataBinding.webView.webViewClient = null
         super.onDestroyView()
+
     }
 
     private fun setCurrentPageItemPosition(position: Int) {

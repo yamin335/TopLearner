@@ -8,6 +8,7 @@ import com.rtchubs.engineerbooks.binding.FragmentDataBindingComponent
 import com.rtchubs.engineerbooks.di.DaggerAppComponent
 import com.rtchubs.engineerbooks.util.AppConstants
 import com.rtchubs.engineerbooks.util.AppConstants.downloadFolder
+import com.rtchubs.engineerbooks.util.AppConstants.unzippedFolder
 import com.rtchubs.engineerbooks.util.FileUtils
 import com.rtchubs.engineerbooks.util.NotificationUtils
 import com.rtchubs.engineerbooks.worker.DaggerWorkerFactory

@@ -18,6 +18,26 @@ import java.math.RoundingMode
 
 class FileUtils {
     companion object {
+        fun deleteFolderWithAllFilesFromExternalStorage(applicationContext: Context, folderName: String): Boolean {
+            //If your app is used on a device that runs Android 4.3 (API level 18) or lower,
+            // then the array contains just one element,
+            // which represents the primary external storage volume
+            val externalStorageVolumes: Array<out File> = ContextCompat.getExternalFilesDirs(
+                applicationContext,
+                null
+            )
+            val primaryExternalStorage = externalStorageVolumes[0]
+            //path = "$primaryExternalStorage/$realDocId"
+
+            //val root: String = Environment.getExternalStorageDirectory().getAbsolutePath()
+            val folder = File(primaryExternalStorage.absolutePath, folderName)
+            if (folder.exists()) {
+                if (!folder.deleteRecursively())
+                    return false
+            }
+            return true
+        }
+
         fun getFileName(context: Context, uri: Uri): String {
             var displayName = ""
 

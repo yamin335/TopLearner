@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data class="WebViewBinding">
-
+        <variable
+            name="viewModel"
+            type="com.rtchubs.engineerbooks.ui.video_play.LoadWebViewViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,17 +46,6 @@
             app:layout_constraintTop_toBottomOf="@+id/appbar"
             app:layout_constraintVertical_bias="0.0" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/webView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/webView"
-            app:layout_constraintVertical_bias="0.0" />
-
         <com.google.android.material.tabs.TabLayout
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:id="@+id/tabs"
@@ -83,6 +74,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tabs" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/appbar">
+            <ProgressBar
+                android:id="@+id/loader"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_marginTop="-6dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/themeButtonColor"
+                app:showLoader="@{viewModel.apiCallStatus}" />
+        </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
