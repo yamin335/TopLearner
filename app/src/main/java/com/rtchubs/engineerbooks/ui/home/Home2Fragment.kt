@@ -132,11 +132,15 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
             drawerListener?.toggleNavDrawer()
         }
 
-        val homeClassListAdapter = HomeClassListAdapter(appExecutors) {
-            if (it.isPaid == true) {
+        val homeClassListAdapter = HomeClassListAdapter(appExecutors, userData.customer_type_id) {
+            if (userData.customer_type_id == 2) {
                 navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
             } else {
-                navigateTo(Home2FragmentDirections.actionHome2FragmentToPaymentFragment(it.id, it.name ?: ""))
+                if (it.isPaid == true) {
+                    navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
+                } else {
+                    navigateTo(Home2FragmentDirections.actionHome2FragmentToPaymentFragment(it.id, it.name ?: ""))
+                }
             }
         }
 
@@ -159,7 +163,13 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         })
 //        viewModel.getAcademicBooks(userData.mobile ?: "", userData.class_id ?: 0)
 
-        if (allBookList.isEmpty()) viewModel.getAcademicBooks(userData.mobile ?: "", userData.class_id ?: 0)
+        if (allBookList.isEmpty()) {
+            if (userData.customer_type_id == 2) {
+                viewModel.getAdminPanelBooks()
+            } else {
+                viewModel.getAcademicBooks(userData.mobile ?: "", userData.class_id ?: 0)
+            }
+        }
 
         homeClassListAdapter.submitList(allBookList)
 

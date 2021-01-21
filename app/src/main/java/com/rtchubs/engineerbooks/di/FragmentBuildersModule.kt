@@ -10,6 +10,7 @@ import com.rtchubs.engineerbooks.ui.history.HistoryFragment
 import com.rtchubs.engineerbooks.ui.home.*
 import com.rtchubs.engineerbooks.ui.how_works.HowWorksFragment
 import com.rtchubs.engineerbooks.ui.info.InfoFragment
+import com.rtchubs.engineerbooks.ui.live_video.LiveVideoFragment
 import com.rtchubs.engineerbooks.ui.login.SignInFragment
 import com.rtchubs.engineerbooks.ui.terms_and_conditions.TermsAndConditionsFragment
 import com.rtchubs.engineerbooks.ui.on_boarding.tou.TouFragment
@@ -174,4 +175,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeTransactionFragment(): TransactionFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeLiveVideoFragment(): LiveVideoFragment
 }

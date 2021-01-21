@@ -59,6 +59,9 @@ interface ApiService {
     @POST(ApiEndPoint.TRANSACTION)
     suspend fun transactionHistory(@Body jsonString: String): Response<TransactionHistoryResponse>
 
+    @POST(ApiEndPoint.PARTNER_TRANSACTION)
+    suspend fun partnerTransactionHistory(@Body jsonString: String): Response<TransactionHistoryResponse>
+
 
 
 

@@ -802,6 +802,40 @@
             </LayoutPositions>
           </value>
         </entry>
+        <entry key="live_nav_graph.xml">
+          <value>
+            <LayoutPositions>
+              <option name="myPositions">
+                <map>
+                  <entry key="drawer_nav_graph">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="transactionFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="150" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </LayoutPositions>
+          </value>
+        </entry>
         <entry key="login_nav_graph.xml">
           <value>
             <LayoutPositions>
@@ -889,6 +923,11 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_permissionsFragment_to_profileSignInFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                           </map>
                         </option>
                       </LayoutPositions>
@@ -899,7 +938,7 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="1003" />
+                            <option name="x" value="1015" />
                             <option name="y" value="14" />
                           </Point>
                         </option>
@@ -926,7 +965,22 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_profileSignInFragment_to_classEditFragment1">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_profileSignInFragment_to_districtEditFragment1">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_profileSignInFragment_to_signInFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_profileSignInFragment_to_upazillaEditFragment1">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -1479,8 +1533,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="12" />
-                            <option name="y" value="12" />
+                            <option name="x" value="-5" />
+                            <option name="y" value="-113" />
                           </Point>
                         </option>
                       </LayoutPositions>

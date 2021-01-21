@@ -92,8 +92,8 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).title }
     }
 
-    //private val viewPagerPageTitles = arrayOf("Video List", "Quiz", "Questions")
-    private val viewPagerPageTitles = arrayOf("Video List", "Questions")
+    private val viewPagerPageTitles = arrayOf("Video List", "Quiz", "Questions")
+//    private val viewPagerPageTitles = arrayOf("Video List", "Questions")
 
     private lateinit var pagerAdapter: VideoTabViewPagerAdapter
 
@@ -134,7 +134,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         } else {
             throw RuntimeException("$context must implement LoginHandlerCallback")
         }
-        FileUtils.makeEmptyFolderIntoExternalStorageWithTitle(requireContext(), AppConstants.unzippedFolder)
+        FileUtils.makeEmptyFolderIntoExternalStorageWithTitle(requireContext(), unzippedFolder)
     }
 
     override fun onDetach() {
@@ -391,7 +391,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
 
         pagerAdapter = VideoTabViewPagerAdapter(
-            2,
+            3,
             this
         )
 
@@ -545,7 +545,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
     private fun unZipFile(inputFile: File, outputFolderName: String) {
         viewModel.apiCallStatus.postValue(ApiCallStatus.LOADING)
         try {
-            var outputFilePath = FileUtils.getLocalStorageFilePath(requireContext(), AppConstants.unzippedFolder)
+            var outputFilePath = FileUtils.getLocalStorageFilePath(requireContext(), unzippedFolder)
             outputFilePath = "$outputFilePath/$outputFolderName"
             val zipFile = ZipFile(inputFile)
             if (zipFile.isEncrypted) {

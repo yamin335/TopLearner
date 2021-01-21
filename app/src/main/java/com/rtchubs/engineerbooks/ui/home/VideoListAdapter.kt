@@ -3,6 +3,7 @@ package com.rtchubs.engineerbooks.ui.home
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
@@ -42,6 +43,7 @@ class VideoListAdapter(
     }) {
     // Properties
     private val viewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool()
+    private var checkedPosition = -1
 
     val onClicked = MutableLiveData<ChapterField>()
     override fun createBinding(parent: ViewGroup): VideoListItemBinding {
@@ -50,7 +52,6 @@ class VideoListAdapter(
             R.layout.list_item_videos, parent, false
         )
     }
-
 
     override fun bind(binding: VideoListItemBinding, position: Int) {
         val item = getItem(position)
@@ -66,8 +67,23 @@ class VideoListAdapter(
                 return false
             }
         }
-        binding.root.setOnClickListener {
+
+        when (checkedPosition) {
+            -1 -> {
+                binding.videoListItemCard.strokeWidth = 0
+            }
+            position -> {
+                binding.videoListItemCard.strokeWidth = 3
+            }
+            else -> {
+                binding.videoListItemCard.strokeWidth = 0
+            }
+        }
+
+        binding.videoListItemCard.setOnClickListener {
             itemCallback?.invoke(item)
+            checkedPosition = position
+            notifyDataSetChanged()
         }
     }
 }

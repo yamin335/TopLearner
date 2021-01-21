@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/live_nav"
+    app:startDestination="@id/liveFragment">
+
+    <fragment
+        android:id="@+id/liveFragment"
+        android:name="com.rtchubs.engineerbooks.ui.live_video.LiveVideoFragment"
+        android:label="Live"
+        tools:layout="@layout/fragment_live_video" />
+
+    <include app:graph="@navigation/drawer_nav_graph" />
+</navigation>

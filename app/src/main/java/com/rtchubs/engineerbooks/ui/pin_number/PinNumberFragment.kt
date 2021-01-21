@@ -1,5 +1,6 @@
 package com.rtchubs.engineerbooks.ui.pin_number
 
+import android.Manifest
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -8,6 +9,8 @@ import android.view.WindowManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.TedPermission
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.TokenInformation
@@ -20,7 +23,7 @@ import com.rtchubs.engineerbooks.util.showErrorToast
 import com.rtchubs.engineerbooks.util.showWarningToast
 import org.json.JSONObject
 
-class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>() {
+class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), PermissionListener {
 
     override val bindingVariable: Int
         get() = BR.viewModel
@@ -44,6 +47,14 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>() {
         }
     }
 
+    override fun onPermissionGranted() {
+
+    }
+
+    override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+
+    }
+
     override fun onDetach() {
         super.onDetach()
         listener = null
@@ -60,6 +71,18 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>() {
         super.onViewCreated(view, savedInstanceState)
         updateStatusBarBackgroundColor("#1E4356")
         registerToolbar(viewDataBinding.toolbar)
+
+        TedPermission.with(requireContext())
+            .setPermissionListener(this)
+            .setDeniedMessage(getString(R.string.if_you_reject_these_permission_the_app_wont_work_perfectly))
+            .setPermissions(
+                Manifest.permission.CAMERA,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.READ_SMS,
+                Manifest.permission.RECEIVE_SMS
+            ).check()
 
         registrationLocalHelper = args.registrationHelper
         registrationRemoteHelper = args.registrationHelper
@@ -131,7 +154,7 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>() {
             hideKeyboard()
             registrationRemoteHelper.pin = viewModel.pin.value
             if (registrationRemoteHelper.isRegistered == false) {
-                navigateTo(PinNumberFragmentDirections.actionPinNumberFragmentToPermissionsFragment(
+                navigateTo(PinNumberFragmentDirections.actionPinNumberFragmentToProfileSignInFragment(
                     registrationRemoteHelper
                 ))
             } else {

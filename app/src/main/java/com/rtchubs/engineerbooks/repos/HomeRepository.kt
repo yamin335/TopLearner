@@ -1,7 +1,9 @@
 package com.rtchubs.engineerbooks.repos
 
 import com.google.gson.JsonObject
+import com.rtchubs.engineerbooks.api.AdminApiService
 import com.rtchubs.engineerbooks.api.ApiService
+import com.rtchubs.engineerbooks.models.home.AllBookResponse
 import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.AddCardOrBankResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.BankOrCardListResponse
@@ -13,7 +15,8 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class HomeRepository @Inject constructor(@Named("auth") private val authApiService: ApiService, private val apiService: ApiService) {
+class HomeRepository @Inject constructor(@Named("auth") private val authApiService: ApiService,
+                                         private val apiService: ApiService, private val adminApiService: AdminApiService) {
 
     suspend fun allBookRepo(mobile: String, class_id: Int): Response<ClassWiseBookResponse> {
         val jsonObjectBody = JsonObject().apply {
@@ -25,6 +28,19 @@ class HomeRepository @Inject constructor(@Named("auth") private val authApiServi
             authApiService.getBooks(jsonObjectBody)
         }
     }
+
+    suspend fun adminPanelBookRepo(): Response<AllBookResponse> {
+
+        return withContext(Dispatchers.IO) {
+            adminApiService.getAllBooks()
+        }
+    }
+
+
+
+
+
+
 
     suspend fun requestBankListRepo(type:String,token:String): Response<BankOrCardListResponse> {
         return withContext(Dispatchers.IO) {

@@ -18,7 +18,7 @@ import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.AppConstants.START_TIME_IN_MILLI_SECONDS
 import com.rtchubs.engineerbooks.util.AppConstants.otpWaitMessage
 
-class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>(), PermissionListener {
+class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
 
     override val bindingVariable: Int
         get() = BR.viewModel
@@ -34,10 +34,6 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>(), 
     private var countdownTimer: CountDownTimer? = null
     var repeater = 0
 
-    override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mActivity.window?.setSoftInputMode(
@@ -48,10 +44,6 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>(), 
     override fun onPause() {
         super.onPause()
         resetTimer()
-    }
-
-    override fun onPermissionGranted() {
-        navigateTo(OtpSignInFragmentDirections.actionOtpSignInFragmentToPinNumberFragment(registrationRemoteHelper))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -99,17 +91,8 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>(), 
                 if (!it.otp.isNullOrBlank() && it.otp == viewModel.otp.value) {
                     registrationRemoteHelper = it
                     registrationRemoteHelper.mobileOperator = registrationLocalHelper.mobileOperator
-                    TedPermission.with(requireContext())
-                        .setPermissionListener(this)
-                        .setDeniedMessage(getString(R.string.if_you_reject_these_permission_the_app_wont_work_perfectly))
-                        .setPermissions(
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_CONTACTS,
-                            Manifest.permission.READ_SMS,
-                            Manifest.permission.RECEIVE_SMS
-                        ).check()
+                    navigateTo(OtpSignInFragmentDirections.actionOtpSignInFragmentToPinNumberFragment(registrationRemoteHelper))
+                    viewModel.verifiedOTP.postValue(null)
                 } else {
                     viewDataBinding.tvOtpTextDescription.text = "You entered an invalid OTP code! please request a new code"
                     viewDataBinding.etOtpCode.setText("")

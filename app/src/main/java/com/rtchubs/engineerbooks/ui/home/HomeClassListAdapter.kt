@@ -17,6 +17,7 @@ import com.rtchubs.engineerbooks.util.DataBoundListAdapter
 
 class HomeClassListAdapter(
     private val appExecutors: AppExecutors,
+    private val customerTypeID: Int?,
     private val itemCallback: ((ClassWiseBook) -> Unit)? = null
 ) : DataBoundListAdapter<ClassWiseBook, HomeClassListItemBinding>(
     appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<ClassWiseBook>() {
@@ -48,8 +49,12 @@ class HomeClassListAdapter(
         val item = getItem(position)
         binding.item = item
 
-        val isPaid = item.isPaid ?: false
-        binding.lockView.visibility = if (isPaid) View.GONE else View.VISIBLE
+        if (customerTypeID == 2) {
+            binding.lockView.visibility = View.GONE
+        } else {
+            val isPaid = item.isPaid ?: false
+            binding.lockView.visibility = if (isPaid) View.GONE else View.VISIBLE
+        }
 
         binding.rootCard.setOnClickListener {
             itemCallback?.invoke(item)

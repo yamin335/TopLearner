@@ -15,6 +15,7 @@ import com.rtchubs.engineerbooks.ui.history.HistoryViewModel
 import com.rtchubs.engineerbooks.ui.home.*
 import com.rtchubs.engineerbooks.ui.how_works.HowWorksViewModel
 import com.rtchubs.engineerbooks.ui.info.InfoViewModel
+import com.rtchubs.engineerbooks.ui.live_video.LiveVideoViewModel
 import com.rtchubs.engineerbooks.ui.login.SignInViewModel
 import com.rtchubs.engineerbooks.ui.on_boarding.tou.TouViewModel
 import com.rtchubs.engineerbooks.ui.otp.OtpViewModel
@@ -277,4 +278,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(TransactionViewModel::class)
     abstract fun bindTransactionViewModel(viewModel: TransactionViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LiveVideoViewModel::class)
+    abstract fun bindLiveVideoViewModel(viewModel: LiveVideoViewModel): ViewModel
 }

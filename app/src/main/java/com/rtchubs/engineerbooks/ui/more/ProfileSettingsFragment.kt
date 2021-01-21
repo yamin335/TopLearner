@@ -8,6 +8,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -81,6 +83,110 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         registerToolbar(viewDataBinding.toolbar)
 
         userData = preferencesHelper.getUser()
+
+        viewDataBinding.firstName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.firstName = s?.toString() ?: ""
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
+
+        viewDataBinding.lastName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.lastName = s?.toString() ?: ""
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
+
+        viewDataBinding.fatherName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.fatherName = s?.toString() ?: ""
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
+
+        viewDataBinding.instituteField.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.institute = s?.toString() ?: ""
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
+
+        viewDataBinding.rollField.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.roll = s?.toString() ?: ""
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
+
+        viewDataBinding.emailField.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.email = s?.toString() ?: ""
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
+
+        viewDataBinding.addressField.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.address = s?.toString() ?: ""
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
 
         imageCropperListener = object : FaceDetectionListener {
             override fun onFaceDetected(result: com.darwin.viola.still.model.Result) {
@@ -192,13 +298,13 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             }
 
             data.profilepic?.let {
-                userData.profilePic = it
+                if (it.isNotEmpty()) userData.profilePic = it
             }
             data.nidfront?.let {
-                userData.nidFrontPic = it
+                if (it.isNotEmpty()) userData.nidFrontPic = it
             }
             data.nidback?.let {
-                userData.nidBackPic = it
+                if (it.isNotEmpty()) userData.nidBackPic = it
             }
 
             viewModel.updateUserProfile(userData)
@@ -224,7 +330,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         viewModel.userProfileInfo.observe(viewLifecycleOwner, androidx.lifecycle.Observer { userInfo ->
             userInfo?.let {
                 userData = it
-                preferencesHelper.saveUser(it)
+                //preferencesHelper.saveUser(it)
                 prepareUserData(it)
             }
 
@@ -253,6 +359,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
                 showErrorToast(requireContext(), "Please enter father's name!")
                 return@setOnClickListener
             }
+            userData.altContactPerson = viewDataBinding.fatherName.text.toString()
 //            if (viewDataBinding.birthDayField.text.toString().isEmpty()) {
 //                viewDataBinding.birthDayField.requestFocus()
 //                showErrorToast(requireContext(), "Please enter birth date!")
@@ -274,7 +381,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 //                showErrorToast(requireContext(), "Please enter email address!")
 //                return@setOnClickListener
 //            }
-            userData.email = viewDataBinding.emailField.text.toString()
+//            userData.email = viewDataBinding.emailField.text.toString()
 //            if (viewDataBinding.addressField.text.toString().isEmpty()) {
 //                viewDataBinding.addressField.requestFocus()
 //                showErrorToast(requireContext(), "Please enter your address!")
@@ -291,7 +398,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
                 showErrorToast(requireContext(), "Please select your upazilla!")
                 return@setOnClickListener
             }
-            userData.city = viewModel.selectedCity?.name
+            //userData.city = viewModel.selectedCity?.name
 
             ClassEditFragment.selectedClass?.let {
                 userData.class_id = it.id?.toInt() ?: 0
@@ -401,22 +508,67 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             .placeholder(R.drawable.doctor_1)
             .into(viewDataBinding.rivNidBackImage)
 
-        viewDataBinding.firstName.setText(user.firstName)
-        viewDataBinding.lastName.setText(user.lastName)
-        viewDataBinding.fatherName.setText(user.altContactPerson)
+        if (viewModel.firstName.isEmpty()) {
+            viewDataBinding.firstName.setText(user.firstName)
+        } else {
+            viewDataBinding.firstName.setText(viewModel.firstName)
+        }
+
+        if (viewModel.lastName.isEmpty()) {
+            viewDataBinding.lastName.setText(user.lastName)
+        } else {
+            viewDataBinding.lastName.setText(viewModel.lastName)
+        }
+
+        if (viewModel.fatherName.isEmpty()) {
+            viewDataBinding.fatherName.setText(user.altContactPerson)
+        } else {
+            viewDataBinding.fatherName.setText(viewModel.fatherName)
+        }
+
+        if (viewModel.institute.isEmpty()) {
+            viewDataBinding.instituteField.setText(user.institute)
+        } else {
+            viewDataBinding.instituteField.setText(viewModel.institute)
+        }
+
+        if (viewModel.roll.isEmpty()) {
+            viewDataBinding.rollField.setText(user.rollnumber)
+        } else {
+            viewDataBinding.rollField.setText(viewModel.roll)
+        }
+
+        if (viewModel.email.isEmpty()) {
+            viewDataBinding.emailField.setText(user.email)
+        } else {
+            viewDataBinding.emailField.setText(viewModel.email)
+        }
+
+        if (viewModel.address.isEmpty()) {
+            viewDataBinding.addressField.setText(user.address)
+        } else {
+            viewDataBinding.addressField.setText(viewModel.address)
+        }
+
         viewDataBinding.city.text = user.city
         viewDataBinding.tvClass.text = user.ClassName
         viewDataBinding.tvUpazilla.text = user.upazila
-        viewDataBinding.emailField.setText(user.email)
+
         //viewDataBinding.nidField.setText(user.nidnumber)
-        viewDataBinding.addressField.setText(user.address)
-        viewDataBinding.instituteField.setText(user.institute)
-        viewDataBinding.rollField.setText(user.rollnumber)
-        var genderIndex = 0
-        viewModel.allGender.forEachIndexed { index, gender ->
-            if (gender.name?.equals(user.gender ?: "N/A", true) == true) genderIndex = index + 1
+
+        if (viewModel.selectedGender == null) {
+            var genderIndex = 0
+            viewModel.allGender.forEachIndexed { index, gender ->
+                if (gender.name?.equals(user.gender ?: "N/A", true) == true) genderIndex = index + 1
+            }
+            viewDataBinding.spGender.setSelection(genderIndex, true)
+        } else {
+            var genderIndex = 0
+            viewModel.allGender.forEachIndexed { index, gender ->
+                if (gender.name?.equals(viewModel.selectedGender?.name ?: "N/A", true) == true) genderIndex = index + 1
+            }
+            viewDataBinding.spGender.setSelection(genderIndex, true)
         }
-        viewDataBinding.spGender.setSelection(genderIndex, true)
 
         ClassEditFragment.selectedClass?.name?.let {
             viewDataBinding.tvClass.text = it

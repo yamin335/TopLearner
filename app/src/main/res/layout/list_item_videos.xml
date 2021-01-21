@@ -17,11 +17,13 @@
     </data>
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/videoListItemCard"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
+        app:strokeColor="@color/themeButtonColor"
         android:clickable="true"
         android:focusable="true"
         app:cardBackgroundColor="@color/white"

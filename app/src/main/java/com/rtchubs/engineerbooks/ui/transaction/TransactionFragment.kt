@@ -30,6 +30,7 @@ class TransactionFragment : BaseFragment<TransactionFragmentBinding, Transaction
     private var drawerListener: NavDrawerHandlerCallback? = null
 
     lateinit var transactionAdapter: TransactionListAdapter
+    lateinit var adminTransactionAdapter: AdminTransactionListAdapter
 
     lateinit var userData: InquiryAccount
 
@@ -61,10 +62,20 @@ class TransactionFragment : BaseFragment<TransactionFragmentBinding, Transaction
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         userData = preferencesHelper.getUser()
+
+        adminTransactionAdapter = AdminTransactionListAdapter(appExecutors) {
+
+        }
+
         transactionAdapter = TransactionListAdapter(appExecutors) {
 
         }
-        viewDataBinding.recyclerTransactions.adapter = transactionAdapter
+
+        if (userData.customer_type_id == 2) {
+            viewDataBinding.recyclerTransactions.adapter = adminTransactionAdapter
+        } else {
+            viewDataBinding.recyclerTransactions.adapter = transactionAdapter
+        }
 
         viewDataBinding.appLogo.setOnClickListener {
             drawerListener?.toggleNavDrawer()
@@ -77,6 +88,17 @@ class TransactionFragment : BaseFragment<TransactionFragmentBinding, Transaction
             }
         })
 
-        viewModel.getAllTransaction(userData.id ?: 0)
+        viewModel.adminTransactionResponse.observe(viewLifecycleOwner, Observer { allTransaction ->
+            allTransaction?.let {
+                viewDataBinding.emptyView.visibility = View.GONE
+                adminTransactionAdapter.submitList(it)
+            }
+        })
+
+        if (userData.customer_type_id == 2) {
+            viewModel.getAdminTransactions(1, 1)
+        } else {
+            viewModel.getAllTransaction(userData.id ?: 0)
+        }
     }
 }

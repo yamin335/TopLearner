@@ -1,10 +1,9 @@
 package com.rtchubs.engineerbooks.di
 
-import android.util.Log
 import com.rtchubs.engineerbooks.api.Api
 import com.rtchubs.engineerbooks.api.TokenAuthenticator
 import com.rtchubs.engineerbooks.api.ApiService
-import com.rtchubs.engineerbooks.api.MediaApiService
+import com.rtchubs.engineerbooks.api.AdminApiService
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.util.LiveDataCallAdapterFactory
 import dagger.Module
@@ -123,7 +122,7 @@ class NetworkModule {
         gsonConverterFactory: GsonConverterFactory
     ): Retrofit.Builder =
         Retrofit.Builder()
-            .baseUrl(Api.MEDIA_API_ROOT_URL)
+            .baseUrl(Api.ADMIN_API_ROOT_URL)
             .addConverterFactory(scalarsConverterFactory)
             .addConverterFactory(gsonConverterFactory)
             .addConverterFactory(nullOrEmptyConverterFactory)
@@ -187,10 +186,10 @@ class NetworkModule {
     fun provideMediaApiService(
         okHttpClient: OkHttpClient,
         @Named("Media") retrofitBuilder: Retrofit.Builder
-    ): MediaApiService {
+    ): AdminApiService {
         return retrofitBuilder
             .client(okHttpClient).build()
-            .create(MediaApiService::class.java)
+            .create(AdminApiService::class.java)
     }
 
     @Provides

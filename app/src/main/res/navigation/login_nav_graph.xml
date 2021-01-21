@@ -42,7 +42,11 @@
 
         <action
             android:id="@+id/action_termsAndConditions_to_otpSignInFragment3"
-            app:destination="@id/otpSignInFragment" />
+            app:destination="@id/otpSignInFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
 
         <argument
             android:name="registrationHelper"
@@ -57,47 +61,58 @@
         <action
             android:id="@+id/action_signInFragment_to_termsFragment"
             app:destination="@id/termsAndConditions"
+            app:launchSingleTop="false"
+            app:popUpToInclusive="false"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
-            app:launchSingleTop="false"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpToInclusive="false" />
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_signInFragment_to_otpSignInFragment"
-            app:destination="@id/otpSignInFragment" />
+            app:destination="@id/otpSignInFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/otpSignInFragment"
         android:name="com.rtchubs.engineerbooks.ui.otp_signin.OtpSignInFragment"
         tools:layout="@layout/fragment_otp_sign_in">
+        <!--        <action-->
+<!--            android:id="@+id/action_otpSignInFragment_to_pinNumberFragment"-->
+<!--            app:destination="@id/pinNumberFragment"-->
+<!--            app:enterAnim="@anim/slide_in_right"-->
+<!--            app:exitAnim="@anim/slide_out_left"-->
+<!--            app:launchSingleTop="false"-->
+<!--            app:popEnterAnim="@anim/slide_in_left"-->
+<!--            app:popExitAnim="@anim/slide_out_right"-->
+<!--            app:popUpToInclusive="false" />-->
+        <argument
+            android:name="registrationHelper"
+            app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />
         <action
             android:id="@+id/action_otpSignInFragment_to_pinNumberFragment"
             app:destination="@id/pinNumberFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
-            app:launchSingleTop="false"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpToInclusive="false" />
-        <argument
-            android:name="registrationHelper"
-            app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/pinNumberFragment"
         android:name="com.rtchubs.engineerbooks.ui.pin_number.PinNumberFragment"
         tools:layout="@layout/fragment_pin_number">
+        <argument
+            android:name="registrationHelper"
+            app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />
         <action
-            android:id="@+id/action_pinNumberFragment_to_permissionsFragment"
-            app:destination="@id/permissionsFragment"
+            android:id="@+id/action_pinNumberFragment_to_profileSignInFragment"
+            app:destination="@id/profileSignInFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
-        <argument
-            android:name="registrationHelper"
-            app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />
     </fragment>
     <fragment
         android:id="@+id/profileSignInFragment"
@@ -149,8 +164,7 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/pinNumberFragment" />
+            app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="registrationHelper"
             app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />
@@ -160,8 +174,7 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/pinNumberFragment"/>
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/NIDScanCameraXFragment"
@@ -173,8 +186,7 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/pinNumberFragment" />
+            app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="registrationHelper"
             app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />

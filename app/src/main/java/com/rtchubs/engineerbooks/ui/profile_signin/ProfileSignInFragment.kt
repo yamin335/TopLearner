@@ -43,6 +43,7 @@ import com.rtchubs.engineerbooks.nid_scan.BitmapUtils
 import com.rtchubs.engineerbooks.ui.LoginHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.more.ProfileSettingsFragmentDirections
+import com.rtchubs.engineerbooks.util.AppConstants.generalUserTypeID
 import com.rtchubs.engineerbooks.util.BitmapUtilss
 import com.rtchubs.engineerbooks.util.showErrorToast
 import com.rtchubs.engineerbooks.util.showSuccessToast
@@ -575,7 +576,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
             registrationHelper.institute = viewDataBinding.instituteField.text.toString()
             registrationHelper.rollnumber = viewDataBinding.rollField.text.toString()
 
-            registrationHelper.customer_type_id = 1
+            registrationHelper.customer_type_id = generalUserTypeID
             registrationHelper.isRegistered = true
             val selectionTime: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(
                 Date()

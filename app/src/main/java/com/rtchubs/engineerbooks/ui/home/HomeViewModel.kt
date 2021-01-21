@@ -55,6 +55,40 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun getAdminPanelBooks() {
+        if (checkNetworkStatus()) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(repository.adminPanelBookRepo())) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        val totalBooks = ArrayList<ClassWiseBook>()
+                        val books = apiResponse.body.data?.books
+                        books?.let {
+                            it.forEach { book ->
+                                totalBooks.add(ClassWiseBook(book.id ?: 0, book.uuid, book.name, book.title, book.authors,
+                                    book.is_paid == 1, book.book_type_id))
+                            }
+                            allBooks.postValue(totalBooks)
+                        }
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                    }
+                    is ApiErrorResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                    }
+                }
+            }
+        }
+    }
+
 
     val paymentMethodList: List<PaymentMethod>
         get() = listOf(
