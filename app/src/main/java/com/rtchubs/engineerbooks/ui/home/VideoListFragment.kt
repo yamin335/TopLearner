@@ -3,6 +3,7 @@ package com.rtchubs.engineerbooks.ui.home
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import com.rtchubs.engineerbooks.BR
@@ -11,6 +12,7 @@ import com.rtchubs.engineerbooks.databinding.VideoListFragmentBinding
 import com.rtchubs.engineerbooks.models.VideoItem
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment
+import java.io.File
 
 class VideoListFragment : BaseFragment<VideoListFragmentBinding, VideoListViewModel>() {
 
@@ -25,6 +27,19 @@ class VideoListFragment : BaseFragment<VideoListFragmentBinding, VideoListViewMo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        parentFragmentManager.setFragmentResultListener(
+            "showHideProgress",
+            viewLifecycleOwner, FragmentResultListener { key, bundle ->
+                val shouldShowProgress = bundle.getBoolean("progressStatus")
+
+                if (shouldShowProgress) {
+                    viewDataBinding.progressView.visibility = View.VISIBLE
+                } else {
+                    viewDataBinding.progressView.visibility = View.GONE
+                }
+            }
+        )
 
         videoListAdapter = VideoListAdapter (
             appExecutors

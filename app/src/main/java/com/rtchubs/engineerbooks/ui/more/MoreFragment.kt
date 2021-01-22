@@ -4,9 +4,12 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiEndPoint
 import com.rtchubs.engineerbooks.databinding.MoreFragmentBinding
+import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.LogoutHandlerCallback
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
@@ -27,6 +30,8 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
     private var listener: LogoutHandlerCallback? = null
 
     private var drawerListener: NavDrawerHandlerCallback? = null
+
+    lateinit var userData: InquiryAccount
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -51,6 +56,11 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        userData = preferencesHelper.getUser()
+
+        init(userData)
+
         viewDataBinding.mProfile.setOnClickListener {
             ClassEditFragment.selectedClass = null
             DistrictEditFragment.selectedCity = null
@@ -72,6 +82,20 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
         viewDataBinding.appLogo.setOnClickListener {
             drawerListener?.toggleNavDrawer()
         }
+    }
+
+    private fun init(user: InquiryAccount) {
+        Glide.with(requireContext())
+            .load("${ApiEndPoint.PROFILE_IMAGES}/${user.Folder}/${user.profilePic}")
+            .placeholder(R.drawable.doctor_1)
+            .circleCrop()
+            .into(viewDataBinding.rivProfileImage)
+
+        viewDataBinding.tvName.text = "${user.firstName} ${user.lastName}"
+        viewDataBinding.tvClass.text = user.ClassName
+        viewDataBinding.tvSID.text = user.mobile
+        viewDataBinding.tvValidDate.text = "N/A"
+        viewDataBinding.tvPackage.text = "N/A"
     }
 
 }

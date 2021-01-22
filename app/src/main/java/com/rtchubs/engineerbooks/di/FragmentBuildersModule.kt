@@ -34,6 +34,7 @@ import com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.ProfileSignInFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment
+import com.rtchubs.engineerbooks.ui.solution.SolutionFragment
 import com.rtchubs.engineerbooks.ui.topup.TopUpAmountFragment
 import com.rtchubs.engineerbooks.ui.topup.TopUpBankCardFragment
 import com.rtchubs.engineerbooks.ui.topup.TopUpMobileFragment
@@ -178,4 +179,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeLiveVideoFragment(): LiveVideoFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeSolutionFragment(): SolutionFragment
 }

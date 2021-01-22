@@ -44,6 +44,10 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
         MutableLiveData<Pair<String, String>>()
     }
 
+    val showHideProgress: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
+
     fun doesItemExists(bookId: Int, chapterId: Int): LiveData<List<HistoryItem>> {
         val doesExists: MutableLiveData<List<HistoryItem>> = MutableLiveData()
         try {
@@ -95,9 +99,10 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
                 toastError.postValue(AppConstants.serverConnectionErrorMessage)
+                showHideProgress.postValue(false)
             }
 
-            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            //apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
                 videoFileDownloadResponse.postValue(downloadFile(downloadUrl, filePath, fileName))
             }

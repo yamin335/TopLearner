@@ -38,6 +38,7 @@ import com.rtchubs.engineerbooks.ui.profile_signin.ClassEditViewModel
 import com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditViewModel
 import com.rtchubs.engineerbooks.ui.profile_signin.ProfileSignInViewModel
 import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditViewModel
+import com.rtchubs.engineerbooks.ui.solution.SolutionViewModel
 import com.rtchubs.engineerbooks.ui.terms_and_conditions.TermsViewModel
 import com.rtchubs.engineerbooks.ui.topup.TopUpAmountViewModel
 import com.rtchubs.engineerbooks.ui.topup.TopUpBankCardViewModel
@@ -283,4 +284,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(LiveVideoViewModel::class)
     abstract fun bindLiveVideoViewModel(viewModel: LiveVideoViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SolutionViewModel::class)
+    abstract fun bindSolutionViewModel(viewModel: SolutionViewModel): ViewModel
 }

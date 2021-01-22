@@ -92,7 +92,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).title }
     }
 
-    private val viewPagerPageTitles = arrayOf("Video List", "Quiz", "Questions")
+    private val viewPagerPageTitles = arrayOf("অ্যানিমেশন", "সমাধান", "প্রশ্ন", "কুইজ")
 //    private val viewPagerPageTitles = arrayOf("Video List", "Questions")
 
     private lateinit var pagerAdapter: VideoTabViewPagerAdapter
@@ -257,6 +257,15 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
         viewDataBinding.toolbar.title = chapter.name
 
+        viewModel.showHideProgress.observe(viewLifecycleOwner, Observer { value ->
+            value?.let {
+                childFragmentManager.setFragmentResult(
+                    "showHideProgress",
+                    bundleOf("progressStatus" to it)
+                )
+            }
+        })
+
         viewModel.videoFileDownloadResponse.observe(viewLifecycleOwner, Observer { value ->
             value?.let {
                 viewModel.filesInDownloadPool.remove(it.second)
@@ -268,6 +277,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         unZipFile(file, outputDirectoryName)
                     }
                 }
+                viewModel.showHideProgress.postValue(false)
             }
         })
 
@@ -391,7 +401,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
 
         pagerAdapter = VideoTabViewPagerAdapter(
-            3,
+            4,
             this
         )
 
@@ -441,6 +451,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         } else if (!viewModel.filesInDownloadPool.contains(fileName)) {
                             val downloadUrl = "$VIDEOS/$fileName"
                             viewModel.filesInDownloadPool.add(fileName)
+                            viewModel.showHideProgress.postValue(true)
                             viewModel.downloadVideoFile(downloadUrl, filepath, fileName)
                         } else {
                             print("")
