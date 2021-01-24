@@ -17,6 +17,8 @@ import com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment
 import com.rtchubs.engineerbooks.ui.splash.SplashFragment
+import com.rtchubs.engineerbooks.util.goToFacebook
+import com.rtchubs.engineerbooks.util.goToYoutube
 
 class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
@@ -81,6 +83,34 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
         viewDataBinding.appLogo.setOnClickListener {
             drawerListener?.toggleNavDrawer()
+        }
+
+        viewDataBinding.mNoticeBoard.setOnClickListener {
+            navigateTo(MoreFragmentDirections.actionMoreFragmentToNoticeBoardFragment())
+        }
+
+        viewDataBinding.mOffer.setOnClickListener {
+            navigateTo(MoreFragmentDirections.actionMoreFragmentToOfferFragment())
+        }
+
+        viewDataBinding.mECode.setOnClickListener {
+            navigateTo(MoreFragmentDirections.actionMoreFragmentToEcodeFragment())
+        }
+
+        viewDataBinding.mYoutube.setOnClickListener {
+            goToYoutube(requireContext(), "engineersapps")
+        }
+
+        viewDataBinding.mFacebook.setOnClickListener {
+            goToFacebook(requireContext(), "engineersapps")
+        }
+
+        viewDataBinding.mShare.setOnClickListener {
+
+        }
+
+        viewDataBinding.mAboutUs.setOnClickListener {
+            navigateTo(MoreFragmentDirections.actionMoreFragmentToAboutUsFragment())
         }
     }
 

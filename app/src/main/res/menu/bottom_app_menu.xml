@@ -16,7 +16,7 @@
         android:id="@+id/live_nav"
         android:title="Live"
         app:showAsAction="always"
-        android:icon="@drawable/ic_baseline_send_24" />
+        android:icon="@drawable/ic_sharp_play_circle_24" />
 <!--    <item-->
 <!--        android:title="Live"-->
 <!--        app:showAsAction="always"-->

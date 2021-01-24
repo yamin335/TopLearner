@@ -24,6 +24,34 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_moreFragment_to_noticeBoardFragment"
+            app:destination="@id/noticeBoardFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_moreFragment_to_offerFragment"
+            app:destination="@id/offerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_moreFragment_to_ecodeFragment"
+            app:destination="@id/ecodeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_moreFragment_to_aboutUsFragment"
+            app:destination="@id/aboutUsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -78,4 +106,24 @@
         android:name="com.rtchubs.engineerbooks.ui.payment.PaymentFragment"
         android:label="PaymentFragment"
         tools:layout="@layout/fragment_payment"/>
+    <fragment
+        android:id="@+id/noticeBoardFragment"
+        android:name="com.rtchubs.engineerbooks.ui.notice_board.NoticeBoardFragment"
+        android:label="Notice Board"
+        tools:layout="@layout/fragment_notice_board"/>
+    <fragment
+        android:id="@+id/offerFragment"
+        android:name="com.rtchubs.engineerbooks.ui.offer.OfferFragment"
+        android:label="Offers"
+        tools:layout="@layout/fragment_offer"/>
+    <fragment
+        android:id="@+id/ecodeFragment"
+        android:name="com.rtchubs.engineerbooks.ui.e_code.ECodeFragment"
+        android:label="E-Code"
+        tools:layout="@layout/fragment_e_code"/>
+    <fragment
+        android:id="@+id/aboutUsFragment"
+        android:name="com.rtchubs.engineerbooks.ui.about_us.AboutUsFragment"
+        android:label="About Us"
+        tools:layout="@layout/fragment_about_us"/>
 </navigation>

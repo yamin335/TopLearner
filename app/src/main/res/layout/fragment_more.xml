@@ -15,7 +15,7 @@
             android:id="@+id/customToolbar"
             android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/themeBackgroundColor"
+            android:background="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -205,7 +205,7 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginStart="20dp"/>
+                    android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mProfile"
                     android:layout_width="match_parent"
@@ -214,13 +214,22 @@
                     android:focusable="true"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
-                    app:contentPaddingLeft="20dp"
+                    app:contentPaddingLeft="16dp"
                     app:contentPaddingRight="10dp"
-                    app:contentPaddingTop="12dp"
-                    app:contentPaddingBottom="12dp">
+                    app:contentPaddingTop="8dp"
+                    app:contentPaddingBottom="8dp">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icProfile"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@drawable/ic_profile"/>
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -228,8 +237,9 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
+                            android:layout_toEndOf="@id/icProfile"
                             android:layout_toStartOf="@id/arrow1"/>
+
                         <ImageView
                             android:id="@+id/arrow1"
                             android:layout_width="wrap_content"
@@ -244,7 +254,7 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginStart="20dp"/>
+                    android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mPayment"
                     android:layout_width="match_parent"
@@ -253,13 +263,21 @@
                     android:focusable="true"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
-                    app:contentPaddingLeft="20dp"
+                    app:contentPaddingLeft="16dp"
                     app:contentPaddingRight="10dp"
-                    app:contentPaddingTop="12dp"
-                    app:contentPaddingBottom="12dp">
+                    app:contentPaddingTop="8dp"
+                    app:contentPaddingBottom="8dp">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icPayment"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@drawable/ic_wallet"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -267,7 +285,7 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
+                            android:layout_toEndOf="@id/icPayment"
                             android:layout_toStartOf="@id/arrow3"/>
                         <ImageView
                             android:id="@+id/arrow3"
@@ -283,7 +301,7 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginStart="20dp"/>
+                    android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mNoticeBoard"
                     android:layout_width="match_parent"
@@ -292,13 +310,21 @@
                     android:focusable="true"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
-                    app:contentPaddingLeft="20dp"
+                    app:contentPaddingLeft="16dp"
                     app:contentPaddingRight="10dp"
-                    app:contentPaddingTop="12dp"
-                    app:contentPaddingBottom="12dp">
+                    app:contentPaddingTop="8dp"
+                    app:contentPaddingBottom="8dp">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icNotice"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@drawable/ic_notice_board"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -306,7 +332,7 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
+                            android:layout_toEndOf="@id/icNotice"
                             android:layout_toStartOf="@id/arrow4"/>
                         <ImageView
                             android:id="@+id/arrow4"
@@ -322,7 +348,7 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginStart="20dp"/>
+                    android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mOffer"
                     android:layout_width="match_parent"
@@ -331,13 +357,21 @@
                     android:focusable="true"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
-                    app:contentPaddingLeft="20dp"
+                    app:contentPaddingLeft="16dp"
                     app:contentPaddingRight="10dp"
-                    app:contentPaddingTop="12dp"
-                    app:contentPaddingBottom="12dp">
+                    app:contentPaddingTop="8dp"
+                    app:contentPaddingBottom="8dp">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icOffer"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@drawable/ic_offer"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -345,7 +379,7 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
+                            android:layout_toEndOf="@id/icOffer"
                             android:layout_toStartOf="@id/arrow5"/>
                         <ImageView
                             android:id="@+id/arrow5"
@@ -361,7 +395,7 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginStart="20dp"/>
+                    android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mECode"
                     android:layout_width="match_parent"
@@ -370,13 +404,21 @@
                     android:focusable="true"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
-                    app:contentPaddingLeft="20dp"
+                    app:contentPaddingLeft="16dp"
                     app:contentPaddingRight="10dp"
-                    app:contentPaddingTop="12dp"
-                    app:contentPaddingBottom="12dp">
+                    app:contentPaddingTop="8dp"
+                    app:contentPaddingBottom="8dp">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icECode"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@drawable/ic_ecode"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -384,7 +426,7 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
+                            android:layout_toEndOf="@id/icECode"
                             android:layout_toStartOf="@id/arrow6"/>
                         <ImageView
                             android:id="@+id/arrow6"
@@ -400,7 +442,7 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginStart="20dp"/>
+                    android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mYoutube"
                     android:layout_width="match_parent"
@@ -409,13 +451,21 @@
                     android:focusable="true"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
-                    app:contentPaddingLeft="20dp"
+                    app:contentPaddingLeft="16dp"
                     app:contentPaddingRight="10dp"
-                    app:contentPaddingTop="12dp"
-                    app:contentPaddingBottom="12dp">
+                    app:contentPaddingTop="8dp"
+                    app:contentPaddingBottom="8dp">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icYoutube"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@drawable/ic_live"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -423,7 +473,7 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
+                            android:layout_toEndOf="@id/icYoutube"
                             android:layout_toStartOf="@id/arrow7"/>
                         <ImageView
                             android:id="@+id/arrow7"
@@ -439,7 +489,7 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginStart="20dp"/>
+                    android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mFacebook"
                     android:layout_width="match_parent"
@@ -448,13 +498,21 @@
                     android:focusable="true"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
-                    app:contentPaddingLeft="20dp"
+                    app:contentPaddingLeft="16dp"
                     app:contentPaddingRight="10dp"
-                    app:contentPaddingTop="12dp"
-                    app:contentPaddingBottom="12dp">
+                    app:contentPaddingTop="8dp"
+                    app:contentPaddingBottom="8dp">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icFacebook"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@drawable/ic_social_media"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -462,7 +520,7 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
+                            android:layout_toEndOf="@id/icFacebook"
                             android:layout_toStartOf="@id/arrow8"/>
                         <ImageView
                             android:id="@+id/arrow8"
@@ -478,7 +536,7 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginStart="20dp"/>
+                    android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mShare"
                     android:layout_width="match_parent"
@@ -487,13 +545,21 @@
                     android:focusable="true"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
-                    app:contentPaddingLeft="20dp"
+                    app:contentPaddingLeft="16dp"
                     app:contentPaddingRight="10dp"
-                    app:contentPaddingTop="12dp"
-                    app:contentPaddingBottom="12dp">
+                    app:contentPaddingTop="8dp"
+                    app:contentPaddingBottom="8dp">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icShare"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@drawable/ic_share"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -501,7 +567,7 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
+                            android:layout_toEndOf="@id/icShare"
                             android:layout_toStartOf="@id/arrow9"/>
                         <ImageView
                             android:id="@+id/arrow9"
@@ -517,7 +583,7 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginStart="20dp"/>
+                    android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mAboutUs"
                     android:layout_width="match_parent"
@@ -526,13 +592,21 @@
                     android:focusable="true"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
-                    app:contentPaddingLeft="20dp"
+                    app:contentPaddingLeft="16dp"
                     app:contentPaddingRight="10dp"
-                    app:contentPaddingTop="12dp"
-                    app:contentPaddingBottom="12dp">
+                    app:contentPaddingTop="8dp"
+                    app:contentPaddingBottom="8dp">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icAboutUs"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@drawable/ic_about_us"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -540,7 +614,7 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
+                            android:layout_toEndOf="@id/icAboutUs"
                             android:layout_toStartOf="@id/arrow2"/>
                         <ImageView
                             android:id="@+id/arrow2"
@@ -556,9 +630,7 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginStart="20dp"/>
-
-
+                    android:layout_marginStart="56dp"/>
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/logout"
                     style="@style/Widget.MaterialComponents.Button.UnelevatedButton"

@@ -6,10 +6,12 @@ import com.rtchubs.engineerbooks.ViewModelFactory
 import com.rtchubs.engineerbooks.nid_scan.NIDScanCameraXViewModel
 import com.rtchubs.engineerbooks.ui.LoginActivityViewModel
 import com.rtchubs.engineerbooks.ui.MainActivityViewModel
+import com.rtchubs.engineerbooks.ui.about_us.AboutUsViewModel
 import com.rtchubs.engineerbooks.ui.add_payment_methods.AddBankViewModel
 import com.rtchubs.engineerbooks.ui.add_payment_methods.AddCardViewModel
 import com.rtchubs.engineerbooks.ui.add_payment_methods.AddPaymentMethodsViewModel
 import com.rtchubs.engineerbooks.ui.chapter_list.ChapterListViewModel
+import com.rtchubs.engineerbooks.ui.e_code.ECodeViewModel
 import com.rtchubs.engineerbooks.ui.exams.ExamsViewModel
 import com.rtchubs.engineerbooks.ui.history.HistoryViewModel
 import com.rtchubs.engineerbooks.ui.home.*
@@ -31,6 +33,8 @@ import com.rtchubs.engineerbooks.ui.video_play.VideoPlayViewModel
 import com.rtchubs.engineerbooks.ui.login.ViewPagerViewModel
 import com.rtchubs.engineerbooks.ui.more.MoreViewModel
 import com.rtchubs.engineerbooks.ui.more.ProfileSettingsViewModel
+import com.rtchubs.engineerbooks.ui.notice_board.NoticeBoardViewModel
+import com.rtchubs.engineerbooks.ui.offer.OfferViewModel
 import com.rtchubs.engineerbooks.ui.otp_signin.OtpSignInViewModel
 import com.rtchubs.engineerbooks.ui.payment.PaymentViewModel
 import com.rtchubs.engineerbooks.ui.pin_number.PinNumberViewModel
@@ -289,4 +293,24 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SolutionViewModel::class)
     abstract fun bindSolutionViewModel(viewModel: SolutionViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NoticeBoardViewModel::class)
+    abstract fun bindNoticeBoardViewModel(viewModel: NoticeBoardViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(OfferViewModel::class)
+    abstract fun bindOfferViewModel(viewModel: OfferViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ECodeViewModel::class)
+    abstract fun bindECodeViewModel(viewModel: ECodeViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AboutUsViewModel::class)
+    abstract fun bindAboutUsViewModel(viewModel: AboutUsViewModel): ViewModel
 }

@@ -19,7 +19,7 @@
             android:id="@+id/customToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/themeBackgroundColor"
+            android:background="@android:color/white"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView

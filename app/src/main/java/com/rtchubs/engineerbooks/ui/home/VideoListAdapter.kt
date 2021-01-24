@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.DataSource
@@ -20,7 +21,11 @@ import com.rtchubs.engineerbooks.databinding.VideoListItemBinding
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
 import com.rtchubs.engineerbooks.models.VideoItem
 import com.rtchubs.engineerbooks.models.chapter.ChapterField
+import com.rtchubs.engineerbooks.util.AppConstants
 import com.rtchubs.engineerbooks.util.DataBoundListAdapter
+import com.rtchubs.engineerbooks.util.FileUtils
+import kotlinx.coroutines.launch
+import java.io.File
 
 class VideoListAdapter(
     private val appExecutors: AppExecutors,
@@ -55,6 +60,18 @@ class VideoListAdapter(
 
     override fun bind(binding: VideoListItemBinding, position: Int) {
         val item = getItem(position)
+        val filepath = FileUtils.getLocalStorageFilePath(
+            binding.root.context,
+            AppConstants.downloadFolder
+        )
+        val fileName = item.video_filename ?: ""
+        val videoFile = File(filepath, fileName)
+        if (videoFile.exists()) {
+            binding.icDownload.visibility = View.GONE
+        } else {
+            binding.icDownload.visibility = View.VISIBLE
+        }
+
         binding.item = item
         binding.url = "${ApiEndPoint.LOGO}/${item.logo}"
         binding.imageRequestListener = object: RequestListener<Drawable> {

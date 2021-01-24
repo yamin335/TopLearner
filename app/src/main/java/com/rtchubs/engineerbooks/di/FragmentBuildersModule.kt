@@ -1,10 +1,12 @@
 package com.rtchubs.engineerbooks.di
 
 import com.rtchubs.engineerbooks.nid_scan.NIDScanCameraXFragment
+import com.rtchubs.engineerbooks.ui.about_us.AboutUsFragment
 import com.rtchubs.engineerbooks.ui.add_payment_methods.AddBankFragment
 import com.rtchubs.engineerbooks.ui.add_payment_methods.AddCardFragment
 import com.rtchubs.engineerbooks.ui.add_payment_methods.AddPaymentMethodsFragment
 import com.rtchubs.engineerbooks.ui.chapter_list.ChapterListFragment
+import com.rtchubs.engineerbooks.ui.e_code.ECodeFragment
 import com.rtchubs.engineerbooks.ui.exams.ExamsFragment
 import com.rtchubs.engineerbooks.ui.history.HistoryFragment
 import com.rtchubs.engineerbooks.ui.home.*
@@ -27,6 +29,8 @@ import com.rtchubs.engineerbooks.ui.video_play.VideoPlayFragment
 import com.rtchubs.engineerbooks.ui.login.ViewPagerFragment
 import com.rtchubs.engineerbooks.ui.more.MoreFragment
 import com.rtchubs.engineerbooks.ui.more.ProfileSettingsFragment
+import com.rtchubs.engineerbooks.ui.notice_board.NoticeBoardFragment
+import com.rtchubs.engineerbooks.ui.offer.OfferFragment
 import com.rtchubs.engineerbooks.ui.otp_signin.OtpSignInFragment
 import com.rtchubs.engineerbooks.ui.payment.PaymentFragment
 import com.rtchubs.engineerbooks.ui.pin_number.PinNumberFragment
@@ -182,4 +186,16 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeSolutionFragment(): SolutionFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeNoticeBoardFragment(): NoticeBoardFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeOfferFragment(): OfferFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeECodeFragment(): ECodeFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeAboutUsFragment(): AboutUsFragment
 }
