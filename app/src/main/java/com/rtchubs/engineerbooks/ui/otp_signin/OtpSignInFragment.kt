@@ -56,8 +56,8 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
         startTimer()
 
         viewDataBinding.btnSubmit.setOnClickListener {
-            viewDataBinding.etOtpCode.isEnabled = false
-            viewDataBinding.btnSubmit.isEnabled = false
+//            viewDataBinding.etOtpCode.isEnabled = false
+//            viewDataBinding.btnSubmit.isEnabled = false
             viewModel.verifyOTPCode(registrationRemoteHelper)
         }
 
@@ -75,14 +75,14 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
             viewModel.requestOTPCode(registrationRemoteHelper)
             viewDataBinding.tvOtpTextDescription.text = otpWaitMessage
             viewDataBinding.etOtpCode.setText("")
-            viewDataBinding.etOtpCode.isEnabled = false
-            viewDataBinding.btnSubmit.isEnabled = false
+//            viewDataBinding.etOtpCode.isEnabled = false
+//            viewDataBinding.btnSubmit.isEnabled = false
             //showWarningToast(mContext, "Please wait 5 minutes before you request a new OTP!")
         }
 
         viewModel.otp.observe(viewLifecycleOwner, Observer { otp ->
             otp?.let {
-                viewDataBinding.btnSubmit.isEnabled = it.length == 3
+                viewDataBinding.btnSubmit.isEnabled = it.length == 4
             }
         })
 
@@ -96,8 +96,8 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
                 } else {
                     viewDataBinding.tvOtpTextDescription.text = "You entered an invalid OTP code! please request a new code"
                     viewDataBinding.etOtpCode.setText("")
-                    viewDataBinding.etOtpCode.isEnabled = false
-                    viewDataBinding.btnSubmit.isEnabled = false
+//                    viewDataBinding.etOtpCode.isEnabled = false
+//                    viewDataBinding.btnSubmit.isEnabled = false
                 }
             }
         })
@@ -139,7 +139,7 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
     private fun startTimer() {
         countdownTimer = object : CountDownTimer(START_TIME_IN_MILLI_SECONDS, 1000) {
             override fun onFinish() {
-                viewDataBinding.btnResend.isEnabled = ++repeater < 3
+                viewDataBinding.btnResend.isEnabled = ++repeater < 4
             }
 
             override fun onTick(time_in_milli_seconds: Long) {

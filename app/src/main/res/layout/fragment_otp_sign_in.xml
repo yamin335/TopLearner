@@ -89,7 +89,7 @@
                             android:hint="Enter OTP code"
                             android:text="@={viewModel.otp}"
                             android:inputType="numberDecimal"
-                            android:maxLength="6"
+                            android:maxLength="4"
                             android:textColor="@color/white"
                             android:textSize="18sp"
                             android:theme="@style/EditTextTheme" />
