@@ -68,10 +68,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/hotline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Hotline# 01755660665"
+                        android:layout_alignParentTop="true"
+                        android:textSize="20sp"
+                        android:elevation="1dp"
+                        android:gravity="center"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:textStyle="bold"
+                        android:textColor="#555555"
+                        android:layout_marginTop="8dp"/>
+
                     <ImageView
                         android:id="@+id/rivProfileImage"
-                        android:layout_width="140dp"
-                        android:layout_height="140dp"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_below="@id/hotline"
                         android:layout_marginTop="16dp"
                         android:layout_marginStart="16dp"
                         android:src="@drawable/doctor_1"
@@ -82,38 +99,26 @@
                         android:layout_height="match_parent"
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="16dp"
+                        android:layout_below="@id/hotline"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="16dp"
                         android:layout_toEndOf="@id/rivProfileImage"
                         android:orientation="vertical">
-                        <RelativeLayout
+                        <TextView
+                            android:id="@+id/tvName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            tools:text="Jahangir Alam"
+                            android:textSize="18sp"
+                            android:gravity="center_vertical"
                             android:layout_marginStart="16dp"
-                            android:layout_marginBottom="8dp">
-                            <TextView
-                                android:id="@+id/tvPackageLabel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Package: "
-                                android:textSize="16sp"
-                                android:gravity="center_vertical"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentStart="true"/>
-                            <TextView
-                                android:id="@+id/tvPackage"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                tools:text="CRS-10"
-                                android:textSize="16sp"
-                                android:gravity="center_vertical"
-                                android:layout_toEndOf="@+id/tvPackageLabel"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentEnd="true"/>
-                        </RelativeLayout>
+                            android:layout_marginEnd="16dp"
+                            android:textStyle="bold"
+                            android:textColor="#555555"/>
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
                             android:layout_marginStart="16dp"
                             android:layout_marginBottom="8dp">
                             <TextView
@@ -136,75 +141,64 @@
                                 android:layout_alignParentTop="true"
                                 android:layout_alignParentEnd="true"/>
                         </RelativeLayout>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginBottom="8dp">
-                            <TextView
-                                android:id="@+id/tvValidDateLabel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Valid Date: "
-                                android:textSize="16sp"
-                                android:gravity="center_vertical"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentStart="true"/>
-                            <TextView
-                                android:id="@+id/tvValidDate"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                tools:text="January 22, 2021"
-                                android:textSize="16sp"
-                                android:gravity="center_vertical"
-                                android:layout_toEndOf="@+id/tvValidDateLabel"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentEnd="true"/>
-                        </RelativeLayout>
                     </LinearLayout>
                 </RelativeLayout>
-                <TextView
-                    android:id="@+id/tvName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="Jahangir Alam"
-                    android:textSize="18sp"
-                    android:gravity="center_vertical"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:textStyle="bold"
-                    android:textColor="#555555"
-                    android:layout_marginTop="8dp"/>
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginBottom="20dp">
-                    <TextView
-                        android:id="@+id/tvClassLabel"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="#FDB40B">
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Class: "
-                        android:textSize="16sp"
-                        android:gravity="center_vertical"
                         android:layout_centerVertical="true"
-                        android:layout_alignParentStart="true"/>
-                    <TextView
-                        android:id="@+id/tvClass"
-                        android:layout_width="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_toLeftOf="@id/upgrade"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/tvClassLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Current Subscription"
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp"
+                            android:gravity="center_vertical"/>
+                        <TextView
+                            android:id="@+id/tvClass"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/black"
+                            tools:text="Math Six (January)"
+                            android:textSize="16sp"
+                            android:gravity="center_vertical"/>
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/upgrade"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Class IV"
-                        android:textSize="16sp"
-                        android:gravity="center_vertical"
-                        android:layout_toEndOf="@+id/tvClassLabel"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentEnd="true"/>
+                        android:layout_alignParentEnd="true"
+                        android:text="Upgrade"
+                        app:rippleColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textColor="@android:color/white"
+                        android:windowSoftInputMode="adjustResize"
+                        android:textAllCaps="false"
+                        android:layout_margin="16dp"
+                        app:strokeColor="@color/themeColor"
+                        android:backgroundTint="#B1B2B1"
+                        app:cornerRadius="20dp"/>
                 </RelativeLayout>
+
                 <View
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
+                    android:visibility="gone"
                     android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mProfile"
@@ -233,7 +227,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Profile"
+                            android:text="আমার প্রোফাইল"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -246,6 +240,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             app:tint="@color/grayColor"
+                            android:visibility="gone"
                             android:layout_alignParentEnd="true"
                             app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"/>
                     </RelativeLayout>
@@ -254,6 +249,7 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
+                    android:visibility="gone"
                     android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mPayment"
@@ -281,7 +277,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Payment"
+                            android:text="পেমেন্ট সিস্টেম"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -293,6 +289,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             app:tint="@color/grayColor"
+                            android:visibility="gone"
                             android:layout_alignParentEnd="true"
                             app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"/>
                     </RelativeLayout>
@@ -301,6 +298,7 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
+                    android:visibility="gone"
                     android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mNoticeBoard"
@@ -328,7 +326,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Notice Board"
+                            android:text="নোটিশ বোর্ড"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -340,6 +338,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             app:tint="@color/grayColor"
+                            android:visibility="gone"
                             android:layout_alignParentEnd="true"
                             app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"/>
                     </RelativeLayout>
@@ -348,6 +347,56 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
+                    android:visibility="gone"
+                    android:layout_marginStart="56dp"/>
+                <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                    android:id="@+id/mSubscription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:contentPaddingLeft="16dp"
+                    app:contentPaddingRight="10dp"
+                    app:contentPaddingTop="8dp"
+                    app:contentPaddingBottom="8dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icSubscription"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@drawable/ic_subscription"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="সাবস্ক্রিপশন"
+                            android:textSize="18sp"
+                            android:gravity="center_vertical"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/icSubscription"
+                            android:layout_toStartOf="@id/arrow10"/>
+                        <ImageView
+                            android:id="@+id/arrow10"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            app:tint="@color/grayColor"
+                            android:visibility="gone"
+                            android:layout_alignParentEnd="true"
+                            app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"/>
+                    </RelativeLayout>
+                </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+                <View
+                    android:background="?android:attr/listDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:visibility="gone"
                     android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mOffer"
@@ -375,7 +424,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Offer"
+                            android:text="আমার অফার"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -387,6 +436,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             app:tint="@color/grayColor"
+                            android:visibility="gone"
                             android:layout_alignParentEnd="true"
                             app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"/>
                     </RelativeLayout>
@@ -395,9 +445,10 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
+                    android:visibility="gone"
                     android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
-                    android:id="@+id/mECode"
+                    android:id="@+id/mTestPaper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
@@ -422,7 +473,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="E-Code"
+                            android:text="টেস্ট পেপার"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -434,6 +485,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             app:tint="@color/grayColor"
+                            android:visibility="gone"
                             android:layout_alignParentEnd="true"
                             app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"/>
                     </RelativeLayout>
@@ -442,56 +494,10 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
+                    android:visibility="gone"
                     android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
-                    android:id="@+id/mYoutube"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardCornerRadius="0dp"
-                    app:cardElevation="0dp"
-                    app:contentPaddingLeft="16dp"
-                    app:contentPaddingRight="10dp"
-                    app:contentPaddingTop="8dp"
-                    app:contentPaddingBottom="8dp">
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <ImageView
-                            android:id="@+id/icYoutube"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
-                            app:srcCompat="@drawable/ic_live"/>
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Youtube"
-                            android:textSize="18sp"
-                            android:gravity="center_vertical"
-                            android:layout_centerVertical="true"
-                            android:layout_toEndOf="@id/icYoutube"
-                            android:layout_toStartOf="@id/arrow7"/>
-                        <ImageView
-                            android:id="@+id/arrow7"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            app:tint="@color/grayColor"
-                            android:layout_alignParentEnd="true"
-                            app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"/>
-                    </RelativeLayout>
-                </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
-                <View
-                    android:background="?android:attr/listDivider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_marginStart="56dp"/>
-                <com.google.android.material.circularreveal.cardview.CircularRevealCardView
-                    android:id="@+id/mFacebook"
+                    android:id="@+id/mSocialMedia"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
@@ -516,7 +522,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Facebook"
+                            android:text="সামাজিক মাধ্যম"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -528,6 +534,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             app:tint="@color/grayColor"
+                            android:visibility="gone"
                             android:layout_alignParentEnd="true"
                             app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"/>
                     </RelativeLayout>
@@ -536,6 +543,7 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
+                    android:visibility="gone"
                     android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mShare"
@@ -563,7 +571,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Share"
+                            android:text="শেয়ার অ্যাপস"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -575,6 +583,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             app:tint="@color/grayColor"
+                            android:visibility="gone"
                             android:layout_alignParentEnd="true"
                             app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"/>
                     </RelativeLayout>
@@ -583,6 +592,56 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
+                    android:visibility="gone"
+                    android:layout_marginStart="56dp"/>
+                <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                    android:id="@+id/mHelpline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:contentPaddingLeft="16dp"
+                    app:contentPaddingRight="10dp"
+                    app:contentPaddingTop="8dp"
+                    app:contentPaddingBottom="8dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icYoutube"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@drawable/ic_helpline"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="হেল্পলাইন"
+                            android:textSize="18sp"
+                            android:gravity="center_vertical"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/icYoutube"
+                            android:layout_toStartOf="@id/arrow7"/>
+                        <ImageView
+                            android:id="@+id/arrow7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            app:tint="@color/grayColor"
+                            android:visibility="gone"
+                            android:layout_alignParentEnd="true"
+                            app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"/>
+                    </RelativeLayout>
+                </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+                <View
+                    android:background="?android:attr/listDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:visibility="gone"
                     android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
                     android:id="@+id/mAboutUs"
@@ -610,7 +669,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="About Us"
+                            android:text="কোম্পানি সম্পর্কে"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -622,6 +681,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             app:tint="@color/grayColor"
+                            android:visibility="gone"
                             android:layout_alignParentEnd="true"
                             app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"/>
                     </RelativeLayout>
@@ -630,24 +690,43 @@
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
+                    android:visibility="gone"
                     android:layout_marginStart="56dp"/>
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/logout"
-                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sign Out"
-                    app:rippleColor="@color/colorPrimary"
-                    android:textSize="18sp"
-                    android:textColor="@color/grayColor"
-                    android:windowSoftInputMode="adjustResize"
-                    android:textAllCaps="false"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginBottom="32dp"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginEnd="24dp"
-                    android:backgroundTint="#f2f2f2"
-                    app:cornerRadius="20dp"/>
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/logout"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:text="Sign Out"
+                        app:rippleColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textColor="@color/grayColor"
+                        android:windowSoftInputMode="adjustResize"
+                        android:textAllCaps="false"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginBottom="32dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:backgroundTint="#f2f2f2"
+                        app:cornerRadius="20dp"/>
+
+                    <TextView
+                        android:id="@+id/version"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:textSize="18sp"
+                        android:layout_marginEnd="24dp"
+                        android:gravity="center"
+                        android:textColor="@color/grayColor"
+                        tools:text="Version 1.0.0"/>
+                </LinearLayout>
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>

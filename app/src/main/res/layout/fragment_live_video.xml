@@ -101,7 +101,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Previous Class"
+                            android:text="আগের ক্লাস"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -140,7 +140,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Class Schedule"
+                            android:text="ক্লাস শিডিউল"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -179,7 +179,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Next Class"
+                            android:text="পরবর্তী ক্লাস"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -217,7 +217,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Teacher Profile"
+                            android:text="শিক্ষক পরিচিতি"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -256,7 +256,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Live Chat"
+                            android:text="লাইভ চ্যাট"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -283,7 +283,7 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Live Class"
+                    android:text="লাইভ ক্লাস"
                     app:rippleColor="@color/colorPrimary"
                     android:textSize="18sp"
                     android:textColor="@color/grayColor"

@@ -1,11 +1,13 @@
 package com.rtchubs.engineerbooks.ui.more
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.rtchubs.engineerbooks.BR
+import com.rtchubs.engineerbooks.BuildConfig
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiEndPoint
 import com.rtchubs.engineerbooks.databinding.MoreFragmentBinding
@@ -93,15 +95,15 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
             navigateTo(MoreFragmentDirections.actionMoreFragmentToOfferFragment())
         }
 
-        viewDataBinding.mECode.setOnClickListener {
+        viewDataBinding.mTestPaper.setOnClickListener {
             navigateTo(MoreFragmentDirections.actionMoreFragmentToEcodeFragment())
         }
 
-        viewDataBinding.mYoutube.setOnClickListener {
-            goToYoutube(requireContext(), "engineersapps")
-        }
+//        viewDataBinding.mYoutube.setOnClickListener {
+//            goToYoutube(requireContext(), "engineersapps")
+//        }
 
-        viewDataBinding.mFacebook.setOnClickListener {
+        viewDataBinding.mSocialMedia.setOnClickListener {
             goToFacebook(requireContext(), "engineersapps")
         }
 
@@ -124,8 +126,6 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
         viewDataBinding.tvName.text = "${user.firstName} ${user.lastName}"
         viewDataBinding.tvClass.text = user.ClassName
         viewDataBinding.tvSID.text = user.mobile
-        viewDataBinding.tvValidDate.text = "N/A"
-        viewDataBinding.tvPackage.text = "N/A"
+        viewDataBinding.version.text = "Version ${BuildConfig.VERSION_NAME}"
     }
-
 }
