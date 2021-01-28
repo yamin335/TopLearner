@@ -211,6 +211,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         super.onCreate(savedInstanceState)
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
         toggle = TransitionInflater.from(requireContext()).inflateTransition(R.transition.search_bar_toogle)
+        detectUSB()
         //source = "$primaryExternalStorageAbsolutePath/math_8_4_1_q_1_ka.zip"
         //destination = "$primaryExternalStorageAbsolutePath/math_8_4_1_q_1_ka"
 
@@ -283,7 +284,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //activity?.title = title
-
+        detectUSB()
         registerToolbar(viewDataBinding.toolbar)
         viewModel.apiCallStatus.postValue(ApiCallStatus.SUCCESS)
 
