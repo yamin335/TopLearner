@@ -96,36 +96,11 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawer
         }
     }
 
-    private val usbDetectionReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == Intent.ACTION_POWER_CONNECTED) {
-                val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
-                    context.registerReceiver(null, ifilter)
-                }
-                // How are we charging?
-                val chargePlug: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
-                if (chargePlug == BatteryManager.BATTERY_PLUGGED_USB) finish()
-            } else if (intent.action == Intent.ACTION_POWER_DISCONNECTED) {
-                binding.mainContainer.uiBlockerOnUSBDetection.visibility = View.GONE
-            }
-        }
-    }
+
 
     override fun onResume() {
         super.onResume()
         preferencesHelper.preference.registerOnSharedPreferenceChangeListener(listener)
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(Intent.ACTION_POWER_CONNECTED)
-        intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED)
-        registerReceiver(usbDetectionReceiver, intentFilter)
-
-        //Detect USB
-        val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
-            registerReceiver(null, ifilter)
-        }
-        // How are we charging?
-        val chargePlug: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
-        if (chargePlug == BatteryManager.BATTERY_PLUGGED_USB) binding.mainContainer.uiBlockerOnUSBDetection.visibility = View.VISIBLE
 
         if (preferencesHelper.isDeviceTimeChanged) {
             binding.mainContainer.uiBlockerOnTimeChange.visibility = View.VISIBLE
@@ -134,7 +109,6 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawer
 
     override fun onPause() {
         super.onPause()
-        unregisterReceiver(usbDetectionReceiver)
         preferencesHelper.preference.unregisterOnSharedPreferenceChangeListener(listener)
     }
 
@@ -151,27 +125,27 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawer
         binding.mainContainer.showBottomNav = true
         binding.drawerNavigation.setNavigationItemSelectedListener(this)
 
-        viewModel.userProfileInfo.observe(this, androidx.lifecycle.Observer { userInfo ->
-            userInfo?.let {
-                userInfo.isSubscribed = true
-                if (userInfo.isSubscribed == true) {
-                    preferencesHelper.isDeviceTimeChanged = false
-                    binding.mainContainer.uiBlockerOnTimeChange.visibility = View.GONE
-                }
-                viewModel.userProfileInfo.postValue(null)
-            }
-        })
+//        viewModel.userProfileInfo.observe(this, androidx.lifecycle.Observer { userInfo ->
+//            userInfo?.let {
+//                userInfo.isSubscribed = true
+//                if (userInfo.isSubscribed == true) {
+//                    preferencesHelper.isDeviceTimeChanged = false
+//                    binding.mainContainer.uiBlockerOnTimeChange.visibility = View.GONE
+//                }
+//                viewModel.userProfileInfo.postValue(null)
+//            }
+//        })
 
-        binding.mainContainer.tryAgainUSB.setOnClickListener {
-            val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
-                registerReceiver(null, ifilter)
-            }
-            val status: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
-
-            if (status != BatteryManager.BATTERY_STATUS_CHARGING) {
-                binding.mainContainer.uiBlockerOnUSBDetection.visibility = View.GONE
-            }
-        }
+//        binding.mainContainer.tryAgainUSB.setOnClickListener {
+//            val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
+//                registerReceiver(null, ifilter)
+//            }
+//            val status: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+//
+//            if (status != BatteryManager.BATTERY_STATUS_CHARGING) {
+//                binding.mainContainer.uiBlockerOnUSBDetection.visibility = View.GONE
+//            }
+//        }
 
         binding.mainContainer.goOnline.setOnClickListener {
             if (!preferencesHelper.isDeviceTimeChanged) {
