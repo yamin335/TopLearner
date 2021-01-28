@@ -17,11 +17,7 @@ class TimeChangeBroadcastReceiver: DaggerBroadcastReceiver() {
 
         val action = intent?.action
         if (action == Intent.ACTION_TIME_CHANGED || action == Intent.ACTION_TIMEZONE_CHANGED) {
-            if (isTimeAndZoneAutomatic(context)) {
-                val tt = isTimeAndZoneAutomatic(context)
-                val ff = tt
-            }
-            preferencesHelper.isDeviceTimeChanged = !isTimeAndZoneAutomatic(context)
+            preferencesHelper.isDeviceTimeChanged = true
         }
     }
 }

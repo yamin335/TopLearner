@@ -37,6 +37,11 @@ class HomeClassListAdapter(
 
     // Properties
     private val viewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool()
+    private var isPaid = false
+    fun setPaymentStatus(isPaid: Boolean) {
+        this.isPaid = isPaid
+        notifyDataSetChanged()
+    }
     val onClicked = MutableLiveData<ClassWiseBook>()
     override fun createBinding(parent: ViewGroup): HomeClassListItemBinding {
         return DataBindingUtil.inflate(
@@ -52,8 +57,14 @@ class HomeClassListAdapter(
         if (customerTypeID == 2) {
             binding.lockView.visibility = View.GONE
         } else {
-            val isPaid = item.isPaid ?: false
-            binding.lockView.visibility = if (isPaid) View.GONE else View.VISIBLE
+            var paymentStatus = item.isPaid ?: false
+            if (!paymentStatus) {
+                if (isPaid) {
+                    paymentStatus = isPaid
+                }
+            }
+
+            binding.lockView.visibility = if (paymentStatus) View.GONE else View.VISIBLE
         }
 
         binding.rootCard.setOnClickListener {

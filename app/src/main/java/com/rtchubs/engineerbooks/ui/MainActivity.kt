@@ -86,38 +86,10 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawer
 
     lateinit var userData: InquiryAccount
 
-    var listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
-        when (key) {
-            KEY_DEVICE_TIME_CHANGED -> {
-                if (preferencesHelper.isDeviceTimeChanged) {
-                    binding.mainContainer.uiBlockerOnTimeChange.visibility = View.VISIBLE
-                }
-            }
-        }
-    }
-
-
-
-    override fun onResume() {
-        super.onResume()
-        preferencesHelper.preference.registerOnSharedPreferenceChangeListener(listener)
-
-        if (preferencesHelper.isDeviceTimeChanged) {
-            binding.mainContainer.uiBlockerOnTimeChange.visibility = View.VISIBLE
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        preferencesHelper.preference.unregisterOnSharedPreferenceChangeListener(listener)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         userData = preferencesHelper.getUser()
-
-        preferencesHelper.preference.registerOnSharedPreferenceChangeListener(listener)
 
         binding = DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
         binding.lifecycleOwner = this
@@ -147,24 +119,10 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawer
 //            }
 //        }
 
-        binding.mainContainer.goOnline.setOnClickListener {
-            if (!preferencesHelper.isDeviceTimeChanged) {
-                if (viewModel.checkNetworkStatus()) {
-                    viewModel.getUserProfileInfo(userData.mobile ?: "")
-                }
-            } else {
-                showWarningToast(this, "Please auto adjust your device time!")
-            }
-        }
-
         // Setup multi-backStack supported bottomNav
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
-
-        if (preferencesHelper.isDeviceTimeChanged) {
-            val tt = true
-        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
