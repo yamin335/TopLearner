@@ -1,15 +1,17 @@
 package com.rtchubs.engineerbooks.ui
 
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.content.res.Configuration
+import android.os.BatteryManager
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,13 +21,17 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.MainActivityBinding
+import com.rtchubs.engineerbooks.models.registration.InquiryAccount
+import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper.Companion.KEY_DEVICE_TIME_CHANGED
+import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.ui.home.Home2FragmentDirections
-import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment
 import com.rtchubs.engineerbooks.util.hideKeyboard
 import com.rtchubs.engineerbooks.util.shouldCloseDrawerFromBackPress
+import com.rtchubs.engineerbooks.util.showWarningToast
 import dagger.android.support.DaggerAppCompatActivity
 import java.io.File
 import javax.inject.Inject
+
 
 interface LoginHandlerCallback {
     fun onLoggedIn()
@@ -52,6 +58,9 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawer
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    @Inject
+    lateinit var preferencesHelper: PreferencesHelper
+
     private val viewModel: MainActivityViewModel by viewModels {
         // Get the ViewModel.
         viewModelFactory
@@ -75,8 +84,66 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawer
 
     var configurationChangeCallback: ConfigurationChangeCallback? = null
 
+    lateinit var userData: InquiryAccount
+
+    var listener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
+        when (key) {
+            KEY_DEVICE_TIME_CHANGED -> {
+                if (preferencesHelper.isDeviceTimeChanged) {
+                    binding.mainContainer.uiBlockerOnTimeChange.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
+
+    private val usbDetectionReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == Intent.ACTION_POWER_CONNECTED) {
+                val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
+                    context.registerReceiver(null, ifilter)
+                }
+                // How are we charging?
+                val chargePlug: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
+                if (chargePlug == BatteryManager.BATTERY_PLUGGED_USB) finish()
+            } else if (intent.action == Intent.ACTION_POWER_DISCONNECTED) {
+                binding.mainContainer.uiBlockerOnUSBDetection.visibility = View.GONE
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        preferencesHelper.preference.registerOnSharedPreferenceChangeListener(listener)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(Intent.ACTION_POWER_CONNECTED)
+        intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED)
+        registerReceiver(usbDetectionReceiver, intentFilter)
+
+        //Detect USB
+        val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
+            registerReceiver(null, ifilter)
+        }
+        // How are we charging?
+        val chargePlug: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
+        if (chargePlug == BatteryManager.BATTERY_PLUGGED_USB) binding.mainContainer.uiBlockerOnUSBDetection.visibility = View.VISIBLE
+
+        if (preferencesHelper.isDeviceTimeChanged) {
+            binding.mainContainer.uiBlockerOnTimeChange.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(usbDetectionReceiver)
+        preferencesHelper.preference.unregisterOnSharedPreferenceChangeListener(listener)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        userData = preferencesHelper.getUser()
+
+        preferencesHelper.preference.registerOnSharedPreferenceChangeListener(listener)
 
         binding = DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
         binding.lifecycleOwner = this
@@ -84,10 +151,46 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawer
         binding.mainContainer.showBottomNav = true
         binding.drawerNavigation.setNavigationItemSelectedListener(this)
 
+        viewModel.userProfileInfo.observe(this, androidx.lifecycle.Observer { userInfo ->
+            userInfo?.let {
+                userInfo.isSubscribed = true
+                if (userInfo.isSubscribed == true) {
+                    preferencesHelper.isDeviceTimeChanged = false
+                    binding.mainContainer.uiBlockerOnTimeChange.visibility = View.GONE
+                }
+                viewModel.userProfileInfo.postValue(null)
+            }
+        })
+
+        binding.mainContainer.tryAgainUSB.setOnClickListener {
+            val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
+                registerReceiver(null, ifilter)
+            }
+            val status: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+
+            if (status != BatteryManager.BATTERY_STATUS_CHARGING) {
+                binding.mainContainer.uiBlockerOnUSBDetection.visibility = View.GONE
+            }
+        }
+
+        binding.mainContainer.goOnline.setOnClickListener {
+            if (!preferencesHelper.isDeviceTimeChanged) {
+                if (viewModel.checkNetworkStatus()) {
+                    viewModel.getUserProfileInfo(userData.mobile ?: "")
+                }
+            } else {
+                showWarningToast(this, "Please auto adjust your device time!")
+            }
+        }
+
         // Setup multi-backStack supported bottomNav
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
+
+        if (preferencesHelper.isDeviceTimeChanged) {
+            val tt = true
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

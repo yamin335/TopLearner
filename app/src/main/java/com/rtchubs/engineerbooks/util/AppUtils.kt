@@ -5,12 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.widget.Toast
 import com.rtchubs.engineerbooks.R
 import kotlinx.android.synthetic.main.toast_custom_error.view.*
 import kotlinx.android.synthetic.main.toast_custom_success.view.*
 import kotlinx.android.synthetic.main.toast_custom_warning.view.*
+
+fun isTimeAndZoneAutomatic(context: Context?): Boolean {
+    return Settings.Global.getInt(context?.contentResolver, Settings.Global.AUTO_TIME, 0) == 1 && Settings.Global.getInt(context?.contentResolver, Settings.Global.AUTO_TIME_ZONE, 0) == 1
+}
 
 fun showErrorToast(context: Context, message: String) {
     val toast = Toast.makeText(context, "", Toast.LENGTH_LONG)

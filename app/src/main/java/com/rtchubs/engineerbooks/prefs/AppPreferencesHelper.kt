@@ -21,15 +21,18 @@ import kotlin.reflect.KProperty
 
 
 class AppPreferencesHelper @Inject constructor(
-    context: Context,
-    @PreferenceInfo prefFileName: String
+    private val context: Context,
+    @PreferenceInfo private val prefFileName: String
 ) : PreferencesHelper {
 
     private val prefs = lazy {
         // Lazy to prevent IO access to main thread.
         context.applicationContext.getSharedPreferences(prefFileName, Context.MODE_PRIVATE)
     }
+    override val preference: SharedPreferences
+        get() = context.applicationContext.getSharedPreferences(prefFileName, Context.MODE_PRIVATE)
 
+    override var isDeviceTimeChanged by BooleanPreference(prefs, KEY_DEVICE_TIME_CHANGED, defaultValue = false, commit = true)
     override var isBookPaid by BooleanPreference(prefs, KEY_BOOK_PAY, defaultValue = false, commit = true)
     override var isRegistered by BooleanPreference(prefs, KEY_REG, defaultValue = false, commit = true)
     override var isTermsAccepted by BooleanPreference(prefs, KEY_TERMS, defaultValue = false, commit = true)
@@ -160,7 +163,7 @@ class AppPreferencesHelper @Inject constructor(
 
 
     companion object {
-        // QPay
+        const val KEY_DEVICE_TIME_CHANGED = "DoesUserChangedDeviceTime"
         private const val KEY_BOOK_PAY = "IsBookPaid"
         private const val KEY_USER = "UserData"
         private const val KEY_REG = "RegistrationStatus"

@@ -1,22 +1,38 @@
 package com.rtchubs.engineerbooks.ui.otp_signin
 
-import android.Manifest
+import android.app.Activity
+import android.content.*
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.view.WindowManager
+import androidx.fragment.app.FragmentResultListener
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.navArgs
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.TedPermission
+import com.google.android.gms.auth.api.phone.SmsRetriever
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.common.api.Status
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiEndPoint
 import com.rtchubs.engineerbooks.databinding.OtpSignInBinding
+import com.rtchubs.engineerbooks.models.chapter.ChapterField
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
+import com.rtchubs.engineerbooks.ui.OTPHandlerCallback
+import com.rtchubs.engineerbooks.ui.ShowHideBottomNavCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
+import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment
+import com.rtchubs.engineerbooks.util.AppConstants
 import com.rtchubs.engineerbooks.util.AppConstants.START_TIME_IN_MILLI_SECONDS
 import com.rtchubs.engineerbooks.util.AppConstants.otpWaitMessage
+import com.rtchubs.engineerbooks.util.FileUtils
+import kotlinx.coroutines.launch
+import java.io.File
+
 
 class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
 
@@ -33,6 +49,23 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
 
     private var countdownTimer: CountDownTimer? = null
     var repeater = 0
+
+    private var startOTPListenerCallback: OTPHandlerCallback? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        if (context is OTPHandlerCallback) {
+            startOTPListenerCallback = context
+        } else {
+            throw RuntimeException("$context must implement LoginHandlerCallback")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        startOTPListenerCallback = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,13 +97,15 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
         viewModel.registeredOTP.observe(viewLifecycleOwner, Observer { inquiryResponse ->
             inquiryResponse?.data?.Account?.let {
                 registrationRemoteHelper = it
-                viewDataBinding.tvOtpTextDescription.text = "An OTP Code has been sent to your mobile +88${registrationRemoteHelper.mobile}"
+                viewDataBinding.tvOtpTextDescription.text =
+                    "An OTP Code has been sent to your mobile +88${registrationRemoteHelper.mobile}"
                 viewDataBinding.etOtpCode.isEnabled = true
                 viewDataBinding.btnSubmit.isEnabled = true
             }
         })
 
         viewDataBinding.btnResend.setOnClickListener {
+            startOTPListenerCallback?.onStartOTPListener()
             startTimer()
             viewModel.requestOTPCode(registrationRemoteHelper)
             viewDataBinding.tvOtpTextDescription.text = otpWaitMessage
@@ -91,10 +126,15 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
                 if (!it.otp.isNullOrBlank() && it.otp == viewModel.otp.value) {
                     registrationRemoteHelper = it
                     registrationRemoteHelper.mobileOperator = registrationLocalHelper.mobileOperator
-                    navigateTo(OtpSignInFragmentDirections.actionOtpSignInFragmentToPinNumberFragment(registrationRemoteHelper))
+                    navigateTo(
+                        OtpSignInFragmentDirections.actionOtpSignInFragmentToPinNumberFragment(
+                            registrationRemoteHelper
+                        )
+                    )
                     viewModel.verifiedOTP.postValue(null)
                 } else {
-                    viewDataBinding.tvOtpTextDescription.text = "You entered an invalid OTP code! please request a new code"
+                    viewDataBinding.tvOtpTextDescription.text =
+                        "You entered an invalid OTP code! please request a new code"
                     viewDataBinding.etOtpCode.setText("")
 //                    viewDataBinding.etOtpCode.isEnabled = false
 //                    viewDataBinding.btnSubmit.isEnabled = false
@@ -167,4 +207,8 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
         viewDataBinding.secondView.text = "$seconds"
     }
 
+    fun updateOTP(otp: String?) {
+        viewDataBinding.etOtpCode.setText(otp)
+        viewModel.verifyOTPCode(registrationRemoteHelper)
+    }
 }

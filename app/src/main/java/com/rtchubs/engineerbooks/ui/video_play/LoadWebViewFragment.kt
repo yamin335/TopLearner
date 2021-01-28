@@ -139,7 +139,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
     override fun onDetach() {
         super.onDetach()
-
+        bottomNavShowHideCallback = null
     }
 
     override fun onDestroy() {

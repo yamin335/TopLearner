@@ -1,17 +1,24 @@
 package com.rtchubs.engineerbooks.ui.login
 
+import android.app.Activity
+import android.content.*
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.google.android.gms.auth.api.phone.SmsRetriever
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.common.api.Status
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.databinding.LayoutOperatorSelectionBinding
 import com.rtchubs.engineerbooks.databinding.SignInBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
+import com.rtchubs.engineerbooks.ui.OTPHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.AppConstants.commonErrorMessage
 import com.rtchubs.engineerbooks.util.hideKeyboard
@@ -25,6 +32,23 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
         get() = R.layout.fragment_sign_in
     override val viewModel: SignInViewModel by viewModels {
         viewModelFactory
+    }
+
+    private var startOTPListenerCallback: OTPHandlerCallback? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        if (context is OTPHandlerCallback) {
+            startOTPListenerCallback = context
+        } else {
+            throw RuntimeException("$context must implement LoginHandlerCallback")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        startOTPListenerCallback = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,6 +147,7 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
     }
 
     private fun inquireAccount(operator: String) {
+        startOTPListenerCallback?.onStartOTPListener()
         viewModel.inquireAccount().observe(viewLifecycleOwner, Observer { response ->
             response?.data?.Account?.let {
                 it.mobileOperator = operator
@@ -133,11 +158,7 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
                         navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
                     }
                 } else if (it.isRegistered == true && it.isMobileVerified == true) {
-                    if (it.isAcceptedTandC == true) {
-                        requestOTPCode(it, operator)
-                    } else {
-                        navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
-                    }
+                    navigateTo(SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(it))
                 } else {
                     showErrorToast(mContext, response.msg ?: commonErrorMessage)
                 }
@@ -149,22 +170,24 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
         viewModel.requestOTPCode(registrationHelper).observe(viewLifecycleOwner, Observer { response ->
             response?.data?.Account?.let {
                 it.mobileOperator = operator
-                if (it.isRegistered == false) {
-                    if (it.isAcceptedTandC == true) {
-                        navigateTo(SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(it))
-                    } else {
-                        navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
-                    }
-                } else if (it.isRegistered == true && it.isMobileVerified == true) {
-                    navigateTo(SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(it))
+                navigateTo(SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(it))
+
+//                if (it.isRegistered == false) {
 //                    if (it.isAcceptedTandC == true) {
-//
+//                        navigateTo(SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(it))
 //                    } else {
 //                        navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
 //                    }
-                } else {
-                    showErrorToast(mContext, response.msg ?: commonErrorMessage)
-                }
+//                } else if (it.isRegistered == true && it.isMobileVerified == true) {
+//                    navigateTo(SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(it))
+////                    if (it.isAcceptedTandC == true) {
+////
+////                    } else {
+////                        navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
+////                    }
+//                } else {
+//                    showErrorToast(mContext, response.msg ?: commonErrorMessage)
+//                }
             }
         })
     }

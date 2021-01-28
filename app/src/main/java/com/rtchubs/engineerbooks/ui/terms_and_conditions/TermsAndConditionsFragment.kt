@@ -1,5 +1,6 @@
 package com.rtchubs.engineerbooks.ui.terms_and_conditions
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -12,6 +13,7 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.TermsBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
+import com.rtchubs.engineerbooks.ui.OTPHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.login.SignInFragmentDirections
 import com.rtchubs.engineerbooks.util.AppConstants
@@ -33,6 +35,23 @@ class TermsAndConditionsFragment : BaseFragment<TermsBinding, TermsViewModel>() 
     lateinit var registrationRemoteHelper: InquiryAccount
 
     val args: TermsAndConditionsFragmentArgs by navArgs()
+
+    private var startOTPListenerCallback: OTPHandlerCallback? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        if (context is OTPHandlerCallback) {
+            startOTPListenerCallback = context
+        } else {
+            throw RuntimeException("$context must implement LoginHandlerCallback")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        startOTPListenerCallback = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +86,7 @@ class TermsAndConditionsFragment : BaseFragment<TermsBinding, TermsViewModel>() 
     }
 
     private fun requestOTPCode(registrationHelper: InquiryAccount) {
+        startOTPListenerCallback?.onStartOTPListener()
         viewModel.requestOTPCode(registrationHelper).observe(viewLifecycleOwner, Observer { response ->
             response?.data?.Account?.let {
                 if (it.isAcceptedTandC == true) {

@@ -57,5 +57,102 @@
 <!--                app:layout_constraintStart_toStartOf="@+id/bottom_nav"-->
 <!--                app:layout_constraintTop_toTopOf="@+id/bottom_nav" />-->
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/uiBlockerOnUSBDetection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:elevation="1dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="#B3000000">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:drawablePadding="4dp"
+                android:textColor="@android:color/white"
+                android:text="USB Detected!!"
+                android:gravity="center"
+                app:drawableStartCompat="@drawable/ic_round_warning_32" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:text="Please remove USB Cable from your device and press Try Again button"
+                android:gravity="center"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tryAgainUSB"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Try Again"
+                app:rippleColor="@android:color/white"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:windowSoftInputMode="adjustResize"
+                android:textAllCaps="false"
+                android:layout_margin="16dp"
+                app:strokeColor="@android:color/white"
+                android:backgroundTint="@android:color/transparent"
+                app:cornerRadius="20dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/uiBlockerOnTimeChange"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="1dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="#E6000000">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:drawablePadding="4dp"
+                android:textColor="@android:color/white"
+                android:text="Device Time Changed!!!"
+                android:gravity="center"
+                app:drawableStartCompat="@drawable/ic_round_warning_32" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:text="You changed your device time or time zone.\nPlease do the following steps to continue:\n\n1. Enable Network Provided Time or Auto Update Time\n\n2. Enable Network Provided Time Zone or Automatic Time Zone\n\n3. Connect your device to the internet\n\n4. Press Go Online button"
+                android:gravity="center_vertical"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/goOnline"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Go Online"
+                app:rippleColor="@android:color/white"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:windowSoftInputMode="adjustResize"
+                android:textAllCaps="false"
+                android:layout_margin="16dp"
+                app:strokeColor="@android:color/white"
+                android:backgroundTint="@android:color/transparent"
+                app:cornerRadius="20dp"/>
+        </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
