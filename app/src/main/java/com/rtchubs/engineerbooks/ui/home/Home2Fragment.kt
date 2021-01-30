@@ -11,8 +11,6 @@ import com.daimajia.slider.library.SliderLayout
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.HomeFragment2Binding
-import com.rtchubs.engineerbooks.models.Book
-import com.rtchubs.engineerbooks.models.Chapter
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
