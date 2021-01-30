@@ -1,27 +1,27 @@
 package com.rtchubs.engineerbooks.ui.payment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.BR
-import com.rtchubs.engineerbooks.databinding.LayoutOperatorSelectionBinding
+import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.PaymentFragmentBinding
-import com.rtchubs.engineerbooks.databinding.SignInBinding
-import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.models.transactions.CreateOrderBody
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.home.Home2Fragment
-import com.rtchubs.engineerbooks.util.AppConstants.commonErrorMessage
 import com.rtchubs.engineerbooks.util.hideKeyboard
 import com.rtchubs.engineerbooks.util.showErrorToast
 import com.rtchubs.engineerbooks.util.showSuccessToast
+import com.rtchubs.engineerbooks.bkash.Checkout
+
+import com.rtchubs.engineerbooks.bkash.PaymentRequest
+
+import com.rtchubs.engineerbooks.bkash.WebViewCheckoutActivity
+
 
 class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>() {
 
@@ -64,14 +64,32 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         })
 
         viewDataBinding.btnPayNow.setOnClickListener {
-            val firstName = userData.firstName ?: ""
-            val lastName = userData.lastName ?: ""
-            viewModel.createOrder(CreateOrderBody(userData.id ?: 0, userData.mobile ?: "",
-                viewModel.amount.value?.toInt() ?: 0, 0, 0,
-                0, "", userData.upazila ?: "", userData.city ?: "",
-                userData.UpazilaID ?: 0, userData.CityID ?: 0, "",
-                "", "", args.bookId, userData.class_id ?: 0,
-                "$firstName $lastName", args.bookName))
+
+            val checkout = Checkout()
+            checkout.setAmount("10")
+
+            checkout.setVersion("two")
+
+//            if (sale.isChecked()) {
+//                checkout.setIntent("sale")
+//            } else {
+                checkout.setIntent("authorization")
+           // }
+
+            val intent = Intent(context, WebViewCheckoutActivity::class.java)
+
+            intent.putExtra("values", checkout)
+
+            startActivity(intent)
+
+//            val firstName = userData.firstName ?: ""
+//            val lastName = userData.lastName ?: ""
+//            viewModel.createOrder(CreateOrderBody(userData.id ?: 0, userData.mobile ?: "",
+//                viewModel.amount.value?.toInt() ?: 0, 0, 0,
+//                0, "", userData.upazila ?: "", userData.city ?: "",
+//                userData.UpazilaID ?: 0, userData.CityID ?: 0, "",
+//                "", "", args.bookId, userData.class_id ?: 0,
+//                "$firstName $lastName", args.bookName))
         }
     }
 }
