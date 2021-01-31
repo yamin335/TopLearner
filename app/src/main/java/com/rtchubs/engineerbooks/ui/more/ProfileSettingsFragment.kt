@@ -330,7 +330,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         viewModel.userProfileInfo.observe(viewLifecycleOwner, androidx.lifecycle.Observer { userInfo ->
             userInfo?.let {
                 userData = it
-                //preferencesHelper.saveUser(it)
+                preferencesHelper.saveUser(it)
                 prepareUserData(it)
             }
 

@@ -30,7 +30,6 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -44,31 +43,23 @@ import com.rtchubs.engineerbooks.databinding.WebViewBinding
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
 import com.rtchubs.engineerbooks.models.chapter.BookChapter
 import com.rtchubs.engineerbooks.models.chapter.ChapterField
-import com.rtchubs.engineerbooks.services.DownloadService
 import com.rtchubs.engineerbooks.ui.ConfigurationChangeCallback
 import com.rtchubs.engineerbooks.ui.MainActivity
 import com.rtchubs.engineerbooks.ui.ShowHideBottomNavCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.home.SetCFragment
 import com.rtchubs.engineerbooks.ui.home.VideoTabViewPagerAdapter
-import com.rtchubs.engineerbooks.util.AppConstants
-import com.rtchubs.engineerbooks.util.AppConstants.DOWNLOAD_COMPLETE
-import com.rtchubs.engineerbooks.util.AppConstants.FILE_NAME
-import com.rtchubs.engineerbooks.util.AppConstants.FILE_PATH
-import com.rtchubs.engineerbooks.util.AppConstants.FILE_TYPE
 import com.rtchubs.engineerbooks.util.AppConstants.downloadFolder
-import com.rtchubs.engineerbooks.util.AppConstants.typePdf
-import com.rtchubs.engineerbooks.util.AppConstants.typeVideo
 import com.rtchubs.engineerbooks.util.AppConstants.unzippedFolder
 import com.rtchubs.engineerbooks.util.FileUtils
 import com.rtchubs.engineerbooks.util.showErrorToast
+import com.rtchubs.engineerbooks.util.showWarningToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.exception.ZipException
 import net.lingala.zip4j.progress.ProgressMonitor
 import java.io.File
-import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Collectors
@@ -127,6 +118,8 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
     //private lateinit var downloadCompleteReceiver: BroadcastReceiver
 
     var isUSBPluggedIn = false
+
+    private var downloadingFile: File? = null
 
     private val usbDetectionReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -306,17 +299,49 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
         viewModel.videoFileDownloadResponse.observe(viewLifecycleOwner, Observer { value ->
             value?.let {
-                viewModel.filesInDownloadPool.remove(it.second)
                 val file = File(it.first, it.second)
                 if (file.exists()) {
-                    val temp = it.second
-                    val outputDirectoryName = temp.substring(0, temp.lastIndexOf("."))
-                    lifecycleScope.launch {
-                        unZipFile(file, outputDirectoryName)
+                    if (isUSBPluggedIn) {
+                        showErrorToast(requireContext(), "Please unplug your USB then try again!")
+                    } else {
+                        val temp = it.second
+                        val outputDirectoryName = temp.substring(0, temp.lastIndexOf("."))
+                        lifecycleScope.launch {
+                            unZipFile(file, outputDirectoryName)
+                        }
                     }
                 }
-                viewModel.showHideProgress.postValue(false)
+
+                val downloadFilePath = FileUtils.getLocalStorageFilePath(
+                    requireContext(),
+                    downloadFolder
+                )
+
+                var oldestFileName = ""
+                var oldestDate = Long.MAX_VALUE
+                val downloadFolder = File(downloadFilePath)
+                if (!downloadFolder.isDirectory) return@let
+                val filesInDownloadFolder = downloadFolder.listFiles() ?: return@let
+
+                if (filesInDownloadFolder.size <= 5) return@let
+                for (zipFile in filesInDownloadFolder) {
+                    if (!zipFile.isDirectory) {
+                        if (zipFile.lastModified() < oldestDate) {
+                            oldestDate = zipFile.lastModified()
+                            oldestFileName = zipFile.name
+                        }
+                    }
+                }
+                val deleteFile = File(downloadFilePath, oldestFileName)
+                if (deleteFile.exists()) FileUtils.deleteFileFromExternalStorage(deleteFile)
             }
+
+            if (value == null && downloadingFile != null) {
+                FileUtils.deleteFileFromExternalStorage(downloadingFile!!)
+                showErrorToast(requireContext(), "This video is not available now")
+            }
+
+            viewModel.showHideProgress.postValue(false)
         })
 
         val webSettings = viewDataBinding.webView.settings
@@ -473,26 +498,30 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                             requireContext(),
                             unzippedFolder
                         )
-                        val fileName = videoItem.video_filename ?: ""
+                        val fileName = videoItem.video_filename
+                        if (fileName.isNullOrBlank()) {
+                            showWarningToast(requireContext(), "This video is not available now")
+                            return@FragmentResultListener
+                        }
                         val videoFile = File(filepath, fileName)
                         if (videoFile.exists()) {
                             val videoFolderName = fileName.substring(0, fileName.lastIndexOf("."))
 
                             val videoFolder = File(unzipFilepath, videoFolderName)
                             if (videoFolder.exists() && videoFolder.isDirectory) {
-                                playVideo("$unzipFilepath/$videoFolderName")
+                                lifecycleScope.launch {
+                                    playVideo("$unzipFilepath/$videoFolderName")
+                                }
                             } else {
                                 lifecycleScope.launch {
                                     unZipFile(File(filepath, fileName), videoFolderName)
                                 }
                             }
-                        } else if (!viewModel.filesInDownloadPool.contains(fileName)) {
+                        } else {
                             val downloadUrl = "$VIDEOS/$fileName"
-                            viewModel.filesInDownloadPool.add(fileName)
                             viewModel.showHideProgress.postValue(true)
                             viewModel.downloadVideoFile(downloadUrl, filepath, fileName)
-                        } else {
-                            print("")
+                            downloadingFile = File(filepath, fileName)
                         }
 //                    lifecycleScope.launch {
 //                        playVideo()
@@ -533,7 +562,9 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                     )
                     SetCFragment.pdfFilePath = "$filepath/${chapter.pdf}"
 
-                    if (!File(SetCFragment.pdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(chapter.pdf!!)) {
+                    if (!File(SetCFragment.pdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(
+                            chapter.pdf!!
+                        )) {
                         viewModel.filesInDownloadPool.add(chapter.pdf!!)
                         viewModel.downloadPdfFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!)
                         //downloadFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!, typePdf)
@@ -560,10 +591,15 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                             val fileName = video.video_filename ?: ""
                             val videoFile = File(filepath, fileName)
                             if (videoFile.exists()) {
-                                val videoFolderName = fileName.substring(0, fileName.lastIndexOf("."))
+                                val videoFolderName = fileName.substring(
+                                    0,
+                                    fileName.lastIndexOf(".")
+                                )
                                 val videoFolder = File(unzipFilepath, videoFolderName)
                                 if (videoFolder.exists() && videoFolder.isDirectory) {
-                                    playVideo("$unzipFilepath/$videoFolderName")
+                                    lifecycleScope.launch {
+                                        playVideo("$unzipFilepath/$videoFolderName")
+                                    }
                                 } else {
                                     lifecycleScope.launch {
                                         unZipFile(File(filepath, fileName), videoFolderName)
@@ -601,7 +637,10 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         } else {
             viewModel.apiCallStatus.postValue(ApiCallStatus.LOADING)
             try {
-                var outputFilePath = FileUtils.getLocalStorageFilePath(requireContext(), unzippedFolder)
+                var outputFilePath = FileUtils.getLocalStorageFilePath(
+                    requireContext(),
+                    unzippedFolder
+                )
                 outputFilePath = "$outputFilePath/$outputFolderName"
                 val zipFile = ZipFile(inputFile)
                 if (zipFile.isEncrypted) {
@@ -629,19 +668,30 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         }
                     }
                     ProgressMonitor.Result.ERROR -> {
+                        FileUtils.deleteFileFromExternalStorage(inputFile)
+                        viewModel.showHideProgress.postValue(false)
                         viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        println("Error occurred. Error message: " + progressMonitor.exception.message)
+                        showErrorToast(requireContext(), "This video is not available now!")
                     }
                     ProgressMonitor.Result.CANCELLED -> {
+                        FileUtils.deleteFileFromExternalStorage(inputFile)
+                        viewModel.showHideProgress.postValue(false)
                         viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        println("Task cancelled")
+                        showErrorToast(requireContext(), "This video is not available now!")
                     }
                     else -> {
-
+                        FileUtils.deleteFileFromExternalStorage(inputFile)
+                        viewModel.showHideProgress.postValue(false)
+                        viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
+                        showErrorToast(requireContext(), "This video is not available now!")
                     }
                 }
             } catch (e: ZipException) {
                 e.printStackTrace()
+                FileUtils.deleteFileFromExternalStorage(inputFile)
+                viewModel.showHideProgress.postValue(false)
+                viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
+                showErrorToast(requireContext(), "This video is not available now!")
             }
         }
     }
@@ -650,44 +700,85 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         if (isUSBPluggedIn) {
             showErrorToast(requireContext(), "Please unplug your USB then try again!")
         } else {
-            //Check if the Path is a directory
+            val middleFolderList = ArrayList<String>() //ArrayList cause you don't know how many files there is
 
-            val path = Paths.get("$videoFolderPath/")
-            var innerFolderName: String = ""
-            var playFileName: String = ""
+            val folder = File(videoFolderPath) //This is just to cast to a File type since you pass it as a String
 
+            val filesInFolder = folder.listFiles() ?: return // This returns all the folders and files in your path
 
-            //List all items in the directory. Note that we are using Java 8 streaming API to group the entries by
-            //directory and files
-            val fileDirMap1 = Files.list(path).collect(Collectors.partitioningBy( {it -> Files.isDirectory(it)}))
-
-            innerFolderName = fileDirMap1[true]?.first().toString()
-            println("Directories")
-
-
-            val newPath = Paths.get(innerFolderName)
-
-            //List all items in the directory. Note that we are using Java 8 streaming API to group the entries by
-            //directory and files
-            val fileDirMap = Files.list(newPath).collect(Collectors.partitioningBy( {it -> Files.isDirectory(it)}))
-
-            fileDirMap[false]?.forEach( {it ->
-//                println("%-20s\t%-5b\t%-5b\t%b".format(
-//                    it.fileName,
-//                    Files.isReadable(it), //Read attribute
-//                    Files.isWritable(it), //Write attribute
-//                    Files.isExecutable(it))) //Execute attribute
-
-                if (it.fileName.toString().contains("player")) {
-                    playFileName =  it.fileName.toString()
+            for (file in filesInFolder) { //For each of the entries do:
+                if (file.isDirectory) { //check that it's a dir
+                    middleFolderList.add(file.name) //push the folder name as a string
                 }
-
-            })
-
-
-            if (File("$innerFolderName/$playFileName").exists()) {
-                viewDataBinding.webView.post { viewDataBinding.webView.loadUrl("file:///$innerFolderName/$playFileName") }
             }
+
+            if (middleFolderList.isEmpty()) return
+            val middleFolderName = middleFolderList.first()
+            val middleFolderPath = "$videoFolderPath/$middleFolderName"
+
+            val middleFolderFileList = ArrayList<String>()
+            val middleFolder = File(middleFolderPath)
+            val filesInMiddleFolder = middleFolder.listFiles() ?: return
+
+            for (file in filesInMiddleFolder) {
+                if (!file.isDirectory) {
+                    middleFolderFileList.add(file.name)
+                }
+            }
+
+            var videoFileName = ""
+            middleFolderFileList.forEach {
+                if (it.contains("player")) videoFileName = it
+            }
+
+            if (File("$videoFolderPath/$middleFolderName/$videoFileName").exists()) {
+                viewDataBinding.webView.post { viewDataBinding.webView.loadUrl("file:///$videoFolderPath/$middleFolderName/$videoFileName") }
+            }
+
+//            val path = Paths.get("$videoFolderPath/")
+//            val innerFolderName: String
+//            var playFileName = ""
+//
+//
+//            //List all items in the directory. Note that we are using Java 8 streaming API to group the entries by
+//            //directory and files
+//            val fileDirMap1 = Files.list(path).collect(Collectors.partitioningBy({ it ->
+//                Files.isDirectory(
+//                    it
+//                )
+//            }))
+//
+//            innerFolderName = fileDirMap1[true]?.first().toString()
+//            println("Directories")
+//
+//
+//            val newPath = Paths.get(innerFolderName)
+//
+//            //List all items in the directory. Note that we are using Java 8 streaming API to group the entries by
+//            //directory and files
+//            val fileDirMap = Files.list(newPath).collect(Collectors.partitioningBy({ it ->
+//                Files.isDirectory(
+//                    it
+//                )
+//            }))
+//
+//            fileDirMap[false]?.forEach({ it ->
+////                println("%-20s\t%-5b\t%-5b\t%b".format(
+////                    it.fileName,
+////                    Files.isReadable(it), //Read attribute
+////                    Files.isWritable(it), //Write attribute
+////                    Files.isExecutable(it))) //Execute attribute
+//
+//                if (it.fileName.toString().contains("player")) {
+//                    playFileName = it.fileName.toString()
+//                }
+//
+//            })
+//
+//
+//            if (File("$innerFolderName/$playFileName").exists()) {
+//                viewDataBinding.webView.post { viewDataBinding.webView.loadUrl("file:///$innerFolderName/$playFileName") }
+//            }
         }
     }
 

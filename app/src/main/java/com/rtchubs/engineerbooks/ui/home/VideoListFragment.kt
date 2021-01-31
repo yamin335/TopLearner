@@ -37,6 +37,7 @@ class VideoListFragment : BaseFragment<VideoListFragmentBinding, VideoListViewMo
                     viewDataBinding.progressView.visibility = View.VISIBLE
                 } else {
                     viewDataBinding.progressView.visibility = View.GONE
+                    videoListAdapter.notifyDataSetChanged()
                 }
             }
         )
