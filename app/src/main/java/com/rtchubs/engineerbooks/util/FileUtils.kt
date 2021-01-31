@@ -38,6 +38,14 @@ class FileUtils {
             return true
         }
 
+        fun deleteFileFromExternalStorage(file: File): Boolean {
+            if (file.exists()) {
+                if (!file.deleteRecursively())
+                    return false
+            }
+            return true
+        }
+
         fun getFileName(context: Context, uri: Uri): String {
             var displayName = ""
 
