@@ -32,6 +32,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
     var nidBackBitmap: Bitmap? = null
 
     var selectedGender: Gender? = null
+    var selectedClass: AcademicClass? = null
     var firstName = ""
     var lastName = ""
     var fatherName = ""

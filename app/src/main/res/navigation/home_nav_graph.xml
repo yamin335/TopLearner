@@ -253,5 +253,36 @@
         <argument
             android:name="bookName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_paymentFragment_to_bkashFragment"
+            app:destination="@id/bkashFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/bkashFragment"
+        android:name="com.rtchubs.engineerbooks.ui.bkash.BKashFragment"
+        android:label="BKash"
+        tools:layout="@layout/fragment_bkash">
+        <argument
+            android:name="checkout"
+            app:argType="com.rtchubs.engineerbooks.models.bkash.BKashCheckout" />
+        <argument
+            android:name="bookId"
+            app:argType="integer" />
+        <argument
+            android:name="bookName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_bkashFragment_to_home2Fragment"
+            app:destination="@id/home2Fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpToInclusive="false" />
     </fragment>
 </navigation>

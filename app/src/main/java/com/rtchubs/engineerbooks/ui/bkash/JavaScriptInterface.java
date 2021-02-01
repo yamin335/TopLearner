@@ -1,10 +1,9 @@
-package com.rtchubs.engineerbooks.bkash;
+package com.rtchubs.engineerbooks.ui.bkash;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.webkit.JavascriptInterface;
-import android.widget.Toast;
+
 import com.rtchubs.engineerbooks.ui.MainActivity;
 
 

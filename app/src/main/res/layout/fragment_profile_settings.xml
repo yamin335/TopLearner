@@ -260,20 +260,14 @@
                             android:textColor="@color/white"
                             android:textSize="16sp" />
 
-                        <TextView
-                            android:id="@+id/tvClass"
+                        <Spinner
+                            android:id="@+id/spClass"
                             android:layout_width="0dp"
                             android:layout_weight="1"
+                            android:padding="5dp"
                             android:layout_height="45dp"
-                            android:paddingStart="16dp"
-                            android:paddingTop="8dp"
-                            android:paddingBottom="8dp"
-                            android:paddingEnd="0dp"
-                            android:textColor="@android:color/white"
-                            android:textSize="14sp"
-                            android:gravity="center_vertical"
-                            android:clickable="true"
-                            android:focusable="true"
+                            android:layout_marginEnd="0dp"
+                            android:spinnerMode="dropdown"
                             android:background="@drawable/rounded_bd_spinner" />
                     </LinearLayout>
 

@@ -79,7 +79,8 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawer
         R.id.termsAndConditions,
         R.id.otpSignInFragment,
         R.id.pinNumberFragment,
-        R.id.profileSignInFragment
+        R.id.profileSignInFragment,
+        R.id.bkashFragment
     )
 
     var configurationChangeCallback: ConfigurationChangeCallback? = null

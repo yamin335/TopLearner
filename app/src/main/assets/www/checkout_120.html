@@ -10,7 +10,6 @@
     <script src="https://scripts.sandbox.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout-sandbox.js"></script>
 </head>
 <body>
-<p>Version 1.2.0-beta</p>
 <button id="bKash_button"  style="display:none">Pay With bKash</button>
 
 <script type="text/javascript">
@@ -77,8 +76,8 @@ $(document).ready(function(){
                             var value1=data.paymentID;
                             var value2=data.trxID;
                             var value3=data.amount;
-                            var queryString = "?Payment ID = " + value1 + "&Transaction ID = " + value2+ "&Amount = " + value3;
-                            window.location.href = "file:///android_asset/www/checkoutSuccess.html"+ queryString;
+                            var paymentResponse = "{\"paymentID\" : " + "\"" + value1 + "\"" + ", \"transactionID\" : " + "\"" + value2 + "\"" + ", \"amount\" : " + "\"" + value3 + "\"" + "}";
+                            window.AndroidNative.onPaymentSuccess(paymentResponse);
                         }
                         else {
                             bKash.execute().onError();
@@ -90,22 +89,17 @@ $(document).ready(function(){
                 });
             }
         });
-
-
     });
 
-                   function callReconfigure(val){
-                     bKash.reconfigure(val);
-                     }
+    function callReconfigure(val){
+        bKash.reconfigure(val);
+    }
 
-                     function clickPayButton(){
-                     $("#bKash_button").trigger('click');
-                     }
-
-
+    function clickPayButton(){
+        $("#bKash_button").trigger('click');
+    }
 
 </script>
-
 
 </body>
 </html>

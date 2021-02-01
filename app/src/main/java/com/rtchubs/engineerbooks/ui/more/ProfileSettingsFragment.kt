@@ -34,12 +34,10 @@ import com.rtchubs.engineerbooks.api.Api
 import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.api.ApiEndPoint.PROFILE_IMAGES
 import com.rtchubs.engineerbooks.databinding.ProfileSettingsFragmentBinding
+import com.rtchubs.engineerbooks.models.registration.AcademicClass
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
-import com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment
-import com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment
-import com.rtchubs.engineerbooks.ui.profile_signin.ProfileSignInViewModel
-import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment
+import com.rtchubs.engineerbooks.ui.profile_signin.*
 import com.rtchubs.engineerbooks.util.BitmapUtilss
 import com.rtchubs.engineerbooks.util.showErrorToast
 import com.rtchubs.engineerbooks.util.showSuccessToast
@@ -58,8 +56,11 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 
     override val viewModel: ProfileSettingsViewModel by viewModels { viewModelFactory }
 
+    private var titleClassList = arrayOf("--Select Class--")
     private var titleGenderList = arrayOf("--Select Gender--")
+
     lateinit var genderAdapter: ArrayAdapter<String>
+    lateinit var classAdapter: ArrayAdapter<String>
 
     lateinit var profileCameraLauncher: ActivityResultLauncher<Intent>
     lateinit var nidFrontCameraLauncher: ActivityResultLauncher<Intent>
@@ -69,6 +70,10 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
     lateinit var currentPhotoPath: String
 
     lateinit var userData: InquiryAccount
+
+    companion object {
+        private var allClass = ArrayList<AcademicClass>()
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -269,6 +274,42 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
+        val tempClass = Array(allClass.size + 1) {""}
+        tempClass[0] = "--Select Class--"
+        allClass.forEachIndexed { index, academicClass ->
+            tempClass[index + 1] = academicClass.name ?: "Unknown"
+        }
+        titleClassList = tempClass
+        classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
+        classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        viewDataBinding.spClass.adapter = classAdapter
+
+        viewDataBinding.spClass.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                if (position > 0) {
+                    try {
+                        if (allClass.isNotEmpty()) {
+                            viewModel.selectedClass = allClass[position - 1]
+                        }
+                    } catch (e: IndexOutOfBoundsException) {
+                        e.printStackTrace()
+                    }
+                } else {
+                    viewModel.selectedClass = null
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        prepareClassData(userData)
+
 //        val nidFrontData = args.NIDData.frontData
 //        val nidBackData = args.NIDData.backData
 
@@ -288,6 +329,25 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             }
             if (it == null) {
                 showErrorToast(requireContext(), "Couldn't update profile at this moment!")
+            }
+        })
+
+        viewModel.allAcademicClass.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            if (allClass.isEmpty()) {
+                it?.let {
+                    val temp = Array(it.size + 1) {""}
+                    temp[0] = "--Select Class--"
+                    it.forEachIndexed { index, academicClass ->
+                        temp[index + 1] = academicClass.name ?: "Unknown"
+                    }
+                    titleClassList = temp
+                    classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
+                    classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    viewDataBinding.spClass.adapter = classAdapter
+                    allClass = it as ArrayList<AcademicClass>
+
+                    prepareClassData(userData)
+                }
             }
         })
 
@@ -323,9 +383,9 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             navigateTo(ProfileSettingsFragmentDirections.actionProfileSettingsFragmentToUpazillaEditFragment(cityId))
         }
 
-        viewDataBinding.tvClass.setOnClickListener {
-            navigateTo(ProfileSettingsFragmentDirections.actionProfileSettingsFragmentToClassEditFragment())
-        }
+//        viewDataBinding.tvClass.setOnClickListener {
+//            navigateTo(ProfileSettingsFragmentDirections.actionProfileSettingsFragmentToClassEditFragment())
+//        }
 
         viewModel.userProfileInfo.observe(viewLifecycleOwner, androidx.lifecycle.Observer { userInfo ->
             userInfo?.let {
@@ -394,16 +454,22 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             }
             userData.gender = viewModel.selectedGender?.name
 
+            viewModel.selectedClass?.let {
+                userData.class_id = it.id?.toInt()
+                userData.ClassName = it.name
+            }
+
+
             if (DistrictEditFragment.selectedCity != null && UpazillaEditFragment.selectedUpazilla == null) {
                 showErrorToast(requireContext(), "Please select your upazilla!")
                 return@setOnClickListener
             }
             //userData.city = viewModel.selectedCity?.name
 
-            ClassEditFragment.selectedClass?.let {
-                userData.class_id = it.id?.toInt() ?: 0
-                userData.ClassName = it.name
-            }
+//            ClassEditFragment.selectedClass?.let {
+//                userData.class_id = it.id?.toInt() ?: 0
+//                userData.ClassName = it.name
+//            }
 
             DistrictEditFragment.selectedCity?.let {
                 userData.CityID = it.id?.toInt() ?: 0
@@ -484,6 +550,10 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             takeProfileImageFromCamera()
         }
 
+        if (allClass.isEmpty()) {
+            viewModel.getAcademicClass()
+        }
+
         if (checkNetworkStatus()) {
             viewModel.getUserProfileInfo(userData.mobile ?: "")
         } else {
@@ -551,7 +621,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         }
 
         viewDataBinding.city.text = user.city
-        viewDataBinding.tvClass.text = user.ClassName
+        //viewDataBinding.tvClass.text = user.ClassName
         viewDataBinding.tvUpazilla.text = user.upazila
 
         //viewDataBinding.nidField.setText(user.nidnumber)
@@ -570,15 +640,19 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             viewDataBinding.spGender.setSelection(genderIndex, true)
         }
 
-        ClassEditFragment.selectedClass?.name?.let {
-            viewDataBinding.tvClass.text = it
-        }
+        prepareClassData(user)
+
+//        ClassEditFragment.selectedClass?.name?.let {
+//            viewDataBinding.tvClass.text = it
+//        }
+
         DistrictEditFragment.selectedCity?.name?.let {
             viewDataBinding.city.text = it
             if (UpazillaEditFragment.selectedUpazilla == null) {
                 viewDataBinding.tvUpazilla.text = getString(R.string.select_upazilla)
             }
         }
+
         UpazillaEditFragment.selectedUpazilla?.name?.let {
             viewDataBinding.tvUpazilla.text = it
         }
@@ -592,6 +666,22 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 //        runBlocking {
 //
 //        }
+    }
+
+    private fun prepareClassData(user: InquiryAccount) {
+        if (viewModel.selectedClass == null) {
+            var academicClassIndex = 0
+            allClass.forEachIndexed { index, academicClass ->
+                if (academicClass.id?.equals(user.class_id?.toString() ?: "0", true) == true) academicClassIndex = index + 1
+            }
+            viewDataBinding.spClass.setSelection(academicClassIndex, true)
+        } else {
+            var academicClassIndex = 0
+            allClass.forEachIndexed { index, academicClass ->
+                if (academicClass.id?.equals(viewModel.selectedClass?.id ?: "0", true) == true) academicClassIndex = index + 1
+            }
+            viewDataBinding.spClass.setSelection(academicClassIndex, true)
+        }
     }
 
 //    private fun takeProfileImageFromCamera() {

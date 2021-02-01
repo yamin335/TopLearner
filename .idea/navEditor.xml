@@ -577,6 +577,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="bkashFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="1128" />
+                            <option name="y" value="503" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="chapterListFragment">
                     <value>
                       <LayoutPositions>
@@ -646,6 +658,11 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_home2Fragment_to_paymentFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_home2Fragment_to_topUpMobileFragment">
                               <value>
                                 <LayoutPositions />
@@ -697,6 +714,15 @@
                             <option name="x" value="852" />
                             <option name="y" value="498" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_paymentFragment_to_bkashFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -1403,7 +1429,7 @@
                         <option name="myPosition">
                           <Point>
                             <option name="x" value="166" />
-                            <option name="y" value="-76" />
+                            <option name="y" value="-15" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -1417,6 +1443,15 @@
                             <option name="x" value="-95" />
                             <option name="y" value="3" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_payFragment_to_loadWebViewFragment2">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

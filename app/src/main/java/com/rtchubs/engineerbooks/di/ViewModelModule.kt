@@ -10,6 +10,7 @@ import com.rtchubs.engineerbooks.ui.about_us.AboutUsViewModel
 import com.rtchubs.engineerbooks.ui.add_payment_methods.AddBankViewModel
 import com.rtchubs.engineerbooks.ui.add_payment_methods.AddCardViewModel
 import com.rtchubs.engineerbooks.ui.add_payment_methods.AddPaymentMethodsViewModel
+import com.rtchubs.engineerbooks.ui.bkash.BKashViewModel
 import com.rtchubs.engineerbooks.ui.chapter_list.ChapterListViewModel
 import com.rtchubs.engineerbooks.ui.e_code.ECodeViewModel
 import com.rtchubs.engineerbooks.ui.exams.ExamsViewModel
@@ -313,4 +314,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AboutUsViewModel::class)
     abstract fun bindAboutUsViewModel(viewModel: AboutUsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BKashViewModel::class)
+    abstract fun bindBKashViewModel(viewModel: BKashViewModel): ViewModel
 }

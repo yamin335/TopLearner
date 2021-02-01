@@ -55,7 +55,7 @@
         </activity>
 
         <activity
-            android:name=".bkash.WebViewCheckoutActivity"
+            android:name=".ui.bkash.WebViewCheckoutActivity"
             android:screenOrientation="portrait">
         </activity>
 

@@ -1,4 +1,4 @@
-package com.rtchubs.engineerbooks.bkash;
+package com.rtchubs.engineerbooks.ui.bkash;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,10 +13,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.rtchubs.engineerbooks.bkash.Checkout;
-import com.rtchubs.engineerbooks.bkash.PaymentRequest;
-import com.rtchubs.engineerbooks.bkash.JavaScriptInterface;
 import com.google.gson.Gson;
 import com.rtchubs.engineerbooks.R;
 
