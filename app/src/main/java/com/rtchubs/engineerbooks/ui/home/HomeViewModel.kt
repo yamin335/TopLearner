@@ -73,7 +73,7 @@ class HomeViewModel @Inject constructor(
                         books?.let {
                             it.forEach { book ->
                                 totalBooks.add(ClassWiseBook(book.id ?: 0, book.uuid, book.name, book.title, book.authors,
-                                    book.is_paid == 1, book.book_type_id))
+                                    book.is_paid == 1, book.book_type_id, book.price, book.status))
                             }
                             allBooks.postValue(totalBooks)
                         }

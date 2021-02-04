@@ -76,6 +76,7 @@
                     android:background="@null"
                     android:inputType="numberDecimal"
                     android:hint="amount"
+                    android:enabled="false"
                     android:maxLength="11"
                     android:text="@={viewModel.amount}"
                     android:textColor="@color/white"

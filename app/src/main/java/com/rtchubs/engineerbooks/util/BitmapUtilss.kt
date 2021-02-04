@@ -4,6 +4,8 @@ import android.annotation.TargetApi
 import android.content.ContentResolver
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.media.Image.Plane
 import android.net.Uri
 import android.os.Build
@@ -15,6 +17,10 @@ import androidx.annotation.RequiresApi
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageProxy
 import androidx.exifinterface.media.ExifInterface
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.Transformation
+import com.bumptech.glide.load.engine.Resource
+import com.bumptech.glide.load.resource.bitmap.BitmapResource
 import com.rtchubs.engineerbooks.nid_scan.FrameMetadata
 import java.io.*
 import java.nio.ByteBuffer
@@ -24,6 +30,27 @@ import java.util.*
 object BitmapUtilss {
 
     private const val TAG = "BitmapUtilss"
+
+    fun transformDrawable(
+        context: Context,
+        drawable: Drawable?,
+        transform: Transformation<Bitmap>,
+        size: Int
+    ): BitmapDrawable? {
+        // render original
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable?.setBounds(0, 0, size, size)
+        drawable?.draw(canvas)
+        // make rounded
+        val original: BitmapResource = BitmapResource.obtain(bitmap, Glide.get(context).bitmapPool)
+            ?: return null
+        val rounded: Resource<Bitmap> = transform.transform(context, original, size, size)
+        if (original != rounded) {
+            original.recycle()
+        }
+        return BitmapDrawable(context.resources, rounded.get())
+    }
 
     /**
      * Converts NV21 format byte buffer to bitmap.

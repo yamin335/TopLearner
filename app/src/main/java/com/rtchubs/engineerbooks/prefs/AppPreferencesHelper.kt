@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken
 import com.rtchubs.engineerbooks.api.ProfileInfo
 import com.rtchubs.engineerbooks.api.TokenInformation
 import com.rtchubs.engineerbooks.di.PreferenceInfo
+import com.rtchubs.engineerbooks.models.home.PaidBook
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.worker.TokenRefreshWorker
 import java.lang.Exception
@@ -33,7 +34,6 @@ class AppPreferencesHelper @Inject constructor(
         get() = context.applicationContext.getSharedPreferences(prefFileName, Context.MODE_PRIVATE)
 
     override var isDeviceTimeChanged by BooleanPreference(prefs, KEY_DEVICE_TIME_CHANGED, defaultValue = false, commit = true)
-    override var isBookPaid by BooleanPreference(prefs, KEY_BOOK_PAY, defaultValue = false, commit = true)
     override var isRegistered by BooleanPreference(prefs, KEY_REG, defaultValue = false, commit = true)
     override var isTermsAccepted by BooleanPreference(prefs, KEY_TERMS, defaultValue = false, commit = true)
     override var pinNumber by StringPreference(prefs, KEY_PIN, defaultValue = null, commit = true)
@@ -55,6 +55,18 @@ class AppPreferencesHelper @Inject constructor(
     override var phoneNumber by StringPreference(prefs, KEY_PHONE_NUMBER, null, true)
 
     override var accessTokenExpiresIn by LongPreference(prefs, PREF_KEY_ACCESS_TOKEN_EXPIRES_IN, 0)
+
+    override fun savePaidBook(book: PaidBook) {
+        val bookString = Gson().toJson(book)
+        prefs.value.edit {
+            putString(KEY_PAID_BOOK, bookString)
+        }
+    }
+
+    override fun getPaidBook(): PaidBook {
+        val bookString = prefs.value.getString(KEY_PAID_BOOK, "{ \"bookID\": 0, \"bookName\": \"\", \"classID\": 0, \"className\": \"\", \"isPaid\": false}")
+        return Gson().fromJson(bookString, PaidBook::class.java)
+    }
 
     override fun saveUser(user: InquiryAccount) {
         val userString = Gson().toJson(user)
@@ -164,7 +176,7 @@ class AppPreferencesHelper @Inject constructor(
 
     companion object {
         const val KEY_DEVICE_TIME_CHANGED = "DoesUserChangedDeviceTime"
-        private const val KEY_BOOK_PAY = "IsBookPaid"
+        private const val KEY_PAID_BOOK = "IsBookPaid"
         private const val KEY_USER = "UserData"
         private const val KEY_REG = "RegistrationStatus"
         private const val KEY_TERMS = "TermsAndConditionStatus"

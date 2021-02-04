@@ -60,9 +60,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-/** Helper type alias used for analysis use case callbacks */
-typealias LumaListener = (luma: Double) -> Unit
-
 /**
  * Main fragment for this app. Implements all camera operations including:
  * - Viewfinder

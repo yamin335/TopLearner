@@ -1,9 +1,11 @@
 package com.rtchubs.engineerbooks.ui.more
 
 import android.content.Context
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.rtchubs.engineerbooks.BR
@@ -19,8 +21,11 @@ import com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment
 import com.rtchubs.engineerbooks.ui.splash.SplashFragment
+import com.rtchubs.engineerbooks.util.BitmapUtilss
 import com.rtchubs.engineerbooks.util.goToFacebook
 import com.rtchubs.engineerbooks.util.goToYoutube
+import com.rtchubs.engineerbooks.util.showWarningToast
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
 class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
@@ -36,6 +41,7 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
     private var drawerListener: NavDrawerHandlerCallback? = null
 
     lateinit var userData: InquiryAccount
+    var placeholder: BitmapDrawable? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -63,6 +69,25 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
         userData = preferencesHelper.getUser()
 
+        placeholder =
+            BitmapUtilss.transformDrawable( // has white background because it's not transparent, so rounding will be visible
+                requireContext(),
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.doctor_1
+                ),  // transformation to be applied
+                RoundedCornersTransformation(
+                    128,
+                    0,
+                    RoundedCornersTransformation.CornerType.ALL
+                ),  // size of the target in pixels
+                256
+            )
+
+        Glide.with(requireContext())
+            .load(placeholder)
+            .into(viewDataBinding.rivProfileImage)
+
         init(userData)
 
         viewDataBinding.mProfile.setOnClickListener {
@@ -73,13 +98,18 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
         }
 
         viewDataBinding.mPayment.setOnClickListener {
-            navigateTo(MoreFragmentDirections.actionMoreFragmentToPaymentFragment2())
+            val paidBook = preferencesHelper.getPaidBook()
+            if (paidBook.isPaid) {
+                navigateTo(MoreFragmentDirections.actionMoreFragmentToPaymentFragmentMore(paidBook))
+            } else {
+                showWarningToast(requireContext(), "Please go to book list and choose your desired book!")
+            }
+
         }
 
         viewDataBinding.logout.setOnClickListener {
             SplashFragment.fromLogout = true
             preferencesHelper.isLoggedIn = false
-            preferencesHelper.isBookPaid = false
             listener?.onLoggedOut()
         }
 
@@ -117,10 +147,11 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
     }
 
     private fun init(user: InquiryAccount) {
+
         Glide.with(requireContext())
             .load("${ApiEndPoint.PROFILE_IMAGES}/${user.Folder}/${user.profilePic}")
-            .placeholder(R.drawable.doctor_1)
             .circleCrop()
+            .placeholder(placeholder)
             .into(viewDataBinding.rivProfileImage)
 
         viewDataBinding.tvName.text = "${user.firstName} ${user.lastName}"

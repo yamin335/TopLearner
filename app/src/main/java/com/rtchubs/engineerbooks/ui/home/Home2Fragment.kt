@@ -13,6 +13,7 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.HomeFragment2Binding
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
+import com.rtchubs.engineerbooks.models.home.PaidBook
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
 import com.rtchubs.engineerbooks.ui.LogoutHandlerCallback
@@ -34,8 +35,6 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         viewModelFactory
     }
 
-    lateinit var paymentListAdapter: PaymentMethodListAdapter
-
     private var listener: LogoutHandlerCallback? = null
 
     private var drawerListener: NavDrawerHandlerCallback? = null
@@ -47,11 +46,11 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
     var timeChangeListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
         when (key) {
             AppPreferencesHelper.KEY_DEVICE_TIME_CHANGED -> {
-                homeClassListAdapter?.setPaymentStatus(preferencesHelper.isBookPaid)
+                homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
 
                 if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
-                    preferencesHelper.isDeviceTimeChanged = true
-                    homeClassListAdapter?.setPaymentStatus(false)
+                    //preferencesHelper.isDeviceTimeChanged = true
+                    homeClassListAdapter?.setTimeChangeStatus(true)
                 }
             }
         }
@@ -61,11 +60,11 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         super.onResume()
         preferencesHelper.preference.registerOnSharedPreferenceChangeListener(timeChangeListener)
 
-        homeClassListAdapter?.setPaymentStatus(preferencesHelper.isBookPaid)
+        homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
 
         if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
             preferencesHelper.isDeviceTimeChanged = true
-            homeClassListAdapter?.setPaymentStatus(false)
+            homeClassListAdapter?.setTimeChangeStatus(true)
         }
     }
 
@@ -85,11 +84,8 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
 
         preferencesHelper.preference.registerOnSharedPreferenceChangeListener(timeChangeListener)
 
-        homeClassListAdapter?.setPaymentStatus(preferencesHelper.isBookPaid)
-
         if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
             preferencesHelper.isDeviceTimeChanged = true
-            homeClassListAdapter?.setPaymentStatus(false)
         }
     }
 
@@ -115,11 +111,8 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         )
         preferencesHelper.preference.registerOnSharedPreferenceChangeListener(timeChangeListener)
 
-        homeClassListAdapter?.setPaymentStatus(preferencesHelper.isBookPaid)
-
         if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
             preferencesHelper.isDeviceTimeChanged = true
-            homeClassListAdapter?.setPaymentStatus(false)
         }
     }
 
@@ -194,15 +187,28 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
                 navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
             } else {
                 if (!preferencesHelper.isDeviceTimeChanged) {
-                    if (preferencesHelper.isBookPaid) {
-                        navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
+
+                    if (it.price ?: 0.0 > 0.0) {
+                        val paidBook = preferencesHelper.getPaidBook()
+                        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
+                            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
+                        } else {
+                            val book = PaidBook(it.id, it.name, userData.class_id, userData.ClassName, false, it.price ?: 0.0)
+                            navigateTo(Home2FragmentDirections.actionHome2FragmentToPaymentFragment(book))
+                        }
                     } else {
-                        navigateTo(Home2FragmentDirections.actionHome2FragmentToPaymentFragment(it.id, it.name ?: ""))
+                        navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
                     }
                 } else {
                     if (isTimeAndZoneAutomatic(context)) {
                         if (checkNetworkStatus()) {
                             preferencesHelper.isDeviceTimeChanged = false
+                            homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
+
+                            if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
+                                preferencesHelper.isDeviceTimeChanged = true
+                                homeClassListAdapter?.setTimeChangeStatus(true)
+                            }
                             viewModel.getAcademicBooks(userData.mobile ?: "", userData.class_id ?: 0)
                         }
                     } else {
@@ -212,11 +218,16 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
             }
         }
 
-        homeClassListAdapter?.setPaymentStatus(preferencesHelper.isBookPaid)
+        homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
 
         if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
             preferencesHelper.isDeviceTimeChanged = true
-            homeClassListAdapter?.setPaymentStatus(false)
+            homeClassListAdapter?.setTimeChangeStatus(true)
+        }
+
+        val paidBook = preferencesHelper.getPaidBook()
+        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
+            homeClassListAdapter?.setPaymentStatus(paidBook.isPaid)
         }
 
         viewDataBinding.homeClassListRecycler.adapter = homeClassListAdapter
@@ -232,11 +243,11 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
                 allBookList = tempList
                 homeClassListAdapter?.submitList(allBookList)
 
-                homeClassListAdapter?.setPaymentStatus(preferencesHelper.isBookPaid)
+                homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
 
                 if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
                     preferencesHelper.isDeviceTimeChanged = true
-                    homeClassListAdapter?.setPaymentStatus(false)
+                    homeClassListAdapter?.setTimeChangeStatus(true)
                 }
 //                homeClassListAdapter.submitList(tempList)
             }

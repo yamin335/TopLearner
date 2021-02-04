@@ -38,8 +38,14 @@ class HomeClassListAdapter(
     // Properties
     private val viewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool()
     private var isPaid = false
+    private var isTimeChanged = false
     fun setPaymentStatus(isPaid: Boolean) {
         this.isPaid = isPaid
+        notifyDataSetChanged()
+    }
+
+    fun setTimeChangeStatus(isChanged: Boolean) {
+        this.isTimeChanged = isChanged
         notifyDataSetChanged()
     }
     val onClicked = MutableLiveData<ClassWiseBook>()
@@ -57,14 +63,18 @@ class HomeClassListAdapter(
         if (customerTypeID == 2) {
             binding.lockView.visibility = View.GONE
         } else {
-            var paymentStatus = item.isPaid ?: false
-            if (!paymentStatus) {
-                if (isPaid) {
-                    paymentStatus = isPaid
+            if (item.price ?: 0.0 > 0.0) {
+                var paymentStatus = item.isPaid ?: false
+                if (!paymentStatus) {
+                    if (isPaid) {
+                        paymentStatus = isPaid
+                    }
                 }
-            }
 
-            binding.lockView.visibility = if (paymentStatus) View.GONE else View.VISIBLE
+                binding.lockView.visibility = if (paymentStatus && !isTimeChanged) View.GONE else View.VISIBLE
+            } else {
+                binding.lockView.visibility = View.GONE
+            }
         }
 
         binding.rootCard.setOnClickListener {

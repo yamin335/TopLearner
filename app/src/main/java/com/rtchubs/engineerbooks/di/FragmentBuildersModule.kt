@@ -5,7 +5,7 @@ import com.rtchubs.engineerbooks.ui.about_us.AboutUsFragment
 import com.rtchubs.engineerbooks.ui.add_payment_methods.AddBankFragment
 import com.rtchubs.engineerbooks.ui.add_payment_methods.AddCardFragment
 import com.rtchubs.engineerbooks.ui.add_payment_methods.AddPaymentMethodsFragment
-import com.rtchubs.engineerbooks.ui.bkash.BKashFragment
+import com.rtchubs.engineerbooks.ui.bkash.BKashDialogFragment
 import com.rtchubs.engineerbooks.ui.chapter_list.ChapterListFragment
 import com.rtchubs.engineerbooks.ui.e_code.ECodeFragment
 import com.rtchubs.engineerbooks.ui.exams.ExamsFragment
@@ -34,6 +34,7 @@ import com.rtchubs.engineerbooks.ui.notice_board.NoticeBoardFragment
 import com.rtchubs.engineerbooks.ui.offer.OfferFragment
 import com.rtchubs.engineerbooks.ui.otp_signin.OtpSignInFragment
 import com.rtchubs.engineerbooks.ui.payment.PaymentFragment
+import com.rtchubs.engineerbooks.ui.payment.PaymentFragmentMore
 import com.rtchubs.engineerbooks.ui.pin_number.PinNumberFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment
@@ -180,6 +181,9 @@ abstract class FragmentBuildersModule {
     abstract fun contributePaymentFragment(): PaymentFragment
 
     @ContributesAndroidInjector
+    abstract fun contributePaymentFragmentMore(): PaymentFragmentMore
+
+    @ContributesAndroidInjector
     abstract fun contributeTransactionFragment(): TransactionFragment
 
     @ContributesAndroidInjector
@@ -201,5 +205,5 @@ abstract class FragmentBuildersModule {
     abstract fun contributeAboutUsFragment(): AboutUsFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeBKashFragment(): BKashFragment
+    abstract fun contributeBKashDialogFragment(): BKashDialogFragment
 }

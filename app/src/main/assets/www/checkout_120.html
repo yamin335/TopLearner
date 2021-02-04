@@ -81,10 +81,12 @@ $(document).ready(function(){
                         }
                         else {
                             bKash.execute().onError();
+                            window.AndroidNative.onPaymentFailed();
                         }
                     },
                     error: function(){
                         bKash.execute().onError();
+                        window.AndroidNative.onPaymentFailed();
                     }
                 });
             }

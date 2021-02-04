@@ -1,10 +1,12 @@
 package com.rtchubs.engineerbooks.ui.profile_signin
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Matrix
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -18,11 +20,14 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.GenericTransitionOptions.with
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.darwin.viola.still.FaceDetectionListener
 import com.darwin.viola.still.Viola
 import com.darwin.viola.still.model.CropAlgorithm
@@ -34,6 +39,7 @@ import com.google.gson.Gson
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.BuildConfig
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.camerax.CameraXActivity
 import com.rtchubs.engineerbooks.databinding.ProfileSignInBinding
 import com.rtchubs.engineerbooks.models.registration.AcademicClass
 import com.rtchubs.engineerbooks.models.registration.Gender
@@ -48,6 +54,7 @@ import com.rtchubs.engineerbooks.util.BitmapUtilss
 import com.rtchubs.engineerbooks.util.showErrorToast
 import com.rtchubs.engineerbooks.util.showSuccessToast
 import com.squareup.picasso.Picasso
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import java.io.File
 import java.io.IOException
 import java.security.SecureRandom
@@ -83,6 +90,9 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
     lateinit var currentPhotoPath: String
 
     lateinit var registrationHelper: InquiryAccount
+
+    var placeholder: BitmapDrawable? = null
+
     val args: ProfileSignInFragmentArgs by navArgs()
 
     override fun onAttach(context: Context) {
@@ -134,37 +144,79 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
             listener?.onLoggedIn()
         }
 
-        Glide.with(requireContext()).load(viewModel.profileBitmap).placeholder(R.drawable.doctor_1).circleCrop().into(viewDataBinding.rivProfileImage)
+        placeholder =
+            BitmapUtilss.transformDrawable( // has white background because it's not transparent, so rounding will be visible
+                requireContext(),
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.doctor_1
+                ),  // transformation to be applied
+                RoundedCornersTransformation(
+                    128,
+                    0,
+                    RoundedCornersTransformation.CornerType.ALL
+                ),  // size of the target in pixels
+                256
+            )
 
-        imageCropperListener = object : FaceDetectionListener {
-            override fun onFaceDetected(result: com.darwin.viola.still.model.Result) {
-                val faceList = result.facePortraits
-                if (faceList.isNotEmpty()) {
-                    //viewModel.profileBitmap = faceList[0].face
-                    viewModel.profileBitmap = BitmapUtilss.getResizedBitmap(faceList[0].face, 500)
-                    Glide.with(requireContext()).load(faceList[0].face).circleCrop().placeholder(R.drawable.doctor_1).into(
-                        viewDataBinding.rivProfileImage
-                    )
-                    //viewDataBinding.rivProfileImage.setImageBitmap()
-                }
-            }
+        Glide.with(requireContext())
+            .load(viewModel.profileBitmap)
+            .circleCrop()
+            .placeholder(placeholder)
+            .into(viewDataBinding.rivProfileImage)
 
-            override fun onFaceDetectionFailed(error: FaceDetectionError, message: String) {
-                showErrorToast(requireContext(), message)
-            }
-        }
+//        imageCropperListener = object : FaceDetectionListener {
+//            override fun onFaceDetected(result: com.darwin.viola.still.model.Result) {
+//                val faceList = result.facePortraits
+//                if (faceList.isNotEmpty()) {
+//                    //viewModel.profileBitmap = faceList[0].face
+//                    viewModel.profileBitmap = BitmapUtilss.getResizedBitmap(faceList[0].face, 500)
+//                    Glide.with(requireContext()).load(faceList[0].face).circleCrop().placeholder(R.drawable.doctor_1).into(
+//                        viewDataBinding.rivProfileImage
+//                    )
+//                    //viewDataBinding.rivProfileImage.setImageBitmap()
+//                }
+//            }
+//
+//            override fun onFaceDetectionFailed(error: FaceDetectionError, message: String) {
+//                showErrorToast(requireContext(), message)
+//            }
+//        }
 
         profileCameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            val file = File(currentPhotoPath)
-            val imageBitmap = BitmapUtilss.getBitmapFromContentUri(requireContext().contentResolver, Uri.fromFile(file))
 
-            val viola = Viola(imageCropperListener)
-            val faceOption = FaceOptions.Builder().cropAlgorithm(CropAlgorithm.SQUARE)
-                    .enableProminentFaceDetection()
-                    .enableDebug()
-                    .build()
-            val bitmap = imageBitmap ?: return@registerForActivityResult
-            viola.detectFace(bitmap, faceOption)
+            if (result.resultCode != Activity.RESULT_OK) return@registerForActivityResult
+            val photoUri = result?.data?.data
+            //val file = File(currentPhotoPath)
+            photoUri?.let {
+                val imageBitmap = BitmapUtilss.getBitmapFromContentUri(requireContext().contentResolver, it)
+
+                Glide.with(requireContext())
+                    .load(imageBitmap)
+                    .circleCrop()
+                    .placeholder(placeholder)
+                    .into(viewDataBinding.rivProfileImage)
+
+                viewModel.profileBitmap = imageBitmap
+
+//                val viola = Viola(imageCropperListener)
+//                val faceOption = FaceOptions.Builder().cropAlgorithm(CropAlgorithm.SQUARE)
+//                    .enableProminentFaceDetection()
+//                    .enableDebug()
+//                    .build()
+//                val bitmap = imageBitmap ?: return@registerForActivityResult
+//                viola.detectFace(bitmap, faceOption)
+            }
+//            val file = File(currentPhotoPath)
+//            val imageBitmap = BitmapUtilss.getBitmapFromContentUri(requireContext().contentResolver, Uri.fromFile(file))
+//
+//            val viola = Viola(imageCropperListener)
+//            val faceOption = FaceOptions.Builder().cropAlgorithm(CropAlgorithm.SQUARE)
+//                    .enableProminentFaceDetection()
+//                    .enableDebug()
+//                    .build()
+//            val bitmap = imageBitmap ?: return@registerForActivityResult
+//            viola.detectFace(bitmap, faceOption)
         }
 
         nidFrontCameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -659,29 +711,30 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
 //    }
 
     private fun takeProfileImageFromCamera() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
-            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-                // Create the File where the photo should go
-                val photoFile: File? = try {
-                    createImageFile()
-                } catch (ex: IOException) {
-                    // Error occurred while creating the File
-                    ex.printStackTrace()
-                    null
-                }
-                // Continue only if the File was successfully created
-                photoFile?.also {
-                    val photoURI: Uri = FileProvider.getUriForFile(
-                        requireContext(),
-                        "${BuildConfig.APPLICATION_ID}.provider",
-                        it
-                    )
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    profileCameraLauncher.launch(takePictureIntent)
-                }
-            }
-        }
+        profileCameraLauncher.launch(Intent(requireContext(), CameraXActivity::class.java))
+//        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+//            // Ensure that there's a camera activity to handle the intent
+//            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+//                // Create the File where the photo should go
+//                val photoFile: File? = try {
+//                    createImageFile()
+//                } catch (ex: IOException) {
+//                    // Error occurred while creating the File
+//                    ex.printStackTrace()
+//                    null
+//                }
+//                // Continue only if the File was successfully created
+//                photoFile?.also {
+//                    val photoURI: Uri = FileProvider.getUriForFile(
+//                        requireContext(),
+//                        "${BuildConfig.APPLICATION_ID}.provider",
+//                        it
+//                    )
+//                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+//                    profileCameraLauncher.launch(takePictureIntent)
+//                }
+//            }
+//        }
     }
 
     private fun takeNIDFrontImageFromCamera() {

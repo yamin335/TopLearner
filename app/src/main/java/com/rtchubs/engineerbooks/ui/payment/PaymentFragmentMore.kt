@@ -21,7 +21,7 @@ import com.rtchubs.engineerbooks.util.hideKeyboard
 import com.rtchubs.engineerbooks.util.showErrorToast
 import com.rtchubs.engineerbooks.util.showSuccessToast
 
-class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>() {
+class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewModel>() {
 
     override val bindingVariable: Int
         get() = BR.viewModel
@@ -31,7 +31,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         viewModelFactory
     }
 
-    val args: PaymentFragmentArgs by navArgs()
+    val args: PaymentFragmentMoreArgs by navArgs()
 
     lateinit var userData: InquiryAccount
 
@@ -94,17 +94,14 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             bkashPgwDialog = BKashDialogFragment(object : BKashDialogFragment.BkashPaymentCallback {
                 override fun onPaymentSuccess(bkashResponse: BKashPaymentResponse) {
                     saveBKaskPayment(bkashResponse)
-                    bkashPgwDialog.dismiss()
                 }
 
                 override fun onPaymentFailed() {
                     showErrorToast(requireContext(), "Purchase is not successful, Payment failed!")
-                    bkashPgwDialog.dismiss()
                 }
 
                 override fun onPaymentCancelled() {
                     showErrorToast(requireContext(), "Purchase is not successful, Payment cancelled!")
-                    bkashPgwDialog.dismiss()
                 }
 
             }, checkout)

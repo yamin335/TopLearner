@@ -3,6 +3,7 @@ package com.rtchubs.engineerbooks.prefs
 import android.content.SharedPreferences
 import com.rtchubs.engineerbooks.api.ProfileInfo
 import com.rtchubs.engineerbooks.api.TokenInformation
+import com.rtchubs.engineerbooks.models.home.PaidBook
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 
 
@@ -11,8 +12,6 @@ interface PreferencesHelper {
     val preference: SharedPreferences
 
     var isDeviceTimeChanged: Boolean
-
-    var isBookPaid: Boolean
 
     var isRegistered: Boolean
 
@@ -61,6 +60,10 @@ interface PreferencesHelper {
     fun saveUser(user: InquiryAccount)
 
     fun getUser(): InquiryAccount
+
+    fun savePaidBook(book: PaidBook)
+
+    fun getPaidBook(): PaidBook
 
     var validityLimiterMap: MutableMap<String, Long>?
 

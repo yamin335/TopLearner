@@ -60,13 +60,9 @@
                         android:layout_width="160dp"
                         android:layout_height="160dp"
                         android:layout_marginTop="10dp"
-                        android:src="@drawable/doctor_1"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:riv_border_color="@color/blue_gray"
-                        app:riv_border_width="2dp"
-                        app:riv_corner_radius="100dp"
                         android:contentDescription="@string/default_description" />
 
                     <LinearLayout
@@ -584,8 +580,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tvNidText"
                         app:layout_constraintVertical_bias="0.0"
-                        app:riv_border_color="@color/blue_gray"
-                        app:riv_border_width="2dp"
                         android:contentDescription="@string/default_description" />
 
                     <ImageView
@@ -604,8 +598,6 @@
                         app:layout_constraintStart_toStartOf="@+id/guideline5"
                         app:layout_constraintTop_toBottomOf="@+id/tvNidText"
                         app:layout_constraintVertical_bias="0.0"
-                        app:riv_border_color="@color/blue_gray"
-                        app:riv_border_width="2dp"
                         android:contentDescription="@string/default_description"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

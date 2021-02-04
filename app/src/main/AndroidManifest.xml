@@ -3,7 +3,6 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.rtchubs.engineerbooks">
-
     <!-- Enable instant app support -->
     <dist:module dist:instant="true" /> <!-- Declare features -->
     <uses-feature
@@ -23,63 +22,27 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         android:versionCode="1"
         android:versionName="1.0.0"
-        android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup"
         tools:targetApi="m">
-
-        <receiver android:name=".ui.receiver.TimeChangeBroadcastReceiver" android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.TIME_SET"/>
-                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name=".services.DownloadService"
-            android:enabled="true"
-            android:exported="false" />
-
         <activity
-            android:name=".ui.LoginActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".ui.bkash.WebViewCheckoutActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity
-            android:name=".ui.MainActivity"
-            android:clearTaskOnLaunch="true"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:name=".camerax.CameraXActivity"
+            android:theme="@style/AppTheme.CameraXTheme"
+            android:screenOrientation="fullUser"
             android:rotationAnimation="seamless"
-            android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme"
-            tools:targetApi="O">
-
-            <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-            </intent-filter>
-
-            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter" />
-
+            tools:targetApi="o">
             <!-- Register as a system camera app -->
             <intent-filter>
                 <action android:name="android.media.action.IMAGE_CAPTURE" />
                 <action android:name="android.media.action.STILL_IMAGE_CAMERA" />
                 <action android:name="android.media.action.VIDEO_CAMERA" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -100,6 +63,51 @@
             <meta-data
                 android:name="android.notch_support"
                 android:value="true" />
+        </activity>
+
+        <receiver
+            android:name=".ui.receiver.TimeChangeBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".services.DownloadService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.LoginActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.bkash.WebViewCheckoutActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.MainActivity"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:rotationAnimation="seamless"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme"
+            tools:targetApi="O">
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />
+
         </activity>
 
         <meta-data

@@ -4,8 +4,10 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.net.Uri
 import android.provider.Settings
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.Toast
 import com.rtchubs.engineerbooks.R
@@ -15,6 +17,11 @@ import kotlinx.android.synthetic.main.toast_custom_warning.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
+
+fun dpToPx(dp: Int, resources: Resources): Int {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics).roundToInt()
+}
 
 fun isTimeAndZoneAutomatic(context: Context?): Boolean {
     return Settings.Global.getInt(context?.contentResolver, Settings.Global.AUTO_TIME, 0) == 1 && Settings.Global.getInt(context?.contentResolver, Settings.Global.AUTO_TIME_ZONE, 0) == 1

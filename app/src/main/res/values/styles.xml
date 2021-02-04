@@ -26,6 +26,20 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="AppTheme.CameraXTheme">
+        <item name="android:immersive">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <!-- Set parent theme as app theme. -->
+    <style name="DialogFullScreenTheme" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
     <!-- ToggleGroupButton material button -->
     <style name="Widget.App.Button.ToggleGroupButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="iconPadding">0dp</item>

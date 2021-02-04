@@ -1,9 +1,11 @@
 package com.rtchubs.engineerbooks.ui.more
 
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Matrix
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -16,36 +18,35 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.darwin.viola.still.FaceDetectionListener
-import com.darwin.viola.still.Viola
-import com.darwin.viola.still.model.CropAlgorithm
-import com.darwin.viola.still.model.FaceDetectionError
-import com.darwin.viola.still.model.FaceOptions
 import com.google.android.gms.vision.Frame
 import com.google.android.gms.vision.face.FaceDetector
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.BuildConfig
 import com.rtchubs.engineerbooks.R
-import com.rtchubs.engineerbooks.api.Api
-import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.api.ApiEndPoint.PROFILE_IMAGES
+import com.rtchubs.engineerbooks.camerax.CameraXActivity
 import com.rtchubs.engineerbooks.databinding.ProfileSettingsFragmentBinding
 import com.rtchubs.engineerbooks.models.registration.AcademicClass
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.*
 import com.rtchubs.engineerbooks.util.BitmapUtilss
+import com.rtchubs.engineerbooks.util.BitmapUtilss.transformDrawable
 import com.rtchubs.engineerbooks.util.showErrorToast
 import com.rtchubs.engineerbooks.util.showSuccessToast
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, ProfileSettingsViewModel>() {
 
@@ -66,10 +67,11 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
     lateinit var nidFrontCameraLauncher: ActivityResultLauncher<Intent>
     lateinit var nidBackCameraLauncher: ActivityResultLauncher<Intent>
 
-    lateinit var imageCropperListener: FaceDetectionListener
+    //lateinit var imageCropperListener: FaceDetectionListener
     lateinit var currentPhotoPath: String
 
     lateinit var userData: InquiryAccount
+    var placeholder: BitmapDrawable? = null
 
     companion object {
         private var allClass = ArrayList<AcademicClass>()
@@ -88,6 +90,21 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         registerToolbar(viewDataBinding.toolbar)
 
         userData = preferencesHelper.getUser()
+
+        placeholder =
+            transformDrawable( // has white background because it's not transparent, so rounding will be visible
+                requireContext(),
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.doctor_1
+                ),  // transformation to be applied
+                RoundedCornersTransformation(128, 0, RoundedCornersTransformation.CornerType.ALL),  // size of the target in pixels
+                256
+            )
+
+        Glide.with(requireContext())
+            .load(placeholder)
+            .into(viewDataBinding.rivProfileImage)
 
         viewDataBinding.firstName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -193,40 +210,60 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 
         })
 
-        imageCropperListener = object : FaceDetectionListener {
-            override fun onFaceDetected(result: com.darwin.viola.still.model.Result) {
-                val faceList = result.facePortraits
-                if (faceList.isNotEmpty()) {
-                    //viewModel.profileBitmap = faceList[0].face
-                    viewModel.profileBitmap = BitmapUtilss.getResizedBitmap(faceList[0].face, 500)
-                    Glide.with(requireContext()).load(faceList[0].face).circleCrop().placeholder(R.drawable.doctor_1).into(
-                        viewDataBinding.rivProfileImage
-                    )
-                    //viewDataBinding.rivProfileImage.setImageBitmap()
-                }
-            }
-
-            override fun onFaceDetectionFailed(error: FaceDetectionError, message: String) {
-                showErrorToast(requireContext(), message)
-            }
-        }
+//        imageCropperListener = object : FaceDetectionListener {
+//            override fun onFaceDetected(result: com.darwin.viola.still.model.Result) {
+//                val faceList = result.facePortraits
+//                if (faceList.isNotEmpty()) {
+//                    //viewModel.profileBitmap = faceList[0].face
+//                    viewModel.profileBitmap = BitmapUtilss.getResizedBitmap(faceList[0].face, 500)
+//                    Glide.with(requireContext()).load(faceList[0].face).circleCrop().placeholder(R.drawable.doctor_1).into(
+//                        viewDataBinding.rivProfileImage
+//                    )
+//                    //viewDataBinding.rivProfileImage.setImageBitmap()
+//                }
+//            }
+//
+//            override fun onFaceDetectionFailed(error: FaceDetectionError, message: String) {
+//                showErrorToast(requireContext(), message)
+//            }
+//        }
 
         profileCameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            val file = File(currentPhotoPath)
-            val imageBitmap = BitmapUtilss.getBitmapFromContentUri(requireContext().contentResolver, Uri.fromFile(file))
 
-            val viola = Viola(imageCropperListener)
-            val faceOption = FaceOptions.Builder().cropAlgorithm(CropAlgorithm.SQUARE)
-                .enableProminentFaceDetection()
-                .enableDebug()
-                .build()
-            val bitmap = imageBitmap ?: return@registerForActivityResult
-            viola.detectFace(bitmap, faceOption)
+            if (result.resultCode != RESULT_OK) return@registerForActivityResult
+            val photoUri = result?.data?.data
+            //val file = File(currentPhotoPath)
+            photoUri?.let {
+                val imageBitmap = BitmapUtilss.getBitmapFromContentUri(
+                    requireContext().contentResolver,
+                    it
+                )
+
+                Glide.with(requireContext())
+                    .load(imageBitmap)
+                    .circleCrop()
+                    .placeholder(placeholder)
+                    .into(viewDataBinding.rivProfileImage)
+
+                viewModel.profileBitmap = imageBitmap
+
+//                val viola = Viola(imageCropperListener)
+//                val faceOption = FaceOptions.Builder().cropAlgorithm(CropAlgorithm.SQUARE)
+//                    .enableProminentFaceDetection()
+//                    .enableDebug()
+//                    .build()
+//                val bitmap = imageBitmap ?: return@registerForActivityResult
+//                viola.detectFace(bitmap, faceOption)
+            }
         }
 
         nidFrontCameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val file = File(currentPhotoPath)
-            val imageBitmap = BitmapUtilss.getBitmapFromContentUri(requireContext().contentResolver, Uri.fromFile(file))
+            val imageBitmap = BitmapUtilss.getBitmapFromContentUri(
+                requireContext().contentResolver, Uri.fromFile(
+                    file
+                )
+            )
             val bitmap = imageBitmap ?: return@registerForActivityResult
             //viewModel.nidFrontBitmap = file
             viewModel.nidFrontBitmap = BitmapUtilss.getResizedBitmap(bitmap, 500)
@@ -235,7 +272,11 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 
         nidBackCameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val file = File(currentPhotoPath)
-            val imageBitmap = BitmapUtilss.getBitmapFromContentUri(requireContext().contentResolver, Uri.fromFile(file))
+            val imageBitmap = BitmapUtilss.getBitmapFromContentUri(
+                requireContext().contentResolver, Uri.fromFile(
+                    file
+                )
+            )
             val bitmap = imageBitmap ?: return@registerForActivityResult
             //viewModel.nidBackBitmap = file
             viewModel.nidBackBitmap = BitmapUtilss.getResizedBitmap(bitmap, 500)
@@ -335,13 +376,17 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         viewModel.allAcademicClass.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             if (allClass.isEmpty()) {
                 it?.let {
-                    val temp = Array(it.size + 1) {""}
+                    val temp = Array(it.size + 1) { "" }
                     temp[0] = "--Select Class--"
                     it.forEachIndexed { index, academicClass ->
                         temp[index + 1] = academicClass.name ?: "Unknown"
                     }
                     titleClassList = temp
-                    classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
+                    classAdapter = ArrayAdapter(
+                        requireContext(),
+                        R.layout.spinner_item,
+                        titleClassList
+                    )
                     classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     viewDataBinding.spClass.adapter = classAdapter
                     allClass = it as ArrayList<AcademicClass>
@@ -380,24 +425,30 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
                 showErrorToast(requireContext(), "Please select city first!")
                 return@setOnClickListener
             }
-            navigateTo(ProfileSettingsFragmentDirections.actionProfileSettingsFragmentToUpazillaEditFragment(cityId))
+            navigateTo(
+                ProfileSettingsFragmentDirections.actionProfileSettingsFragmentToUpazillaEditFragment(
+                    cityId
+                )
+            )
         }
 
 //        viewDataBinding.tvClass.setOnClickListener {
 //            navigateTo(ProfileSettingsFragmentDirections.actionProfileSettingsFragmentToClassEditFragment())
 //        }
 
-        viewModel.userProfileInfo.observe(viewLifecycleOwner, androidx.lifecycle.Observer { userInfo ->
-            userInfo?.let {
-                userData = it
-                preferencesHelper.saveUser(it)
-                prepareUserData(it)
-            }
+        viewModel.userProfileInfo.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer { userInfo ->
+                userInfo?.let {
+                    userData = it
+                    preferencesHelper.saveUser(it)
+                    prepareUserData(it)
+                }
 
-            if (userInfo == null) {
-                prepareUserData(userData)
-            }
-        })
+                if (userInfo == null) {
+                    prepareUserData(userData)
+                }
+            })
 
         viewDataBinding.btnSubmit.setOnClickListener {
             if (viewDataBinding.firstName.text.toString().isEmpty()) {
@@ -562,11 +613,20 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
     }
 
     private fun prepareUserData(user: InquiryAccount) {
-        Glide.with(requireContext())
-            .load("${PROFILE_IMAGES}/${user.Folder}/${user.profilePic}")
-            .placeholder(R.drawable.doctor_1)
-            .circleCrop()
-            .into(viewDataBinding.rivProfileImage)
+
+        if (viewModel.profileBitmap == null) {
+            Glide.with(requireContext())
+                .load("${PROFILE_IMAGES}/${user.Folder}/${user.profilePic}")
+                .circleCrop()
+                .placeholder(placeholder)
+                .into(viewDataBinding.rivProfileImage)
+        } else {
+            Glide.with(requireContext())
+                .load(viewModel.profileBitmap)
+                .circleCrop()
+                .placeholder(placeholder)
+                .into(viewDataBinding.rivProfileImage)
+        }
 
         Glide.with(requireContext())
             .load("${PROFILE_IMAGES}/${user.Folder}/${user.nidFrontPic}")
@@ -694,29 +754,30 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 //    }
 
     private fun takeProfileImageFromCamera() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
-            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-                // Create the File where the photo should go
-                val photoFile: File? = try {
-                    createImageFile()
-                } catch (ex: IOException) {
-                    // Error occurred while creating the File
-                    ex.printStackTrace()
-                    null
-                }
-                // Continue only if the File was successfully created
-                photoFile?.also {
-                    val photoURI: Uri = FileProvider.getUriForFile(
-                        requireContext(),
-                        "${BuildConfig.APPLICATION_ID}.provider",
-                        it
-                    )
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    profileCameraLauncher.launch(takePictureIntent)
-                }
-            }
-        }
+        profileCameraLauncher.launch(Intent(requireContext(), CameraXActivity::class.java))
+//        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+//            // Ensure that there's a camera activity to handle the intent
+//            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+//                // Create the File where the photo should go
+//                val photoFile: File? = try {
+//                    createImageFile()
+//                } catch (ex: IOException) {
+//                    // Error occurred while creating the File
+//                    ex.printStackTrace()
+//                    null
+//                }
+//                // Continue only if the File was successfully created
+//                photoFile?.also {
+//                    val photoURI: Uri = FileProvider.getUriForFile(
+//                        requireContext(),
+//                        "${BuildConfig.APPLICATION_ID}.provider",
+//                        it
+//                    )
+//                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+//                    profileCameraLauncher.launch(takePictureIntent)
+//                }
+//            }
+//        }
     }
 
     private fun takeNIDFrontImageFromCamera() {
