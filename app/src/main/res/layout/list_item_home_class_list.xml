@@ -3,7 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+
     <data class="HomeClassListItemBinding">
+        <import type="com.bumptech.glide.request.RequestListener"/>
+        <import type="android.graphics.drawable.Drawable"/>
+        <variable
+            name="imageRequestListener"
+            type="com.bumptech.glide.request.RequestListener&lt;Drawable>" />
+        <variable
+            name="url"
+            type="String" />
         <variable
             name="item"
             type="com.rtchubs.engineerbooks.models.home.ClassWiseBook" />
@@ -12,15 +21,16 @@
     <com.google.android.material.circularreveal.cardview.CircularRevealCardView
         android:id="@+id/rootCard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="88dp"
+        android:layout_margin="8dp"
         android:clickable="true"
         android:focusable="true"
         app:cardBackgroundColor="@color/white"
-        app:strokeColor="@color/grey_7"
-        app:strokeWidth="1px"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
-        android:layout_margin="8dp">
+        app:strokeColor="@color/grey_7"
+        app:strokeWidth="1px">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -31,11 +41,13 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/temp1"
-                android:layout_width="wrap_content"
-                android:layout_height="70dp"
-                android:layout_margin="8dp"
+                android:id="@+id/thumbnail"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:adjustViewBounds="true"
+                android:padding="4dp"
+                app:imageRequestListener="@{imageRequestListener}"
+                app:imageUrl="@{url}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -44,29 +56,29 @@
 
             <TextView
                 android:id="@+id/label"
-                tools:text="Class One"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:gravity="center"
                 android:text="@{item.title}"
-                android:layout_marginTop="8dp"
                 android:textColor="@color/gray"
                 android:textSize="13sp"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/temp1" />
+                app:layout_constraintTop_toBottomOf="@+id/temp1"
+                tools:text="Class One" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/lockView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:gravity="center"
                 android:background="#A1808080"
+                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

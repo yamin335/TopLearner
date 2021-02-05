@@ -1,6 +1,7 @@
 package com.rtchubs.engineerbooks.ui.home
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,8 +9,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.rtchubs.engineerbooks.AppExecutors
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiEndPoint
 import com.rtchubs.engineerbooks.databinding.HomeClassListItemBinding
 import com.rtchubs.engineerbooks.models.Book
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
@@ -76,6 +82,18 @@ class HomeClassListAdapter(
                 binding.lockView.visibility = View.GONE
             }
         }
+        binding.url = "${ApiEndPoint.LOGO}/${item.logo}"
+        binding.imageRequestListener = object: RequestListener<Drawable> {
+            override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                binding.thumbnail.setImageResource(R.drawable.engineers)
+                return true
+            }
+
+            override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                return false
+            }
+        }
+
 
         binding.rootCard.setOnClickListener {
             itemCallback?.invoke(item)
