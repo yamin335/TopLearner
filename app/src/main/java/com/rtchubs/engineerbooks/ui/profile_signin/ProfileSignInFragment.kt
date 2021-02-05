@@ -191,13 +191,15 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
             photoUri?.let {
                 val imageBitmap = BitmapUtilss.getBitmapFromContentUri(requireContext().contentResolver, it)
 
-                Glide.with(requireContext())
-                    .load(imageBitmap)
-                    .circleCrop()
-                    .placeholder(placeholder)
-                    .into(viewDataBinding.rivProfileImage)
+                imageBitmap?.let { bitmap ->
+                    viewModel.profileBitmap = BitmapUtilss.getResizedBitmap(bitmap, 500)
 
-                viewModel.profileBitmap = imageBitmap
+                    Glide.with(requireContext())
+                        .load(viewModel.profileBitmap)
+                        .circleCrop()
+                        .placeholder(placeholder)
+                        .into(viewDataBinding.rivProfileImage)
+                }
 
 //                val viola = Viola(imageCropperListener)
 //                val faceOption = FaceOptions.Builder().cropAlgorithm(CropAlgorithm.SQUARE)

@@ -239,13 +239,15 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
                     it
                 )
 
-                Glide.with(requireContext())
-                    .load(imageBitmap)
-                    .circleCrop()
-                    .placeholder(placeholder)
-                    .into(viewDataBinding.rivProfileImage)
+                imageBitmap?.let { bitmap ->
+                    viewModel.profileBitmap = BitmapUtilss.getResizedBitmap(bitmap, 500)
 
-                viewModel.profileBitmap = imageBitmap
+                    Glide.with(requireContext())
+                        .load(viewModel.profileBitmap)
+                        .circleCrop()
+                        .placeholder(placeholder)
+                        .into(viewDataBinding.rivProfileImage)
+                }
 
 //                val viola = Viola(imageCropperListener)
 //                val faceOption = FaceOptions.Builder().cropAlgorithm(CropAlgorithm.SQUARE)
@@ -366,11 +368,12 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
                     preferencesHelper.saveUser(account)
                     prepareUserData(userData)
                     showSuccessToast(requireContext(), "Successfully profile updated.")
+                    viewModel.profileUpdateResponse.postValue(null)
                 }
             }
-            if (it == null) {
-                showErrorToast(requireContext(), "Couldn't update profile at this moment!")
-            }
+//            if (it == null) {
+//                showErrorToast(requireContext(), "Couldn't update profile at this moment!")
+//            }
         })
 
         viewModel.allAcademicClass.observe(viewLifecycleOwner, androidx.lifecycle.Observer {

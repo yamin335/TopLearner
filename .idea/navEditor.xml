@@ -1302,12 +1302,27 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_moreFragment_to_aboutUsFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_moreFragment_to_ecodeFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_moreFragment_to_noticeBoardFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
                             </entry>
-                            <entry key="action_moreFragment_to_paymentFragment2">
+                            <entry key="action_moreFragment_to_offerFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_moreFragment_to_paymentFragmentMore">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -1346,13 +1361,13 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="paymentFragment2">
+                  <entry key="paymentFragmentMore">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="100" />
-                            <option name="y" value="386" />
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
                           </Point>
                         </option>
                       </LayoutPositions>

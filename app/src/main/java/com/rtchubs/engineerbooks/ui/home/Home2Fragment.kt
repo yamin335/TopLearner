@@ -228,6 +228,8 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         val paidBook = preferencesHelper.getPaidBook()
         if (paidBook.isPaid && paidBook.classID == userData.class_id) {
             homeClassListAdapter?.setPaymentStatus(paidBook.isPaid)
+        } else {
+            homeClassListAdapter?.setPaymentStatus(false)
         }
 
         viewDataBinding.homeClassListRecycler.adapter = homeClassListAdapter
@@ -248,6 +250,13 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
                 if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
                     preferencesHelper.isDeviceTimeChanged = true
                     homeClassListAdapter?.setTimeChangeStatus(true)
+                }
+
+                val book = preferencesHelper.getPaidBook()
+                if (book.isPaid && book.classID == userData.class_id) {
+                    homeClassListAdapter?.setPaymentStatus(book.isPaid)
+                } else {
+                    homeClassListAdapter?.setPaymentStatus(false)
                 }
 //                homeClassListAdapter.submitList(tempList)
             }
