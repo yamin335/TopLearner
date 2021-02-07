@@ -98,14 +98,24 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icon1"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/previous_class"
+                            android:layout_centerVertical="true"
+                            android:adjustViewBounds="true"
+                            android:layout_marginEnd="16dp"
+                            android:layout_alignParentStart="true"/>
+
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="আগের ক্লাস"
                             android:textSize="18sp"
+                            android:layout_toEndOf="@id/icon1"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
                             android:layout_toStartOf="@id/arrow"/>
                         <ImageView
                             android:id="@+id/arrow"
@@ -137,6 +147,17 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/icon2"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/class_schedule"
+                            android:layout_centerVertical="true"
+                            android:adjustViewBounds="true"
+                            android:layout_marginEnd="16dp"
+                            android:layout_alignParentStart="true"/>
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -144,7 +165,7 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
+                            android:layout_toEndOf="@id/icon2"
                             android:layout_toStartOf="@id/arrow1"/>
                         <ImageView
                             android:id="@+id/arrow1"
@@ -176,6 +197,15 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icon3"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/next_class"
+                            android:layout_centerVertical="true"
+                            android:adjustViewBounds="true"
+                            android:layout_marginEnd="16dp"
+                            android:layout_alignParentStart="true"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -183,7 +213,7 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
+                            android:layout_toEndOf="@id/icon3"
                             android:layout_toStartOf="@id/arrow2"/>
                         <ImageView
                             android:id="@+id/arrow2"
@@ -214,6 +244,15 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icon4"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_about_us"
+                            android:layout_centerVertical="true"
+                            android:adjustViewBounds="true"
+                            android:layout_marginEnd="16dp"
+                            android:layout_alignParentStart="true"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -221,7 +260,7 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
+                            android:layout_toEndOf="@id/icon4"
                             android:layout_toStartOf="@id/arrow3"/>
                         <ImageView
                             android:id="@+id/arrow3"
@@ -253,6 +292,15 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icon5"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/live_chat"
+                            android:layout_centerVertical="true"
+                            android:adjustViewBounds="true"
+                            android:layout_marginEnd="16dp"
+                            android:layout_alignParentStart="true"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -260,7 +308,7 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
+                            android:layout_toEndOf="@id/icon5"
                             android:layout_toStartOf="@id/arrow4"/>
                         <ImageView
                             android:id="@+id/arrow4"
@@ -278,24 +326,17 @@
                     android:layout_height="1px"
                     android:layout_marginStart="20dp"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/logout"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/liveClass"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
-                    android:text="লাইভ ক্লাস"
-                    app:rippleColor="@color/colorPrimary"
-                    android:textSize="18sp"
-                    android:textColor="@color/grayColor"
-                    android:windowSoftInputMode="adjustResize"
-                    android:textAllCaps="false"
-                    app:strokeColor="@color/colorPrimary"
+                    android:layout_gravity="center_horizontal"
+                    app:srcCompat="@drawable/live_class_button"
+                    android:adjustViewBounds="true"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="0dp"
                     android:layout_marginStart="24dp"
-                    android:layout_marginEnd="24dp"
-                    android:backgroundTint="@android:color/white"
-                    app:cornerRadius="20dp"/>
+                    android:layout_marginEnd="24dp"/>
             </LinearLayout>
             <ProgressBar
                 android:id="@+id/loader"

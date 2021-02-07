@@ -20,6 +20,7 @@ import com.rtchubs.engineerbooks.ui.home.Home2Fragment
 import com.rtchubs.engineerbooks.util.hideKeyboard
 import com.rtchubs.engineerbooks.util.showErrorToast
 import com.rtchubs.engineerbooks.util.showSuccessToast
+import java.security.SecureRandom
 
 class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>() {
 
@@ -123,10 +124,16 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 userData.id ?: 0, userData.mobile ?: "",
                 amount.toInt(), 0, 0,
                 0, "", userData.upazila ?: "", userData.city ?: "",
-                userData.UpazilaID ?: 0, userData.CityID ?: 0, "",
-                "", "", args.book.bookID ?: 0, userData.class_id ?: 0,
-                "$firstName $lastName", args.book.bookName ?: ""
+                userData.UpazilaID ?: 0, userData.CityID ?: 0, generateInvoiceID(),
+                "", response.paymentID, args.book.bookID ?: 0, userData.class_id ?: 0,
+                "$firstName $lastName", args.book.bookName ?: "", response.transactionID
             )
         )
+    }
+
+    private fun generateInvoiceID(): String {
+        val random1 = "${1 + SecureRandom().nextInt(9999)}"
+        val random2 = "${1 + SecureRandom().nextInt(9999)}"
+        return "${random1}${random2}"
     }
 }

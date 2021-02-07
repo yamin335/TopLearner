@@ -1,7 +1,9 @@
 package com.rtchubs.engineerbooks.ui.more
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.*
@@ -105,6 +107,12 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
                 showWarningToast(requireContext(), "Please go to book list and choose your desired book!")
             }
 
+        }
+
+        viewDataBinding.rtchubs.setOnClickListener {
+            val url = "https://rtchubs.com"
+            val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(myIntent)
         }
 
         viewDataBinding.logout.setOnClickListener {

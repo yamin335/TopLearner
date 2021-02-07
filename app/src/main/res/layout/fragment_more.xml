@@ -227,7 +227,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="আমার প্রোফাইল"
+                            android:text="মাই প্রোফাইল"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -273,7 +273,7 @@
                             android:layout_marginEnd="8dp"
                             android:layout_centerVertical="true"
                             android:layout_alignParentStart="true"
-                            app:srcCompat="@drawable/ic_wallet"/>
+                            app:srcCompat="@drawable/ic_payment"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -371,11 +371,11 @@
                             android:layout_marginEnd="8dp"
                             android:layout_centerVertical="true"
                             android:layout_alignParentStart="true"
-                            app:srcCompat="@drawable/ic_subscription"/>
+                            app:srcCompat="@drawable/ic_ecode"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="সাবস্ক্রিপশন"
+                            android:text="মাই সাবস্ক্রিপশন"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -424,7 +424,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="আমার অফার"
+                            android:text="মাই অফার"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
@@ -469,7 +469,7 @@
                             android:layout_marginEnd="8dp"
                             android:layout_centerVertical="true"
                             android:layout_alignParentStart="true"
-                            app:srcCompat="@drawable/ic_ecode"/>
+                            app:srcCompat="@drawable/ic_subscription"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -665,7 +665,7 @@
                             android:layout_marginEnd="8dp"
                             android:layout_centerVertical="true"
                             android:layout_alignParentStart="true"
-                            app:srcCompat="@drawable/ic_about_us"/>
+                            app:srcCompat="@drawable/ic_ecode"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -695,6 +695,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="32dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
                     <com.google.android.material.button.MaterialButton
@@ -704,15 +708,12 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:text="Sign Out"
+                        android:layout_marginEnd="24dp"
                         app:rippleColor="@color/colorPrimary"
                         android:textSize="18sp"
                         android:textColor="@color/grayColor"
                         android:windowSoftInputMode="adjustResize"
                         android:textAllCaps="false"
-                        android:layout_marginTop="32dp"
-                        android:layout_marginBottom="32dp"
-                        android:layout_marginStart="24dp"
-                        android:layout_marginEnd="24dp"
                         android:backgroundTint="#f2f2f2"
                         app:cornerRadius="20dp"/>
 
@@ -721,12 +722,43 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
-                        android:textSize="18sp"
-                        android:layout_marginEnd="24dp"
+                        android:textSize="16sp"
                         android:gravity="center"
                         android:textColor="@color/grayColor"
                         tools:text="Version 1.0.0"/>
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/developerAd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="32dp">
+                    <TextView
+                        android:id="@+id/developerLavel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:text="@string/developer_ad"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/grayColor"/>
+                    <TextView
+                        android:id="@+id/rtchubs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:text="@string/developer_company"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/md_blue_500"/>
+                </LinearLayout>
+
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>

@@ -85,7 +85,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).title }
     }
 
-    private val viewPagerPageTitles = arrayOf("অ্যানিমেশন", "সমাধান", "প্রশ্ন", "কুইজ")
+    private val viewPagerPageTitles = arrayOf("অ্যানিমেশন", "সমাধান", "সূত্রাবলী", "নৈর্ব্যক্তিক")
 //    private val viewPagerPageTitles = arrayOf("Video List", "Questions")
 
     private lateinit var pagerAdapter: VideoTabViewPagerAdapter

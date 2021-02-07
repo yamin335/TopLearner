@@ -74,7 +74,7 @@
                 app:layout_constraintStart_toStartOf="@+id/tvChapterName"
                 app:layout_constraintTop_toBottomOf="@+id/tvChapterName"
                 app:layout_constraintVertical_bias="0.0"
-                android:text="Video can be interlaced or progressive. In progressive scan systems, each refresh period updates all scan lines in each frame in sequence. When displaying a natively progressive broadcast or recorded signal, the result is optimum spatial resolution of both the stationary and moving parts of the image."/>
+                tools:text="Video can be interlaced or progressive. In progressive scan systems, each refresh period updates all scan lines in each frame in sequence. When displaying a natively progressive broadcast or recorded signal, the result is optimum spatial resolution of both the stationary and moving parts of the image."/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

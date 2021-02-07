@@ -70,12 +70,14 @@ class HomeClassListAdapter(
             binding.lockView.visibility = View.GONE
         } else {
             if (item.price ?: 0.0 > 0.0) {
-                var paymentStatus = item.isPaid ?: false
-                if (!paymentStatus) {
-                    if (isPaid) {
-                        paymentStatus = isPaid
-                    }
-                }
+//                var paymentStatus = item.isPaid ?: false
+//                if (!paymentStatus) {
+//                    if (isPaid) {
+//                        paymentStatus = isPaid
+//                    }
+//                }
+
+                val paymentStatus = isPaid
 
                 binding.lockView.visibility = if (paymentStatus && !isTimeChanged) View.GONE else View.VISIBLE
             } else {
