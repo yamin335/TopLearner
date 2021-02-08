@@ -10,141 +10,163 @@
             type="com.rtchubs.engineerbooks.ui.pin_number.PinNumberViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#1E4356">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="Pin Number"
-            android:theme="@style/AppTheme.AppBarOverlay"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleTextColor="@color/white"/>
-
-        <ScrollView
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbarThumbVertical="@null"
-            android:fillViewport="true">
-            <RelativeLayout
+            android:orientation="vertical"
+            android:background="#1E4356">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="?attr/actionBarSize"
+                app:title="Pin Number"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:titleTextColor="@color/white"/>
 
-                <LinearLayout
-                    android:id="@+id/linear"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="64dp"
-                    android:layout_marginEnd="20dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Pin Number"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="8dp"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <EditText
-                            android:id="@+id/etPin"
-                            android:theme="@style/EditTextTheme"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:maxLength="6"
-                            android:text="@={viewModel.pin}"
-                            android:inputType="numberPassword"
-                            android:hint="Enter your 6 digit pin number"
-                            android:textColor="@color/white"
-                            android:background="@null"/>
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="4dp"
-                        android:background="@color/albumColorPrimary"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearReTypePin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_below="@id/linear"
-                    android:layout_marginBottom="32dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Re-type Pin"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="8dp"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <EditText
-                            android:id="@+id/etRepin"
-                            android:theme="@style/EditTextTheme"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:maxLength="6"
-                            android:text="@={viewModel.rePin}"
-                            android:inputType="numberPassword"
-                            android:hint="Re-type Pin Number"
-                            android:textColor="@color/white"
-                            android:background="@null"/>
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="4dp"
-                        android:background="@color/albumColorPrimary"/>
-
-                </LinearLayout>
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbarThumbVertical="@null"
+                android:fillViewport="true">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/linear"
-                    android:layout_alignParentBottom="true">
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnSubmit"
-                        android:layout_width="match_parent"
-                        android:layout_height="54dp"
-                        android:text="Submit"
-                        android:enabled="false"
-                        app:cornerRadius="0dp"
-                        android:textSize="18sp"
-                        android:insetBottom="0dp"
-                        android:textAllCaps="false"
-                        android:textColor="@color/button_text_enable_disable_colors"
-                        android:backgroundTint="@color/button_enable_disable_colors"
-                        android:layout_alignParentBottom="true"/>
-                </RelativeLayout>
-            </RelativeLayout>
-        </ScrollView>
+                    android:layout_height="wrap_content">
 
-    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/linear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="64dp"
+                        android:layout_marginEnd="20dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Pin Number"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="8dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/etPin"
+                                android:theme="@style/EditTextTheme"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:maxLength="6"
+                                android:text="@={viewModel.pin}"
+                                android:inputType="numberPassword"
+                                android:hint="Enter your 6 digit pin number"
+                                android:textColor="@color/white"
+                                android:background="@null"/>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@color/albumColorPrimary"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearReTypePin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_below="@id/linear"
+                        android:layout_marginBottom="32dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Re-type Pin"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="8dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/etRepin"
+                                android:theme="@style/EditTextTheme"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:maxLength="6"
+                                android:text="@={viewModel.rePin}"
+                                android:inputType="numberPassword"
+                                android:hint="Re-type Pin Number"
+                                android:textColor="@color/white"
+                                android:background="@null"/>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@color/albumColorPrimary"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/forgotPassword"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:text="Forgot Password?"
+                        android:layout_below="@id/linearReTypePin"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="20dp"
+                        android:textSize="16sp"
+                        android:textColor="@color/albumColorPrimary"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/linearReTypePin"
+                        android:layout_alignParentBottom="true">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSubmit"
+                            android:layout_width="match_parent"
+                            android:layout_height="54dp"
+                            android:text="Submit"
+                            android:enabled="false"
+                            app:cornerRadius="0dp"
+                            android:textSize="18sp"
+                            android:insetBottom="0dp"
+                            android:textAllCaps="false"
+                            android:textColor="@color/button_text_enable_disable_colors"
+                            android:backgroundTint="@color/button_enable_disable_colors"
+                            android:layout_alignParentBottom="true"/>
+                    </RelativeLayout>
+                </RelativeLayout>
+            </ScrollView>
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/resetPinBottomSheet"
+            layout="@layout/bottom_sheet_reset_pin"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

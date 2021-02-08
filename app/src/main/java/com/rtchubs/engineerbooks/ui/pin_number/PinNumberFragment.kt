@@ -2,13 +2,14 @@ package com.rtchubs.engineerbooks.ui.pin_number
 
 import android.Manifest
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.rtchubs.engineerbooks.BR
@@ -19,7 +20,6 @@ import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.LoginHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.hideKeyboard
-import com.rtchubs.engineerbooks.util.showErrorToast
 import com.rtchubs.engineerbooks.util.showWarningToast
 import org.json.JSONObject
 
@@ -35,6 +35,8 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
     lateinit var registrationLocalHelper: InquiryAccount
     lateinit var registrationRemoteHelper: InquiryAccount
     private var listener: LoginHandlerCallback? = null
+
+    private lateinit var resetPinSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     val args: PinNumberFragmentArgs by navArgs()
 
@@ -72,6 +74,17 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
         updateStatusBarBackgroundColor("#1E4356")
         registerToolbar(viewDataBinding.toolbar)
 
+        resetPinSheetBehavior = BottomSheetBehavior.from(viewDataBinding.resetPinBottomSheet.resetPinBottomSheet)
+        resetPinSheetBehavior.isDraggable = false
+
+        viewDataBinding.forgotPassword.setOnClickListener {
+            resetPinSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        viewDataBinding.resetPinBottomSheet.cancel.setOnClickListener {
+            resetPinSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
         TedPermission.with(requireContext())
             .setPermissionListener(this)
             .setDeniedMessage(getString(R.string.if_you_reject_these_permission_the_app_wont_work_perfectly))
@@ -95,6 +108,9 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
 
         if (registrationRemoteHelper.isRegistered == true) {
             viewDataBinding.linearReTypePin.visibility = View.GONE
+            viewDataBinding.forgotPassword.visibility = View.VISIBLE
+        } else {
+            viewDataBinding.forgotPassword.visibility = View.GONE
         }
 
         viewModel.defaultResponse.observe(viewLifecycleOwner, Observer { response ->

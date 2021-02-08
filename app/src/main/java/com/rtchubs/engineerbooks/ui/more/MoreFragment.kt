@@ -4,9 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.view.*
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
@@ -16,12 +15,14 @@ import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiEndPoint
 import com.rtchubs.engineerbooks.databinding.MoreFragmentBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
+import com.rtchubs.engineerbooks.models.social_media.SocialMedia
 import com.rtchubs.engineerbooks.ui.LogoutHandlerCallback
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment
+import com.rtchubs.engineerbooks.ui.social_media.SocialMediaBottomSheetDialog
 import com.rtchubs.engineerbooks.ui.splash.SplashFragment
 import com.rtchubs.engineerbooks.util.BitmapUtilss
 import com.rtchubs.engineerbooks.util.goToFacebook
@@ -44,6 +45,8 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
     lateinit var userData: InquiryAccount
     var placeholder: BitmapDrawable? = null
+
+    lateinit var socialMediaBottomSheetDialog: SocialMediaBottomSheetDialog
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -92,6 +95,16 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
         init(userData)
 
+        socialMediaBottomSheetDialog = SocialMediaBottomSheetDialog(object : SocialMediaBottomSheetDialog.SocialMediaClickListener {
+            override fun onSocialMediaClick(socialMedia: SocialMedia) {
+                when(socialMedia.name) {
+                    "Facebook" -> goToFacebook(requireContext(), "engineersapps")
+                    "Youtube" -> goToYoutube(requireContext(), "engineersapps")
+                }
+                socialMediaBottomSheetDialog.dismiss()
+            }
+        })
+
         viewDataBinding.mProfile.setOnClickListener {
             ClassEditFragment.selectedClass = null
             DistrictEditFragment.selectedCity = null
@@ -137,12 +150,8 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
             navigateTo(MoreFragmentDirections.actionMoreFragmentToEcodeFragment())
         }
 
-//        viewDataBinding.mYoutube.setOnClickListener {
-//            goToYoutube(requireContext(), "engineersapps")
-//        }
-
         viewDataBinding.mSocialMedia.setOnClickListener {
-            goToFacebook(requireContext(), "engineersapps")
+            socialMediaBottomSheetDialog.show(childFragmentManager, "#Social_Media_Bottom_Modal")
         }
 
         viewDataBinding.mShare.setOnClickListener {

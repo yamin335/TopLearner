@@ -3,12 +3,10 @@ package com.rtchubs.engineerbooks.ui.pin_number
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.models.registration.DefaultResponse
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.models.registration.UserRegistrationData
-import com.rtchubs.engineerbooks.repos.LoginRepository
 import com.rtchubs.engineerbooks.repos.RegistrationRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
 import com.rtchubs.engineerbooks.util.AppConstants
@@ -24,6 +22,12 @@ class PinNumberViewModel @Inject constructor(
         MutableLiveData<String>()
     }
     val rePin: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+    val newPin: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+    val newRePin: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
     val defaultResponse: MutableLiveData<DefaultResponse> = MutableLiveData()
