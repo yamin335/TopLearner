@@ -4,12 +4,10 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.ApiService
 import com.rtchubs.engineerbooks.models.registration.*
-import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
 import javax.inject.Inject
@@ -46,6 +44,17 @@ class RegistrationRepository @Inject constructor(private val apiService: ApiServ
             jsonObject.addProperty("otp", otp)
             val body = jsonObject.toString()
             apiService.verifyOTPCode(body)
+        }
+    }
+
+    suspend fun resetPinRepo(mobileNumber: String, pin: String, rePin: String): Response<InquiryResponse> {
+        return withContext(Dispatchers.IO) {
+            val jsonObject = JsonObject()
+            jsonObject.addProperty("Mobile", mobileNumber)
+            jsonObject.addProperty("Pin", pin)
+            jsonObject.addProperty("RetypePin", rePin)
+            val body = jsonObject.toString()
+            authApiService.resetPin(body)
         }
     }
 

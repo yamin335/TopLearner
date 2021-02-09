@@ -1,37 +1,21 @@
 package com.rtchubs.engineerbooks.ui.otp_signin
 
-import android.app.Activity
-import android.content.*
+import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.view.WindowManager
-import androidx.fragment.app.FragmentResultListener
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.navArgs
-import com.google.android.gms.auth.api.phone.SmsRetriever
-import com.google.android.gms.common.api.CommonStatusCodes
-import com.google.android.gms.common.api.Status
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
-import com.rtchubs.engineerbooks.api.ApiEndPoint
 import com.rtchubs.engineerbooks.databinding.OtpSignInBinding
-import com.rtchubs.engineerbooks.models.chapter.ChapterField
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.OTPHandlerCallback
-import com.rtchubs.engineerbooks.ui.ShowHideBottomNavCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
-import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment
-import com.rtchubs.engineerbooks.util.AppConstants
 import com.rtchubs.engineerbooks.util.AppConstants.START_TIME_IN_MILLI_SECONDS
 import com.rtchubs.engineerbooks.util.AppConstants.otpWaitMessage
-import com.rtchubs.engineerbooks.util.FileUtils
-import kotlinx.coroutines.launch
-import java.io.File
 
 
 class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
@@ -139,6 +123,9 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
 //                    viewDataBinding.etOtpCode.isEnabled = false
 //                    viewDataBinding.btnSubmit.isEnabled = false
                 }
+            }
+            response?.data?.Token?.let { token ->
+                preferencesHelper.accessToken = token.AccessToken
             }
         })
 

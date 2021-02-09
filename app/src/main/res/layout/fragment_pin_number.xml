@@ -13,7 +13,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -28,10 +28,22 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:titleTextColor="@color/white"/>
 
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:id="@+id/loader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-6dp"
+                android:layout_below="@id/toolbar"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/colorWhite"
+                app:showLoader="@{viewModel.apiCallStatus}"/>
+
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbarThumbVertical="@null"
+                android:layout_below="@id/toolbar"
                 android:fillViewport="true">
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -140,6 +152,22 @@
                         android:textSize="16sp"
                         android:textColor="@color/albumColorPrimary"/>
 
+                    <TextView
+                        android:id="@+id/invalidPin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:text="Invalid Pin Number!"
+                        android:visibility="gone"
+                        android:layout_below="@id/forgotPassword"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginEnd="20dp"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="20dp"
+                        android:textSize="16sp"
+                        android:textColor="@color/md_yellow_A200"/>
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -162,7 +190,7 @@
                 </RelativeLayout>
             </ScrollView>
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <include
             android:id="@+id/resetPinBottomSheet"

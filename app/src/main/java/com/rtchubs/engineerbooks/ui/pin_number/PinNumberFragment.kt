@@ -14,14 +14,13 @@ import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
-import com.rtchubs.engineerbooks.api.TokenInformation
 import com.rtchubs.engineerbooks.databinding.PinNumberBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.LoginHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.hideKeyboard
-import com.rtchubs.engineerbooks.util.showWarningToast
-import org.json.JSONObject
+import com.rtchubs.engineerbooks.util.showErrorToast
+import com.rtchubs.engineerbooks.util.showSuccessToast
 
 class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), PermissionListener {
 
@@ -74,11 +73,13 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
         updateStatusBarBackgroundColor("#1E4356")
         registerToolbar(viewDataBinding.toolbar)
 
+        viewDataBinding.resetPinBottomSheet.viewModel = viewModel
+
         resetPinSheetBehavior = BottomSheetBehavior.from(viewDataBinding.resetPinBottomSheet.resetPinBottomSheet)
         resetPinSheetBehavior.isDraggable = false
 
         viewDataBinding.forgotPassword.setOnClickListener {
-            resetPinSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            viewModel.verifyOTPCode(registrationRemoteHelper)
         }
 
         viewDataBinding.resetPinBottomSheet.cancel.setOnClickListener {
@@ -100,11 +101,11 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
         registrationLocalHelper = args.registrationHelper
         registrationRemoteHelper = args.registrationHelper
 
-        registrationLocalHelper.pin = "123456"
-        registrationLocalHelper.retypePin = "123456"
-
-        registrationRemoteHelper.pin = "123456"
-        registrationRemoteHelper.retypePin = "123456"
+//        registrationLocalHelper.pin = "123456"
+//        registrationLocalHelper.retypePin = "123456"
+//
+//        registrationRemoteHelper.pin = "123456"
+//        registrationRemoteHelper.retypePin = "123456"
 
         if (registrationRemoteHelper.isRegistered == true) {
             viewDataBinding.linearReTypePin.visibility = View.GONE
@@ -113,31 +114,32 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
             viewDataBinding.forgotPassword.visibility = View.GONE
         }
 
-        viewModel.defaultResponse.observe(viewLifecycleOwner, Observer { response ->
-            response?.let {
-                when {
-                    it.isSuccess == true -> {
-                        val data = JSONObject(response.body.toString())
-                        var tokenInfo = TokenInformation(
-                            data.getString("access_token"), data.getString("expires_in").toLong()
-                            , data.getString("refresh_token"), data.getString("token_type")
-                        )
-                        preferencesHelper.saveToken(tokenInfo)
-                        //val action = PinNumberFragmentDirections.actionPinNumberFragmentToHome()
-                        //navController.navigate(action)
-                    }
-                    it.isSuccess == false && it.errorMessage != null -> {
-                        showWarningToast(mContext, it.errorMessage)
-                    }
-                    else -> {
-                        showWarningToast(mContext, getString(R.string.something_went_wrong))
-                    }
-                }
-            }
-        })
+//        viewModel.defaultResponse.observe(viewLifecycleOwner, Observer { response ->
+//            response?.let {
+//                when {
+//                    it.isSuccess == true -> {
+//                        val data = JSONObject(response.body.toString())
+//                        val tokenInfo = TokenInformation(
+//                            data.getString("access_token"), data.getString("expires_in").toLong()
+//                            , data.getString("refresh_token"), data.getString("token_type")
+//                        )
+//                        preferencesHelper.saveToken(tokenInfo)
+//                        //val action = PinNumberFragmentDirections.actionPinNumberFragmentToHome()
+//                        //navController.navigate(action)
+//                    }
+//                    it.isSuccess == false && it.errorMessage != null -> {
+//                        showWarningToast(mContext, it.errorMessage)
+//                    }
+//                    else -> {
+//                        showWarningToast(mContext, getString(R.string.something_went_wrong))
+//                    }
+//                }
+//            }
+//        })
 
         viewModel.pin.observe(viewLifecycleOwner, Observer { pin ->
             pin?.let {
+                viewDataBinding.invalidPin.visibility = View.GONE
                 if (registrationRemoteHelper.isRegistered == true) {
                     viewDataBinding.btnSubmit.isEnabled = pin.length == 6
                 } else {
@@ -149,6 +151,59 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
         viewModel.rePin.observe(viewLifecycleOwner, Observer { rePin ->
             rePin?.let {
                 viewDataBinding.btnSubmit.isEnabled = viewModel.pin.value?.length == 6 && rePin.length == 6 && viewModel.pin.value == rePin
+            }
+        })
+
+        viewModel.newPin.observe(viewLifecycleOwner, Observer { newPin ->
+            newPin?.let {
+                viewDataBinding.resetPinBottomSheet.btnSubmit.isEnabled = newPin.length == 6 && viewModel.newRePin.value?.length == 6 && viewModel.newRePin.value == newPin
+            }
+        })
+
+        viewModel.newRePin.observe(viewLifecycleOwner, Observer { newRePin ->
+            newRePin?.let {
+                viewDataBinding.resetPinBottomSheet.btnSubmit.isEnabled = viewModel.newPin.value?.length == 6 && newRePin.length == 6 && viewModel.newPin.value == newRePin
+            }
+        })
+
+        viewDataBinding.resetPinBottomSheet.btnSubmit.setOnClickListener {
+            viewModel.resetPin(registrationRemoteHelper.mobile ?: "")
+            resetPinSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        viewModel.verifiedOTP.observe(viewLifecycleOwner, Observer { response ->
+            response?.data?.let { data ->
+                if (data.Account == null) {
+                    showErrorToast(requireContext(), "You entered an invalid OTP code! please request a new code")
+                } else {
+                    resetPinSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+                viewModel.verifiedOTP.postValue(null)
+            }
+            response?.data?.Token?.let { token ->
+                preferencesHelper.accessToken = token.AccessToken
+            }
+        })
+
+        viewModel.resetPinResponse.observe(viewLifecycleOwner, Observer { response ->
+            response?.data?.let { data ->
+                if (data.Account == null) {
+                    showErrorToast(requireContext(), "Pin reset failed!")
+                } else {
+                    showSuccessToast(requireContext(), "Pin reset successful!")
+                }
+                viewModel.resetPinResponse.postValue(null)
+            }
+        })
+
+        viewModel.invalidPin.observe(viewLifecycleOwner, Observer { isInvalid ->
+            isInvalid?.let {
+                if (it) {
+                    viewDataBinding.invalidPin.visibility = View.VISIBLE
+                } else {
+                    viewDataBinding.invalidPin.visibility = View.GONE
+                }
+                viewModel.invalidPin.postValue(null)
             }
         })
 

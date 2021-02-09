@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
-import com.rtchubs.engineerbooks.models.registration.DefaultResponse
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
+import com.rtchubs.engineerbooks.models.registration.InquiryResponse
 import com.rtchubs.engineerbooks.models.registration.UserRegistrationData
 import com.rtchubs.engineerbooks.repos.RegistrationRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
@@ -30,10 +30,21 @@ class PinNumberViewModel @Inject constructor(
     val newRePin: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
-    val defaultResponse: MutableLiveData<DefaultResponse> = MutableLiveData()
 
     val loginResponse: MutableLiveData<UserRegistrationData> by lazy {
         MutableLiveData<UserRegistrationData>()
+    }
+
+    val verifiedOTP: MutableLiveData<InquiryResponse> by lazy {
+        MutableLiveData<InquiryResponse>()
+    }
+
+    val resetPinResponse: MutableLiveData<InquiryResponse> by lazy {
+        MutableLiveData<InquiryResponse>()
+    }
+
+    val invalidPin: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
     }
 
     fun loginUser(inquiryAccount: InquiryAccount) {
@@ -56,6 +67,74 @@ class PinNumberViewModel @Inject constructor(
                     }
                     is ApiErrorResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
+                        if (apiResponse.errorMessage.contains("Incorrect Pin")) {
+                            invalidPin.postValue(true)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun verifyOTPCode(registrationHelper: InquiryAccount) {
+        if (checkNetworkStatus()) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+                verifiedOTP.postValue(null)
+            }
+
+            val mobile = registrationHelper.mobile ?: "0"
+            val isAcceptedTandC = registrationHelper.isAcceptedTandC ?: false
+            val otpCode = registrationHelper.otp ?: ""
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(repository.verifyOTPCodeRepo(mobile, isAcceptedTandC, otpCode))) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        verifiedOTP.postValue(apiResponse.body)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                        verifiedOTP.postValue(null)
+                    }
+                    is ApiErrorResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                        verifiedOTP.postValue(null)
+                    }
+                }
+            }
+        }
+    }
+
+    fun resetPin(mobileNumber: String) {
+        if (checkNetworkStatus()) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+                resetPinResponse.postValue(null)
+            }
+
+            val newPin = newPin.value ?: ""
+            val newRePin = newRePin.value ?: ""
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(repository.resetPinRepo(mobileNumber, newPin, newRePin))) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        resetPinResponse.postValue(apiResponse.body)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                        resetPinResponse.postValue(null)
+                    }
+                    is ApiErrorResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                        resetPinResponse.postValue(null)
                     }
                 }
             }

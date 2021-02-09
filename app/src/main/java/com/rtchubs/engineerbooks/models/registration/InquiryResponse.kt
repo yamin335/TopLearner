@@ -14,6 +14,4 @@ data class InquiryAccount(var udid: String?, var createdAt: String?, var updated
                           var isMobileVerified: Boolean?, var isAcceptedTandC: Boolean?,
                           var Table: String?, var address: String?, var Folder: String?, var isSubscribed: Boolean? = true): Serializable
 
-data class InquiryResponse(val code: Int?, val data: InquiryData?, val msg: String?)
-
-data class InquiryData(val Account: InquiryAccount?)
+data class InquiryResponse(val code: Int?, val data: UserRegistrationData?, val msg: String?)

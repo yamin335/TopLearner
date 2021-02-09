@@ -29,3 +29,5 @@ data class Token(val AccessToken: String?, val RefreshToken: String?, val Access
 data class ProfileImageUploadResponse(val code: Int?, val status: String?, val message: String?, val data: ProfileImageUploadData?)
 
 data class ProfileImageUploadData(val profilepic: String?, val nidfront: String?, val nidback: String?, val folder: String?)
+
+data class OTPVerifyResponse(val code: Number?, val data: UserRegistrationData?, val msg: String?)

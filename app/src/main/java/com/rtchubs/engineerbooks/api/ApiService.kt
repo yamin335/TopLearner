@@ -3,7 +3,6 @@ package com.rtchubs.engineerbooks.api
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.Api.ContentType
 import com.rtchubs.engineerbooks.models.common.MyAccountListResponse
-import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.AddCardOrBankResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.BankOrCardListResponse
@@ -28,6 +27,9 @@ interface ApiService {
 
     @POST(ApiEndPoint.VERIFY_OTP)
     suspend fun verifyOTPCode(@Body jsonString: String): Response<InquiryResponse>
+
+    @POST(ApiEndPoint.RESET_PIN)
+    suspend fun resetPin(@Body jsonString: String): Response<InquiryResponse>
 
     @POST(ApiEndPoint.REGISTER)
     suspend fun registerUser(@Body jsonString: String): Response<UserRegistrationResponse>

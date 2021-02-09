@@ -38,10 +38,6 @@ class HomeRepository @Inject constructor(@Named("auth") private val authApiServi
 
 
 
-
-
-
-
     suspend fun requestBankListRepo(type:String,token:String): Response<BankOrCardListResponse> {
         return withContext(Dispatchers.IO) {
             apiService.requestBankList(type,token)
