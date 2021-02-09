@@ -5,11 +5,9 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.rtchubs.engineerbooks.BR
@@ -34,8 +32,7 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
     lateinit var registrationLocalHelper: InquiryAccount
     lateinit var registrationRemoteHelper: InquiryAccount
     private var listener: LoginHandlerCallback? = null
-
-    private lateinit var resetPinSheetBehavior: BottomSheetBehavior<LinearLayout>
+    lateinit var resetPinDialogFragment: ResetPinDialogFragment
 
     val args: PinNumberFragmentArgs by navArgs()
 
@@ -73,19 +70,16 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
         updateStatusBarBackgroundColor("#1E4356")
         registerToolbar(viewDataBinding.toolbar)
 
-        viewDataBinding.resetPinBottomSheet.viewModel = viewModel
+        resetPinDialogFragment = ResetPinDialogFragment(object : ResetPinDialogFragment.PinResetCallback {
+            override fun onPinChanged(pin: String) {
+                resetPinDialogFragment.dismiss()
+                viewModel.resetPin(registrationRemoteHelper.mobile ?: "", pin)
+            }
 
-        resetPinSheetBehavior = BottomSheetBehavior.from(viewDataBinding.resetPinBottomSheet.resetPinBottomSheet)
-        resetPinSheetBehavior.isDraggable = false
-        resetPinSheetBehavior.peekHeight = 0
+        })
 
         viewDataBinding.forgotPassword.setOnClickListener {
             viewModel.verifyOTPCode(registrationRemoteHelper)
-        }
-
-        viewDataBinding.resetPinBottomSheet.cancel.setOnClickListener {
-            resetPinSheetBehavior.peekHeight = 0
-            resetPinSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
         TedPermission.with(requireContext())
@@ -156,30 +150,12 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
             }
         })
 
-        viewModel.newPin.observe(viewLifecycleOwner, Observer { newPin ->
-            newPin?.let {
-                viewDataBinding.resetPinBottomSheet.btnSubmit.isEnabled = newPin.length == 6 && viewModel.newRePin.value?.length == 6 && viewModel.newRePin.value == newPin
-            }
-        })
-
-        viewModel.newRePin.observe(viewLifecycleOwner, Observer { newRePin ->
-            newRePin?.let {
-                viewDataBinding.resetPinBottomSheet.btnSubmit.isEnabled = viewModel.newPin.value?.length == 6 && newRePin.length == 6 && viewModel.newPin.value == newRePin
-            }
-        })
-
-        viewDataBinding.resetPinBottomSheet.btnSubmit.setOnClickListener {
-            viewModel.resetPin(registrationRemoteHelper.mobile ?: "")
-            resetPinSheetBehavior.peekHeight = 0
-            resetPinSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
-
         viewModel.verifiedOTP.observe(viewLifecycleOwner, Observer { response ->
             response?.data?.let { data ->
                 if (data.Account == null) {
                     showErrorToast(requireContext(), "You entered an invalid OTP code! please request a new code")
                 } else {
-                    resetPinSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    resetPinDialogFragment.show(childFragmentManager, "#reset_pin_dialog")
                 }
                 viewModel.verifiedOTP.postValue(null)
             }

@@ -191,10 +191,6 @@
             </ScrollView>
 
         </RelativeLayout>
-
-        <include
-            android:id="@+id/resetPinBottomSheet"
-            layout="@layout/bottom_sheet_reset_pin"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

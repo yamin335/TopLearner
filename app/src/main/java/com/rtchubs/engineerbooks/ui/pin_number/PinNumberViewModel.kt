@@ -24,12 +24,6 @@ class PinNumberViewModel @Inject constructor(
     val rePin: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
-    val newPin: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
-    }
-    val newRePin: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
-    }
 
     val loginResponse: MutableLiveData<UserRegistrationData> by lazy {
         MutableLiveData<UserRegistrationData>()
@@ -109,7 +103,7 @@ class PinNumberViewModel @Inject constructor(
         }
     }
 
-    fun resetPin(mobileNumber: String) {
+    fun resetPin(mobileNumber: String, pin: String) {
         if (checkNetworkStatus()) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -118,12 +112,9 @@ class PinNumberViewModel @Inject constructor(
                 resetPinResponse.postValue(null)
             }
 
-            val newPin = newPin.value ?: ""
-            val newRePin = newRePin.value ?: ""
-
             apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.resetPinRepo(mobileNumber, newPin, newRePin))) {
+                when (val apiResponse = ApiResponse.create(repository.resetPinRepo(mobileNumber, pin, pin))) {
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
                         resetPinResponse.postValue(apiResponse.body)
