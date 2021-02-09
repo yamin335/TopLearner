@@ -77,12 +77,14 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
 
         resetPinSheetBehavior = BottomSheetBehavior.from(viewDataBinding.resetPinBottomSheet.resetPinBottomSheet)
         resetPinSheetBehavior.isDraggable = false
+        resetPinSheetBehavior.peekHeight = 0
 
         viewDataBinding.forgotPassword.setOnClickListener {
             viewModel.verifyOTPCode(registrationRemoteHelper)
         }
 
         viewDataBinding.resetPinBottomSheet.cancel.setOnClickListener {
+            resetPinSheetBehavior.peekHeight = 0
             resetPinSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
@@ -168,6 +170,7 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
 
         viewDataBinding.resetPinBottomSheet.btnSubmit.setOnClickListener {
             viewModel.resetPin(registrationRemoteHelper.mobile ?: "")
+            resetPinSheetBehavior.peekHeight = 0
             resetPinSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
