@@ -203,6 +203,7 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
         viewDataBinding.btnSubmit.setOnClickListener {
             hideKeyboard()
             registrationRemoteHelper.pin = viewModel.pin.value
+            registrationRemoteHelper.retypePin = viewModel.rePin.value
             if (registrationRemoteHelper.isRegistered == false) {
                 navigateTo(PinNumberFragmentDirections.actionPinNumberFragmentToProfileSignInFragment(
                     registrationRemoteHelper

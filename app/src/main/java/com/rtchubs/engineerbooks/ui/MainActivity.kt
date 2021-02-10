@@ -102,6 +102,8 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
         binding.mainContainer.showBottomNav = true
         binding.drawerNavigation.setNavigationItemSelectedListener(this)
 
+        binding.mainContainer.bottomNav.itemIconTintList = null
+
 //        viewModel.userProfileInfo.observe(this, androidx.lifecycle.Observer { userInfo ->
 //            userInfo?.let {
 //                userInfo.isSubscribed = true

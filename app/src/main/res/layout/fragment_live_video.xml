@@ -67,6 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:scaleType="centerCrop"
+                    android:visibility="gone"
                     android:src="@drawable/slider_image_1"
                     android:adjustViewBounds="true"
                     android:layout_marginTop="0dp"

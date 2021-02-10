@@ -36,7 +36,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:visibility="@{showBottomNav? View.VISIBLE : View.GONE}"
-                app:itemIconTint="@color/bottom_navigation_item_colors"
+                app:itemIconTint="@null"
                 app:itemRippleColor="@color/colorPrimary"
                 app:itemTextColor="@color/bottom_navigation_item_colors"
                 app:labelVisibilityMode="labeled"
