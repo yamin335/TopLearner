@@ -22,8 +22,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.vision.Frame
 import com.google.android.gms.vision.face.FaceDetector
 import com.rtchubs.engineerbooks.BR
@@ -41,6 +39,7 @@ import com.rtchubs.engineerbooks.util.BitmapUtilss.transformDrawable
 import com.rtchubs.engineerbooks.util.showErrorToast
 import com.rtchubs.engineerbooks.util.showSuccessToast
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
+import kotlinx.android.synthetic.main.fragment_profile_settings.*
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.IOException
@@ -368,6 +367,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
                     preferencesHelper.saveUser(account)
                     prepareUserData(userData)
                     showSuccessToast(requireContext(), "Successfully profile updated.")
+                    preferencesHelper.shouldClearBackStackOfHomeNav = true
                     viewModel.profileUpdateResponse.postValue(null)
                 }
             }
@@ -423,10 +423,13 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         }
 
         viewDataBinding.tvUpazilla.setOnClickListener {
-            val cityId = DistrictEditFragment.selectedCity?.id
+            var cityId = DistrictEditFragment.selectedCity?.id
             if (cityId == null) {
-                showErrorToast(requireContext(), "Please select city first!")
-                return@setOnClickListener
+                if (userData.CityID?.toString() == null) {
+                    showErrorToast(requireContext(), "Please select city first!")
+                    return@setOnClickListener
+                }
+                cityId = userData.CityID?.toString() ?: return@setOnClickListener
             }
             navigateTo(
                 ProfileSettingsFragmentDirections.actionProfileSettingsFragmentToUpazillaEditFragment(

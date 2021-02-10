@@ -2,12 +2,9 @@ package com.rtchubs.engineerbooks.ui
 
 import android.content.*
 import android.content.res.Configuration
-import android.os.BatteryManager
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.view.MenuItem
-import android.view.View
+import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -22,13 +19,15 @@ import com.google.android.material.navigation.NavigationView
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.MainActivityBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
-import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper.Companion.KEY_DEVICE_TIME_CHANGED
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.ui.home.Home2FragmentDirections
 import com.rtchubs.engineerbooks.util.hideKeyboard
 import com.rtchubs.engineerbooks.util.shouldCloseDrawerFromBackPress
-import com.rtchubs.engineerbooks.util.showWarningToast
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
@@ -53,7 +52,8 @@ interface ConfigurationChangeCallback {
     fun onNewConfiguration(newConfig: Configuration)
 }
 
-class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawerHandlerCallback, ShowHideBottomNavCallback, NavigationHost, NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
+    NavDrawerHandlerCallback, ShowHideBottomNavCallback, NavigationHost, NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -88,6 +88,11 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
 
         userData = preferencesHelper.getUser()
 
@@ -176,8 +181,21 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback, NavDrawer
 
 //            setupActionBarWithNavController(navController)
         })
+
         currentNavController = controller
         currentNavHostFragment = navHost
+
+        currentNavController?.observe(this, Observer { homeController ->
+            if (homeController.graph.startDestination == R.id.home2Fragment && preferencesHelper.shouldClearBackStackOfHomeNav) {
+                CoroutineScope(Dispatchers.Main.immediate).launch {
+                    delay(700)
+                    homeController.popBackStack(
+                        homeController.graph.startDestination, false
+                    )
+                }
+                preferencesHelper.shouldClearBackStackOfHomeNav = false
+            }
+        })
     }
 
     override fun onBackPressed() {

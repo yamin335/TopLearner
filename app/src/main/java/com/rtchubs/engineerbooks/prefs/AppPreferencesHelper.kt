@@ -14,7 +14,6 @@ import com.rtchubs.engineerbooks.di.PreferenceInfo
 import com.rtchubs.engineerbooks.models.home.PaidBook
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.worker.TokenRefreshWorker
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.properties.ReadWriteProperty
@@ -33,6 +32,7 @@ class AppPreferencesHelper @Inject constructor(
     override val preference: SharedPreferences
         get() = context.applicationContext.getSharedPreferences(prefFileName, Context.MODE_PRIVATE)
 
+    override var shouldClearBackStackOfHomeNav by BooleanPreference(prefs, KEY_CLEAR_HOME_BACK_STACK, defaultValue = false, commit = true)
     override var isDeviceTimeChanged by BooleanPreference(prefs, KEY_DEVICE_TIME_CHANGED, defaultValue = false, commit = true)
     override var isRegistered by BooleanPreference(prefs, KEY_REG, defaultValue = false, commit = true)
     override var isTermsAccepted by BooleanPreference(prefs, KEY_TERMS, defaultValue = false, commit = true)
@@ -187,6 +187,7 @@ class AppPreferencesHelper @Inject constructor(
         private const val KEY_DEVICE_NAME = "DeviceName"
         private const val KEY_DEVICE_MODEL = "DeviceModel"
         private const val KEY_IS_LOGGED_IN = "LoginStatus"
+        private const val KEY_CLEAR_HOME_BACK_STACK = "ClearHomeNavBackStack"
 
         private const val PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN"
 

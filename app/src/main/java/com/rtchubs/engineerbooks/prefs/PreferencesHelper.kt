@@ -9,6 +9,8 @@ import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 
 interface PreferencesHelper {
 
+    var shouldClearBackStackOfHomeNav: Boolean
+
     val preference: SharedPreferences
 
     var isDeviceTimeChanged: Boolean
