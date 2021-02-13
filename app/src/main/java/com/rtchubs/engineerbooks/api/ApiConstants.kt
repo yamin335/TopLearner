@@ -27,6 +27,7 @@ import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE_PHOTOS
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_REGISTER
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_REQUEST_OTP
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_RESET_PIN
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_SOMADHAN
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_TRANSACTION
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_UPAZILLA
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_UPDATE_PROFILE
@@ -71,6 +72,7 @@ object Api {
     const val DIRECTORY_VIDEOS = "videos"
     const val DIRECTORY_COMMISSION = "commission"
     const val DIRECTORY_NOTICES = "getnotices/null"
+    const val DIRECTORY_SOMADHAN = "somadhan"
 
     const val DIRECTORY_CONNECT = "connect"
     const val DIRECTORY_BANK_INFO = "bankinformation"
@@ -102,6 +104,7 @@ object ApiEndPoint {
     const val LOGO = "$ADMIN_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/$DIRECTORY_LOGO"
     const val VIDEOS = "$ADMIN_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/$DIRECTORY_VIDEOS"
     const val PDF = "$ADMIN_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/$DIRECTORY_PDF"
+    const val SOMADHAN = "$ADMIN_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/$DIRECTORY_SOMADHAN"
     const val ALL_BOOKS = "$API_REPO/$DIRECTORY_BOOKS"
     const val NOTICES = "$API_REPO/$DIRECTORY_NOTICES"
     const val PARTNER_TRANSACTION = "$API_VERSION/$SALES_REPO/$DIRECTORY_COMMISSION"

@@ -2,12 +2,11 @@ package com.rtchubs.engineerbooks.ui.video_play
 
 import android.app.Application
 import android.database.sqlite.SQLiteException
-import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import com.rtchubs.engineerbooks.api.*
+import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.local_db.dao.HistoryDao
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
@@ -17,14 +16,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import javax.inject.Inject
-import kotlin.math.abs
 
 class LoadWebViewViewModel @Inject constructor(private val application: Application, private val historyDao: HistoryDao) : BaseViewModel(application) {
 
@@ -41,6 +38,10 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
     }
 
     val pdfFileDownloadResponse: MutableLiveData<Pair<String, String>> by lazy {
+        MutableLiveData<Pair<String, String>>()
+    }
+
+    val solutionPdfFileDownloadResponse: MutableLiveData<Pair<String, String>> by lazy {
         MutableLiveData<Pair<String, String>>()
     }
 
@@ -121,7 +122,19 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
         }
     }
 
-    suspend fun downloadFile(downloadUrl: String, filePath: String, fileName: String): Pair<String, String>? {
+    fun downloadSolutionPdfFile(downloadUrl: String, filePath: String, fileName: String) {
+        if (checkNetworkStatus()) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+            }
+
+            viewModelScope.launch(handler) {
+                solutionPdfFileDownloadResponse.postValue(downloadFile(downloadUrl, filePath, fileName))
+            }
+        }
+    }
+
+    private suspend fun downloadFile(downloadUrl: String, filePath: String, fileName: String): Pair<String, String>? {
         return withContext(Dispatchers.IO) {
             // Normally we would do some work here, like download a file.
             try {

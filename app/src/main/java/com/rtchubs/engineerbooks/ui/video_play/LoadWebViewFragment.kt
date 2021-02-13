@@ -38,6 +38,7 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.api.ApiEndPoint.PDF
+import com.rtchubs.engineerbooks.api.ApiEndPoint.SOMADHAN
 import com.rtchubs.engineerbooks.api.ApiEndPoint.VIDEOS
 import com.rtchubs.engineerbooks.databinding.WebViewBinding
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
@@ -49,6 +50,7 @@ import com.rtchubs.engineerbooks.ui.ShowHideBottomNavCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.home.SetCFragment
 import com.rtchubs.engineerbooks.ui.home.VideoTabViewPagerAdapter
+import com.rtchubs.engineerbooks.ui.solution.SolutionFragment
 import com.rtchubs.engineerbooks.util.AppConstants.downloadFolder
 import com.rtchubs.engineerbooks.util.AppConstants.unzippedFolder
 import com.rtchubs.engineerbooks.util.FileUtils
@@ -60,9 +62,6 @@ import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.exception.ZipException
 import net.lingala.zip4j.progress.ProgressMonitor
 import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.util.stream.Collectors
 import javax.inject.Inject
 
 class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(), ConfigurationChangeCallback {
@@ -551,6 +550,16 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
             }
         })
 
+        viewModel.solutionPdfFileDownloadResponse.observe(viewLifecycleOwner, Observer { value ->
+            value?.let {
+                childFragmentManager.setFragmentResult(
+                    "loadSolutionPdf",
+                    bundleOf("solutionPdfFilePath" to "${it.first}/${it.second}")
+                )
+                viewModel.filesInDownloadPool.remove(it.second)
+            }
+        })
+
         if (savedInstanceState == null) {
             if (isUSBPluggedIn) {
                 showErrorToast(requireContext(), "Please unplug your USB then try again!")
@@ -573,6 +582,27 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                     childFragmentManager.setFragmentResult(
                         "loadPdf",
                         bundleOf("pdfFilePath" to "")
+                    )
+                }
+
+                if (!chapter.somadhan.isNullOrBlank()) {
+                    val filepath = FileUtils.getLocalStorageFilePath(
+                        requireContext(),
+                        unzippedFolder
+                    )
+                    SolutionFragment.solutionPdfFilePath = "$filepath/${chapter.somadhan}"
+
+                    if (!File(SolutionFragment.solutionPdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(
+                            chapter.somadhan!!
+                        )) {
+                        viewModel.filesInDownloadPool.add(chapter.somadhan!!)
+                        viewModel.downloadSolutionPdfFile("$SOMADHAN/${chapter.somadhan}", filepath, chapter.somadhan!!)
+                        //downloadFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!, typePdf)
+                    }
+                } else {
+                    childFragmentManager.setFragmentResult(
+                        "loadSolutionPdf",
+                        bundleOf("solutionPdfFilePath" to "")
                     )
                 }
 

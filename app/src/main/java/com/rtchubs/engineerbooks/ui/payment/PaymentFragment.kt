@@ -1,6 +1,5 @@
 package com.rtchubs.engineerbooks.ui.payment
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -111,6 +110,17 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             }, checkout)
             bkashPgwDialog.isCancelable = true
             bkashPgwDialog.show(childFragmentManager, "#bkash_payment_dialog")
+
+//            viewModel.createOrder(
+//                CreateOrderBody(
+//                    userData.id ?: 0, userData.mobile ?: "",
+//                    viewModel.amount.value?.toDouble()?.toInt() ?: 0, 0, 0,
+//                    0, "", userData.upazila ?: "", userData.city ?: "",
+//                    userData.UpazilaID ?: 0, userData.CityID ?: 0, generateInvoiceID(),
+//                    "", "", args.book.bookID ?: 0, userData.class_id ?: 0,
+//                    "${userData.firstName ?: ""} ${userData.lastName ?: ""}", args.book.bookName ?: "", ""
+//                )
+//            )
         }
     }
 

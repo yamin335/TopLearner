@@ -6,7 +6,7 @@ data class ChapterResponse(val code: Int?, val status: String?, val message: Str
                            val data: ChapterResponseData?)
 
 data class BookChapter(val id: Int?, val book_id: Int?, val name: String?,
-                       val title: String?, val logo: String?, val pdf: String?,
+                       val title: String?, val logo: String?, val pdf: String?, val somadhan: String?,
                        val status: Number?, val created_at: String?, val updated_at: String?,
                        val fields: List<ChapterField>?):Serializable
 
