@@ -29,7 +29,6 @@
             android:id="@+id/emptyView"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@android:color/white"
             android:text="Empty"
             android:visibility="gone"
             android:textSize="20sp"

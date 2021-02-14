@@ -2,13 +2,9 @@ package com.rtchubs.engineerbooks.ui.chapter_list
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
-import com.rtchubs.engineerbooks.models.Chapter
 import com.rtchubs.engineerbooks.models.chapter.BookChapter
-import com.rtchubs.engineerbooks.models.registration.Upazilla
-import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.repos.MediaRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
 import com.rtchubs.engineerbooks.util.AppConstants
@@ -30,6 +26,7 @@ class ChapterListViewModel @Inject constructor(
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
                 toastError.postValue(AppConstants.serverConnectionErrorMessage)
+                chapterList.postValue(null)
             }
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
@@ -41,9 +38,11 @@ class ChapterListViewModel @Inject constructor(
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                        chapterList.postValue(null)
                     }
                     is ApiErrorResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
+                        chapterList.postValue(null)
                     }
                 }
             }

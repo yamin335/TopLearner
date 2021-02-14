@@ -31,7 +31,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -136,7 +137,6 @@ abstract class BaseFragment<T : ViewDataBinding, V : ViewModel> : DaggerFragment
         viewDataBinding.setVariable(bindingVariable, viewModel)
         viewDataBinding.lifecycleOwner = viewLifecycleOwner
         viewDataBinding.executePendingBindings()
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

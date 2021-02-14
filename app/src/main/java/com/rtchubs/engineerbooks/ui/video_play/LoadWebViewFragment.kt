@@ -48,6 +48,7 @@ import com.rtchubs.engineerbooks.ui.ConfigurationChangeCallback
 import com.rtchubs.engineerbooks.ui.MainActivity
 import com.rtchubs.engineerbooks.ui.ShowHideBottomNavCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
+import com.rtchubs.engineerbooks.ui.common.CommonMessageBottomSheetDialog
 import com.rtchubs.engineerbooks.ui.home.SetCFragment
 import com.rtchubs.engineerbooks.ui.home.VideoTabViewPagerAdapter
 import com.rtchubs.engineerbooks.ui.solution.SolutionFragment
@@ -55,7 +56,6 @@ import com.rtchubs.engineerbooks.util.AppConstants.downloadFolder
 import com.rtchubs.engineerbooks.util.AppConstants.unzippedFolder
 import com.rtchubs.engineerbooks.util.FileUtils
 import com.rtchubs.engineerbooks.util.showErrorToast
-import com.rtchubs.engineerbooks.util.showWarningToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.lingala.zip4j.ZipFile
@@ -78,7 +78,8 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
     private val url by lazy {
         //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).url }
-        "file:///android_asset/math_8_4_1_q_1_ka/MATH8_4.1Q1KA_player.html"
+//        "file:///android_asset/math_8_4_1_q_1_ka/MATH8_4.1Q1KA_player.html"
+        "file:///android_asset/math_8_4_1_q_1_ka/MATH8_4.1Q1KA.html"
     }
     private val title by lazy {
         //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).title }
@@ -119,6 +120,8 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
     var isUSBPluggedIn = false
 
     private var downloadingFile: File? = null
+
+    lateinit var commonMessageBottomSheetDialog: CommonMessageBottomSheetDialog
 
     private val usbDetectionReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -287,6 +290,8 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
         viewDataBinding.toolbar.title = chapter.name
 
+        commonMessageBottomSheetDialog = CommonMessageBottomSheetDialog(null)
+
         viewModel.showHideProgress.observe(viewLifecycleOwner, Observer { value ->
             value?.let {
                 childFragmentManager.setFragmentResult(
@@ -337,11 +342,15 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
             if (value == null && downloadingFile != null) {
                 FileUtils.deleteFileFromExternalStorage(downloadingFile!!)
-                showErrorToast(requireContext(), "This video is not available now")
+                commonMessageBottomSheetDialog.message = "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
+                //showErrorToast(requireContext(), "This video is not available now")
             }
 
             viewModel.showHideProgress.postValue(false)
         })
+
+        //viewDataBinding.webView.setInitialScale(1)
 
         val webSettings = viewDataBinding.webView.settings
         webSettings.javaScriptEnabled = true
@@ -499,7 +508,9 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         )
                         val fileName = videoItem.video_filename
                         if (fileName.isNullOrBlank()) {
-                            showWarningToast(requireContext(), "This video is not available now")
+                            commonMessageBottomSheetDialog.message = "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                            commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
+                            //showWarningToast(requireContext(), "This video is not available now")
                             return@FragmentResultListener
                         }
                         val videoFile = File(filepath, fileName)
@@ -701,19 +712,28 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         FileUtils.deleteFileFromExternalStorage(inputFile)
                         viewModel.showHideProgress.postValue(false)
                         viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        showErrorToast(requireContext(), "This video is not available now!")
+                        commonMessageBottomSheetDialog.message = "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                        commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
+
+                        //showErrorToast(requireContext(), "This video is not available now!")
                     }
                     ProgressMonitor.Result.CANCELLED -> {
                         FileUtils.deleteFileFromExternalStorage(inputFile)
                         viewModel.showHideProgress.postValue(false)
                         viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        showErrorToast(requireContext(), "This video is not available now!")
+                        commonMessageBottomSheetDialog.message = "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                        commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
+
+                        //showErrorToast(requireContext(), "This video is not available now!")
                     }
                     else -> {
                         FileUtils.deleteFileFromExternalStorage(inputFile)
                         viewModel.showHideProgress.postValue(false)
                         viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        showErrorToast(requireContext(), "This video is not available now!")
+                        commonMessageBottomSheetDialog.message = "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                        commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
+
+                        //showErrorToast(requireContext(), "This video is not available now!")
                     }
                 }
             } catch (e: ZipException) {
@@ -721,7 +741,10 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                 FileUtils.deleteFileFromExternalStorage(inputFile)
                 viewModel.showHideProgress.postValue(false)
                 viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
-                showErrorToast(requireContext(), "This video is not available now!")
+                commonMessageBottomSheetDialog.message = "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
+
+                //showErrorToast(requireContext(), "This video is not available now!")
             }
         }
     }

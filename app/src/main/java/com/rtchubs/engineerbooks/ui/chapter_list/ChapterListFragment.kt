@@ -37,9 +37,12 @@ class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterList
 
         viewDataBinding.rvChapterList.adapter = chapterListAdapter
 
-        viewModel.chapterList.observe(viewLifecycleOwner, Observer {
-            it?.let { chapters ->
+        viewModel.chapterList.observe(viewLifecycleOwner, Observer { chapters ->
+            if (chapters.isNullOrEmpty()) {
+                viewDataBinding.emptyView.visibility = View.VISIBLE
+            } else {
                 chapterListAdapter.submitList(chapters)
+                viewDataBinding.emptyView.visibility = View.GONE
             }
         })
 
