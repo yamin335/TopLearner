@@ -64,6 +64,7 @@ import net.lingala.zip4j.progress.ProgressMonitor
 import java.io.File
 import javax.inject.Inject
 
+
 class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(), ConfigurationChangeCallback {
     override val bindingVariable: Int
         get() = BR.viewModel
@@ -342,7 +343,8 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
             if (value == null && downloadingFile != null) {
                 FileUtils.deleteFileFromExternalStorage(downloadingFile!!)
-                commonMessageBottomSheetDialog.message = "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                commonMessageBottomSheetDialog.message =
+                    "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
                 commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
                 //showErrorToast(requireContext(), "This video is not available now")
             }
@@ -508,8 +510,12 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         )
                         val fileName = videoItem.video_filename
                         if (fileName.isNullOrBlank()) {
-                            commonMessageBottomSheetDialog.message = "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
-                            commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
+                            commonMessageBottomSheetDialog.message =
+                                "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                            commonMessageBottomSheetDialog.show(
+                                childFragmentManager,
+                                "#Common_Message_Dialog"
+                            )
                             //showWarningToast(requireContext(), "This video is not available now")
                             return@FragmentResultListener
                         }
@@ -607,7 +613,11 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                             chapter.somadhan!!
                         )) {
                         viewModel.filesInDownloadPool.add(chapter.somadhan!!)
-                        viewModel.downloadSolutionPdfFile("$SOMADHAN/${chapter.somadhan}", filepath, chapter.somadhan!!)
+                        viewModel.downloadSolutionPdfFile(
+                            "$SOMADHAN/${chapter.somadhan}",
+                            filepath,
+                            chapter.somadhan!!
+                        )
                         //downloadFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!, typePdf)
                     }
                 } else {
@@ -712,8 +722,12 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         FileUtils.deleteFileFromExternalStorage(inputFile)
                         viewModel.showHideProgress.postValue(false)
                         viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        commonMessageBottomSheetDialog.message = "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
-                        commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
+                        commonMessageBottomSheetDialog.message =
+                            "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                        commonMessageBottomSheetDialog.show(
+                            childFragmentManager,
+                            "#Common_Message_Dialog"
+                        )
 
                         //showErrorToast(requireContext(), "This video is not available now!")
                     }
@@ -721,8 +735,12 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         FileUtils.deleteFileFromExternalStorage(inputFile)
                         viewModel.showHideProgress.postValue(false)
                         viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        commonMessageBottomSheetDialog.message = "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
-                        commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
+                        commonMessageBottomSheetDialog.message =
+                            "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                        commonMessageBottomSheetDialog.show(
+                            childFragmentManager,
+                            "#Common_Message_Dialog"
+                        )
 
                         //showErrorToast(requireContext(), "This video is not available now!")
                     }
@@ -731,7 +749,10 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         viewModel.showHideProgress.postValue(false)
                         viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
                         commonMessageBottomSheetDialog.message = "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
-                        commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
+                        commonMessageBottomSheetDialog.show(
+                            childFragmentManager,
+                            "#Common_Message_Dialog"
+                        )
 
                         //showErrorToast(requireContext(), "This video is not available now!")
                     }
