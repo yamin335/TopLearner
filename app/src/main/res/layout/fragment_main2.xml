@@ -85,16 +85,25 @@
                     app:spanCount="3"
                     tools:listitem="@layout/list_item_home_class_list"/>
             </LinearLayout>
-            <ProgressBar
-                android:id="@+id/loader"
-                style="?android:attr/progressBarStyleHorizontal"
+
+            <LinearLayout
+                android:id="@+id/progressView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="-5dp"
-                android:indeterminate="true"
-                android:indeterminateTint="@color/themeButtonColor"
-                app:showLoader="@{viewModel.apiCallStatus}" />
+                android:layout_height="match_parent"
+                android:background="#80FFFFFF"
+                android:orientation="vertical"
+                android:clickable="true"
+                android:elevation="1dp"
+                android:focusable="true"
+                android:gravity="center"
+                app:showLoader="@{viewModel.apiCallStatus}">
+
+                <ProgressBar
+                    android:id="@+id/loader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:elevation="2dp" />
+            </LinearLayout>
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

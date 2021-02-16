@@ -64,7 +64,6 @@ import net.lingala.zip4j.progress.ProgressMonitor
 import java.io.File
 import javax.inject.Inject
 
-
 class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(), ConfigurationChangeCallback {
     override val bindingVariable: Int
         get() = BR.viewModel

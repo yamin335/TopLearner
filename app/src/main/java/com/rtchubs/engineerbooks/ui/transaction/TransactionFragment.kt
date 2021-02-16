@@ -2,20 +2,17 @@ package com.rtchubs.engineerbooks.ui.transaction
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
-import android.widget.ImageView
-import androidx.fragment.app.Fragment
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
-import com.rtchubs.engineerbooks.databinding.PaymentFragmentBinding
 import com.rtchubs.engineerbooks.databinding.TransactionFragmentBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
-import com.rtchubs.engineerbooks.ui.LogoutHandlerCallback
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
-import com.rtchubs.engineerbooks.ui.payment.PaymentViewModel
 
 class TransactionFragment : BaseFragment<TransactionFragmentBinding, TransactionViewModel>() {
 
@@ -72,8 +69,10 @@ class TransactionFragment : BaseFragment<TransactionFragmentBinding, Transaction
         }
 
         if (userData.customer_type_id == 2) {
+            viewDataBinding.linearSummary.visibility = View.VISIBLE
             viewDataBinding.recyclerTransactions.adapter = adminTransactionAdapter
         } else {
+            viewDataBinding.linearSummary.visibility = View.GONE
             viewDataBinding.recyclerTransactions.adapter = transactionAdapter
         }
 
