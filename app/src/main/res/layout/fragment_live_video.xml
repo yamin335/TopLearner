@@ -85,7 +85,7 @@
                     />
 
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
-                    android:id="@+id/mProfile"
+                    android:id="@+id/mPreviousClass"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
@@ -134,7 +134,7 @@
                     android:layout_height="1px"
                     android:layout_marginStart="20dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
-                    android:id="@+id/mPayment"
+                    android:id="@+id/mClassSchedule"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
@@ -184,7 +184,7 @@
                     android:layout_height="1px"
                     android:layout_marginStart="20dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
-                    android:id="@+id/mAboutUs"
+                    android:id="@+id/mNextClass"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"

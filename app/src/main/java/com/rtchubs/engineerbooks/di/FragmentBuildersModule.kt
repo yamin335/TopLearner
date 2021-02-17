@@ -13,6 +13,7 @@ import com.rtchubs.engineerbooks.ui.history.HistoryFragment
 import com.rtchubs.engineerbooks.ui.home.*
 import com.rtchubs.engineerbooks.ui.how_works.HowWorksFragment
 import com.rtchubs.engineerbooks.ui.info.InfoFragment
+import com.rtchubs.engineerbooks.ui.live_class_schedule.LiveClassScheduleFragment
 import com.rtchubs.engineerbooks.ui.live_video.LiveVideoFragment
 import com.rtchubs.engineerbooks.ui.login.SignInFragment
 import com.rtchubs.engineerbooks.ui.login.ViewPagerFragment
@@ -210,4 +211,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeResetPinDialogFragment(): ResetPinDialogFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeLiveClassScheduleFragment(): LiveClassScheduleFragment
 }

@@ -1,34 +1,31 @@
 package com.rtchubs.engineerbooks.ui.transaction
 
 import android.app.Application
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
-import com.rtchubs.engineerbooks.models.home.ClassWiseBook
-import com.rtchubs.engineerbooks.models.registration.InquiryAccount
-import com.rtchubs.engineerbooks.models.registration.InquiryResponse
-import com.rtchubs.engineerbooks.models.transactions.AdminPayHistory
-import com.rtchubs.engineerbooks.models.transactions.CreateOrderBody
-import com.rtchubs.engineerbooks.models.transactions.Salesinvoice
+import com.rtchubs.engineerbooks.models.transactions.PartnerTransaction
 import com.rtchubs.engineerbooks.models.transactions.Transaction
-import com.rtchubs.engineerbooks.repos.RegistrationRepository
+import com.rtchubs.engineerbooks.repos.AdminRepository
 import com.rtchubs.engineerbooks.repos.TransactionRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
-import com.rtchubs.engineerbooks.util.AppConstants
 import com.rtchubs.engineerbooks.util.AppConstants.serverConnectionErrorMessage
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class TransactionViewModel @Inject constructor(private val application: Application, private val repository: TransactionRepository) : BaseViewModel(application) {
+class TransactionViewModel @Inject constructor(
+    private val application: Application,
+    private val repository: TransactionRepository,
+    private val adminRepository: AdminRepository
+) : BaseViewModel(application) {
 
     val salesInvoice: MutableLiveData<List<Transaction>> by lazy {
         MutableLiveData<List<Transaction>>()
     }
 
-    val adminTransactionResponse: MutableLiveData<List<Transaction>> by lazy {
-        MutableLiveData<List<Transaction>>()
+    val adminTransactionResponse: MutableLiveData<List<PartnerTransaction>> by lazy {
+        MutableLiveData<List<PartnerTransaction>>()
     }
 
     fun getAllTransaction(studentId: Int) {
@@ -57,7 +54,7 @@ class TransactionViewModel @Inject constructor(private val application: Applicat
         }
     }
 
-    fun getAdminTransactions(city_id: Int, upazila_id: Int) {
+    fun getAdminTransactions(mobile: String) {
         if (checkNetworkStatus()) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -67,10 +64,10 @@ class TransactionViewModel @Inject constructor(private val application: Applicat
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.adminTransactionsRepo(city_id, upazila_id))) {
+                when (val apiResponse = ApiResponse.create(adminRepository.adminTransactionsRepo(mobile))) {
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                        adminTransactionResponse.postValue(apiResponse.body.data?.transactions)
+                        adminTransactionResponse.postValue(apiResponse.body.data?.payments)
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)

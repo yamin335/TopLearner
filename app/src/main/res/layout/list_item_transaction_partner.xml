@@ -4,16 +4,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data class="PartnerTransactionItemBinding">
         <variable
-            name="studentID"
-            type="String" />
-        <variable
-            name="share"
+            name="paymentMethod"
             type="String" />
         <variable
             name="paymentDate"
             type="String" />
         <variable
-            name="shareAmount"
+            name="remarks"
+            type="String" />
+        <variable
+            name="paidAmount"
             type="String" />
     </data>
 
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="#555555"
-                android:text="@{shareAmount}"
+                android:text="@{paidAmount}"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -56,14 +56,14 @@
                 android:layout_marginEnd="8dp"
                 android:ellipsize="end"
                 android:maxLines="3"
-                android:text="@{studentID}"
+                android:text="@{paymentMethod}"
                 android:textColor="#404040"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toStartOf="@+id/payment"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Package Name" />
+                tools:text="Payment Method" />
 
             <LinearLayout
                 android:id="@+id/linear1"
@@ -93,7 +93,7 @@
                     android:text="@{paymentDate}"
                     android:textColor="#404040"
                     android:textSize="12sp"
-                    tools:text="500" />
+                    tools:text="2021-2-3" />
 
             </LinearLayout>
 
@@ -104,6 +104,7 @@
                 android:orientation="horizontal"
                 app:layout_constrainedWidth="true"
                 android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/payment"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -116,16 +117,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:text="Share:"
+                    android:textColor="#404040"
+                    android:textStyle="bold"
+                    android:text="Remarks:"
                     android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{share}"
+                    android:text="@{remarks}"
                     android:textColor="#404040"
                     android:textSize="12sp"
-                    tools:text="10%" />
+                    tools:text="remarks details" />
 
             </LinearLayout>
 

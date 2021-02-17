@@ -9,10 +9,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rtchubs.engineerbooks.AppExecutors
 import com.rtchubs.engineerbooks.R
-import com.rtchubs.engineerbooks.databinding.HistoryListItemBinding
 import com.rtchubs.engineerbooks.databinding.PartnerTransactionItemBinding
-import com.rtchubs.engineerbooks.databinding.TransactionItemBinding
-import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
+import com.rtchubs.engineerbooks.models.transactions.PartnerTransaction
 import com.rtchubs.engineerbooks.models.transactions.Transaction
 import com.rtchubs.engineerbooks.util.DataBoundListAdapter
 import java.text.SimpleDateFormat
@@ -20,18 +18,18 @@ import java.util.*
 
 class AdminTransactionListAdapter(
     private val appExecutors: AppExecutors,
-    private val itemCallback: ((Transaction) -> Unit)? = null
+    private val itemCallback: ((PartnerTransaction) -> Unit)? = null
 
-) : DataBoundListAdapter<Transaction, PartnerTransactionItemBinding>(
-    appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<Transaction>() {
-        override fun areItemsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
-            return oldItem.udid == newItem.udid
+) : DataBoundListAdapter<PartnerTransaction, PartnerTransactionItemBinding>(
+    appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<PartnerTransaction>() {
+        override fun areItemsTheSame(oldItem: PartnerTransaction, newItem: PartnerTransaction): Boolean {
+            return oldItem.id == newItem.id
         }
 
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(
-            oldItem: Transaction,
-            newItem: Transaction
+            oldItem: PartnerTransaction,
+            newItem: PartnerTransaction
         ): Boolean {
             return oldItem == newItem
         }
@@ -51,13 +49,11 @@ class AdminTransactionListAdapter(
 
     override fun bind(binding: PartnerTransactionItemBinding, position: Int) {
         val item = getItem(position)
-        binding.studentID = if (item.StudentMobile.isNullOrBlank()) "Unknown" else item.StudentMobile
-        var grand = item.GrandTotal?.toString() ?: "0"
-        grand = if (grand.isEmpty()) "0" else grand
-        val grandTotal = grand.toInt()
-        binding.shareAmount = "${0.01 * grandTotal} ৳"
-        binding.share = "10%"
-        binding.paymentDate = item.Date
+        binding.paymentMethod = if (item.payment_method.isNullOrBlank()) "Unknown Payment Method" else item.payment_method
+        val amount = item.payamount?.toString()
+        binding.paidAmount = if (amount.isNullOrBlank()) "" else "$amount ৳"
+        binding.paymentDate = item.payment_date
+        binding.remarks = item.remarks
 
         binding.root.setOnClickListener {
             itemCallback?.invoke(item)

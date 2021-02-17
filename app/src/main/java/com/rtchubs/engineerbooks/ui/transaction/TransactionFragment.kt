@@ -76,6 +76,9 @@ class TransactionFragment : BaseFragment<TransactionFragmentBinding, Transaction
             viewDataBinding.recyclerTransactions.adapter = transactionAdapter
         }
 
+//        viewDataBinding.linearSummary.visibility = View.VISIBLE
+//        viewDataBinding.recyclerTransactions.adapter = adminTransactionAdapter
+
         viewDataBinding.appLogo.setOnClickListener {
             drawerListener?.toggleNavDrawer()
         }
@@ -95,9 +98,11 @@ class TransactionFragment : BaseFragment<TransactionFragmentBinding, Transaction
         })
 
         if (userData.customer_type_id == 2) {
-            viewModel.getAdminTransactions(1, 1)
+            viewModel.getAdminTransactions(userData.mobile ?: "")
         } else {
             viewModel.getAllTransaction(userData.id ?: 0)
         }
+
+//        viewModel.getAdminTransactions("01733255589")
     }
 }

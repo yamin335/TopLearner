@@ -9,7 +9,19 @@
         android:id="@+id/liveFragment"
         android:name="com.rtchubs.engineerbooks.ui.live_video.LiveVideoFragment"
         android:label="Live"
-        tools:layout="@layout/fragment_live_video" />
+        tools:layout="@layout/fragment_live_video" >
+        <action
+            android:id="@+id/action_liveFragment_to_liveClassScheduleFragment"
+            app:destination="@id/liveClassScheduleFragment" />
+    </fragment>
 
     <include app:graph="@navigation/drawer_nav_graph" />
+    <fragment
+        android:id="@+id/liveClassScheduleFragment"
+        android:name="com.rtchubs.engineerbooks.ui.live_class_schedule.LiveClassScheduleFragment"
+        tools:layout="@layout/fragment_live_class_schedule">
+        <argument
+            android:name="liveClassTypeID"
+            app:argType="integer" />
+    </fragment>
 </navigation>

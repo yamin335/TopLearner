@@ -1,9 +1,12 @@
 package com.rtchubs.engineerbooks.api
 
+import com.google.gson.JsonObject
+import com.rtchubs.engineerbooks.models.LiveClassScheduleResponse
 import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
 import com.rtchubs.engineerbooks.models.home.AllBookResponse
 import com.rtchubs.engineerbooks.models.notice_board.NoticeResponse
 import com.rtchubs.engineerbooks.models.registration.ProfileImageUploadResponse
+import com.rtchubs.engineerbooks.models.transactions.PartnerTransactionResponse
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -26,6 +29,12 @@ interface AdminApiService {
 
     @GET(ApiEndPoint.NOTICES)
     suspend fun getAllNotices(): Response<NoticeResponse>
+
+    @GET(ApiEndPoint.CLASS_SCHEDULE)
+    suspend fun getClassSchedule(@Path("classTypeID") classTypeID: Int?): Response<LiveClassScheduleResponse>
+
+    @POST(ApiEndPoint.PARTNER_TRANSACTION)
+    suspend fun partnerTransactionHistory(@Body jsonString: JsonObject): Response<PartnerTransactionResponse>
 
 //    @POST(ApiEndPoint.ADMIN_TRANSACTION)
 //    suspend fun adminTransactionHistory(@Body jsonString: String): Response<AdminPayHistoryResponse>

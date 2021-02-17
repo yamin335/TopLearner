@@ -17,38 +17,39 @@ import com.rtchubs.engineerbooks.ui.history.HistoryViewModel
 import com.rtchubs.engineerbooks.ui.home.*
 import com.rtchubs.engineerbooks.ui.how_works.HowWorksViewModel
 import com.rtchubs.engineerbooks.ui.info.InfoViewModel
+import com.rtchubs.engineerbooks.ui.live_class_schedule.LiveClassScheduleViewModel
 import com.rtchubs.engineerbooks.ui.live_video.LiveVideoViewModel
 import com.rtchubs.engineerbooks.ui.login.SignInViewModel
-import com.rtchubs.engineerbooks.ui.on_boarding.tou.TouViewModel
-import com.rtchubs.engineerbooks.ui.otp.OtpViewModel
-import com.rtchubs.engineerbooks.ui.pre_on_boarding.PreOnBoardingViewModel
-import com.rtchubs.engineerbooks.ui.profiles.ProfilesViewModel
-import com.rtchubs.engineerbooks.ui.registration.RegistrationViewModel
-import com.rtchubs.engineerbooks.ui.settings.SettingsViewModel
-import com.rtchubs.engineerbooks.ui.setup.SetupViewModel
-import com.rtchubs.engineerbooks.ui.setup_complete.SetupCompleteViewModel
-import com.rtchubs.engineerbooks.ui.splash.SplashViewModel
-import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewViewModel
-import com.rtchubs.engineerbooks.ui.video_play.VideoPlayViewModel
 import com.rtchubs.engineerbooks.ui.login.ViewPagerViewModel
 import com.rtchubs.engineerbooks.ui.more.MoreViewModel
 import com.rtchubs.engineerbooks.ui.more.ProfileSettingsViewModel
 import com.rtchubs.engineerbooks.ui.notice_board.NoticeBoardViewModel
 import com.rtchubs.engineerbooks.ui.offer.OfferViewModel
+import com.rtchubs.engineerbooks.ui.on_boarding.tou.TouViewModel
+import com.rtchubs.engineerbooks.ui.otp.OtpViewModel
 import com.rtchubs.engineerbooks.ui.otp_signin.OtpSignInViewModel
 import com.rtchubs.engineerbooks.ui.payment.PaymentViewModel
 import com.rtchubs.engineerbooks.ui.pin_number.PinNumberViewModel
+import com.rtchubs.engineerbooks.ui.pre_on_boarding.PreOnBoardingViewModel
 import com.rtchubs.engineerbooks.ui.profile_signin.ClassEditViewModel
 import com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditViewModel
 import com.rtchubs.engineerbooks.ui.profile_signin.ProfileSignInViewModel
 import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditViewModel
+import com.rtchubs.engineerbooks.ui.profiles.ProfilesViewModel
+import com.rtchubs.engineerbooks.ui.registration.RegistrationViewModel
+import com.rtchubs.engineerbooks.ui.settings.SettingsViewModel
+import com.rtchubs.engineerbooks.ui.setup.SetupViewModel
+import com.rtchubs.engineerbooks.ui.setup_complete.SetupCompleteViewModel
 import com.rtchubs.engineerbooks.ui.solution.SolutionViewModel
+import com.rtchubs.engineerbooks.ui.splash.SplashViewModel
 import com.rtchubs.engineerbooks.ui.terms_and_conditions.TermsViewModel
 import com.rtchubs.engineerbooks.ui.topup.TopUpAmountViewModel
 import com.rtchubs.engineerbooks.ui.topup.TopUpBankCardViewModel
 import com.rtchubs.engineerbooks.ui.topup.TopUpMobileViewModel
 import com.rtchubs.engineerbooks.ui.topup.TopUpPinViewModel
 import com.rtchubs.engineerbooks.ui.transaction.TransactionViewModel
+import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewViewModel
+import com.rtchubs.engineerbooks.ui.video_play.VideoPlayViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -313,4 +314,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AboutUsViewModel::class)
     abstract fun bindAboutUsViewModel(viewModel: AboutUsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LiveClassScheduleViewModel::class)
+    abstract fun bindLiveClassScheduleViewModel(viewModel: LiveClassScheduleViewModel): ViewModel
 }

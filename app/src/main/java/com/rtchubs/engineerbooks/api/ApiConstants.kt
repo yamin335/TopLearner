@@ -11,7 +11,7 @@ import com.rtchubs.engineerbooks.api.Api.DIRECTORY_BOOKS
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CARD
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CHAPTERS
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CLASS
-import com.rtchubs.engineerbooks.api.Api.DIRECTORY_COMMISSION
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CLASS_SCHEDULE
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CONNECT
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_DISTRICT
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_INQUIRE
@@ -19,6 +19,7 @@ import com.rtchubs.engineerbooks.api.Api.DIRECTORY_LOGIN
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_LOGO
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_NOTICES
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_ORDER
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PARTNER_TRANSACTION
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PDF
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE_IMAGES
@@ -70,9 +71,10 @@ object Api {
     const val DIRECTORY_LOGO = "logo"
     const val DIRECTORY_PDF = "pdf"
     const val DIRECTORY_VIDEOS = "videos"
-    const val DIRECTORY_COMMISSION = "commission"
+    const val DIRECTORY_PARTNER_TRANSACTION = "partnerpayments"
     const val DIRECTORY_NOTICES = "getnotices/null"
     const val DIRECTORY_SOMADHAN = "somadhan"
+    const val DIRECTORY_CLASS_SCHEDULE = "getliveclassschedule"
 
     const val DIRECTORY_CONNECT = "connect"
     const val DIRECTORY_BANK_INFO = "bankinformation"
@@ -107,7 +109,8 @@ object ApiEndPoint {
     const val SOMADHAN = "$ADMIN_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/$DIRECTORY_SOMADHAN"
     const val ALL_BOOKS = "$API_REPO/$DIRECTORY_BOOKS"
     const val NOTICES = "$API_REPO/$DIRECTORY_NOTICES"
-    const val PARTNER_TRANSACTION = "$API_VERSION/$SALES_REPO/$DIRECTORY_COMMISSION"
+    const val PARTNER_TRANSACTION = "$API_REPO/$DIRECTORY_PARTNER_TRANSACTION"
+    const val CLASS_SCHEDULE = "$API_REPO/$DIRECTORY_CLASS_SCHEDULE/{classTypeID}/null"
 
     const val REQUESTOTP = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}/request-otp"
     const val REGISTRATION = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}"
