@@ -1,4 +1,4 @@
-package com.rtchubs.engineerbooks.ui.more
+package com.rtchubs.engineerbooks.ui.profiles
 
 import android.app.Activity.RESULT_OK
 import android.content.Context

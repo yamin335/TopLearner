@@ -106,10 +106,14 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
         })
 
         viewDataBinding.mProfile.setOnClickListener {
-            ClassEditFragment.selectedClass = null
-            DistrictEditFragment.selectedCity = null
-            UpazillaEditFragment.selectedUpazilla = null
-            navigateTo(MoreFragmentDirections.actionMoreFragmentToProfileSettingsFragment())
+            if (userData.customer_type_id == 2) {
+                navigateTo(MoreFragmentDirections.actionMoreFragmentToPartnerProfileFragment())
+            } else {
+                ClassEditFragment.selectedClass = null
+                DistrictEditFragment.selectedCity = null
+                UpazillaEditFragment.selectedUpazilla = null
+                navigateTo(MoreFragmentDirections.actionMoreFragmentToProfileSettingsFragment())
+            }
         }
 
         viewDataBinding.mPayment.setOnClickListener {

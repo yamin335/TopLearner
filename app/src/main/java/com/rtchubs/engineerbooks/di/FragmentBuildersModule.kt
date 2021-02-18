@@ -18,7 +18,6 @@ import com.rtchubs.engineerbooks.ui.live_video.LiveVideoFragment
 import com.rtchubs.engineerbooks.ui.login.SignInFragment
 import com.rtchubs.engineerbooks.ui.login.ViewPagerFragment
 import com.rtchubs.engineerbooks.ui.more.MoreFragment
-import com.rtchubs.engineerbooks.ui.more.ProfileSettingsFragment
 import com.rtchubs.engineerbooks.ui.notice_board.NoticeBoardFragment
 import com.rtchubs.engineerbooks.ui.offer.OfferFragment
 import com.rtchubs.engineerbooks.ui.on_boarding.tou.TouFragment
@@ -33,6 +32,8 @@ import com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.ProfileSignInFragment
 import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment
+import com.rtchubs.engineerbooks.ui.profiles.PartnerProfileFragment
+import com.rtchubs.engineerbooks.ui.profiles.ProfileSettingsFragment
 import com.rtchubs.engineerbooks.ui.profiles.ProfilesFragment
 import com.rtchubs.engineerbooks.ui.registration.RegistrationFragment
 import com.rtchubs.engineerbooks.ui.settings.SettingsFragment
@@ -214,4 +215,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeLiveClassScheduleFragment(): LiveClassScheduleFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributePartnerProfileFragment(): PartnerProfileFragment
 }

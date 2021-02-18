@@ -22,7 +22,7 @@ import com.rtchubs.engineerbooks.ui.live_video.LiveVideoViewModel
 import com.rtchubs.engineerbooks.ui.login.SignInViewModel
 import com.rtchubs.engineerbooks.ui.login.ViewPagerViewModel
 import com.rtchubs.engineerbooks.ui.more.MoreViewModel
-import com.rtchubs.engineerbooks.ui.more.ProfileSettingsViewModel
+import com.rtchubs.engineerbooks.ui.profiles.ProfileSettingsViewModel
 import com.rtchubs.engineerbooks.ui.notice_board.NoticeBoardViewModel
 import com.rtchubs.engineerbooks.ui.offer.OfferViewModel
 import com.rtchubs.engineerbooks.ui.on_boarding.tou.TouViewModel

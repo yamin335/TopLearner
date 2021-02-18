@@ -24,6 +24,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
+import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentResultListener
@@ -54,6 +55,7 @@ import com.rtchubs.engineerbooks.ui.home.VideoTabViewPagerAdapter
 import com.rtchubs.engineerbooks.ui.solution.SolutionFragment
 import com.rtchubs.engineerbooks.util.AppConstants.downloadFolder
 import com.rtchubs.engineerbooks.util.AppConstants.unzippedFolder
+import com.rtchubs.engineerbooks.util.FLAGS_FULLSCREEN
 import com.rtchubs.engineerbooks.util.FileUtils
 import com.rtchubs.engineerbooks.util.showErrorToast
 import kotlinx.coroutines.Dispatchers
@@ -63,6 +65,8 @@ import net.lingala.zip4j.exception.ZipException
 import net.lingala.zip4j.progress.ProgressMonitor
 import java.io.File
 import javax.inject.Inject
+
+private const val IMMERSIVE_FLAG_TIMEOUT = 500L
 
 class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(), ConfigurationChangeCallback {
     override val bindingVariable: Int
@@ -123,6 +127,8 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
     lateinit var commonMessageBottomSheetDialog: CommonMessageBottomSheetDialog
 
+    var systemUiVisibility: Int = 0
+
     private val usbDetectionReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == Intent.ACTION_POWER_CONNECTED) {
@@ -159,13 +165,16 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
         // How are we charging?
         val chargePlug: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
-        if (chargePlug == BatteryManager.BATTERY_PLUGGED_USB) isUSBPluggedIn = true
+        if (chargePlug == BatteryManager.BATTERY_PLUGGED_USB) isUSBPluggedIn = false
     }
 
     override fun onPause() {
         super.onPause()
         FileUtils.deleteFolderWithAllFilesFromExternalStorage(requireContext(), unzippedFolder)
         requireActivity().unregisterReceiver(usbDetectionReceiver)
+
+
+
         //LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(downloadCompleteReceiver)
 
 //        if (viewDataBinding.webView != null ) {
@@ -204,6 +213,11 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // This callback will only be called when MyFragment is at least Started.
+        requireActivity().onBackPressedDispatcher.addCallback(this, true) {
+        }
+
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
         toggle = TransitionInflater.from(requireContext()).inflateTransition(R.transition.search_bar_toogle)
         detectUSB()
@@ -263,10 +277,6 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         viewDataBinding.webView.onPause()
         viewDataBinding.webView.visibility = View.GONE
         expanded = true
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -577,6 +587,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         })
 
         if (savedInstanceState == null) {
+            //viewDataBinding.webView.loadUrl(url)
             if (isUSBPluggedIn) {
                 showErrorToast(requireContext(), "Please unplug your USB then try again!")
             } else {
@@ -878,20 +889,28 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
     private fun hideSystemUI() {
         //requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        viewDataBinding.toolbar.visibility = View.GONE
+        try {
+            viewDataBinding.toolbar.visibility = View.GONE
+            requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            systemUIConfigurationBackup = requireActivity().window.decorView.systemUiVisibility
+            requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+            requireActivity().window.statusBarColor = Color.TRANSPARENT
+            systemUiVisibility = viewDataBinding.mainContainer.systemUiVisibility
+            viewDataBinding.mainContainer.postDelayed({
+                viewDataBinding.mainContainer.systemUiVisibility = FLAGS_FULLSCREEN
+            }, IMMERSIVE_FLAG_TIMEOUT)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         // Standard Android full-screen functionality.
-        systemUIConfigurationBackup = requireActivity().window.decorView.systemUiVisibility
+
 //        requireActivity().window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 //                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 //                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 //                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
 //                or View.SYSTEM_UI_FLAG_FULLSCREEN
 //                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-
-
-        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-        requireActivity().window.statusBarColor = Color.TRANSPARENT
-
 
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -910,13 +929,20 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
     }
 
     private fun restoreSystemUI() {
-        if (viewDataBinding.toolbar != null) {
-            viewDataBinding.toolbar.visibility = View.VISIBLE
+        try {
+            if (viewDataBinding.toolbar != null) {
+                viewDataBinding.toolbar.visibility = View.VISIBLE
+            }
+            requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+            requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            requireActivity().window.decorView.systemUiVisibility = systemUIConfigurationBackup
+            requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            viewDataBinding.mainContainer.postDelayed({
+                viewDataBinding.mainContainer.systemUiVisibility = systemUiVisibility
+            }, IMMERSIVE_FLAG_TIMEOUT)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        requireActivity().window.decorView.systemUiVisibility = systemUIConfigurationBackup
-        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     companion object {

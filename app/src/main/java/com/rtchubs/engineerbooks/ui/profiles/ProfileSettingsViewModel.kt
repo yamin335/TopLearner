@@ -1,28 +1,21 @@
-package com.rtchubs.engineerbooks.ui.more
+package com.rtchubs.engineerbooks.ui.profiles
 
 import android.app.Application
 import android.graphics.Bitmap
-import android.net.Uri
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.models.registration.*
 import com.rtchubs.engineerbooks.repos.MediaRepository
 import com.rtchubs.engineerbooks.repos.RegistrationRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
 import com.rtchubs.engineerbooks.util.AppConstants.serverConnectionErrorMessage
-import com.rtchubs.engineerbooks.util.asFile
-import com.rtchubs.engineerbooks.util.asFilePart
 import com.rtchubs.engineerbooks.util.toFile
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
 import javax.inject.Inject
 
 class ProfileSettingsViewModel @Inject constructor(private val application: Application, private val repository: RegistrationRepository, private val mediaRepository: MediaRepository) : BaseViewModel(application) {

@@ -6,13 +6,13 @@
 
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.more.ProfileSettingsViewModel" />
+            type="com.rtchubs.engineerbooks.ui.profiles.ProfileSettingsViewModel" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#1E4356"
+        android:background="@android:color/white"
         android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -50,7 +50,7 @@
                 android:elevation="1dp"
                 android:layout_alignParentTop="true"
                 android:indeterminate="true"
-                android:indeterminateTint="@color/colorWhite"
+                android:indeterminateTint="@color/accent"
                 app:showLoader="@{viewModel.apiCallStatus}"/>
 
             <androidx.core.widget.NestedScrollView
@@ -101,7 +101,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
                                 android:text="@string/first_name"
-                                android:textColor="@color/white"
+                                android:textColor="#404040"
                                 android:textSize="16sp" />
 
                             <EditText
@@ -110,7 +110,7 @@
                                 android:layout_height="wrap_content"
                                 android:background="@null"
                                 android:hint="first name"
-                                android:textColor="@color/white"
+                                android:textColor="@color/grayColor"
                                 android:textSize="18sp"
                                 android:inputType="text"
                                 android:theme="@style/EditTextTheme"
@@ -139,7 +139,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
                                 android:text="@string/last_name"
-                                android:textColor="@color/white"
+                                android:textColor="#404040"
                                 android:textSize="16sp" />
 
                             <EditText
@@ -149,7 +149,7 @@
                                 android:background="@null"
                                 android:hint="last name"
                                 android:inputType="text"
-                                android:textColor="@color/white"
+                                android:textColor="@color/grayColor"
                                 android:textSize="18sp"
                                 android:theme="@style/EditTextTheme"
                                 android:importantForAutofill="no" />
@@ -181,7 +181,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:text="@string/father_s_name"
-                            android:textColor="@color/white"
+                            android:textColor="#404040"
                             android:textSize="16sp" />
 
                         <EditText
@@ -190,7 +190,7 @@
                             android:layout_height="wrap_content"
                             android:background="@null"
                             android:hint="father name"
-                            android:textColor="@color/white"
+                            android:textColor="@color/grayColor"
                             android:textSize="18sp"
                             android:inputType="text"
                             android:theme="@style/EditTextTheme"
@@ -221,7 +221,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
                             android:text="@string/gender"
-                            android:textColor="@color/white"
+                            android:textColor="#404040"
                             android:textSize="16sp" />
 
                         <Spinner
@@ -253,7 +253,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
                             android:text="@string/academic_class"
-                            android:textColor="@color/white"
+                            android:textColor="#404040"
                             android:textSize="16sp" />
 
                         <Spinner
@@ -325,7 +325,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
                             android:text="@string/city"
-                            android:textColor="@color/white"
+                            android:textColor="#404040"
                             android:textSize="16sp" />
 
                         <TextView
@@ -337,7 +337,7 @@
                             android:paddingTop="8dp"
                             android:paddingBottom="8dp"
                             android:paddingEnd="0dp"
-                            android:textColor="@android:color/white"
+                            android:textColor="#404040"
                             android:textSize="14sp"
                             android:gravity="center_vertical"
                             android:clickable="true"
@@ -363,7 +363,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
                             android:text="@string/upazilla"
-                            android:textColor="@color/white"
+                            android:textColor="#404040"
                             android:textSize="16sp" />
 
                         <TextView
@@ -374,7 +374,7 @@
                             android:paddingTop="8dp"
                             android:paddingBottom="8dp"
                             android:paddingEnd="0dp"
-                            android:textColor="@android:color/white"
+                            android:textColor="#404040"
                             android:textSize="14sp"
                             android:gravity="center_vertical"
                             android:layout_weight="1"
@@ -408,7 +408,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
                                 android:text="Institute"
-                                android:textColor="@color/white"
+                                android:textColor="#404040"
                                 android:textSize="16sp" />
 
                             <EditText
@@ -418,7 +418,7 @@
                                 android:background="@null"
                                 android:hint="institute"
                                 android:inputType="text"
-                                android:textColor="@color/white"
+                                android:textColor="@color/grayColor"
                                 android:textSize="18sp"
                                 android:theme="@style/EditTextTheme"
                                 android:importantForAutofill="no" />
@@ -443,7 +443,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
                                 android:text="Roll"
-                                android:textColor="@color/white"
+                                android:textColor="#404040"
                                 android:textSize="16sp" />
 
                             <EditText
@@ -453,7 +453,7 @@
                                 android:background="@null"
                                 android:hint="class roll"
                                 android:inputType="numberDecimal"
-                                android:textColor="@color/white"
+                                android:textColor="@color/grayColor"
                                 android:textSize="18sp"
                                 android:theme="@style/EditTextTheme"
                                 android:importantForAutofill="no" />
@@ -485,7 +485,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:text="Email Address"
-                            android:textColor="@color/white"
+                            android:textColor="#404040"
                             android:textSize="16sp" />
 
                         <EditText
@@ -496,7 +496,7 @@
                             android:importantForAutofill="yes"
                             android:hint="email address"
                             android:inputType="textEmailAddress"
-                            android:textColor="@color/white"
+                            android:textColor="@color/grayColor"
                             android:textSize="18sp"
                             android:theme="@style/EditTextTheme" />
 
@@ -527,7 +527,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:text="Address"
-                            android:textColor="@color/white"
+                            android:textColor="#404040"
                             android:textSize="16sp" />
 
                         <EditText
@@ -536,7 +536,7 @@
                             android:layout_height="wrap_content"
                             android:background="@null"
                             android:hint="address"
-                            android:textColor="@color/white"
+                            android:textColor="@color/grayColor"
                             android:textSize="18sp"
                             android:theme="@style/EditTextTheme"
                             android:importantForAutofill="no" />

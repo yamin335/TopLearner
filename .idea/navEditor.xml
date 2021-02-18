@@ -1382,13 +1382,25 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="partnerProfileFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="165" />
+                            <option name="y" value="514" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="paymentFragmentMore">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="12" />
-                            <option name="y" value="12" />
+                            <option name="x" value="-214" />
+                            <option name="y" value="538" />
                           </Point>
                         </option>
                       </LayoutPositions>

@@ -52,11 +52,18 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_moreFragment_to_partnerProfileFragment"
+            app:destination="@id/partnerProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
         android:id="@+id/profileSettingsFragment"
-        android:name="com.rtchubs.engineerbooks.ui.more.ProfileSettingsFragment"
+        android:name="com.rtchubs.engineerbooks.ui.profiles.ProfileSettingsFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile_settings" >
         <action
@@ -130,4 +137,9 @@
         android:name="com.rtchubs.engineerbooks.ui.about_us.AboutUsFragment"
         android:label="About Us"
         tools:layout="@layout/fragment_about_us"/>
+    <fragment
+        android:id="@+id/partnerProfileFragment"
+        android:name="com.rtchubs.engineerbooks.ui.profiles.PartnerProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile_partner"/>
 </navigation>
