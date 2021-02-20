@@ -535,14 +535,14 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
                 showErrorToast(requireContext(), "Please enter first name!")
                 return@setOnClickListener
             }
-            registrationHelper.firstName = viewDataBinding.firstName.text.toString()
+            registrationHelper.first_name = viewDataBinding.firstName.text.toString()
 
             if (viewDataBinding.lastName.text.toString().isEmpty()) {
                 viewDataBinding.lastName.requestFocus()
                 showErrorToast(requireContext(), "Please enter last name!")
                 return@setOnClickListener
             }
-            registrationHelper.lastName = viewDataBinding.lastName.text.toString()
+            registrationHelper.last_name = viewDataBinding.lastName.text.toString()
 
             if (viewDataBinding.fatherName.text.toString().isEmpty()) {
                 viewDataBinding.fatherName.requestFocus()

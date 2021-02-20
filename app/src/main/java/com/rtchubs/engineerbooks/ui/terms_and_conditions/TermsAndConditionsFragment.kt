@@ -15,7 +15,6 @@ import com.rtchubs.engineerbooks.databinding.TermsBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.OTPHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
-import com.rtchubs.engineerbooks.ui.login.SignInFragmentDirections
 import com.rtchubs.engineerbooks.util.AppConstants
 import com.rtchubs.engineerbooks.util.AppConstants.TERMS_AND_CONDITIONS_URL
 import com.rtchubs.engineerbooks.util.showErrorToast
@@ -91,7 +90,7 @@ class TermsAndConditionsFragment : BaseFragment<TermsBinding, TermsViewModel>() 
             response?.data?.Account?.let {
                 if (it.isAcceptedTandC == true) {
                     registrationRemoteHelper = it
-                    registrationRemoteHelper.mobileOperator =registrationLocalHelper.mobileOperator
+                    registrationRemoteHelper.mobile_operator = registrationLocalHelper.mobile_operator
                     navController.navigate(TermsAndConditionsFragmentDirections.actionTermsAndConditionsToOtpSignInFragment3(registrationRemoteHelper))
                 } else {
                     showErrorToast(mContext, response.msg ?: AppConstants.commonErrorMessage)

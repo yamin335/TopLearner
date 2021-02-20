@@ -175,7 +175,7 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
             .placeholder(placeholder)
             .into(viewDataBinding.rivProfileImage)
 
-        viewDataBinding.tvName.text = "${user.firstName} ${user.lastName}"
+        viewDataBinding.tvName.text = "${user.first_name} ${user.last_name}"
         viewDataBinding.tvClass.text = user.ClassName
         viewDataBinding.tvSID.text = user.mobile
         viewDataBinding.version.text = "Version ${BuildConfig.VERSION_NAME}"

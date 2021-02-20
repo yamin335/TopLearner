@@ -109,7 +109,7 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
             response?.data?.Account?.let {
                 if (!it.otp.isNullOrBlank() && it.otp == viewModel.otp.value) {
                     registrationRemoteHelper = it
-                    registrationRemoteHelper.mobileOperator = registrationLocalHelper.mobileOperator
+                    registrationRemoteHelper.mobile_operator = registrationLocalHelper.mobile_operator
                     navigateTo(
                         OtpSignInFragmentDirections.actionOtpSignInFragmentToPinNumberFragment(
                             registrationRemoteHelper

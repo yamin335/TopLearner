@@ -78,26 +78,25 @@ class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, Profi
             .placeholder(placeholder)
             .into(viewDataBinding.rivProfileImage)
 
-        viewDataBinding.name.text = "${user.firstName} ${user.lastName}"
-        viewDataBinding.fatherName.text = "N/A"
-        viewDataBinding.motherName.text = "N/A"
-        viewDataBinding.mobileNo.text = user.mobile
-        viewDataBinding.homeContact.text = "N/A"
-        viewDataBinding.email.text = user.email
-        viewDataBinding.nidNo.text = user.nidnumber
-        viewDataBinding.birthDate.text = "N/A"
+        viewDataBinding.name.text = "${user.first_name} ${user.last_name}"
+        viewDataBinding.fatherName.text = if (user.father_name.isNullOrBlank()) "N/A" else user.father_name
+        viewDataBinding.motherName.text = if (user.mother_name.isNullOrBlank()) "N/A" else user.mother_name
+        viewDataBinding.mobileNo.text = if (user.mobile.isNullOrBlank()) "N/A" else user.mobile
+        viewDataBinding.homeContact.text = if (user.home_mobile.isNullOrBlank()) "N/A" else user.home_mobile
+        viewDataBinding.email.text = if (user.email.isNullOrBlank()) "N/A" else user.email
+        viewDataBinding.nidNo.text = if (user.nidnumber.isNullOrBlank()) "N/A" else user.nidnumber
+        viewDataBinding.birthDate.text = if (user.birth_date.isNullOrBlank()) "N/A" else user.birth_date
         viewDataBinding.bloodGroup.text = "N/A"
-        viewDataBinding.presentAddress.text = user.address
-        viewDataBinding.permanentAddress.text = user.address
-        viewDataBinding.officialId.text = "N/A"
-        viewDataBinding.partnerType.text = "N/A"
+        viewDataBinding.presentAddress.text = if (user.present_address.isNullOrBlank()) "N/A" else user.present_address
+        viewDataBinding.permanentAddress.text = if (user.parmanent_address.isNullOrBlank()) "N/A" else user.parmanent_address
+        viewDataBinding.officialId.text = if (user.official_id.isNullOrBlank()) "N/A" else user.official_id
+        viewDataBinding.partnerType.text = if (user.partner_type.isNullOrBlank()) "N/A" else user.partner_type
         viewDataBinding.responsibleArea.text = "N/A"
-        viewDataBinding.designation.text = "N/A"
+        viewDataBinding.designation.text = if (user.designation.isNullOrBlank()) "N/A" else user.designation
         viewDataBinding.sharePercent.text = "N/A"
         viewDataBinding.earnedMoney.text = "N/A"
         viewDataBinding.subTotal.text = "N/A"
         viewDataBinding.paymentAmount.text = "N/A"
         viewDataBinding.payableAmount.text = "N/A"
     }
-
 }

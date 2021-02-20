@@ -1,6 +1,5 @@
 package com.rtchubs.engineerbooks.ui.payment
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -111,8 +110,8 @@ class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewMode
     }
 
     private fun saveBKaskPayment(response: BKashPaymentResponse) {
-        val firstName = userData.firstName ?: ""
-        val lastName = userData.lastName ?: ""
+        val firstName = userData.first_name ?: ""
+        val lastName = userData.last_name ?: ""
 
         val amount = response.amount.toDouble()
         viewModel.createOrder(

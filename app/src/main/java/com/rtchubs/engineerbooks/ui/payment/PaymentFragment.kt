@@ -125,8 +125,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
     }
 
     private fun saveBKaskPayment(response: BKashPaymentResponse) {
-        val firstName = userData.firstName ?: ""
-        val lastName = userData.lastName ?: ""
+        val firstName = userData.first_name ?: ""
+        val lastName = userData.last_name ?: ""
 
         val amount = response.amount.toDouble()
         viewModel.createOrder(

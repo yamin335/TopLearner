@@ -462,14 +462,14 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
                 showErrorToast(requireContext(), "Please enter first name!")
                 return@setOnClickListener
             }
-            userData.firstName = viewDataBinding.firstName.text.toString()
+            userData.first_name = viewDataBinding.firstName.text.toString()
 
             if (viewDataBinding.lastName.text.toString().isEmpty()) {
                 viewDataBinding.lastName.requestFocus()
                 showErrorToast(requireContext(), "Please enter last name!")
                 return@setOnClickListener
             }
-            userData.lastName = viewDataBinding.lastName.text.toString()
+            userData.last_name = viewDataBinding.lastName.text.toString()
 
             if (viewDataBinding.fatherName.text.toString().isEmpty()) {
                 viewDataBinding.fatherName.requestFocus()
@@ -645,13 +645,13 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             .into(viewDataBinding.rivNidBackImage)
 
         if (viewModel.firstName.isEmpty()) {
-            viewDataBinding.firstName.setText(user.firstName)
+            viewDataBinding.firstName.setText(user.first_name)
         } else {
             viewDataBinding.firstName.setText(viewModel.firstName)
         }
 
         if (viewModel.lastName.isEmpty()) {
-            viewDataBinding.lastName.setText(user.lastName)
+            viewDataBinding.lastName.setText(user.last_name)
         } else {
             viewDataBinding.lastName.setText(viewModel.lastName)
         }

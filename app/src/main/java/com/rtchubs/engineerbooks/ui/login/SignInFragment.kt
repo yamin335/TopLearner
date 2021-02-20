@@ -1,20 +1,15 @@
 package com.rtchubs.engineerbooks.ui.login
 
-import android.app.Activity
-import android.content.*
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.google.android.gms.auth.api.phone.SmsRetriever
-import com.google.android.gms.common.api.CommonStatusCodes
-import com.google.android.gms.common.api.Status
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.BR
+import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.LayoutOperatorSelectionBinding
 import com.rtchubs.engineerbooks.databinding.SignInBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
@@ -150,7 +145,7 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
         startOTPListenerCallback?.onStartOTPListener()
         viewModel.inquireAccount().observe(viewLifecycleOwner, Observer { response ->
             response?.data?.Account?.let {
-                it.mobileOperator = operator
+                it.mobile_operator = operator
                 if (it.isRegistered == false) {
                     if (it.isAcceptedTandC == true) {
                         requestOTPCode(it, operator)
@@ -169,7 +164,7 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
     private fun requestOTPCode(registrationHelper: InquiryAccount, operator: String) {
         viewModel.requestOTPCode(registrationHelper).observe(viewLifecycleOwner, Observer { response ->
             response?.data?.Account?.let {
-                it.mobileOperator = operator
+                it.mobile_operator = operator
                 navigateTo(SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(it))
 
 //                if (it.isRegistered == false) {
