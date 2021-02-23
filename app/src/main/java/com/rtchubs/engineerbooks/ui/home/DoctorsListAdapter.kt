@@ -9,25 +9,25 @@ import androidx.recyclerview.widget.MergeAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rtchubs.engineerbooks.AppExecutors
 import com.rtchubs.engineerbooks.R
-import com.rtchubs.engineerbooks.models.Book
-import com.rtchubs.engineerbooks.models.SubBook
 import com.rtchubs.engineerbooks.databinding.ItemDoctorsListBinding
+import com.rtchubs.engineerbooks.models.SubBook
+import com.rtchubs.engineerbooks.models.chapter.BookChapter
 import com.rtchubs.engineerbooks.util.DataBoundListAdapter
 
 class DoctorsListAdapter(
     private val appExecutors: AppExecutors,
     private var itemCallback: ((SubBook) -> Unit)? = null
-) : DataBoundListAdapter<Book, ItemDoctorsListBinding>(
+) : DataBoundListAdapter<BookChapter, ItemDoctorsListBinding>(
     appExecutors = appExecutors,
-    diffCallback = object : DiffUtil.ItemCallback<Book>() {
-        override fun areItemsTheSame(oldItem: Book, newItem: Book): Boolean {
+    diffCallback = object : DiffUtil.ItemCallback<BookChapter>() {
+        override fun areItemsTheSame(oldItem: BookChapter, newItem: BookChapter): Boolean {
             return oldItem?.id == newItem?.id
         }
 
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(
-            oldItem: Book,
-            newItem: Book
+            oldItem: BookChapter,
+            newItem: BookChapter
         ): Boolean {
             return oldItem == newItem
         }

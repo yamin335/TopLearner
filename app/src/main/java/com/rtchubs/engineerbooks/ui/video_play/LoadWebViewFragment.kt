@@ -17,6 +17,8 @@ import android.os.Bundle
 import android.transition.Transition
 import android.transition.TransitionInflater
 import android.transition.TransitionManager
+import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -73,7 +75,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         get() = BR.viewModel
     override val layoutId: Int
         get() = R.layout.fragment_load_web_view
-    override val viewModel by viewModels<LoadWebViewViewModel>{
+    override val viewModel by viewModels<LoadWebViewViewModel> {
         viewModelFactory
     }
 
@@ -83,7 +85,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
     private val url by lazy {
         //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).url }
 //        "file:///android_asset/math_8_4_1_q_1_ka/MATH8_4.1Q1KA_player.html"
-        "file:///android_asset/math_8_4_1_q_1_ka/MATH8_4.1Q1KA.html"
+        "file:///android_asset/math_8_4_1_q_1_ka/MATH8_4.1Q1KA_player.html"
     }
     private val title by lazy {
         //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).title }
@@ -165,7 +167,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
         // How are we charging?
         val chargePlug: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
-        if (chargePlug == BatteryManager.BATTERY_PLUGGED_USB) isUSBPluggedIn = false
+        if (chargePlug == BatteryManager.BATTERY_PLUGGED_USB) isUSBPluggedIn = true
     }
 
     override fun onPause() {
@@ -398,9 +400,9 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                             HistoryItem(
                                 0,
                                 chapter.book_id ?: 0,
-                                "N/A",
                                 chapter.id ?: 0,
                                 chapter.name,
+                                chapter,
                                 1
                             )
                         )
@@ -464,6 +466,13 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
 
         viewDataBinding.webView.webViewClient = object : WebViewClient() {
+
+
+
+            override fun shouldOverrideKeyEvent(view: WebView?, event: KeyEvent?): Boolean {
+                return super.shouldOverrideKeyEvent(view, event)
+                var tt = "S"
+            }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
@@ -879,9 +888,15 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
     override fun onNewConfiguration(newConfig: Configuration) {
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            viewDataBinding.webView.evaluateJavascript("javascript:disableFullScreen()") {
+                Log.d("JavaScriptReturnValue:", it)
+            }
             restoreSystemUI()
             bottomNavShowHideCallback?.showOrHideBottomNav(true)
         } else {
+            viewDataBinding.webView.evaluateJavascript("javascript:enableFullScreen()") {
+                Log.d("JavaScriptReturnValue:", it)
+            }
             hideSystemUI()
             bottomNavShowHideCallback?.showOrHideBottomNav(false)
         }

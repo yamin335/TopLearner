@@ -4,29 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data class="Home2Binding">
-        <variable
-            name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.home.HomeViewModel" />
-        
-        <variable
-            name="book1"
-            type="com.rtchubs.engineerbooks.models.Book" />
-
-        <variable
-            name="book2"
-            type="com.rtchubs.engineerbooks.models.Book" />
-
-        <variable
-            name="book3"
-            type="com.rtchubs.engineerbooks.models.Book" />
-
-        <variable
-            name="book4"
-            type="com.rtchubs.engineerbooks.models.Book" />
-
-        <variable
-            name="book5"
-            type="com.rtchubs.engineerbooks.models.Book" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -137,7 +114,6 @@
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
                             android:textSize="13sp"
-                            android:text="@{book1.title}"
                             android:textColor="@color/gray"
                             android:gravity="center"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -181,7 +157,6 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:text="@{book2.title}"
                             android:textColor="@color/gray"
                             android:textSize="13sp"
                             android:gravity="center"
@@ -226,7 +201,6 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:text="@{book3.title}"
                             android:textColor="@color/gray"
                             android:textSize="13sp"
                             android:gravity="center"
@@ -286,7 +260,6 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:text="@{book4.title}"
                             android:textColor="@color/gray"
                             android:textSize="13sp"
                             android:gravity="center"
@@ -331,7 +304,6 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:text="@{book5.title}"
                             android:textColor="@color/gray"
                             android:textSize="13sp"
                             android:gravity="center"

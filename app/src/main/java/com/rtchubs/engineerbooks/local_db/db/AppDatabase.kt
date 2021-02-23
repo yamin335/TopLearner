@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.rtchubs.engineerbooks.local_db.dao.HistoryDao
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
 
@@ -18,6 +19,7 @@ import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
     exportSchema = false
 )
 
+@TypeConverters(RoomDataTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun historyDao(): HistoryDao
 
@@ -35,7 +37,7 @@ abstract class AppDatabase : RoomDatabase() {
             }
 
         private fun buildDatabase(app: Application) =
-            Room.databaseBuilder(app, AppDatabase::class.java, "engineer_books")
+            Room.databaseBuilder(app, AppDatabase::class.java, "engineers_apps")
                 // prepopulate the database after onCreate was called
 //                .addCallback(object : Callback() {
 //                    override fun onCreate(db: SupportSQLiteDatabase) {

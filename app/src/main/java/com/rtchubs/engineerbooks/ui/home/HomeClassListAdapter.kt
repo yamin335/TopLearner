@@ -17,7 +17,6 @@ import com.rtchubs.engineerbooks.AppExecutors
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiEndPoint
 import com.rtchubs.engineerbooks.databinding.HomeClassListItemBinding
-import com.rtchubs.engineerbooks.models.Book
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.util.DataBoundListAdapter
 

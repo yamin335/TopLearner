@@ -13,9 +13,7 @@ import com.bumptech.glide.request.target.Target
 import com.rtchubs.engineerbooks.AppExecutors
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiEndPoint.LOGO
-import com.rtchubs.engineerbooks.models.Chapter
 import com.rtchubs.engineerbooks.databinding.ItemChapterListBinding
-import com.rtchubs.engineerbooks.models.Book
 import com.rtchubs.engineerbooks.models.chapter.BookChapter
 import com.rtchubs.engineerbooks.util.DataBoundListAdapter
 

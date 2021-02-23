@@ -45,7 +45,7 @@
                 android:layout_marginEnd="8dp"
                 android:ellipsize="end"
                 android:maxLines="3"
-                android:text="@{item.bookTitle}"
+                android:text="@{item.chapter.name}"
                 android:textColor="#404040"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toStartOf="@+id/remove"
@@ -54,37 +54,20 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Lesson Title" />
 
-            <LinearLayout
-                android:id="@+id/linear1"
+            <TextView
+                android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constrainedWidth="true"
                 android:layout_marginEnd="8dp"
-                android:orientation="horizontal"
+                android:text="@{item.chapter.title}"
+                android:textSize="12sp"
+                app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/remove"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/title"
                 app:layout_constraintTop_toBottomOf="@+id/title"
-                app:layout_constraintVertical_bias="0.0">
-
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:text="Chapter:"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{item.chapterTitle}"
-                    android:textColor="#404040"
-                    android:textSize="12sp"
-                    tools:text="chapter-1" />
-
-            </LinearLayout>
+                app:layout_constraintVertical_bias="0.0"/>
 
             <LinearLayout
                 android:id="@+id/linear2"
@@ -97,7 +80,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/remove"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/title"
-                app:layout_constraintTop_toBottomOf="@+id/linear1"
+                app:layout_constraintTop_toBottomOf="@+id/textView5"
                 app:layout_constraintVertical_bias="0.0">
 
                 <TextView

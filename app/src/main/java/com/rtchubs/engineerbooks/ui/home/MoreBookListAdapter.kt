@@ -13,26 +13,24 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.rtchubs.engineerbooks.AppExecutors
 import com.rtchubs.engineerbooks.R
-import com.rtchubs.engineerbooks.databinding.LayoutBankListRowBinding
 import com.rtchubs.engineerbooks.databinding.MoreBookListItemBinding
-import com.rtchubs.engineerbooks.models.*
-
+import com.rtchubs.engineerbooks.models.chapter.BookChapter
 import com.rtchubs.engineerbooks.util.DataBoundListAdapter
 
 class MoreBookListAdapter(
     private val appExecutors: AppExecutors,
-    private val itemCallback: ((Book) -> Unit)? = null
+    private val itemCallback: ((BookChapter) -> Unit)? = null
 
-) : DataBoundListAdapter<Book, MoreBookListItemBinding>(
-    appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<Book>() {
-        override fun areItemsTheSame(oldItem: Book, newItem: Book): Boolean {
+) : DataBoundListAdapter<BookChapter, MoreBookListItemBinding>(
+    appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<BookChapter>() {
+        override fun areItemsTheSame(oldItem: BookChapter, newItem: BookChapter): Boolean {
             return oldItem.id == newItem.id
         }
 
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(
-            oldItem: Book,
-            newItem: Book
+            oldItem: BookChapter,
+            newItem: BookChapter
         ): Boolean {
             return oldItem == newItem
         }
@@ -51,7 +49,7 @@ class MoreBookListAdapter(
 
     override fun bind(binding: MoreBookListItemBinding, position: Int) {
         val item = getItem(position)
-        binding.model = item
+        //binding.model = item
 
         binding.root.setOnClickListener {
             itemCallback?.invoke(item)

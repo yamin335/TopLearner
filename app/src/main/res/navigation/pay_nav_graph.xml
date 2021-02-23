@@ -23,5 +23,10 @@
     <fragment
         android:id="@+id/loadWebViewFragment2"
         android:name="com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment"
-        android:label="LoadWebViewFragment" />
+        android:label="LoadWebViewFragment"
+        tools:layout="@layout/fragment_load_web_view">
+        <argument
+            android:name="chapter"
+            app:argType="com.rtchubs.engineerbooks.models.chapter.BookChapter" />
+    </fragment>
 </navigation>

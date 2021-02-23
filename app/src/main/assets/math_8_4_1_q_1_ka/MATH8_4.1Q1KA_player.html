@@ -44,6 +44,10 @@ html, body {
 
              TSC.localizationStrings.setLanguage(TSC.languageCodes.ENGLISH);
 
+             //TSC.mediaInterface.addEventListener(TSC.events.External.VideoStart, function() {
+                //toggleFullScreen();
+             //});
+
             TSC.mediaPlayer.init("#tscVideoContent");
         }
 
@@ -53,6 +57,22 @@ html, body {
             setup(window["TSC"]);
         });
     }(window));
+
+    function enableFullScreen() {
+  var doc = window.document;
+  var container = doc.getElementById("tscVideoContent");
+      container.requestFullscreen();
+
+//  var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+
+//requestFullScreen.call(docEl);
+}
+
+    function disableFullScreen() {
+  var doc = window.document;
+  var container = doc.getElementById("tscVideoContent");
+      container.cancelFullScreen();
+}
 </script>
 </body>
 </html>
