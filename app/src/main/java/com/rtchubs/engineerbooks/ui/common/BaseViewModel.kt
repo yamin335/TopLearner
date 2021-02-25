@@ -19,11 +19,17 @@ abstract class BaseViewModel constructor(val context: Application) : ViewModel()
     val toastSuccess = MutableLiveData<String>()
     val popBackStack = MutableLiveData<Boolean>()
 
-    fun checkNetworkStatus() = if (NetworkUtils.isNetworkConnected(context)) {
-        true
-    } else {
-        showErrorToast(context, context.getString(R.string.internet_error_msg))
-        false
+    fun checkNetworkStatus(shouldShowMessage: Boolean) = when {
+        NetworkUtils.isNetworkConnected(context) -> {
+            true
+        }
+        shouldShowMessage -> {
+            showErrorToast(context, context.getString(R.string.internet_error_msg))
+            false
+        }
+        else -> {
+            false
+        }
     }
 
     fun onAppExit(preferences: SharedPreferences) {

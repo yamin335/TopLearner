@@ -6,6 +6,14 @@
         <variable
             name="item"
             type="com.rtchubs.engineerbooks.local_db.dbo.HistoryItem" />
+        <import type="com.bumptech.glide.request.RequestListener"/>
+        <import type="android.graphics.drawable.Drawable"/>
+        <variable
+            name="imageRequestListener"
+            type="com.bumptech.glide.request.RequestListener&lt;Drawable>" />
+        <variable
+            name="url"
+            type="String" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -26,10 +34,11 @@
 
             <ImageView
                 android:id="@+id/thumbnail"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:padding="4dp"
+                app:imageRequestListener="@{imageRequestListener}"
+                app:imageUrl="@{url}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

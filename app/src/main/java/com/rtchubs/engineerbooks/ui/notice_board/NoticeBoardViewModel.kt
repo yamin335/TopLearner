@@ -22,7 +22,7 @@ class NoticeBoardViewModel @Inject constructor(
     }
 
     fun getAllNotices() {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

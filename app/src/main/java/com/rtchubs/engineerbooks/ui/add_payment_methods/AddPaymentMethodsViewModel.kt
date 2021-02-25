@@ -24,7 +24,7 @@ class AddPaymentMethodsViewModel @Inject constructor(
     }
 
     fun requestBankList(type:String) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(false)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

@@ -95,7 +95,8 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
     }
 
     fun downloadVideoFile(downloadUrl: String, filePath: String, fileName: String) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
+            showHideProgress.postValue(true)
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -111,7 +112,7 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
     }
 
     fun downloadPdfFile(downloadUrl: String, filePath: String, fileName: String) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(false)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
             }
@@ -123,7 +124,7 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
     }
 
     fun downloadSolutionPdfFile(downloadUrl: String, filePath: String, fileName: String) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(false)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
             }

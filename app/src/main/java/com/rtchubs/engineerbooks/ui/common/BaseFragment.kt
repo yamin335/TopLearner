@@ -90,11 +90,17 @@ abstract class BaseFragment<T : ViewDataBinding, V : ViewModel> : DaggerFragment
      */
     abstract val viewModel: V
 
-    fun checkNetworkStatus() = if (NetworkUtils.isNetworkConnected(context)) {
-        true
-    } else {
-        showErrorToast(requireContext(), requireContext().getString(R.string.internet_error_msg))
-        false
+    fun checkNetworkStatus(shouldShowMessage: Boolean) = when {
+        NetworkUtils.isNetworkConnected(context) -> {
+            true
+        }
+        shouldShowMessage -> {
+            showErrorToast(requireContext(), requireContext().getString(R.string.internet_error_msg))
+            false
+        }
+        else -> {
+            false
+        }
     }
 
     //    val isNetworkConnected: Boolean

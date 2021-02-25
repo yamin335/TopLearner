@@ -13,6 +13,12 @@ class RoomDataTypeConverter {
     }
 
     @TypeConverter
+    fun bookChaptersToJsonString(value: List<BookChapter>) = gson.toJson(value)
+
+    @TypeConverter
+    fun jsonStringToBookChapters(value: String): List<BookChapter> = gson.fromJson(value, Array<BookChapter>::class.java).toList()
+
+    @TypeConverter
     fun jsonStringToChapterField(value: String?): ChapterField? {
         return gson.fromJson(value, ChapterField::class.java)
     }
@@ -23,12 +29,12 @@ class RoomDataTypeConverter {
     }
 
     @TypeConverter
-    fun jsonStringToBookChapter(value: String): BookChapter {
+    fun jsonStringToBookChapter(value: String): BookChapter? {
         return gson.fromJson(value, BookChapter::class.java)
     }
 
     @TypeConverter
-    fun bookChapterToJsonString(bookChapter: BookChapter): String {
+    fun bookChapterToJsonString(bookChapter: BookChapter): String? {
         return gson.toJson(bookChapter)
     }
 

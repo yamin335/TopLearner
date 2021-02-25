@@ -5,14 +5,19 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
 import com.rtchubs.engineerbooks.local_db.dao.HistoryDao
+import com.rtchubs.engineerbooks.local_db.dbo.ChapterItem
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
+import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 
 /**
  * Main database.
  */
 @Database(
     entities = [
+        ClassWiseBook::class,
+        ChapterItem::class,
         HistoryItem::class
     ],
     version = 1,
@@ -21,6 +26,8 @@ import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
 
 @TypeConverters(RoomDataTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
+
+    abstract fun bookChapterDao(): BookChapterDao
     abstract fun historyDao(): HistoryDao
 
     companion object {

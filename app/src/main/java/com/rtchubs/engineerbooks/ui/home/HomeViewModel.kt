@@ -1,12 +1,16 @@
 package com.rtchubs.engineerbooks.ui.home
 
 import android.app.Application
+import android.database.sqlite.SQLiteException
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.*
+import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
 import com.rtchubs.engineerbooks.models.PaymentMethod
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.registration.DefaultResponse
@@ -15,13 +19,15 @@ import com.rtchubs.engineerbooks.repos.HomeRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
 import com.rtchubs.engineerbooks.util.AppConstants
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
     private val preferencesHelper: PreferencesHelper,
     private val application: Application,
-    private val repository: HomeRepository
+    private val repository: HomeRepository,
+    private val bookChapterDao: BookChapterDao
 ) : BaseViewModel(application) {
     val defaultResponse: MutableLiveData<DefaultResponse> = MutableLiveData()
 
@@ -29,8 +35,28 @@ class HomeViewModel @Inject constructor(
         MutableLiveData<List<ClassWiseBook>>()
     }
 
+    val allBooksFromDB: LiveData<List<ClassWiseBook>> = liveData {
+        bookChapterDao.getAllBooks().collect { list ->
+            emit(list)
+        }
+    }
+
+    fun saveBooksInDB(books: List<ClassWiseBook>) {
+        try {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+            }
+
+            viewModelScope.launch(handler) {
+                bookChapterDao.updateBooks(books)
+            }
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+        }
+    }
+
     fun getAcademicBooks(mobile: String, class_id: Int) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(false)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -56,7 +82,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getAdminPanelBooks() {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(false)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -124,7 +150,7 @@ class HomeViewModel @Inject constructor(
 
 
     fun requestBankList(type:String) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

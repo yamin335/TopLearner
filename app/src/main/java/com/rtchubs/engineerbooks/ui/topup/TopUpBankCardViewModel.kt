@@ -21,7 +21,7 @@ class TopUpBankCardViewModel @Inject constructor(private val application: Applic
     }
 
     fun getMyAccountList() {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

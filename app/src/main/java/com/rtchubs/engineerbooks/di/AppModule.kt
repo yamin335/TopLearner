@@ -2,7 +2,7 @@ package com.rtchubs.engineerbooks.di
 
 import android.app.Application
 import android.content.Context
-import androidx.room.Room
+import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
 import com.rtchubs.engineerbooks.local_db.dao.HistoryDao
 import com.rtchubs.engineerbooks.local_db.db.AppDatabase
 import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
@@ -29,6 +29,12 @@ class AppModule {
     @Provides
     fun provideDb(app: Application): AppDatabase {
         return AppDatabase.getInstance(app)
+    }
+
+    @Singleton
+    @Provides
+    fun provideBookChapterDao(db: AppDatabase): BookChapterDao {
+        return db.bookChapterDao()
     }
 
     @Singleton

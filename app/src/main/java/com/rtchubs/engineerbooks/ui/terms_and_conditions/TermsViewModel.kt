@@ -3,12 +3,10 @@ package com.rtchubs.engineerbooks.ui.terms_and_conditions
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.models.registration.InquiryResponse
-import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.repos.RegistrationRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
 import com.rtchubs.engineerbooks.util.AppConstants
@@ -20,7 +18,7 @@ class TermsViewModel @Inject constructor(private val application: Application, p
 
     fun requestOTPCode(registrationHelper: InquiryAccount): LiveData<InquiryResponse> {
         val response: MutableLiveData<InquiryResponse> = MutableLiveData()
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

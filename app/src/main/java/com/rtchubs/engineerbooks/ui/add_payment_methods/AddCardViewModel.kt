@@ -39,7 +39,7 @@ class AddCardViewModel @Inject constructor(
     }
 
     fun addCardAccount() {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(false)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

@@ -22,7 +22,7 @@ class LiveClassScheduleViewModel @Inject constructor(
     }
 
     fun getAllLiveClasses(classTypeID: Int) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

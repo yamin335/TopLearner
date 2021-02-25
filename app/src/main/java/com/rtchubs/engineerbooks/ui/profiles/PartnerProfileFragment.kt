@@ -64,7 +64,7 @@ class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, Profi
                 }
             })
 
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             viewModel.getUserProfileInfo(userData.mobile ?: "")
         } else {
             prepareUserData(userData)

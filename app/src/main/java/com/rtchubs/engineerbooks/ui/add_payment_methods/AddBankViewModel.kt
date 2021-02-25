@@ -30,7 +30,7 @@ class AddBankViewModel @Inject constructor(
     }
 
     fun addBankAccount() {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(false)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

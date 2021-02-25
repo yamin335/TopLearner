@@ -18,7 +18,7 @@ class MainActivityViewModel @Inject constructor(private val application: Applica
     }
 
     fun getUserProfileInfo(mobileNumber: String) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(false)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

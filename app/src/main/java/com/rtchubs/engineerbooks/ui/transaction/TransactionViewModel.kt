@@ -29,7 +29,7 @@ class TransactionViewModel @Inject constructor(
     }
 
     fun getAllTransaction(studentId: Int) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -55,7 +55,7 @@ class TransactionViewModel @Inject constructor(
     }
 
     fun getAdminTransactions(mobile: String) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

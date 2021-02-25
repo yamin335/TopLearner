@@ -191,17 +191,17 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
                     if (it.price ?: 0.0 > 0.0) {
                         val paidBook = preferencesHelper.getPaidBook()
                         if (paidBook.isPaid && paidBook.classID == userData.class_id) {
-                            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
+                            navigateTo(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
                         } else {
                             val book = PaidBook(it.id, it.name, userData.class_id, userData.ClassName, false, it.price ?: 0.0)
                             navigateTo(Home2FragmentDirections.actionHome2FragmentToPaymentFragment(book))
                         }
                     } else {
-                        navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
+                        navigateTo(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
                     }
                 } else {
                     if (isTimeAndZoneAutomatic(context)) {
-                        if (checkNetworkStatus()) {
+                        if (checkNetworkStatus(true)) {
                             preferencesHelper.isDeviceTimeChanged = false
                             homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
 
@@ -218,23 +218,7 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
             }
         }
 
-        homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
-
-        if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
-            preferencesHelper.isDeviceTimeChanged = true
-            homeClassListAdapter?.setTimeChangeStatus(true)
-        }
-
-        val paidBook = preferencesHelper.getPaidBook()
-        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
-            homeClassListAdapter?.setPaymentStatus(paidBook.isPaid)
-        } else {
-            homeClassListAdapter?.setPaymentStatus(false)
-        }
-
-        viewDataBinding.homeClassListRecycler.adapter = homeClassListAdapter
-
-        viewModel.allBooks.observe(viewLifecycleOwner, Observer { books ->
+        viewModel.allBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
             books?.let {
                 val tempList = ArrayList<ClassWiseBook>()
                 var i = 1
@@ -259,6 +243,30 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
                     homeClassListAdapter?.setPaymentStatus(false)
                 }
 //                homeClassListAdapter.submitList(tempList)
+            }
+        })
+
+        homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
+
+        if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
+            preferencesHelper.isDeviceTimeChanged = true
+            homeClassListAdapter?.setTimeChangeStatus(true)
+        }
+
+        val paidBook = preferencesHelper.getPaidBook()
+        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
+            homeClassListAdapter?.setPaymentStatus(paidBook.isPaid)
+        } else {
+            homeClassListAdapter?.setPaymentStatus(false)
+        }
+
+        viewDataBinding.homeClassListRecycler.adapter = homeClassListAdapter
+
+        viewModel.allBooks.observe(viewLifecycleOwner, Observer { books ->
+            books?.let {
+                if (it.isNotEmpty()) {
+                    viewModel.saveBooksInDB(it)
+                }
             }
         })
 //        viewModel.getAcademicBooks(userData.mobile ?: "", userData.class_id ?: 0)

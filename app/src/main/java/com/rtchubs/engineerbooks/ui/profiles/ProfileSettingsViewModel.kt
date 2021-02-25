@@ -62,7 +62,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
     }
 
     fun getDistricts() {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -88,7 +88,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
     }
 
     fun getUpazilla(districtID: String) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -114,7 +114,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
     }
 
     fun getAcademicClass() {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -140,7 +140,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
     }
 
     fun uploadProfileImagesToServer(mobile: String, folder: String) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM).apply {
                 profileBitmap?.let {
                     val profileImageFile = it.toFile(context)
@@ -203,7 +203,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
     }
 
     fun registerNewUser(inquiryAccount: InquiryAccount) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -229,7 +229,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
     }
 
     fun updateUserProfile(inquiryAccount: InquiryAccount) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -257,7 +257,7 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
     }
 
     fun getUserProfileInfo(mobileNumber: String) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

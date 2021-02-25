@@ -11,6 +11,11 @@ import com.rtchubs.engineerbooks.databinding.ChapterListFragmentBinding
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 
 class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterListViewModel>() {
+
+    companion object {
+        var bookID = ""
+    }
+
     override val bindingVariable: Int
         get() = BR.viewModel
     override val layoutId: Int
@@ -23,7 +28,6 @@ class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterList
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         registerToolbar(viewDataBinding.toolbar)
 
         viewDataBinding.toolbar.title = args.book.title
@@ -37,12 +41,24 @@ class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterList
 
         viewDataBinding.rvChapterList.adapter = chapterListAdapter
 
+        bookID = args.book.udid
+
+        viewModel.chapterListFromDB.observe(viewLifecycleOwner, Observer { chapters ->
+            chapters?.let {
+                if (it.chapters.isNullOrEmpty()) {
+                    viewDataBinding.emptyView.visibility = View.VISIBLE
+                } else {
+                    chapterListAdapter.submitList(it.chapters)
+                    viewDataBinding.emptyView.visibility = View.GONE
+                }
+            }
+        })
+
         viewModel.chapterList.observe(viewLifecycleOwner, Observer { chapters ->
-            if (chapters.isNullOrEmpty()) {
-                viewDataBinding.emptyView.visibility = View.VISIBLE
-            } else {
-                chapterListAdapter.submitList(chapters)
-                viewDataBinding.emptyView.visibility = View.GONE
+            chapters?.let {
+                if (it.isNotEmpty()) {
+                    viewModel.saveBookChaptersInDB(bookID, chapters)
+                }
             }
         })
 

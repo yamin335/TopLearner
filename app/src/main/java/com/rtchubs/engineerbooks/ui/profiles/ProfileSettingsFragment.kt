@@ -611,7 +611,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             viewModel.getAcademicClass()
         }
 
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             viewModel.getUserProfileInfo(userData.mobile ?: "")
         } else {
             prepareUserData(userData)

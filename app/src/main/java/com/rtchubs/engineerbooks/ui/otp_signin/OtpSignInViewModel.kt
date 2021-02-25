@@ -1,13 +1,9 @@
 package com.rtchubs.engineerbooks.ui.otp_signin
 
 import android.app.Application
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.rtchubs.engineerbooks.api.*
-import com.rtchubs.engineerbooks.models.registration.DefaultResponse
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.models.registration.InquiryResponse
 import com.rtchubs.engineerbooks.repos.RegistrationRepository
@@ -32,7 +28,7 @@ class OtpSignInViewModel @Inject constructor(private val application: Applicatio
     }
 
     fun requestOTPCode(registrationHelper: InquiryAccount) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -64,7 +60,7 @@ class OtpSignInViewModel @Inject constructor(private val application: Applicatio
     }
 
     fun verifyOTPCode(registrationHelper: InquiryAccount) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

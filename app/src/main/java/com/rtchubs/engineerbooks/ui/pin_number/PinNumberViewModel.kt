@@ -42,7 +42,7 @@ class PinNumberViewModel @Inject constructor(
     }
 
     fun loginUser(inquiryAccount: InquiryAccount) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -71,7 +71,7 @@ class PinNumberViewModel @Inject constructor(
     }
 
     fun verifyOTPCode(registrationHelper: InquiryAccount) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -104,7 +104,7 @@ class PinNumberViewModel @Inject constructor(
     }
 
     fun resetPin(mobileNumber: String, pin: String) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

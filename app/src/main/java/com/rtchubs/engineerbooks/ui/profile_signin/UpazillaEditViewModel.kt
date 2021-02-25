@@ -1,15 +1,9 @@
 package com.rtchubs.engineerbooks.ui.profile_signin
 
 import android.app.Application
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.rtchubs.engineerbooks.api.*
-import com.rtchubs.engineerbooks.models.registration.DefaultResponse
-import com.rtchubs.engineerbooks.models.registration.InquiryAccount
-import com.rtchubs.engineerbooks.models.registration.InquiryResponse
 import com.rtchubs.engineerbooks.models.registration.Upazilla
 import com.rtchubs.engineerbooks.repos.RegistrationRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
@@ -24,7 +18,7 @@ class UpazillaEditViewModel @Inject constructor(private val application: Applica
     }
 
     fun getUpazilla(districtID: String) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

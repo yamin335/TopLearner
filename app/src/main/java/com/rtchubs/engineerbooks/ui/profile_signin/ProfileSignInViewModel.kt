@@ -2,27 +2,20 @@ package com.rtchubs.engineerbooks.ui.profile_signin
 
 import android.app.Application
 import android.graphics.Bitmap
-import android.net.Uri
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.models.registration.*
 import com.rtchubs.engineerbooks.repos.MediaRepository
 import com.rtchubs.engineerbooks.repos.RegistrationRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
 import com.rtchubs.engineerbooks.util.AppConstants.serverConnectionErrorMessage
-import com.rtchubs.engineerbooks.util.asFile
-import com.rtchubs.engineerbooks.util.asFilePart
 import com.rtchubs.engineerbooks.util.toFile
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
 import javax.inject.Inject
 
 class ProfileSignInViewModel @Inject constructor(
@@ -66,7 +59,7 @@ class ProfileSignInViewModel @Inject constructor(
     }
 
     fun getDistricts() {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -92,7 +85,7 @@ class ProfileSignInViewModel @Inject constructor(
     }
 
     fun getUpazilla(districtID: String) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -118,7 +111,7 @@ class ProfileSignInViewModel @Inject constructor(
     }
 
     fun getAcademicClass() {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -144,7 +137,7 @@ class ProfileSignInViewModel @Inject constructor(
     }
 
     fun uploadProfileImagesToServer(mobile: String, folder: String) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM).apply {
                 profileBitmap?.let {
                     val profileImageFile = it.toFile(context)
@@ -207,7 +200,7 @@ class ProfileSignInViewModel @Inject constructor(
     }
 
     fun registerNewUser(inquiryAccount: InquiryAccount) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -233,7 +226,7 @@ class ProfileSignInViewModel @Inject constructor(
     }
 
     fun updateUserProfile(inquiryAccount: InquiryAccount) {
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)

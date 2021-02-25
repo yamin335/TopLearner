@@ -553,7 +553,6 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                             }
                         } else {
                             val downloadUrl = "$VIDEOS/$fileName"
-                            viewModel.showHideProgress.postValue(true)
                             viewModel.downloadVideoFile(downloadUrl, filepath, fileName)
                             downloadingFile = File(filepath, fileName)
                         }

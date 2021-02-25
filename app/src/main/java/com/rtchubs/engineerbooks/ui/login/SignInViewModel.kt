@@ -22,7 +22,7 @@ class SignInViewModel @Inject constructor(private val application: Application, 
 
     fun inquireAccount(): LiveData<InquiryResponse> {
         val response: MutableLiveData<InquiryResponse> = MutableLiveData()
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
@@ -53,7 +53,7 @@ class SignInViewModel @Inject constructor(private val application: Application, 
 
     fun requestOTPCode(registrationHelper: InquiryAccount): LiveData<InquiryResponse> {
         val response: MutableLiveData<InquiryResponse> = MutableLiveData()
-        if (checkNetworkStatus()) {
+        if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
