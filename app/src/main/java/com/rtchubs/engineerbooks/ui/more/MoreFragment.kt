@@ -154,8 +154,16 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
             navigateTo(MoreFragmentDirections.actionMoreFragmentToEcodeFragment())
         }
 
-        viewDataBinding.mSocialMedia.setOnClickListener {
-            socialMediaBottomSheetDialog.show(childFragmentManager, "#Social_Media_Bottom_Modal")
+//        viewDataBinding.mSocialMedia.setOnClickListener {
+//            socialMediaBottomSheetDialog.show(childFragmentManager, "#Social_Media_Bottom_Modal")
+//        }
+
+        viewDataBinding.mFacebook.setOnClickListener {
+            goToFacebook(requireContext(), "engineersapps")
+        }
+
+        viewDataBinding.mYoutube.setOnClickListener {
+            goToYoutube(requireContext(), "engineersapps")
         }
 
         viewDataBinding.mShare.setOnClickListener {

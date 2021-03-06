@@ -89,6 +89,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 //
 //            startActivity(intent)
 
+            // --------bKash start--------
+
             val checkout = BKashCheckout(viewModel.amount.value ?: "0", "authorization", "two")
 
             bkashPgwDialog = BKashDialogFragment(object : BKashDialogFragment.BkashPaymentCallback {
@@ -111,6 +113,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             bkashPgwDialog.isCancelable = true
             bkashPgwDialog.show(childFragmentManager, "#bkash_payment_dialog")
 
+            // --------bKash End--------
+
 //            viewModel.createOrder(
 //                CreateOrderBody(
 //                    userData.id ?: 0, userData.mobile ?: "",
@@ -118,7 +122,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 //                    0, "", userData.upazila ?: "", userData.city ?: "",
 //                    userData.UpazilaID ?: 0, userData.CityID ?: 0, generateInvoiceID(),
 //                    "", "", args.book.bookID ?: 0, userData.class_id ?: 0,
-//                    "${userData.firstName ?: ""} ${userData.lastName ?: ""}", args.book.bookName ?: "", ""
+//                    "${userData.first_name ?: ""} ${userData.last_name ?: ""}", args.book.bookName ?: "", ""
 //                )
 //            )
         }

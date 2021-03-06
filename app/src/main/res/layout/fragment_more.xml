@@ -497,7 +497,7 @@
                     android:visibility="gone"
                     android:layout_marginStart="56dp"/>
                 <com.google.android.material.circularreveal.cardview.CircularRevealCardView
-                    android:id="@+id/mSocialMedia"
+                    android:id="@+id/mFacebook"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
@@ -518,15 +518,64 @@
                             android:layout_marginEnd="8dp"
                             android:layout_centerVertical="true"
                             android:layout_alignParentStart="true"
-                            app:srcCompat="@drawable/ic_social_media"/>
+                            app:srcCompat="@drawable/ic_facebook"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="সামাজিক মাধ্যম"
+                            android:text="ফেইসবুক পেজ"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
                             android:layout_toEndOf="@id/icFacebook"
+                            android:layout_toStartOf="@id/arrow11"/>
+                        <ImageView
+                            android:id="@+id/arrow11"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            app:tint="@color/grayColor"
+                            android:visibility="gone"
+                            android:layout_alignParentEnd="true"
+                            app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"/>
+                    </RelativeLayout>
+                </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+                <View
+                    android:background="?android:attr/listDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:visibility="gone"
+                    android:layout_marginStart="56dp"/>
+                <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                    android:id="@+id/mYoutube"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:contentPaddingLeft="16dp"
+                    app:contentPaddingRight="10dp"
+                    app:contentPaddingTop="8dp"
+                    app:contentPaddingBottom="8dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icYoutube"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@drawable/ic_youtube"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="ইউটিউব চ্যানেল"
+                            android:textSize="18sp"
+                            android:gravity="center_vertical"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/icYoutube"
                             android:layout_toStartOf="@id/arrow8"/>
                         <ImageView
                             android:id="@+id/arrow8"
@@ -610,7 +659,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <ImageView
-                            android:id="@+id/icYoutube"
+                            android:id="@+id/icHelpline"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:layout_marginEnd="8dp"
@@ -624,7 +673,7 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
-                            android:layout_toEndOf="@id/icYoutube"
+                            android:layout_toEndOf="@id/icHelpline"
                             android:layout_toStartOf="@id/arrow7"/>
                         <ImageView
                             android:id="@+id/arrow7"

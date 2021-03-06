@@ -85,7 +85,7 @@ class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, Profi
         viewDataBinding.homeContact.text = if (user.home_mobile.isNullOrBlank()) "N/A" else user.home_mobile
         viewDataBinding.email.text = if (user.email.isNullOrBlank()) "N/A" else user.email
         viewDataBinding.nidNo.text = if (user.nidnumber.isNullOrBlank()) "N/A" else user.nidnumber
-        viewDataBinding.birthDate.text = if (user.birth_date.isNullOrBlank()) "N/A" else user.birth_date
+        viewDataBinding.birthDate.text = if (user.BirthDate.isNullOrBlank()) "N/A" else user.BirthDate
         viewDataBinding.bloodGroup.text = "N/A"
         viewDataBinding.presentAddress.text = if (user.present_address.isNullOrBlank()) "N/A" else user.present_address
         viewDataBinding.permanentAddress.text = if (user.parmanent_address.isNullOrBlank()) "N/A" else user.parmanent_address

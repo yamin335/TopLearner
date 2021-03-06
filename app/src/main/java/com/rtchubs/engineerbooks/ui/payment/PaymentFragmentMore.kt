@@ -19,6 +19,7 @@ import com.rtchubs.engineerbooks.ui.home.Home2Fragment
 import com.rtchubs.engineerbooks.util.hideKeyboard
 import com.rtchubs.engineerbooks.util.showErrorToast
 import com.rtchubs.engineerbooks.util.showSuccessToast
+import java.security.SecureRandom
 
 class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewModel>() {
 
@@ -88,26 +89,80 @@ class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewMode
 //
 //            startActivity(intent)
 
+//            val checkout = BKashCheckout(viewModel.amount.value ?: "0", "authorization", "two")
+//
+//            bkashPgwDialog = BKashDialogFragment(object : BKashDialogFragment.BkashPaymentCallback {
+//                override fun onPaymentSuccess(bkashResponse: BKashPaymentResponse) {
+//                    saveBKaskPayment(bkashResponse)
+//                }
+//
+//                override fun onPaymentFailed() {
+//                    showErrorToast(requireContext(), "Purchase is not successful, Payment failed!")
+//                }
+//
+//                override fun onPaymentCancelled() {
+//                    showErrorToast(requireContext(), "Purchase is not successful, Payment cancelled!")
+//                }
+//
+//            }, checkout)
+//            bkashPgwDialog.isCancelable = true
+//            bkashPgwDialog.show(childFragmentManager, "#bkash_payment_dialog")
+
+            // --------bKash start--------
+
             val checkout = BKashCheckout(viewModel.amount.value ?: "0", "authorization", "two")
 
             bkashPgwDialog = BKashDialogFragment(object : BKashDialogFragment.BkashPaymentCallback {
                 override fun onPaymentSuccess(bkashResponse: BKashPaymentResponse) {
                     saveBKaskPayment(bkashResponse)
+                    bkashPgwDialog.dismiss()
                 }
 
                 override fun onPaymentFailed() {
                     showErrorToast(requireContext(), "Purchase is not successful, Payment failed!")
+                    bkashPgwDialog.dismiss()
                 }
 
                 override fun onPaymentCancelled() {
                     showErrorToast(requireContext(), "Purchase is not successful, Payment cancelled!")
+                    bkashPgwDialog.dismiss()
                 }
 
             }, checkout)
             bkashPgwDialog.isCancelable = true
             bkashPgwDialog.show(childFragmentManager, "#bkash_payment_dialog")
+
+            // --------bKash End--------
+
+//            viewModel.createOrder(
+//                CreateOrderBody(
+//                    userData.id ?: 0, userData.mobile ?: "",
+//                    viewModel.amount.value?.toDouble()?.toInt() ?: 0, 0, 0,
+//                    0, "", userData.upazila ?: "", userData.city ?: "",
+//                    userData.UpazilaID ?: 0, userData.CityID ?: 0, generateInvoiceID(),
+//                    "", "", args.book.bookID ?: 0, userData.class_id ?: 0,
+//                    "${userData.first_name ?: ""} ${userData.last_name ?: ""}", args.book.bookName ?: "", "sfdsfsd"
+//                )
+//            )
         }
     }
+
+//    private fun saveBKaskPayment(response: BKashPaymentResponse) {
+//        val firstName = userData.first_name ?: ""
+//        val lastName = userData.last_name ?: ""
+//
+//        val amount = response.amount.toDouble()
+//        viewModel.createOrder(
+//            CreateOrderBody(
+//                userData.id ?: 0, userData.mobile ?: "",
+//                amount.toInt(), 0, 0,
+//                0, "", userData.upazila ?: "", userData.city ?: "",
+//                userData.UpazilaID ?: 0, userData.CityID ?: 0, "",
+//                "", "", args.book.bookID ?: 0, userData.class_id ?: 0,
+//                "$firstName $lastName", args.book.bookName ?: ""
+//            )
+//        )
+//    }
 
     private fun saveBKaskPayment(response: BKashPaymentResponse) {
         val firstName = userData.first_name ?: ""
@@ -119,10 +174,16 @@ class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewMode
                 userData.id ?: 0, userData.mobile ?: "",
                 amount.toInt(), 0, 0,
                 0, "", userData.upazila ?: "", userData.city ?: "",
-                userData.UpazilaID ?: 0, userData.CityID ?: 0, "",
-                "", "", args.book.bookID ?: 0, userData.class_id ?: 0,
-                "$firstName $lastName", args.book.bookName ?: ""
+                userData.UpazilaID ?: 0, userData.CityID ?: 0, generateInvoiceID(),
+                "", response.paymentID, args.book.bookID ?: 0, userData.class_id ?: 0,
+                "$firstName $lastName", args.book.bookName ?: "", response.transactionID
             )
         )
+    }
+
+    private fun generateInvoiceID(): String {
+        val random1 = "${1 + SecureRandom().nextInt(9999)}"
+        val random2 = "${1 + SecureRandom().nextInt(9999)}"
+        return "${random1}${random2}"
     }
 }
