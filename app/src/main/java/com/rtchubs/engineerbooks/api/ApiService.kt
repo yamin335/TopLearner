@@ -2,8 +2,11 @@ package com.rtchubs.engineerbooks.api
 
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.Api.ContentType
+import com.rtchubs.engineerbooks.models.OfferResponse
+import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
 import com.rtchubs.engineerbooks.models.common.MyAccountListResponse
 import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
+import com.rtchubs.engineerbooks.models.notice_board.NoticeResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.AddCardOrBankResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.BankOrCardListResponse
 import com.rtchubs.engineerbooks.models.registration.*
@@ -46,6 +49,9 @@ interface ApiService {
     @POST(ApiEndPoint.BOOKS)
     suspend fun getBooks(@Body jsonString: String): Response<ClassWiseBookResponse>
 
+    @POST(ApiEndPoint.CHAPTERS)
+    suspend fun getChapters(@Body jsonString: String): Response<ChapterResponse>
+
     @GET(ApiEndPoint.DISTRICT)
     suspend fun getDistrict(): Response<DistrictResponse>
 
@@ -61,6 +67,11 @@ interface ApiService {
     @POST(ApiEndPoint.TRANSACTION)
     suspend fun transactionHistory(@Body jsonString: String): Response<TransactionHistoryResponse>
 
+    @POST(ApiEndPoint.OFFER)
+    suspend fun getOffers(@Body jsonString: String): Response<OfferResponse>
+
+    @POST(ApiEndPoint.NOTICE)
+    suspend fun getNotices(@Body jsonString: String): Response<NoticeResponse>
 
 
     @Multipart

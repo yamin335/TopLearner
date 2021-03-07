@@ -11,7 +11,6 @@ import com.google.gson.Gson
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
-import com.rtchubs.engineerbooks.models.PaymentMethod
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.registration.DefaultResponse
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
@@ -114,24 +113,6 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
-
-    val paymentMethodList: List<PaymentMethod>
-        get() = listOf(
-            /* PaymentMethod(
-                 "0",
-                 "\u2022\u2022\u2022\u2022 4122",R.drawable.maestro
-
-             ),
-             PaymentMethod(
-                 "1",
-                 "\u2022\u2022\u2022\u2022 9120",R.drawable.visa
-             ),*/
-            PaymentMethod(
-                "-1",
-                "Add Payment Method", R.drawable.plus
-            )
-        )
 
 
     val slideDataList = listOf(

@@ -18,6 +18,5 @@
     <item
         android:id="@+id/settings_navigation"
         android:title="Settings"
-        android:icon="@drawable/settings_a"
         android:menuCategory="secondary"/>
 </menu>

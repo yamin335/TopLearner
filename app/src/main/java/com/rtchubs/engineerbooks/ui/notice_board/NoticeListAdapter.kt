@@ -18,7 +18,7 @@ class NoticeListAdapter(
     appExecutors = appExecutors,
     diffCallback = object : DiffUtil.ItemCallback<Notice>() {
         override fun areItemsTheSame(oldItem: Notice, newItem: Notice): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.udid == newItem.udid
         }
 
         @SuppressLint("DiffUtilEquals")

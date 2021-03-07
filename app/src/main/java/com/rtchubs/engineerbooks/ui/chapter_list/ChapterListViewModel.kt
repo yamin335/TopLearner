@@ -10,6 +10,7 @@ import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
 import com.rtchubs.engineerbooks.local_db.dbo.ChapterItem
 import com.rtchubs.engineerbooks.models.chapter.BookChapter
+import com.rtchubs.engineerbooks.repos.HomeRepository
 import com.rtchubs.engineerbooks.repos.MediaRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
 import com.rtchubs.engineerbooks.util.AppConstants
@@ -21,7 +22,8 @@ import javax.inject.Inject
 class ChapterListViewModel @Inject constructor(
     private val application: Application,
     private val mediaRepository: MediaRepository,
-    private val bookChapterDao: BookChapterDao
+    private val bookChapterDao: BookChapterDao,
+    private val homeRepository: HomeRepository
     ) : BaseViewModel(application) {
 
     val chapterListFromDB: LiveData<ChapterItem> = liveData {
@@ -48,7 +50,7 @@ class ChapterListViewModel @Inject constructor(
         MutableLiveData<List<BookChapter>>()
     }
 
-    fun getChapterList(bookID: String?) {
+    fun getChapterList(bookID: Int?) {
         if (checkNetworkStatus(false)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -59,7 +61,7 @@ class ChapterListViewModel @Inject constructor(
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(mediaRepository.getChaptersRepo(bookID))) {
+                when (val apiResponse = ApiResponse.create(homeRepository.getChaptersRepo(bookID))) {
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
                         chapterList.postValue(apiResponse.body.data?.chapters)

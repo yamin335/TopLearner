@@ -62,6 +62,6 @@ class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterList
             }
         })
 
-        viewModel.getChapterList(args.book.udid)
+        viewModel.getChapterList(args.book.id)
     }
 }

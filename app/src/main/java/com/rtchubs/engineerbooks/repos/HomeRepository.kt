@@ -3,8 +3,10 @@ package com.rtchubs.engineerbooks.repos
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.AdminApiService
 import com.rtchubs.engineerbooks.api.ApiService
+import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
 import com.rtchubs.engineerbooks.models.home.AllBookResponse
 import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
+import com.rtchubs.engineerbooks.models.notice_board.NoticeResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.AddCardOrBankResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.BankOrCardListResponse
 import kotlinx.coroutines.Dispatchers
@@ -65,6 +67,35 @@ class HomeRepository @Inject constructor(@Named("auth") private val authApiServi
 
         return withContext(Dispatchers.IO) {
             apiService.addCardAccount(jsonObjectBody, token)
+        }
+    }
+
+    suspend fun noticeRepo(mobile: String?): Response<NoticeResponse> {
+        val jsonObjectBody = JsonObject().apply {
+            addProperty("mobile", mobile)
+        }
+
+        return withContext(Dispatchers.IO) {
+            authApiService.getNotices(jsonObjectBody.toString())
+        }
+    }
+
+    suspend fun offerRepo(mobile: String?): Response<NoticeResponse> {
+        val jsonObjectBody = JsonObject().apply {
+            addProperty("mobile", mobile)
+        }
+
+        return withContext(Dispatchers.IO) {
+            authApiService.getNotices(jsonObjectBody.toString())
+        }
+    }
+
+    suspend fun getChaptersRepo(bookID: Int?): Response<ChapterResponse> {
+        val jsonObjectBody = JsonObject().apply {
+            addProperty("book_id", bookID)
+        }
+        return withContext(Dispatchers.IO) {
+            authApiService.getChapters(jsonObjectBody.toString())
         }
     }
 }
