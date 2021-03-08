@@ -44,8 +44,6 @@ class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewMode
 
         userData = preferencesHelper.getUser()
 
-        viewModel.amount.postValue(args.book.price.toString())
-
         viewModel.salesInvoice.observe(viewLifecycleOwner, Observer { invoice ->
             invoice?.let {
                 Home2Fragment.allBookList.map { classWiseBook ->
@@ -70,7 +68,27 @@ class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewMode
             }
         })
 
+        viewModel.offers.observe(viewLifecycleOwner, Observer {
+            it?.let { offers ->
+                if (offers.isNotEmpty()) {
+                    offers.forEach { offer ->
+                        if (offer.archived == false) {
+                            val offerAmount = offer.offer_amount ?: 0
+                            val temp = args.book.price
+                            var amount = temp.toInt()
+                            amount -= offerAmount
+                            viewModel.amount.postValue(amount.toString())
+                            return@Observer
+                        }
+                    }
+                }
+            }
+            viewModel.amount.postValue(args.book.price.toString())
+        })
+
         viewDataBinding.btnPayNow.setOnClickListener {
+
+            shoWBkashDialog()
 
 //            val checkout = Checkout()
 //            checkout.setAmount("10")
@@ -89,51 +107,6 @@ class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewMode
 //
 //            startActivity(intent)
 
-//            val checkout = BKashCheckout(viewModel.amount.value ?: "0", "authorization", "two")
-//
-//            bkashPgwDialog = BKashDialogFragment(object : BKashDialogFragment.BkashPaymentCallback {
-//                override fun onPaymentSuccess(bkashResponse: BKashPaymentResponse) {
-//                    saveBKaskPayment(bkashResponse)
-//                }
-//
-//                override fun onPaymentFailed() {
-//                    showErrorToast(requireContext(), "Purchase is not successful, Payment failed!")
-//                }
-//
-//                override fun onPaymentCancelled() {
-//                    showErrorToast(requireContext(), "Purchase is not successful, Payment cancelled!")
-//                }
-//
-//            }, checkout)
-//            bkashPgwDialog.isCancelable = true
-//            bkashPgwDialog.show(childFragmentManager, "#bkash_payment_dialog")
-
-            // --------bKash start--------
-
-            val checkout = BKashCheckout(viewModel.amount.value ?: "0", "authorization", "two")
-
-            bkashPgwDialog = BKashDialogFragment(object : BKashDialogFragment.BkashPaymentCallback {
-                override fun onPaymentSuccess(bkashResponse: BKashPaymentResponse) {
-                    saveBKaskPayment(bkashResponse)
-                    bkashPgwDialog.dismiss()
-                }
-
-                override fun onPaymentFailed() {
-                    showErrorToast(requireContext(), "Purchase is not successful, Payment failed!")
-                    bkashPgwDialog.dismiss()
-                }
-
-                override fun onPaymentCancelled() {
-                    showErrorToast(requireContext(), "Purchase is not successful, Payment cancelled!")
-                    bkashPgwDialog.dismiss()
-                }
-
-            }, checkout)
-            bkashPgwDialog.isCancelable = true
-            bkashPgwDialog.show(childFragmentManager, "#bkash_payment_dialog")
-
-            // --------bKash End--------
-
 //            viewModel.createOrder(
 //                CreateOrderBody(
 //                    userData.id ?: 0, userData.mobile ?: "",
@@ -141,10 +114,39 @@ class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewMode
 //                    0, "", userData.upazila ?: "", userData.city ?: "",
 //                    userData.UpazilaID ?: 0, userData.CityID ?: 0, generateInvoiceID(),
 //                    "", "", args.book.bookID ?: 0, userData.class_id ?: 0,
-//                    "${userData.first_name ?: ""} ${userData.last_name ?: ""}", args.book.bookName ?: "", "sfdsfsd"
+//                    "${userData.first_name ?: ""} ${userData.last_name ?: ""}", args.book.bookName ?: "", ""
 //                )
 //            )
         }
+        viewModel.getAllOffers(userData.CityID, userData.UpazilaID)
+    }
+
+    private fun shoWBkashDialog() {
+        // --------bKash start--------
+
+        val checkout = BKashCheckout(viewModel.amount.value ?: "0", "authorization", "two")
+
+        bkashPgwDialog = BKashDialogFragment(object : BKashDialogFragment.BkashPaymentCallback {
+            override fun onPaymentSuccess(bkashResponse: BKashPaymentResponse) {
+                saveBKaskPayment(bkashResponse)
+                bkashPgwDialog.dismiss()
+            }
+
+            override fun onPaymentFailed() {
+                showErrorToast(requireContext(), "Purchase is not successful, Payment failed!")
+                bkashPgwDialog.dismiss()
+            }
+
+            override fun onPaymentCancelled() {
+                showErrorToast(requireContext(), "Purchase is not successful, Payment cancelled!")
+                bkashPgwDialog.dismiss()
+            }
+
+        }, checkout)
+        bkashPgwDialog.isCancelable = true
+        bkashPgwDialog.show(childFragmentManager, "#bkash_payment_dialog")
+
+        // --------bKash End--------
     }
 
 //    private fun saveBKaskPayment(response: BKashPaymentResponse) {
