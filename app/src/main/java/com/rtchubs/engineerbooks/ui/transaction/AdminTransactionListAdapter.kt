@@ -19,7 +19,6 @@ import java.util.*
 class AdminTransactionListAdapter(
     private val appExecutors: AppExecutors,
     private val itemCallback: ((PartnerTransaction) -> Unit)? = null
-
 ) : DataBoundListAdapter<PartnerTransaction, PartnerTransactionItemBinding>(
     appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<PartnerTransaction>() {
         override fun areItemsTheSame(oldItem: PartnerTransaction, newItem: PartnerTransaction): Boolean {

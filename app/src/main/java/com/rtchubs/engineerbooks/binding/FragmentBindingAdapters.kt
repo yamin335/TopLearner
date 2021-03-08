@@ -39,7 +39,10 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputLayout
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiCallStatus
-import com.rtchubs.engineerbooks.util.*
+import com.rtchubs.engineerbooks.util.Validator
+import com.rtchubs.engineerbooks.util.afterTextChanged
+import com.rtchubs.engineerbooks.util.isValid
+import com.rtchubs.engineerbooks.util.openWebsiteUrl
 
 
 /**
@@ -83,7 +86,7 @@ class FragmentBindingAdapters {
     fun bindImage(imageView: ImageView, resName: String) {
         val context = imageView.context
         val resId = context.resources.getIdentifier(resName, "drawable", context.packageName)
-        imageView.setImageResource(if (resId == 0) R.drawable.engineering_logo else resId)
+        imageView.setImageResource(if (resId == 0) R.drawable.book_1 else resId)
     }
 
     @BindingAdapter("android:src")

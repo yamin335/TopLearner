@@ -96,7 +96,7 @@
         //added attributes
         <item name="colorControlHighlight">@color/black</item>
 
-        <item name="passwordToggleDrawable">@drawable/drawable_password_toggle</item>
+<!--        <item name="passwordToggleDrawable">@drawable/drawable_password_toggle</item>-->
     </style>
     <style name="TextInputLayoutStyle.Amount">
     </style>

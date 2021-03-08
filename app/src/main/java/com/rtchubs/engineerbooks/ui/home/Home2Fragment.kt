@@ -220,13 +220,14 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
 
         viewModel.allBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
             books?.let {
-                val tempList = ArrayList<ClassWiseBook>()
-                var i = 1
-                it.forEach { book ->
-                    book.id = i++
-                    tempList.add(book)
-                }
-                allBookList = tempList
+//                val tempList = ArrayList<ClassWiseBook>()
+//                var i = 1
+//                it.forEach { book ->
+//                    book.id = i++
+//                    tempList.add(book)
+//                }
+//                allBookList = tempList
+                allBookList = it as ArrayList<ClassWiseBook>
                 homeClassListAdapter?.submitList(allBookList)
 
                 homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)

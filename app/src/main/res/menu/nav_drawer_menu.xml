@@ -14,7 +14,7 @@
 
         <item
             android:id="@+id/nav_settings"
-            android:icon="@drawable/transactions"
+            android:icon="@drawable/icons8_transaction_80"
             android:title="@string/settings"
             app:contentDescription="All settings" />
     </group>
@@ -25,7 +25,7 @@
 
         <item
             android:id="@+id/nav_info"
-            android:icon="@drawable/info"
+            android:icon="@drawable/ic_notice_board"
             android:title="@string/info"
             app:contentDescription="Detail description of developers" />
     </group>

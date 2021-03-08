@@ -44,8 +44,6 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         userData = preferencesHelper.getUser()
 
-        viewModel.amount.postValue(args.book.price.toString())
-
         viewModel.salesInvoice.observe(viewLifecycleOwner, Observer { invoice ->
             invoice?.let {
                 Home2Fragment.allBookList.map { classWiseBook ->
@@ -70,7 +68,27 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             }
         })
 
+        viewModel.offers.observe(viewLifecycleOwner, Observer {
+            it?.let { offers ->
+                if (offers.isNotEmpty()) {
+                    offers.forEach { offer ->
+                        if (offer.archived == false) {
+                            val offerAmount = offer.offer_amount ?: 0
+                            val temp = args.book.price
+                            var amount = temp.toInt()
+                            amount -= offerAmount
+                            viewModel.amount.postValue(amount.toString())
+                            return@Observer
+                        }
+                    }
+                }
+            }
+            viewModel.amount.postValue(args.book.price.toString())
+        })
+
         viewDataBinding.btnPayNow.setOnClickListener {
+
+            shoWBkashDialog()
 
 //            val checkout = Checkout()
 //            checkout.setAmount("10")
@@ -89,32 +107,6 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 //
 //            startActivity(intent)
 
-            // --------bKash start--------
-
-            val checkout = BKashCheckout(viewModel.amount.value ?: "0", "authorization", "two")
-
-            bkashPgwDialog = BKashDialogFragment(object : BKashDialogFragment.BkashPaymentCallback {
-                override fun onPaymentSuccess(bkashResponse: BKashPaymentResponse) {
-                    saveBKaskPayment(bkashResponse)
-                    bkashPgwDialog.dismiss()
-                }
-
-                override fun onPaymentFailed() {
-                    showErrorToast(requireContext(), "Purchase is not successful, Payment failed!")
-                    bkashPgwDialog.dismiss()
-                }
-
-                override fun onPaymentCancelled() {
-                    showErrorToast(requireContext(), "Purchase is not successful, Payment cancelled!")
-                    bkashPgwDialog.dismiss()
-                }
-
-            }, checkout)
-            bkashPgwDialog.isCancelable = true
-            bkashPgwDialog.show(childFragmentManager, "#bkash_payment_dialog")
-
-            // --------bKash End--------
-
 //            viewModel.createOrder(
 //                CreateOrderBody(
 //                    userData.id ?: 0, userData.mobile ?: "",
@@ -126,6 +118,35 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 //                )
 //            )
         }
+        viewModel.getAllOffers(userData.CityID, userData.UpazilaID)
+    }
+
+    private fun shoWBkashDialog() {
+        // --------bKash start--------
+
+        val checkout = BKashCheckout(viewModel.amount.value ?: "0", "authorization", "two")
+
+        bkashPgwDialog = BKashDialogFragment(object : BKashDialogFragment.BkashPaymentCallback {
+            override fun onPaymentSuccess(bkashResponse: BKashPaymentResponse) {
+                saveBKaskPayment(bkashResponse)
+                bkashPgwDialog.dismiss()
+            }
+
+            override fun onPaymentFailed() {
+                showErrorToast(requireContext(), "Purchase is not successful, Payment failed!")
+                bkashPgwDialog.dismiss()
+            }
+
+            override fun onPaymentCancelled() {
+                showErrorToast(requireContext(), "Purchase is not successful, Payment cancelled!")
+                bkashPgwDialog.dismiss()
+            }
+
+        }, checkout)
+        bkashPgwDialog.isCancelable = true
+        bkashPgwDialog.show(childFragmentManager, "#bkash_payment_dialog")
+
+        // --------bKash End--------
     }
 
     private fun saveBKaskPayment(response: BKashPaymentResponse) {

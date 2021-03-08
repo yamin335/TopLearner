@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data class="OfferFragmentBinding">
+        <variable
+            name="viewModel"
+            type="com.rtchubs.engineerbooks.ui.offer.OfferViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,12 +36,25 @@
                 app:titleTextColor="@color/accent" />
         </com.google.android.material.appbar.AppBarLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvOfferList"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:paddingBottom="32dp"
+            android:clipToPadding="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appbar"
+            tools:listitem="@layout/list_item_offer" />
+
         <TextView
             android:id="@+id/emptyView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Empty"
+            android:text="No Offer Found"
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -60,7 +76,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="-6dp"
                 android:indeterminate="true"
-                android:indeterminateTint="@color/themeButtonColor" />
+                android:indeterminateTint="@color/themeButtonColor"
+                app:showLoader="@{viewModel.apiCallStatus}"/>
         </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

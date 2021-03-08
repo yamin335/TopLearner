@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.NoticeboardFragmentBinding
+import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 
 class NoticeBoardFragment : BaseFragment<NoticeboardFragmentBinding, NoticeBoardViewModel>() {
@@ -18,9 +19,13 @@ class NoticeBoardFragment : BaseFragment<NoticeboardFragmentBinding, NoticeBoard
 
     lateinit var noticeListAdapter: NoticeListAdapter
 
+    lateinit var userData: InquiryAccount
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         registerToolbar(viewDataBinding.toolbar)
+
+        userData = preferencesHelper.getUser()
 
         noticeListAdapter = NoticeListAdapter(appExecutors) { notice ->
         }
@@ -34,6 +39,6 @@ class NoticeBoardFragment : BaseFragment<NoticeboardFragmentBinding, NoticeBoard
             }
         })
 
-        viewModel.getAllNotices()
+        viewModel.getAllNotices(userData.mobile)
     }
 }

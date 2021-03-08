@@ -19,7 +19,6 @@ import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.MainActivityBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
-import com.rtchubs.engineerbooks.ui.home.Home2FragmentDirections
 import com.rtchubs.engineerbooks.util.hideKeyboard
 import com.rtchubs.engineerbooks.util.shouldCloseDrawerFromBackPress
 import dagger.android.support.DaggerAppCompatActivity
@@ -260,7 +259,7 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
                 currentNavController?.value?.let { navController ->
                     when (navController.graph.id) {
                         R.id.home_nav -> {
-                            navController.navigate(Home2FragmentDirections.actionHome2FragmentToExamsNavGraph())
+                            //navController.navigate(Home2FragmentDirections.actionHome2FragmentToExamsNavGraph())
                         }
                     }
                 }

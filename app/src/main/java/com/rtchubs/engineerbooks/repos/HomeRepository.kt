@@ -3,6 +3,7 @@ package com.rtchubs.engineerbooks.repos
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.AdminApiService
 import com.rtchubs.engineerbooks.api.ApiService
+import com.rtchubs.engineerbooks.models.OfferResponse
 import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
 import com.rtchubs.engineerbooks.models.home.AllBookResponse
 import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
@@ -80,13 +81,14 @@ class HomeRepository @Inject constructor(@Named("auth") private val authApiServi
         }
     }
 
-    suspend fun offerRepo(mobile: String?): Response<NoticeResponse> {
+    suspend fun offerRepo(cityId: Int?, upazillaId: Int?): Response<OfferResponse> {
         val jsonObjectBody = JsonObject().apply {
-            addProperty("mobile", mobile)
+            addProperty("city_id", cityId)
+            addProperty("upazila_id", upazillaId)
         }
 
         return withContext(Dispatchers.IO) {
-            authApiService.getNotices(jsonObjectBody.toString())
+            authApiService.getOffers(jsonObjectBody.toString())
         }
     }
 

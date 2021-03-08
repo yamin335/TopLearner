@@ -10,5 +10,5 @@
         android:id="@+id/menu_info"
         android:title="@string/pay"
         app:showAsAction="always"
-        android:icon="@drawable/info"/>
+        android:icon="@drawable/icons8_transaction_80"/>
 </menu>

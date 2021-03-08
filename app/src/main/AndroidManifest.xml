@@ -90,9 +90,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.bkash.WebViewCheckoutActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.MainActivity"
             android:clearTaskOnLaunch="true"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
