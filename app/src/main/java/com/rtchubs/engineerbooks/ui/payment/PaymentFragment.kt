@@ -16,6 +16,7 @@ import com.rtchubs.engineerbooks.models.transactions.CreateOrderBody
 import com.rtchubs.engineerbooks.ui.bkash.BKashDialogFragment
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.home.Home2Fragment
+import com.rtchubs.engineerbooks.util.getMilliFromDate
 import com.rtchubs.engineerbooks.util.hideKeyboard
 import com.rtchubs.engineerbooks.util.showErrorToast
 import com.rtchubs.engineerbooks.util.showSuccessToast
@@ -69,21 +70,29 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         })
 
         viewModel.offers.observe(viewLifecycleOwner, Observer {
+            val discount = (userData.discount_amount ?: 0.0).toInt()
             it?.let { offers ->
                 if (offers.isNotEmpty()) {
                     offers.forEach { offer ->
-                        if (offer.archived == false) {
+                        val firstDate = offer.EndDate?.split("T")?.first()?.getMilliFromDate() ?: Long.MAX_VALUE
+                        val lastDate = offer.EndDate?.split("T")?.first()?.getMilliFromDate() ?: Long.MAX_VALUE
+                        val date = System.currentTimeMillis()
+                        val validDate = firstDate..lastDate
+
+                        if (offer.archived == false && date in validDate) {
                             val offerAmount = offer.offer_amount ?: 0
                             val temp = args.book.price
                             var amount = temp.toInt()
                             amount -= offerAmount
+                            amount -= discount
                             viewModel.amount.postValue(amount.toString())
                             return@Observer
                         }
                     }
                 }
             }
-            viewModel.amount.postValue(args.book.price.toString())
+
+            viewModel.amount.postValue((args.book.price - discount).toString())
         })
 
         viewDataBinding.btnPayNow.setOnClickListener {

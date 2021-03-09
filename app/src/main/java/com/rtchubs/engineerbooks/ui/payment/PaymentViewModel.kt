@@ -10,7 +10,6 @@ import com.rtchubs.engineerbooks.models.transactions.Salesinvoice
 import com.rtchubs.engineerbooks.repos.HomeRepository
 import com.rtchubs.engineerbooks.repos.TransactionRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
-import com.rtchubs.engineerbooks.util.AppConstants
 import com.rtchubs.engineerbooks.util.AppConstants.serverConnectionErrorMessage
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -37,7 +36,7 @@ class PaymentViewModel @Inject constructor(private val application: Application,
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
-                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+                offers.postValue(null)
             }
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
@@ -49,9 +48,11 @@ class PaymentViewModel @Inject constructor(private val application: Application,
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                        offers.postValue(null)
                     }
                     is ApiErrorResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
+                        offers.postValue(null)
                     }
                 }
             }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.rtchubs.engineerbooks.ViewModelFactory
 import com.rtchubs.engineerbooks.nid_scan.NIDScanCameraXViewModel
+import com.rtchubs.engineerbooks.ui.LiveClassActivityViewModel
 import com.rtchubs.engineerbooks.ui.LoginActivityViewModel
 import com.rtchubs.engineerbooks.ui.MainActivityViewModel
 import com.rtchubs.engineerbooks.ui.about_us.AboutUsViewModel
@@ -207,4 +208,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(LiveClassScheduleViewModel::class)
     abstract fun bindLiveClassScheduleViewModel(viewModel: LiveClassScheduleViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LiveClassActivityViewModel::class)
+    abstract fun bindLiveClassActivityViewModel(viewModel: LiveClassActivityViewModel): ViewModel
 }

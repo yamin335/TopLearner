@@ -31,12 +31,15 @@
         android:versionName="1.0.0"
         tools:ignore="AllowBackup"
         tools:targetApi="m">
+        <activity android:name=".ui.LiveClassActivity"
+            android:screenOrientation="landscape"/>
         <activity
             android:name=".camerax.CameraXActivity"
-            android:theme="@style/AppTheme.CameraXTheme"
-            android:screenOrientation="fullUser"
             android:rotationAnimation="seamless"
+            android:screenOrientation="fullUser"
+            android:theme="@style/AppTheme.CameraXTheme"
             tools:targetApi="o">
+
             <!-- Register as a system camera app -->
             <intent-filter>
                 <action android:name="android.media.action.IMAGE_CAPTURE" />
@@ -104,7 +107,6 @@
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
-
         </activity>
 
         <meta-data

@@ -1,5 +1,6 @@
 package com.rtchubs.engineerbooks.di
 
+import com.rtchubs.engineerbooks.ui.LiveClassActivity
 import com.rtchubs.engineerbooks.ui.LoginActivity
 import com.rtchubs.engineerbooks.ui.MainActivity
 import dagger.Module
@@ -11,4 +12,6 @@ abstract class ActivityModule {
     abstract fun contributeLoginActivity(): LoginActivity
     @ContributesAndroidInjector(modules = [FragmentBuildersModule::class])
     abstract fun contributeMainActivity(): MainActivity
+    @ContributesAndroidInjector(modules = [FragmentBuildersModule::class])
+    abstract fun contributeLiveClassActivity(): LiveClassActivity
 }

@@ -18,7 +18,7 @@ class LiveClassScheduleListAdapter(
     appExecutors = appExecutors,
     diffCallback = object : DiffUtil.ItemCallback<LiveClassSchedule>() {
         override fun areItemsTheSame(oldItem: LiveClassSchedule, newItem: LiveClassSchedule): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.udid == newItem.udid
         }
 
         @SuppressLint("DiffUtilEquals")

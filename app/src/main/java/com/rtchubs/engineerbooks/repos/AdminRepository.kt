@@ -2,7 +2,6 @@ package com.rtchubs.engineerbooks.repos
 
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.AdminApiService
-import com.rtchubs.engineerbooks.models.LiveClassScheduleResponse
 import com.rtchubs.engineerbooks.models.transactions.PartnerTransactionResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -12,12 +11,6 @@ import javax.inject.Singleton
 
 @Singleton
 class AdminRepository @Inject constructor(private val adminApiService: AdminApiService) {
-
-    suspend fun liveClassScheduleRepo(classTypeID: Int): Response<LiveClassScheduleResponse> {
-        return withContext(Dispatchers.IO) {
-            adminApiService.getClassSchedule(classTypeID)
-        }
-    }
 
     suspend fun adminTransactionsRepo(mobileNumber: String): Response<PartnerTransactionResponse> {
         val jsonObject = JsonObject().apply {

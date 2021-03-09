@@ -3,6 +3,7 @@ package com.rtchubs.engineerbooks.repos
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.AdminApiService
 import com.rtchubs.engineerbooks.api.ApiService
+import com.rtchubs.engineerbooks.models.LiveClassScheduleResponse
 import com.rtchubs.engineerbooks.models.OfferResponse
 import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
 import com.rtchubs.engineerbooks.models.home.AllBookResponse
@@ -98,6 +99,15 @@ class HomeRepository @Inject constructor(@Named("auth") private val authApiServi
         }
         return withContext(Dispatchers.IO) {
             authApiService.getChapters(jsonObjectBody.toString())
+        }
+    }
+
+    suspend fun liveClassScheduleRepo(classID: Int?): Response<LiveClassScheduleResponse> {
+        val jsonObjectBody = JsonObject().apply {
+            addProperty("class_id", classID)
+        }
+        return withContext(Dispatchers.IO) {
+            authApiService.getClassSchedule(jsonObjectBody.toString())
         }
     }
 }

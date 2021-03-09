@@ -8,6 +8,7 @@ import androidx.navigation.fragment.navArgs
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.LiveClassScheduleFragmentBinding
+import com.rtchubs.engineerbooks.models.LiveClassSchedule
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 
 class LiveClassScheduleFragment : BaseFragment<LiveClassScheduleFragmentBinding, LiveClassScheduleViewModel>() {
@@ -25,10 +26,12 @@ class LiveClassScheduleFragment : BaseFragment<LiveClassScheduleFragmentBinding,
         super.onViewCreated(view, savedInstanceState)
         registerToolbar(viewDataBinding.toolbar)
 
-        when(args.liveClassTypeID) {
-            0 -> viewDataBinding.toolbar.title = "Next Classes"
-            1 -> viewDataBinding.toolbar.title = "Previous Classes"
-            2 -> viewDataBinding.toolbar.title = "Class Schedule"
+        val classType = args.liveClassTypeID
+
+        when(classType) {
+            0 -> viewDataBinding.toolbar.title = "আগের ক্লাস"
+            1 -> viewDataBinding.toolbar.title = "পরবর্তী ক্লাস"
+            2 -> viewDataBinding.toolbar.title = "ক্লাস শিডিউল"
         }
 
         liveClassScheduleListAdapter = LiveClassScheduleListAdapter(appExecutors) { notice ->
@@ -37,12 +40,26 @@ class LiveClassScheduleFragment : BaseFragment<LiveClassScheduleFragmentBinding,
         viewDataBinding.rvClassList.adapter = liveClassScheduleListAdapter
 
         viewModel.liveClassList.observe(viewLifecycleOwner, Observer {
-            it?.let { notices ->
-                liveClassScheduleListAdapter.submitList(notices)
-                viewDataBinding.emptyView.visibility = View.GONE
+            it?.let { classes ->
+                val classSchedules = ArrayList<LiveClassSchedule>()
+                classes.forEach { classSchedule ->
+                    when {
+                        classType == 0 && classSchedule.archived == true -> {
+                            classSchedules.add(classSchedule)
+                        }
+                        classType == 1 && classSchedule.archived == false -> {
+                            classSchedules.add(classSchedule)
+                        }
+                        classType == 2 && classSchedule.is_live == true -> {
+                            classSchedules.add(classSchedule)
+                        }
+                    }
+                }
+                liveClassScheduleListAdapter.submitList(classSchedules)
+                viewDataBinding.emptyView.visibility = if (classSchedules.isEmpty()) View.VISIBLE else View.GONE
             }
         })
 
-        viewModel.getAllLiveClasses(args.liveClassTypeID)
+        viewModel.getAllLiveClasses(preferencesHelper.getUser().class_id)
     }
 }

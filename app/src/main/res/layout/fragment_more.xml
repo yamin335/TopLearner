@@ -104,6 +104,17 @@
                         android:layout_marginEnd="16dp"
                         android:layout_toEndOf="@id/rivProfileImage"
                         android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvUserType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            tools:text="Student"
+                            android:textSize="18sp"
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="16dp"
+                            android:textColor="#555555"/>
+
                         <TextView
                             android:id="@+id/tvName"
                             android:layout_width="match_parent"
@@ -112,35 +123,19 @@
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_marginStart="16dp"
-                            android:layout_marginEnd="16dp"
+                            android:layout_marginTop="8dp"
                             android:textStyle="bold"
                             android:textColor="#555555"/>
-                        <RelativeLayout
+                        <TextView
+                            android:id="@+id/tvSID"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
+                            tools:text="01789898798"
+                            android:textSize="16sp"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="4dp"
                             android:layout_marginStart="16dp"
-                            android:layout_marginBottom="8dp">
-                            <TextView
-                                android:id="@+id/tvSIDLabel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="SID: "
-                                android:textSize="16sp"
-                                android:gravity="center_vertical"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentStart="true"/>
-                            <TextView
-                                android:id="@+id/tvSID"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                tools:text="01789898798"
-                                android:textSize="16sp"
-                                android:gravity="center_vertical"
-                                android:layout_toEndOf="@+id/tvSIDLabel"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentEnd="true"/>
-                        </RelativeLayout>
+                            android:layout_marginBottom="8dp"/>
                     </LinearLayout>
                 </RelativeLayout>
 

@@ -105,6 +105,12 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
             }
         })
 
+        if (userData.customer_type_id == 2) {
+            viewDataBinding.tvUserType.text = "Partner"
+        } else {
+            viewDataBinding.tvUserType.text = "Student"
+        }
+
         viewDataBinding.mProfile.setOnClickListener {
             if (userData.customer_type_id == 2) {
                 navigateTo(MoreFragmentDirections.actionMoreFragmentToPartnerProfileFragment())

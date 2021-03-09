@@ -76,7 +76,7 @@ object Api {
     const val DIRECTORY_NOTICE = "notice/getall"
     const val DIRECTORY_OFFER = "offer/getall"
     const val DIRECTORY_SOMADHAN = "somadhan"
-    const val DIRECTORY_CLASS_SCHEDULE = "getliveclassschedule"
+    const val DIRECTORY_CLASS_SCHEDULE = "class"
 
     const val DIRECTORY_CONNECT = "connect"
     const val DIRECTORY_BANK_INFO = "bankinformation"
@@ -111,7 +111,7 @@ object ApiEndPoint {
     const val SOMADHAN = "$ADMIN_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/$DIRECTORY_SOMADHAN"
     const val ALL_BOOKS = "$API_REPO/$DIRECTORY_BOOKS"
     const val PARTNER_TRANSACTION = "$API_REPO/$DIRECTORY_PARTNER_TRANSACTION"
-    const val CLASS_SCHEDULE = "$API_REPO/$DIRECTORY_CLASS_SCHEDULE/{classTypeID}/null"
+    const val CLASS_SCHEDULE = "$API_VERSION/$DIRECTORY_CLASS_SCHEDULE/schedules"
     const val NOTICE = "$API_VERSION/$DIRECTORY_NOTICE"
     const val OFFER = "$API_VERSION/$DIRECTORY_OFFER"
 

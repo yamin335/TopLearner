@@ -1,7 +1,6 @@
 package com.rtchubs.engineerbooks.api
 
 import com.google.gson.JsonObject
-import com.rtchubs.engineerbooks.models.LiveClassScheduleResponse
 import com.rtchubs.engineerbooks.models.home.AllBookResponse
 import com.rtchubs.engineerbooks.models.registration.ProfileImageUploadResponse
 import com.rtchubs.engineerbooks.models.transactions.PartnerTransactionResponse
@@ -10,7 +9,6 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Path
 
 /**
  * REST API access points
@@ -21,9 +19,6 @@ interface AdminApiService {
 
     @GET(ApiEndPoint.ALL_BOOKS)
     suspend fun getAllBooks(): Response<AllBookResponse>
-
-    @GET(ApiEndPoint.CLASS_SCHEDULE)
-    suspend fun getClassSchedule(@Path("classTypeID") classTypeID: Int?): Response<LiveClassScheduleResponse>
 
     @POST(ApiEndPoint.PARTNER_TRANSACTION)
     suspend fun partnerTransactionHistory(@Body jsonString: JsonObject): Response<PartnerTransactionResponse>

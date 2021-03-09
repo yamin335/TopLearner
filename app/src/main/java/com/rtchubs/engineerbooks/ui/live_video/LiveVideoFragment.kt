@@ -1,16 +1,20 @@
 package com.rtchubs.engineerbooks.ui.live_video
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.LiveVideoFragmentBinding
+import com.rtchubs.engineerbooks.ui.LiveClassActivity
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
+import com.rtchubs.engineerbooks.util.showWarningToast
 
 class LiveVideoFragment : BaseFragment<LiveVideoFragmentBinding, LiveVideoViewModel>() {
 
@@ -45,12 +49,28 @@ class LiveVideoFragment : BaseFragment<LiveVideoFragmentBinding, LiveVideoViewMo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.liveClassList.observe(viewLifecycleOwner, Observer {
+            it?.let { classes ->
+                if (classes.isNotEmpty() && classes.first().link?.isNotBlank() == true) {
+                    LiveClassActivity.videoUrl = classes.first().link ?: ""
+                    startActivity(Intent(requireActivity(), LiveClassActivity::class.java))
+                } else {
+                    showWarningToast(requireContext(), "No live class ongoing...")
+                }
+            }
+        })
+
+        viewDataBinding.liveClass.setOnClickListener {
+            viewModel.getAllLiveClasses(preferencesHelper.getUser().class_id)
+        }
+
         viewDataBinding.appLogo.setOnClickListener {
             drawerListener?.toggleNavDrawer()
         }
 
         viewDataBinding.mPreviousClass.setOnClickListener {
-            navigateTo(LiveVideoFragmentDirections.actionLiveFragmentToLiveClassScheduleFragment(1))
+            navigateTo(LiveVideoFragmentDirections.actionLiveFragmentToLiveClassScheduleFragment(0))
         }
 
         viewDataBinding.mClassSchedule.setOnClickListener {
@@ -58,7 +78,7 @@ class LiveVideoFragment : BaseFragment<LiveVideoFragmentBinding, LiveVideoViewMo
         }
 
         viewDataBinding.mNextClass.setOnClickListener {
-            navigateTo(LiveVideoFragmentDirections.actionLiveFragmentToLiveClassScheduleFragment(0))
+            navigateTo(LiveVideoFragmentDirections.actionLiveFragmentToLiveClassScheduleFragment(1))
         }
     }
 

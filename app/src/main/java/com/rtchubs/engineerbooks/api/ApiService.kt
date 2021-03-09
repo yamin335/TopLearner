@@ -2,6 +2,7 @@ package com.rtchubs.engineerbooks.api
 
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.Api.ContentType
+import com.rtchubs.engineerbooks.models.LiveClassScheduleResponse
 import com.rtchubs.engineerbooks.models.OfferResponse
 import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
 import com.rtchubs.engineerbooks.models.common.MyAccountListResponse
@@ -66,6 +67,9 @@ interface ApiService {
 
     @POST(ApiEndPoint.TRANSACTION)
     suspend fun transactionHistory(@Body jsonString: String): Response<TransactionHistoryResponse>
+
+    @POST(ApiEndPoint.CLASS_SCHEDULE)
+    suspend fun getClassSchedule(@Body jsonString: String): Response<LiveClassScheduleResponse>
 
     @POST(ApiEndPoint.OFFER)
     suspend fun getOffers(@Body jsonString: String): Response<OfferResponse>

@@ -35,7 +35,19 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
 import java.util.*
+
+fun String.getMilliFromDate(): Long {
+    var date: Date? = null
+    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    try {
+        date = formatter.parse(this)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    return date?.time ?: Long.MAX_VALUE
+}
 
 val String.colorValue
     get() = Color.parseColor(this)
