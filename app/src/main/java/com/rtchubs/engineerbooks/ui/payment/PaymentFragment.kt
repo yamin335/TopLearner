@@ -74,12 +74,11 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             it?.let { offers ->
                 if (offers.isNotEmpty()) {
                     offers.forEach { offer ->
-                        val firstDate = offer.EndDate?.split("T")?.first()?.getMilliFromDate() ?: Long.MAX_VALUE
+                        val firstDate = offer.FromDate?.split("T")?.first()?.getMilliFromDate() ?: Long.MAX_VALUE
                         val lastDate = offer.EndDate?.split("T")?.first()?.getMilliFromDate() ?: Long.MAX_VALUE
                         val date = System.currentTimeMillis()
-                        val validDate = firstDate..lastDate
 
-                        if (offer.archived == false && date in validDate) {
+                        if (offer.archived == false && date in firstDate..lastDate) {
                             val offerAmount = offer.offer_amount ?: 0
                             val temp = args.book.price
                             var amount = temp.toInt()
