@@ -55,6 +55,7 @@ class LiveVideoFragment : BaseFragment<LiveVideoFragmentBinding, LiveVideoViewMo
                 if (classes.isNotEmpty() && classes.first().link?.isNotBlank() == true) {
                     LiveClassActivity.videoUrl = classes.first().link ?: ""
                     startActivity(Intent(requireActivity(), LiveClassActivity::class.java))
+                    viewModel.liveClassList.postValue(null)
                 } else {
                     showWarningToast(requireContext(), "No live class ongoing...")
                 }
