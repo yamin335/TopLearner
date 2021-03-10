@@ -96,14 +96,14 @@ class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, Profi
         viewDataBinding.email.text = if (user.email.isNullOrBlank()) "N/A" else user.email
         viewDataBinding.nidNo.text = if (user.nidnumber.isNullOrBlank()) "N/A" else user.nidnumber
         viewDataBinding.birthDate.text = if (user.BirthDate.isNullOrBlank()) "N/A" else user.BirthDate
-        viewDataBinding.bloodGroup.text = "N/A"
+        viewDataBinding.bloodGroup.text = if (user.blood.isNullOrBlank()) "N/A" else user.blood
         viewDataBinding.presentAddress.text = if (user.present_address.isNullOrBlank()) "N/A" else user.present_address
         viewDataBinding.permanentAddress.text = if (user.parmanent_address.isNullOrBlank()) "N/A" else user.parmanent_address
         viewDataBinding.officialId.text = if (user.official_id.isNullOrBlank()) "N/A" else user.official_id
         viewDataBinding.partnerType.text = if (user.partner_type.isNullOrBlank()) "N/A" else user.partner_type
-        viewDataBinding.responsibleArea.text = "N/A"
+        viewDataBinding.responsibleArea.text = if (user.city.isNullOrBlank()) "N/A" else user.city
         viewDataBinding.designation.text = if (user.designation.isNullOrBlank()) "N/A" else user.designation
-        viewDataBinding.sharePercent.text = "N/A"
+        viewDataBinding.sharePercent.text = "${user.discount_amount ?: 0} ৳"
         viewDataBinding.subTotal.text = "N/A"
     }
 }

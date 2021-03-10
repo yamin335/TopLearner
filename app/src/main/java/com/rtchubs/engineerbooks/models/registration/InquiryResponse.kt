@@ -21,6 +21,6 @@ data class InquiryAccount(var udid: String?, var createdAt: String?, var updated
                           var official_id: String?, var partner_type: String?,
                           var education: String?, var designation: String?,
                           var home_mobile: String?, var contact_personal: String?,
-                          var mother_name: String?, var father_name: String?, var discount_amount: Double?): Serializable
+                          var mother_name: String?, var father_name: String?, var discount_amount: Double?, var blood: String?): Serializable
 
 data class InquiryResponse(val code: Int?, val data: UserRegistrationData?, val msg: String?)
