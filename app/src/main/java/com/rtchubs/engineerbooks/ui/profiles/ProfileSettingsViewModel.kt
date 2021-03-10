@@ -6,8 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.models.registration.*
+import com.rtchubs.engineerbooks.models.transactions.PaymentStatusData
 import com.rtchubs.engineerbooks.repos.MediaRepository
 import com.rtchubs.engineerbooks.repos.RegistrationRepository
+import com.rtchubs.engineerbooks.repos.TransactionRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
 import com.rtchubs.engineerbooks.util.AppConstants.serverConnectionErrorMessage
 import com.rtchubs.engineerbooks.util.toFile
@@ -18,7 +20,12 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import javax.inject.Inject
 
-class ProfileSettingsViewModel @Inject constructor(private val application: Application, private val repository: RegistrationRepository, private val mediaRepository: MediaRepository) : BaseViewModel(application) {
+class ProfileSettingsViewModel @Inject constructor(
+    private val application: Application,
+    private val repository: RegistrationRepository,
+    private val mediaRepository: MediaRepository,
+    private val transactionRepository: TransactionRepository
+) : BaseViewModel(application) {
 
     var profileBitmap: Bitmap? = null
     var nidFrontBitmap: Bitmap? = null
@@ -59,6 +66,10 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
 
     val userProfileInfo: MutableLiveData<InquiryAccount> by lazy {
         MutableLiveData<InquiryAccount>()
+    }
+
+    val partnerPaymentStatus: MutableLiveData<PaymentStatusData> by lazy {
+        MutableLiveData<PaymentStatusData>()
     }
 
     fun getDistricts() {
@@ -279,6 +290,32 @@ class ProfileSettingsViewModel @Inject constructor(private val application: Appl
                     is ApiErrorResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                         userProfileInfo.postValue(null)
+                    }
+                }
+            }
+        }
+    }
+
+    fun getPartnerPaymentStatus(mobile: String?, cityID: Int?, upazillaID: Int?) {
+        if (checkNetworkStatus(true)) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(serverConnectionErrorMessage)
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(transactionRepository.partnerPaymentStatusRepo(mobile, cityID, upazillaID))) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        partnerPaymentStatus.postValue(apiResponse.body.data)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                    }
+                    is ApiErrorResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }
             }

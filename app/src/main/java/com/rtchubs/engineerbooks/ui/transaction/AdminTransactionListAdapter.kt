@@ -22,7 +22,7 @@ class AdminTransactionListAdapter(
 ) : DataBoundListAdapter<PartnerTransaction, PartnerTransactionItemBinding>(
     appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<PartnerTransaction>() {
         override fun areItemsTheSame(oldItem: PartnerTransaction, newItem: PartnerTransaction): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.udid == newItem.udid
         }
 
         @SuppressLint("DiffUtilEquals")
@@ -51,7 +51,7 @@ class AdminTransactionListAdapter(
         binding.paymentMethod = if (item.payment_method.isNullOrBlank()) "Unknown Payment Method" else item.payment_method
         val amount = item.payamount?.toString()
         binding.paidAmount = if (amount.isNullOrBlank()) "" else "$amount ৳"
-        binding.paymentDate = item.payment_date
+        binding.paymentDate = item.PaymentDate
         binding.remarks = item.remarks
 
         binding.root.setOnClickListener {

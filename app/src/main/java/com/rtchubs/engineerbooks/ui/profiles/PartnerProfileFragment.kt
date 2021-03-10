@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
@@ -64,8 +65,17 @@ class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, Profi
                 }
             })
 
+        viewModel.partnerPaymentStatus.observe(viewLifecycleOwner, Observer {
+            it?.let { data ->
+                viewDataBinding.earnedMoney.text = "${data.totalamountearns ?: 0} ৳"
+                viewDataBinding.payableAmount.text = "${data.totalamountdue ?: 0} ৳"
+                viewDataBinding.paymentAmount.text = "${data.totalamountpaid ?: 0} ৳"
+            }
+        })
+
         if (checkNetworkStatus(true)) {
             viewModel.getUserProfileInfo(userData.mobile ?: "")
+            viewModel.getPartnerPaymentStatus(userData.mobile, userData.CityID, userData.UpazilaID)
         } else {
             prepareUserData(userData)
         }
@@ -94,9 +104,6 @@ class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, Profi
         viewDataBinding.responsibleArea.text = "N/A"
         viewDataBinding.designation.text = if (user.designation.isNullOrBlank()) "N/A" else user.designation
         viewDataBinding.sharePercent.text = "N/A"
-        viewDataBinding.earnedMoney.text = "N/A"
         viewDataBinding.subTotal.text = "N/A"
-        viewDataBinding.paymentAmount.text = "N/A"
-        viewDataBinding.payableAmount.text = "N/A"
     }
 }

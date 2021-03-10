@@ -14,31 +14,18 @@ data class Transaction(val udid: String?, val createdAt: String?, val updatedAt:
                        val BookID: Int?, val StudentName: String?, val BookName: String?,
                        val Date: String?, val Table: String?)
 
-data class PartnerTransactionResponse(val code: Int?, val status: String?, val message: String?, val data: PartnerTransactionData?)
+data class PartnerTransactionResponse(val code: Int?, val data: PartnerTransactionData?, val msg: String?)
 
 data class PartnerTransactionData(val payments: List<PartnerTransaction>?)
 
-data class PartnerTransaction(val id: Int?, val created_at: String?, val updated_at: String?, val payment_date: String?,
-                              val partner_name: String?, val payment_method: String?, val is_paid: Int?,
-                              val payamount: Int?, val remarks: String?, val partner_id: Int?, val partner_mobile: String?)
+data class PartnerTransaction(val udid: String?, val createdAt: String?, val updatedAt: String?,
+                              val partner_id: Int?, val partner_name: String?,
+                              val partner_mobile: String?, val payment_method: String?, val payamount: Int?,
+                              val InvoiceID: String?, val remarks: String?,
+                              val TransactionID: String?, val PayemtReferenceID: String?,
+                              val upazila_id: Int?, val city_id: Int?,
+                              val PaymentDate: String?, val Table: String?)
 
+data class PaymentStatusResponse(val code: Int?, val data: PaymentStatusData?, val msg: String?)
 
-//data class AdminPayHistoryResponse(val code: String?, val status: String?, val message: String?, val data: AdminPayHistoryData?)
-//
-//data class AdminPayHistoryData(val sales: AdminPaySales?, val total: AdminPayTotal?)
-//
-//data class AdminPayHistory(val id: Int?, val student_id: Int?, val partner_id: Int?, val status: String?,
-//                           val uuid: String?, val taxType: Any?, val customer_note: Any?, val tax_type_total: Any?,
-//                           val discount_type_total: Any?, val sub_total: Any?, val grand_total: Int?,
-//                           val paid_amount: Int?, val due_amount: Int?, val created_at: String?,
-//                           val updated_at: String?, val student_mobile: String?, val partner_mobile: Any?,
-//                           val upazila: String?, val city: String?, val discount: Int?, val book_id: Int?,
-//                           val book_name: String?, val date: String?, val invoice_id: String?, val reference_id: String?,
-//                           val student_name: String?, val payemt_reference_id: String?, val institute: String?,
-//                           val city_id: Int?, val upazila_id: Int?, val class_id: Int?)
-//
-//data class AdminPaySales(val current_page: Int?, val data: List<AdminPayHistory>?, val first_page_url: String?,
-//                 val from: Int?, val last_page: Int?, val last_page_url: String?, val next_page_url: Any?,
-//                 val path: String?, val per_page: Int?, val prev_page_url: Any?, val to: Int?, val total: Int?)
-//
-//data class AdminPayTotal(val amount: Int?, val vat: Int?, val discount: Int?, val total: Int?)
+data class PaymentStatusData(val totalamountdue: Int?, val totalamountearns: Int?, val totalamountpaid: Int?)

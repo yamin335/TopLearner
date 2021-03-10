@@ -72,8 +72,9 @@
                     android:gravity="center_vertical"
                     android:textColor="#404040"
                     android:textSize="15sp"
-                    android:text="Total amount earned:"/>
+                    android:text="Total Amount Earned:"/>
                 <TextView
+                    android:id="@+id/amountEarned"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -96,8 +97,9 @@
                     android:gravity="center_vertical"
                     android:textColor="#404040"
                     android:textSize="15sp"
-                    android:text="Total amount earned:"/>
+                    android:text="Total Amount Due:"/>
                 <TextView
+                    android:id="@+id/amountDue"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -121,8 +123,9 @@
                     android:gravity="center_vertical"
                     android:textColor="#404040"
                     android:textSize="15sp"
-                    android:text="Total amount earned:"/>
+                    android:text="Total Amount Paid:"/>
                 <TextView
+                    android:id="@+id/amountPaid"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"

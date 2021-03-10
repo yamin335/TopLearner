@@ -97,8 +97,17 @@ class TransactionFragment : BaseFragment<TransactionFragmentBinding, Transaction
             }
         })
 
+        viewModel.partnerPaymentStatus.observe(viewLifecycleOwner, Observer {
+            it?.let { data ->
+                viewDataBinding.amountEarned.text = "${data.totalamountearns ?: 0} ৳"
+                viewDataBinding.amountDue.text = "${data.totalamountdue ?: 0} ৳"
+                viewDataBinding.amountPaid.text = "${data.totalamountpaid ?: 0} ৳"
+            }
+        })
+
         if (userData.customer_type_id == 2) {
             viewModel.getAdminTransactions(userData.mobile ?: "")
+            viewModel.getPartnerPaymentStatus(userData.mobile, userData.CityID, userData.UpazilaID)
         } else {
             viewModel.getAllTransaction(userData.id ?: 0)
         }

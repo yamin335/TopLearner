@@ -11,7 +11,9 @@ import com.rtchubs.engineerbooks.models.notice_board.NoticeResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.AddCardOrBankResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.BankOrCardListResponse
 import com.rtchubs.engineerbooks.models.registration.*
+import com.rtchubs.engineerbooks.models.transactions.PartnerTransactionResponse
 import com.rtchubs.engineerbooks.models.transactions.PayInvoiceResponse
+import com.rtchubs.engineerbooks.models.transactions.PaymentStatusResponse
 import com.rtchubs.engineerbooks.models.transactions.TransactionHistoryResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -76,6 +78,12 @@ interface ApiService {
 
     @POST(ApiEndPoint.NOTICE)
     suspend fun getNotices(@Body jsonString: String): Response<NoticeResponse>
+
+    @POST(ApiEndPoint.PARTNER_TRANSACTION)
+    suspend fun partnerTransactionHistory(@Body jsonString: JsonObject): Response<PartnerTransactionResponse>
+
+    @POST(ApiEndPoint.PARTNER_PAYMENT_STATUS)
+    suspend fun partnerPaymentStatus(@Body jsonString: JsonObject): Response<PaymentStatusResponse>
 
 
     @Multipart

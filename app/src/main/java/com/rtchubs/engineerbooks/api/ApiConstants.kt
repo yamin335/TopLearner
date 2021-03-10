@@ -20,7 +20,9 @@ import com.rtchubs.engineerbooks.api.Api.DIRECTORY_LOGO
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_NOTICE
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_OFFER
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_ORDER
-import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PARTNER_TRANSACTION
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PARTNER
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PAYMENTS
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PAYMENT_STATUS
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PDF
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_PROFILE_IMAGES
@@ -72,11 +74,13 @@ object Api {
     const val DIRECTORY_LOGO = "logo"
     const val DIRECTORY_PDF = "pdf"
     const val DIRECTORY_VIDEOS = "videos"
-    const val DIRECTORY_PARTNER_TRANSACTION = "partnerpayments"
+    const val DIRECTORY_PAYMENTS = "payments"
     const val DIRECTORY_NOTICE = "notice/getall"
     const val DIRECTORY_OFFER = "offer/getall"
     const val DIRECTORY_SOMADHAN = "somadhan"
     const val DIRECTORY_CLASS_SCHEDULE = "class"
+    const val DIRECTORY_PARTNER = "partner"
+    const val DIRECTORY_PAYMENT_STATUS = "paymentstatus"
 
     const val DIRECTORY_CONNECT = "connect"
     const val DIRECTORY_BANK_INFO = "bankinformation"
@@ -110,10 +114,11 @@ object ApiEndPoint {
     const val PDF = "$ADMIN_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/$DIRECTORY_PDF"
     const val SOMADHAN = "$ADMIN_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/$DIRECTORY_SOMADHAN"
     const val ALL_BOOKS = "$API_REPO/$DIRECTORY_BOOKS"
-    const val PARTNER_TRANSACTION = "$API_REPO/$DIRECTORY_PARTNER_TRANSACTION"
+    const val PARTNER_TRANSACTION = "$API_VERSION/$DIRECTORY_PARTNER/$DIRECTORY_PAYMENTS"
     const val CLASS_SCHEDULE = "$API_VERSION/$DIRECTORY_CLASS_SCHEDULE/schedules"
     const val NOTICE = "$API_VERSION/$DIRECTORY_NOTICE"
     const val OFFER = "$API_VERSION/$DIRECTORY_OFFER"
+    const val PARTNER_PAYMENT_STATUS = "$API_VERSION/$DIRECTORY_PARTNER/$DIRECTORY_PAYMENT_STATUS"
 
     const val REQUESTOTP = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}/request-otp"
     const val REGISTRATION = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}"
