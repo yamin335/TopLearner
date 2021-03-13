@@ -9,12 +9,13 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
-import com.rtchubs.engineerbooks.api.ApiEndPoint.PROFILE_IMAGES
+import com.rtchubs.engineerbooks.api.ApiEndPoint.PARTNER_PROFILE_IMAGE
 import com.rtchubs.engineerbooks.databinding.PartnerProfileFragmentBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.BitmapUtilss.transformDrawable
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
+import okio.ArrayIndexOutOfBoundsException
 
 
 class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, ProfileSettingsViewModel>() {
@@ -83,7 +84,7 @@ class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, Profi
 
     private fun prepareUserData(user: InquiryAccount) {
         Glide.with(requireContext())
-            .load("${PROFILE_IMAGES}/${user.Folder}/${user.profilePic}")
+            .load("${PARTNER_PROFILE_IMAGE}/${user.profilePic}")
             .circleCrop()
             .placeholder(placeholder)
             .into(viewDataBinding.rivProfileImage)
@@ -95,15 +96,19 @@ class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, Profi
         viewDataBinding.homeContact.text = if (user.home_mobile.isNullOrBlank()) "N/A" else user.home_mobile
         viewDataBinding.email.text = if (user.email.isNullOrBlank()) "N/A" else user.email
         viewDataBinding.nidNo.text = if (user.nidnumber.isNullOrBlank()) "N/A" else user.nidnumber
-        viewDataBinding.birthDate.text = if (user.BirthDate.isNullOrBlank()) "N/A" else user.BirthDate
         viewDataBinding.bloodGroup.text = if (user.blood.isNullOrBlank()) "N/A" else user.blood
         viewDataBinding.presentAddress.text = if (user.present_address.isNullOrBlank()) "N/A" else user.present_address
         viewDataBinding.permanentAddress.text = if (user.parmanent_address.isNullOrBlank()) "N/A" else user.parmanent_address
         viewDataBinding.officialId.text = if (user.official_id.isNullOrBlank()) "N/A" else user.official_id
         viewDataBinding.partnerType.text = if (user.partner_type.isNullOrBlank()) "N/A" else user.partner_type
-        viewDataBinding.responsibleArea.text = if (user.city.isNullOrBlank()) "N/A" else user.city
+        viewDataBinding.responsibleArea.text = if (user.upazila.isNullOrBlank()) "N/A" else user.upazila
         viewDataBinding.designation.text = if (user.designation.isNullOrBlank()) "N/A" else user.designation
-        viewDataBinding.sharePercent.text = "${user.discount_amount ?: 0} ৳"
+        viewDataBinding.sharePercent.text = "${user.discount_amount ?: 0}%"
         viewDataBinding.subTotal.text = "N/A"
+        try {
+            viewDataBinding.birthDate.text = if (user.BirthDate.isNullOrBlank()) "N/A" else user.BirthDate?.split("T")?.get(0)
+        } catch (e: ArrayIndexOutOfBoundsException) {
+            e.printStackTrace()
+        }
     }
 }

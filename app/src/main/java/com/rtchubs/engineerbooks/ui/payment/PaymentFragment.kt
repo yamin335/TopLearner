@@ -74,16 +74,27 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             it?.let { offers ->
                 if (offers.isNotEmpty()) {
                     offers.forEach { offer ->
-                        val firstDate = offer.FromDate?.split("T")?.first()?.getMilliFromDate() ?: Long.MAX_VALUE
-                        val lastDate = offer.EndDate?.split("T")?.first()?.getMilliFromDate() ?: Long.MAX_VALUE
+                        val firstDate = offer.FromDate?.split("T")?.first()?.getMilliFromDate()
+                            ?: Long.MAX_VALUE
+                        val lastDate =
+                            offer.EndDate?.split("T")?.first()?.getMilliFromDate() ?: Long.MAX_VALUE
                         val date = System.currentTimeMillis()
 
                         if (offer.archived == false && date in firstDate..lastDate) {
                             val offerAmount = offer.offer_amount ?: 0
                             val temp = args.book.price
                             var amount = temp.toInt()
-                            amount -= offerAmount
-                            amount -= discount
+                            val totalDiscount = offerAmount + discount
+                            if (totalDiscount > 0) {
+                                viewDataBinding.linearTotalPayable.visibility = View.VISIBLE
+                                viewDataBinding.linearTotalDiscount.visibility = View.VISIBLE
+                                viewDataBinding.totalPayableAmount.text = "${amount}৳"
+                                viewDataBinding.totalDiscount.text = "${totalDiscount}৳"
+                            } else {
+                                viewDataBinding.linearTotalPayable.visibility = View.GONE
+                                viewDataBinding.linearTotalDiscount.visibility = View.GONE
+                            }
+                            amount -= totalDiscount
                             viewModel.amount.postValue(amount.toString())
                             return@Observer
                         }
@@ -91,6 +102,16 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 }
             }
 
+            val amount = args.book.price.toInt()
+            if (discount > 0) {
+                viewDataBinding.linearTotalPayable.visibility = View.VISIBLE
+                viewDataBinding.linearTotalDiscount.visibility = View.VISIBLE
+                viewDataBinding.totalPayableAmount.text = "${amount}৳"
+                viewDataBinding.totalDiscount.text = "${discount}৳"
+            } else {
+                viewDataBinding.linearTotalPayable.visibility = View.GONE
+                viewDataBinding.linearTotalDiscount.visibility = View.GONE
+            }
             viewModel.amount.postValue((args.book.price - discount).toString())
         })
 
