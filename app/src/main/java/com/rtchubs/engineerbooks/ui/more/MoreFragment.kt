@@ -183,11 +183,19 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
     private fun init(user: InquiryAccount) {
 
-        Glide.with(requireContext())
-            .load("${ApiEndPoint.PROFILE_IMAGES}/${user.Folder}/${user.profilePic}")
-            .circleCrop()
-            .placeholder(placeholder)
-            .into(viewDataBinding.rivProfileImage)
+        if (user.customer_type_id == 2) {
+            Glide.with(requireContext())
+                .load("${ApiEndPoint.PARTNER_PROFILE_IMAGE}/${user.profilePic}")
+                .circleCrop()
+                .placeholder(placeholder)
+                .into(viewDataBinding.rivProfileImage)
+        } else {
+            Glide.with(requireContext())
+                .load("${ApiEndPoint.PROFILE_IMAGES}/${user.Folder}/${user.profilePic}")
+                .circleCrop()
+                .placeholder(placeholder)
+                .into(viewDataBinding.rivProfileImage)
+        }
 
         viewDataBinding.tvName.text = "${user.first_name} ${user.last_name}"
         viewDataBinding.tvClass.text = user.ClassName
