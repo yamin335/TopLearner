@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.daimajia.slider.library.SliderLayout
-import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.BR
+import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.ViewPagerBinding
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 
@@ -31,17 +32,18 @@ class ViewPagerFragment : BaseFragment<ViewPagerBinding, ViewPagerViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.slideDataList.forEach { slideData ->
-            val slide = SliderView(requireContext())
-            slide.sliderTextTitle = slideData.textTitle
-            slide.sliderTextDescription = slideData.descText
-            slide.sliderImage(slideData.slideImage)
-            viewDataBinding.sliderLayout.addSlider(slide)
-        }
+        viewModel.slideDataList.observe(viewLifecycleOwner, Observer {
+            it?.let { ads ->
+                ads.forEach { slideData ->
+                    val slide = SliderView(slideData, requireContext())
+                    viewDataBinding.sliderLayout.addSlider(slide)
+                }
+            }
+        })
 
         // set Slider Transition Animation
         viewDataBinding.sliderLayout.setPresetTransformer(SliderLayout.Transformer.Default)
-        viewDataBinding.sliderLayout.stopAutoCycle()
+        viewDataBinding.sliderLayout.startAutoCycle()
 
         // set Slider Transition Animation
         //viewDataBinding.sliderLayout.setPresetTransformer(SliderLayout.Transformer.Default)
@@ -54,7 +56,7 @@ class ViewPagerFragment : BaseFragment<ViewPagerBinding, ViewPagerViewModel>() {
         }
 
         updateStatusBarBackgroundColor("#1E4356")
+
+        viewModel.getAds()
     }
-
-
 }

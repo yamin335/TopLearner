@@ -5,54 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.daimajia.slider.library.SliderTypes.BaseSliderView
 import com.rtchubs.engineerbooks.R
-import kotlin.properties.Delegates
+import com.rtchubs.engineerbooks.api.ApiEndPoint
+import com.rtchubs.engineerbooks.models.AdSlider
 
-class SliderView(context: Context) : BaseSliderView(context) {
-
-    lateinit var sliderTextTitle: String
-    lateinit var sliderTextDescription: String
-    var sliderImage by Delegates.notNull<Int>()
+class SliderView(private val adSlider: AdSlider, mContext: Context) : BaseSliderView(mContext) {
 
     override fun getView(): View {
         val v: View = LayoutInflater.from(context).inflate(R.layout.custom_slide_view, null)
         val target: ImageView = v.findViewById(R.id.slideImage)
         val titleText: TextView = v.findViewById(R.id.slideTitleText)
-        val descText: TextView = v.findViewById(R.id.slideDescriptionText)
 
-        titleText.text = sliderTextTitle
-        descText.text = sliderTextDescription
-        target.setImageResource(sliderImage)
+        titleText.text = adSlider.title
+        val temp = "${ApiEndPoint.SLIDER_IMAGE}/${adSlider.logo}"
+        Glide.with(context)
+            .load("${ApiEndPoint.SLIDER_IMAGE}/${adSlider.logo}")
+            .placeholder(R.drawable.slider_image_1)
+            .into(target)
 
         return v
-    }
-    /**
-     * the description of a slider image.
-     * @param description
-     * @return
-     */
-    fun sliderImage(res: Int): SliderView? {
-        sliderImage = res
-        return this
-    }
-    /**
-     * the description of a slider image.
-     * @param description
-     * @return
-     */
-    fun sliderTextDescription(description: String): SliderView? {
-        sliderTextDescription = description
-        return this
-    }
-
-    /**
-     * the description of a slider image.
-     * @param description
-     * @return
-     */
-    fun sliderTextTitle(title: String): SliderView? {
-        sliderTextTitle = title
-        return this
     }
 }

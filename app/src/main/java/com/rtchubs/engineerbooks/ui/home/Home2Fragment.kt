@@ -138,17 +138,18 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
 //
 //
 //
-        viewModel.slideDataList.forEach { slideData ->
-            val slide = SliderView(requireContext())
-            slide.sliderTextTitle = slideData.textTitle
-            slide.sliderTextDescription = slideData.descText
-            slide.sliderImage(slideData.slideImage)
-            viewDataBinding.sliderLayout.addSlider(slide)
-        }
+        viewModel.slideDataList.observe(viewLifecycleOwner, Observer {
+            it?.let { ads ->
+                ads.forEach { slideData ->
+                    val slide = SliderView(slideData, requireContext())
+                    viewDataBinding.sliderLayout.addSlider(slide)
+                }
+            }
+        })
 
         // set Slider Transition Animation
         viewDataBinding.sliderLayout.setPresetTransformer(SliderLayout.Transformer.Default)
-        viewDataBinding.sliderLayout.stopAutoCycle()
+        viewDataBinding.sliderLayout.startAutoCycle()
 
 //        val chapterList = listOf(
 //            Chapter(1, "Chapter One", null, null),
@@ -277,6 +278,8 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         } else {
             viewModel.getAcademicBooks(userData.mobile ?: "", userData.class_id ?: 0)
         }
+
+        viewModel.getAds()
 
 //        viewModel.slideDataList.forEach { slideData ->
 //            val slide = SliderView(requireContext())

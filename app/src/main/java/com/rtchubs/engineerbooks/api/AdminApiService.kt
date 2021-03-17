@@ -17,7 +17,4 @@ interface AdminApiService {
 
     @GET(ApiEndPoint.ALL_BOOKS)
     suspend fun getAllBooks(): Response<AllBookResponse>
-
-//    @POST(ApiEndPoint.ADMIN_TRANSACTION)
-//    suspend fun adminTransactionHistory(@Body jsonString: String): Response<AdminPayHistoryResponse>
 }

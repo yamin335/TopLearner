@@ -2,6 +2,7 @@ package com.rtchubs.engineerbooks.api
 
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.Api.ContentType
+import com.rtchubs.engineerbooks.models.AdSliderResponse
 import com.rtchubs.engineerbooks.models.LiveClassScheduleResponse
 import com.rtchubs.engineerbooks.models.OfferResponse
 import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
@@ -84,6 +85,9 @@ interface ApiService {
 
     @POST(ApiEndPoint.PARTNER_PAYMENT_STATUS)
     suspend fun partnerPaymentStatus(@Body jsonString: JsonObject): Response<PaymentStatusResponse>
+
+    @GET(ApiEndPoint.SLIDER_ADS)
+    suspend fun getAds(): Response<AdSliderResponse>
 
 
     @Multipart
