@@ -97,6 +97,7 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
         binding = DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
         binding.mainContainer.showBottomNav = true
         binding.drawerNavigation.setNavigationItemSelectedListener(this)
 

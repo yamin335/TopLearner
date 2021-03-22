@@ -55,6 +55,7 @@ abstract class BaseFragment<T : ViewDataBinding, V : ViewModel> : DaggerFragment
 
     @Inject
     lateinit var appExecutors: AppExecutors
+
     var dialog: AlertDialog? = null
 
     var viewDataBinding by autoCleared<T>()

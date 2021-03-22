@@ -9,10 +9,8 @@ import androidx.fragment.app.viewModels
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.VideoListFragmentBinding
-import com.rtchubs.engineerbooks.models.VideoItem
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment
-import java.io.File
 
 class VideoListFragment : BaseFragment<VideoListFragmentBinding, VideoListViewModel>() {
 
@@ -50,6 +48,6 @@ class VideoListFragment : BaseFragment<VideoListFragmentBinding, VideoListViewMo
 
         viewDataBinding.rvVideoList.adapter = videoListAdapter
 
-        videoListAdapter.submitList(LoadWebViewFragment.chapter.fields)
+        videoListAdapter.submitList(LoadWebViewFragment.chapter.fields?.filter { it.type == "video" })
     }
 }

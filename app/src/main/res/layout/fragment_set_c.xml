@@ -10,28 +10,33 @@
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <com.rtchubs.engineerbooks.util.NestedScrollableHost
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-            <com.github.barteksc.pdfviewer.PDFView
-                android:id="@+id/pdfView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </com.rtchubs.engineerbooks.util.NestedScrollableHost>
+<!--        <com.rtchubs.engineerbooks.util.NestedScrollableHost-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent">-->
+<!--            <com.github.barteksc.pdfviewer.PDFView-->
+<!--                android:id="@+id/pdfView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent" />-->
+<!--        </com.rtchubs.engineerbooks.util.NestedScrollableHost>-->
 
-        <ProgressBar
-            android:id="@+id/loader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:elevation="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+<!--        <ProgressBar-->
+<!--            android:id="@+id/loader"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:elevation="8dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

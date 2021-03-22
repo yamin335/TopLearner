@@ -40,8 +40,6 @@ import com.rtchubs.engineerbooks.AppGlobalValues
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiCallStatus
-import com.rtchubs.engineerbooks.api.ApiEndPoint.PDF
-import com.rtchubs.engineerbooks.api.ApiEndPoint.SOMADHAN
 import com.rtchubs.engineerbooks.api.ApiEndPoint.VIDEOS
 import com.rtchubs.engineerbooks.databinding.WebViewBinding
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
@@ -52,9 +50,7 @@ import com.rtchubs.engineerbooks.ui.MainActivity
 import com.rtchubs.engineerbooks.ui.ShowHideBottomNavCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.common.CommonMessageBottomSheetDialog
-import com.rtchubs.engineerbooks.ui.home.SetCFragment
 import com.rtchubs.engineerbooks.ui.home.VideoTabViewPagerAdapter
-import com.rtchubs.engineerbooks.ui.solution.SolutionFragment
 import com.rtchubs.engineerbooks.util.AppConstants.downloadFolder
 import com.rtchubs.engineerbooks.util.AppConstants.unzippedFolder
 import com.rtchubs.engineerbooks.util.FLAGS_FULLSCREEN
@@ -503,6 +499,12 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
         viewPager2PageChangeCallback = ViewPager2PageChangeCallback {
             setCurrentPageItemPosition(it)
+            when(it) {
+                0 -> requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+                1 -> requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                2 -> requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                3 -> requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            }
         }
 
         viewDataBinding.viewPager.registerOnPageChangeCallback(viewPager2PageChangeCallback)
@@ -599,51 +601,51 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
             if (isUSBPluggedIn) {
                 showErrorToast(requireContext(), "Please unplug your USB then try again!")
             } else {
-                if (!chapter.pdf.isNullOrBlank()) {
-                    val filepath = FileUtils.getLocalStorageFilePath(
-                        requireContext(),
-                        unzippedFolder
-                    )
-                    SetCFragment.pdfFilePath = "$filepath/${chapter.pdf}"
+//                if (!chapter.pdf.isNullOrBlank()) {
+//                    val filepath = FileUtils.getLocalStorageFilePath(
+//                        requireContext(),
+//                        unzippedFolder
+//                    )
+//                    SetCFragment.pdfFilePath = "$filepath/${chapter.pdf}"
+//
+//                    if (!File(SetCFragment.pdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(
+//                            chapter.pdf!!
+//                        )) {
+//                        viewModel.filesInDownloadPool.add(chapter.pdf!!)
+//                        viewModel.downloadPdfFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!)
+//                        //downloadFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!, typePdf)
+//                    }
+//                } else {
+//                    childFragmentManager.setFragmentResult(
+//                        "loadPdf",
+//                        bundleOf("pdfFilePath" to "")
+//                    )
+//                }
 
-                    if (!File(SetCFragment.pdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(
-                            chapter.pdf!!
-                        )) {
-                        viewModel.filesInDownloadPool.add(chapter.pdf!!)
-                        viewModel.downloadPdfFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!)
-                        //downloadFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!, typePdf)
-                    }
-                } else {
-                    childFragmentManager.setFragmentResult(
-                        "loadPdf",
-                        bundleOf("pdfFilePath" to "")
-                    )
-                }
-
-                if (!chapter.somadhan.isNullOrBlank()) {
-                    val filepath = FileUtils.getLocalStorageFilePath(
-                        requireContext(),
-                        unzippedFolder
-                    )
-                    SolutionFragment.solutionPdfFilePath = "$filepath/${chapter.somadhan}"
-
-                    if (!File(SolutionFragment.solutionPdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(
-                            chapter.somadhan!!
-                        )) {
-                        viewModel.filesInDownloadPool.add(chapter.somadhan!!)
-                        viewModel.downloadSolutionPdfFile(
-                            "$SOMADHAN/${chapter.somadhan}",
-                            filepath,
-                            chapter.somadhan!!
-                        )
-                        //downloadFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!, typePdf)
-                    }
-                } else {
-                    childFragmentManager.setFragmentResult(
-                        "loadSolutionPdf",
-                        bundleOf("solutionPdfFilePath" to "")
-                    )
-                }
+//                if (!chapter.somadhan.isNullOrBlank()) {
+//                    val filepath = FileUtils.getLocalStorageFilePath(
+//                        requireContext(),
+//                        unzippedFolder
+//                    )
+//                    SolutionFragment.solutionPdfFilePath = "$filepath/${chapter.somadhan}"
+//
+//                    if (!File(SolutionFragment.solutionPdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(
+//                            chapter.somadhan!!
+//                        )) {
+//                        viewModel.filesInDownloadPool.add(chapter.somadhan!!)
+//                        viewModel.downloadSolutionPdfFile(
+//                            "$SOMADHAN/${chapter.somadhan}",
+//                            filepath,
+//                            chapter.somadhan!!
+//                        )
+//                        //downloadFile("$PDF/${chapter.pdf}", filepath, chapter.pdf!!, typePdf)
+//                    }
+//                } else {
+//                    childFragmentManager.setFragmentResult(
+//                        "loadSolutionPdf",
+//                        bundleOf("solutionPdfFilePath" to "")
+//                    )
+//                }
 
                 chapter.fields?.let { videoList ->
                     if (videoList.isNotEmpty()) {
