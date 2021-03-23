@@ -3,6 +3,8 @@ package com.rtchubs.engineerbooks.ui.home
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebChromeClient
+import android.webkit.WebViewClient
 import androidx.fragment.app.viewModels
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
@@ -28,6 +30,11 @@ class Tab2Fragment : BaseFragment<SetCFragmentBinding, Tab2ViewModel>() {
         webSettings.allowContentAccess = true
         webSettings.domStorageEnabled = true
         webSettings.setAppCacheEnabled(true)
+        webSettings.builtInZoomControls = true
+        webSettings.displayZoomControls = true
+
+        viewDataBinding.webView.webChromeClient = WebChromeClient()
+        viewDataBinding.webView.webViewClient = WebViewClient()
 
         try {
             val chapterFields = LoadWebViewFragment.chapter.fields?.filter { it.type == "Tab2" }
