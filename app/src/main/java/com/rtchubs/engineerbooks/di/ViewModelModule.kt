@@ -12,8 +12,8 @@ import com.rtchubs.engineerbooks.ui.chapter_list.ChapterListViewModel
 import com.rtchubs.engineerbooks.ui.e_code.ECodeViewModel
 import com.rtchubs.engineerbooks.ui.history.HistoryViewModel
 import com.rtchubs.engineerbooks.ui.home.HomeViewModel
-import com.rtchubs.engineerbooks.ui.home.QuizListViewModel
-import com.rtchubs.engineerbooks.ui.home.SetCViewModel
+import com.rtchubs.engineerbooks.ui.home.Tab3ViewModel
+import com.rtchubs.engineerbooks.ui.home.Tab2ViewModel
 import com.rtchubs.engineerbooks.ui.home.VideoListViewModel
 import com.rtchubs.engineerbooks.ui.live_class_schedule.LiveClassScheduleViewModel
 import com.rtchubs.engineerbooks.ui.live_video.LiveVideoViewModel
@@ -31,7 +31,7 @@ import com.rtchubs.engineerbooks.ui.profile_signin.ProfileSignInViewModel
 import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditViewModel
 import com.rtchubs.engineerbooks.ui.profiles.ProfileSettingsViewModel
 import com.rtchubs.engineerbooks.ui.settings.SettingsViewModel
-import com.rtchubs.engineerbooks.ui.solution.SolutionViewModel
+import com.rtchubs.engineerbooks.ui.home.Tab1ViewModel
 import com.rtchubs.engineerbooks.ui.splash.SplashViewModel
 import com.rtchubs.engineerbooks.ui.terms_and_conditions.TermsViewModel
 import com.rtchubs.engineerbooks.ui.transaction.TransactionViewModel
@@ -75,13 +75,13 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(QuizListViewModel::class)
-    abstract fun bindQuizListViewModel(viewModel: QuizListViewModel): ViewModel
+    @ViewModelKey(Tab3ViewModel::class)
+    abstract fun bindQuizListViewModel(viewModel: Tab3ViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(SetCViewModel::class)
-    abstract fun bindSetCViewModel(viewModel: SetCViewModel): ViewModel
+    @ViewModelKey(Tab2ViewModel::class)
+    abstract fun bindSetCViewModel(viewModel: Tab2ViewModel): ViewModel
 
     @Binds
     @IntoMap
@@ -181,8 +181,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SolutionViewModel::class)
-    abstract fun bindSolutionViewModel(viewModel: SolutionViewModel): ViewModel
+    @ViewModelKey(Tab1ViewModel::class)
+    abstract fun bindSolutionViewModel(viewModel: Tab1ViewModel): ViewModel
 
     @Binds
     @IntoMap

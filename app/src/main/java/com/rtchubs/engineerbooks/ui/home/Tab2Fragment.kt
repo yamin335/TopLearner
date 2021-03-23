@@ -1,4 +1,4 @@
-package com.rtchubs.engineerbooks.ui.solution
+package com.rtchubs.engineerbooks.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -6,18 +6,18 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
-import com.rtchubs.engineerbooks.databinding.SolutionCFragmentBinding
+import com.rtchubs.engineerbooks.databinding.SetCFragmentBinding
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment
 
-class SolutionFragment : BaseFragment<SolutionCFragmentBinding, SolutionViewModel>() {
+class Tab2Fragment : BaseFragment<SetCFragmentBinding, Tab2ViewModel>() {
 
     override val bindingVariable: Int
         get() = BR.viewModel
     override val layoutId: Int
-        get() = R.layout.fragment_solution
+        get() = R.layout.fragment_set_c
 
-    override val viewModel: SolutionViewModel by viewModels { viewModelFactory }
+    override val viewModel: Tab2ViewModel by viewModels { viewModelFactory }
 
     @SuppressLint("SetJavaScriptEnabled", "ObsoleteSdkInt")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,13 +30,28 @@ class SolutionFragment : BaseFragment<SolutionCFragmentBinding, SolutionViewMode
         webSettings.setAppCacheEnabled(true)
 
         try {
-            val chapterFields = LoadWebViewFragment.chapter.fields?.filter { it.type == "Shomadhan" }
+            val chapterFields = LoadWebViewFragment.chapter.fields?.filter { it.type == "Tab2" }
             val solution = chapterFields?.first()?.link
 
             viewDataBinding.webView.loadUrl(solution)
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
+//        parentFragmentManager.setFragmentResultListener(
+//            "loadPdf",
+//            viewLifecycleOwner, FragmentResultListener { key, bundle ->
+//                pdfFilePath = bundle.getString("pdfFilePath") ?: ""
+//
+//                if (pdfFilePath == "") {
+//                    viewDataBinding.loader.visibility = View.GONE
+//                } else {
+//                    loadPDF(File(pdfFilePath))
+//                }
+//            }
+//        )
+//
+//        loadPDF(File(pdfFilePath))
     }
 
 //    private fun loadPDF(file: File) {
@@ -48,17 +63,16 @@ class SolutionFragment : BaseFragment<SolutionCFragmentBinding, SolutionViewMode
 //                    .swipeHorizontal(false)
 //                    .load()
 //                viewDataBinding.loader.visibility = View.GONE
-//                viewDataBinding.emptyView.visibility = View.GONE
 //            }
 //        }
 //    }
 
 //    companion object {
-//        var solutionPdfFilePath = ""
+//        var pdfFilePath = ""
 //    }
 //
 //    override fun onDetach() {
 //        super.onDetach()
-//        solutionPdfFilePath = ""
+//        pdfFilePath = ""
 //    }
 }

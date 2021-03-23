@@ -7,8 +7,8 @@ import com.rtchubs.engineerbooks.ui.chapter_list.ChapterListFragment
 import com.rtchubs.engineerbooks.ui.e_code.ECodeFragment
 import com.rtchubs.engineerbooks.ui.history.HistoryFragment
 import com.rtchubs.engineerbooks.ui.home.Home2Fragment
-import com.rtchubs.engineerbooks.ui.home.QuizListFragment
-import com.rtchubs.engineerbooks.ui.home.SetCFragment
+import com.rtchubs.engineerbooks.ui.home.Tab3Fragment
+import com.rtchubs.engineerbooks.ui.home.Tab2Fragment
 import com.rtchubs.engineerbooks.ui.home.VideoListFragment
 import com.rtchubs.engineerbooks.ui.live_class_schedule.LiveClassScheduleFragment
 import com.rtchubs.engineerbooks.ui.live_video.LiveVideoFragment
@@ -29,7 +29,7 @@ import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment
 import com.rtchubs.engineerbooks.ui.profiles.PartnerProfileFragment
 import com.rtchubs.engineerbooks.ui.profiles.ProfileSettingsFragment
 import com.rtchubs.engineerbooks.ui.settings.SettingsFragment
-import com.rtchubs.engineerbooks.ui.solution.SolutionFragment
+import com.rtchubs.engineerbooks.ui.home.Tab1Fragment
 import com.rtchubs.engineerbooks.ui.splash.SplashFragment
 import com.rtchubs.engineerbooks.ui.terms_and_conditions.TermsAndConditionsFragment
 import com.rtchubs.engineerbooks.ui.transaction.TransactionFragment
@@ -63,10 +63,10 @@ abstract class FragmentBuildersModule {
     abstract fun contributeVideoListFragment(): VideoListFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeSetBFragment(): QuizListFragment
+    abstract fun contributeSetBFragment(): Tab3Fragment
 
     @ContributesAndroidInjector
-    abstract fun contributeQuizListFragment(): SetCFragment
+    abstract fun contributeQuizListFragment(): Tab2Fragment
 
     @ContributesAndroidInjector
     abstract fun contributeHome2Fragment(): Home2Fragment
@@ -117,7 +117,7 @@ abstract class FragmentBuildersModule {
     abstract fun contributeLiveVideoFragment(): LiveVideoFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeSolutionFragment(): SolutionFragment
+    abstract fun contributeSolutionFragment(): Tab1Fragment
 
     @ContributesAndroidInjector
     abstract fun contributeNoticeBoardFragment(): NoticeBoardFragment

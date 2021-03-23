@@ -10,14 +10,14 @@ import com.rtchubs.engineerbooks.databinding.QuizListFragmentBinding
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment
 
-class QuizListFragment : BaseFragment<QuizListFragmentBinding, QuizListViewModel>() {
+class Tab3Fragment : BaseFragment<QuizListFragmentBinding, Tab3ViewModel>() {
 
     override val bindingVariable: Int
         get() = BR.viewModel
     override val layoutId: Int
         get() = R.layout.fragment_quiz_list
 
-    override val viewModel: QuizListViewModel by viewModels { viewModelFactory }
+    override val viewModel: Tab3ViewModel by viewModels { viewModelFactory }
 
     //lateinit var quizListAdapter: QuizListAdapter
 
@@ -32,7 +32,7 @@ class QuizListFragment : BaseFragment<QuizListFragmentBinding, QuizListViewModel
         webSettings.setAppCacheEnabled(true)
 
         try {
-            val chapterFields = LoadWebViewFragment.chapter.fields?.filter { it.type == "MCQ" }
+            val chapterFields = LoadWebViewFragment.chapter.fields?.filter { it.type == "Tab3" }
             val solution = chapterFields?.first()?.link
 
             viewDataBinding.webView.loadUrl(solution)

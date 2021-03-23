@@ -1,11 +1,7 @@
 package com.rtchubs.engineerbooks.ui.home
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.rtchubs.engineerbooks.models.chapter.ChapterField
-import com.rtchubs.engineerbooks.ui.solution.SolutionFragment
 
 class VideoTabViewPagerAdapter internal constructor(
     private val size: Int,
@@ -19,9 +15,9 @@ class VideoTabViewPagerAdapter internal constructor(
     override fun createFragment(position: Int): Fragment {
         return when(position) {
             0 -> VideoListFragment()
-            1 -> SolutionFragment()
-            2 -> SetCFragment()
-            3 -> QuizListFragment()
+            1 -> Tab1Fragment()
+            2 -> Tab2Fragment()
+            3 -> Tab3Fragment()
             else -> VideoListFragment()
         }
     }

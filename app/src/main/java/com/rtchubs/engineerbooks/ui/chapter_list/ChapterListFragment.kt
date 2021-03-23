@@ -9,6 +9,7 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.ChapterListFragmentBinding
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
+import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment
 
 class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterListViewModel>() {
 
@@ -33,6 +34,9 @@ class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterList
         viewDataBinding.toolbar.title = args.book.title
 
         chapterListAdapter = ChapterListAdapter(appExecutors) { chapter ->
+            LoadWebViewFragment.tab1Title = chapter.fields?.first { it.type == "Tab1" }?.name ?: ""
+            LoadWebViewFragment.tab2Title = chapter.fields?.first { it.type == "Tab2" }?.name ?: ""
+            LoadWebViewFragment.tab3Title = chapter.fields?.first { it.type == "Tab3" }?.name ?: ""
             navController.navigate(
                 //ChapterListFragmentDirections.actionChapterListToVideoPlay("vedio_file")
                 ChapterListFragmentDirections.actionChapterListToWebView(chapter)

@@ -87,7 +87,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).title }
     }
 
-    private val viewPagerPageTitles = arrayOf("অ্যানিমেশন", "সমাধান", "সূত্রাবলী", "নৈর্ব্যক্তিক")
+    private val viewPagerPageTitles = arrayOf("অ্যানিমেশন", tab1Title, tab2Title, tab3Title)
 //    private val viewPagerPageTitles = arrayOf("Video List", "Questions")
 
     private lateinit var pagerAdapter: VideoTabViewPagerAdapter
@@ -606,9 +606,9 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 //                        requireContext(),
 //                        unzippedFolder
 //                    )
-//                    SetCFragment.pdfFilePath = "$filepath/${chapter.pdf}"
+//                    Tab2Fragment.pdfFilePath = "$filepath/${chapter.pdf}"
 //
-//                    if (!File(SetCFragment.pdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(
+//                    if (!File(Tab2Fragment.pdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(
 //                            chapter.pdf!!
 //                        )) {
 //                        viewModel.filesInDownloadPool.add(chapter.pdf!!)
@@ -627,9 +627,9 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 //                        requireContext(),
 //                        unzippedFolder
 //                    )
-//                    SolutionFragment.solutionPdfFilePath = "$filepath/${chapter.somadhan}"
+//                    Tab1Fragment.solutionPdfFilePath = "$filepath/${chapter.somadhan}"
 //
-//                    if (!File(SolutionFragment.solutionPdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(
+//                    if (!File(Tab1Fragment.solutionPdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(
 //                            chapter.somadhan!!
 //                        )) {
 //                        viewModel.filesInDownloadPool.add(chapter.somadhan!!)
@@ -963,6 +963,9 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
     companion object {
         lateinit var chapter: BookChapter
+        var tab1Title = ""
+        var tab2Title = ""
+        var tab3Title = ""
     }
 }
 

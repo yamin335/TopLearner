@@ -6,18 +6,18 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
-import com.rtchubs.engineerbooks.databinding.SetCFragmentBinding
+import com.rtchubs.engineerbooks.databinding.SolutionCFragmentBinding
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment
 
-class SetCFragment : BaseFragment<SetCFragmentBinding, SetCViewModel>() {
+class Tab1Fragment : BaseFragment<SolutionCFragmentBinding, Tab1ViewModel>() {
 
     override val bindingVariable: Int
         get() = BR.viewModel
     override val layoutId: Int
-        get() = R.layout.fragment_set_c
+        get() = R.layout.fragment_solution
 
-    override val viewModel: SetCViewModel by viewModels { viewModelFactory }
+    override val viewModel: Tab1ViewModel by viewModels { viewModelFactory }
 
     @SuppressLint("SetJavaScriptEnabled", "ObsoleteSdkInt")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,28 +30,13 @@ class SetCFragment : BaseFragment<SetCFragmentBinding, SetCViewModel>() {
         webSettings.setAppCacheEnabled(true)
 
         try {
-            val chapterFields = LoadWebViewFragment.chapter.fields?.filter { it.type == "Sources" }
+            val chapterFields = LoadWebViewFragment.chapter.fields?.filter { it.type == "Tab1" }
             val solution = chapterFields?.first()?.link
 
             viewDataBinding.webView.loadUrl(solution)
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
-//        parentFragmentManager.setFragmentResultListener(
-//            "loadPdf",
-//            viewLifecycleOwner, FragmentResultListener { key, bundle ->
-//                pdfFilePath = bundle.getString("pdfFilePath") ?: ""
-//
-//                if (pdfFilePath == "") {
-//                    viewDataBinding.loader.visibility = View.GONE
-//                } else {
-//                    loadPDF(File(pdfFilePath))
-//                }
-//            }
-//        )
-//
-//        loadPDF(File(pdfFilePath))
     }
 
 //    private fun loadPDF(file: File) {
@@ -63,16 +48,17 @@ class SetCFragment : BaseFragment<SetCFragmentBinding, SetCViewModel>() {
 //                    .swipeHorizontal(false)
 //                    .load()
 //                viewDataBinding.loader.visibility = View.GONE
+//                viewDataBinding.emptyView.visibility = View.GONE
 //            }
 //        }
 //    }
 
 //    companion object {
-//        var pdfFilePath = ""
+//        var solutionPdfFilePath = ""
 //    }
 //
 //    override fun onDetach() {
 //        super.onDetach()
-//        pdfFilePath = ""
+//        solutionPdfFilePath = ""
 //    }
 }
