@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.models.Offer
+import com.rtchubs.engineerbooks.models.bkash.BKashCreateResponse
 import com.rtchubs.engineerbooks.models.transactions.CreateOrderBody
 import com.rtchubs.engineerbooks.models.transactions.Salesinvoice
 import com.rtchubs.engineerbooks.repos.HomeRepository
@@ -29,6 +30,39 @@ class PaymentViewModel @Inject constructor(private val application: Application,
 
     val offers: MutableLiveData<List<Offer>> by lazy {
         MutableLiveData<List<Offer>>()
+    }
+
+    val bkashUrl: MutableLiveData<BKashCreateResponse> by lazy {
+        MutableLiveData<BKashCreateResponse>()
+    }
+
+    fun getBkashPaymentUrl(mobile: String?, amount: String?, invoiceNumber: String?): MutableLiveData<BKashCreateResponse> {
+        if (checkNetworkStatus(true)) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                offers.postValue(null)
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(repository.bkashPaymentUrlRepo(mobile, amount, invoiceNumber))) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        bkashUrl.postValue(apiResponse.body.data?.createresponse)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                        offers.postValue(null)
+                    }
+                    is ApiErrorResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                        offers.postValue(null)
+                    }
+                }
+            }
+        }
+        return bkashUrl
     }
 
     fun getAllOffers(cityId: Int?, upazillaId: Int?) {

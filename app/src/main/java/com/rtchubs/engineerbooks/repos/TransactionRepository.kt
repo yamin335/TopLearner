@@ -3,6 +3,7 @@ package com.rtchubs.engineerbooks.repos
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.ApiService
+import com.rtchubs.engineerbooks.models.bkash.BKashPaymentUrlResponse
 import com.rtchubs.engineerbooks.models.transactions.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -53,6 +54,18 @@ class TransactionRepository @Inject constructor(@Named("auth") private val authA
 
         return withContext(Dispatchers.IO) {
             authApiService.partnerPaymentStatus(jsonObject)
+        }
+    }
+
+    suspend fun bkashPaymentUrlRepo(mobile: String?, amount: String?, invoiceNumber: String?): Response<BKashPaymentUrlResponse> {
+        val jsonObject = JsonObject().apply {
+            addProperty("mobile", mobile)
+            addProperty("amount", amount)
+            addProperty("invoicenumber", invoiceNumber)
+        }
+
+        return withContext(Dispatchers.IO) {
+            authApiService.bkashPaymentUrl(jsonObject)
         }
     }
 }

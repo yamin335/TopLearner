@@ -10,6 +10,7 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.PaymentFragmentBinding
 import com.rtchubs.engineerbooks.models.bkash.BKashCheckout
+import com.rtchubs.engineerbooks.models.bkash.BKashCreateResponse
 import com.rtchubs.engineerbooks.models.bkash.BKashPaymentResponse
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.models.transactions.CreateOrderBody
@@ -37,6 +38,8 @@ class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewMode
     lateinit var userData: InquiryAccount
 
     private lateinit var bkashPgwDialog: BKashDialogFragment
+
+    private var invoiceNumber: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -117,7 +120,13 @@ class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewMode
 
         viewDataBinding.btnPayNow.setOnClickListener {
 
-            shoWBkashDialog()
+            viewModel.getBkashPaymentUrl(userData.mobile ?: "",
+                viewModel.amount.value ?: "0",
+                invoiceNumber ?: generateInvoiceID()).observe(viewLifecycleOwner, Observer { response ->
+                response?.let {
+                    shoWBkashDialog(it)
+                }
+            })
 
 //            val checkout = Checkout()
 //            checkout.setAmount("10")
@@ -150,7 +159,7 @@ class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewMode
         viewModel.getAllOffers(userData.CityID, userData.UpazilaID)
     }
 
-    private fun shoWBkashDialog() {
+    private fun shoWBkashDialog(bkashData: BKashCreateResponse) {
         // --------bKash start--------
 
         val checkout = BKashCheckout(viewModel.amount.value ?: "0", "authorization", "two")
@@ -171,7 +180,7 @@ class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewMode
                 bkashPgwDialog.dismiss()
             }
 
-        }, checkout)
+        }, bkashData)
         bkashPgwDialog.isCancelable = true
         bkashPgwDialog.show(childFragmentManager, "#bkash_payment_dialog")
 

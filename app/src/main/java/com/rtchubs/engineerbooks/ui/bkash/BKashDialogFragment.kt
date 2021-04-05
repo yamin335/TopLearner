@@ -17,15 +17,14 @@ import com.google.gson.Gson
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.binding.FragmentDataBindingComponent
 import com.rtchubs.engineerbooks.databinding.BKashDialogFragmentBinding
-import com.rtchubs.engineerbooks.models.bkash.BKashCheckout
-import com.rtchubs.engineerbooks.models.bkash.BKashPaymentRequest
+import com.rtchubs.engineerbooks.models.bkash.BKashCreateResponse
 import com.rtchubs.engineerbooks.models.bkash.BKashPaymentResponse
 import com.rtchubs.engineerbooks.util.autoCleared
 import dagger.android.support.DaggerDialogFragment
 
 class BKashDialogFragment internal constructor(
     private val callBack: BkashPaymentCallback,
-    private val checkout: BKashCheckout
+    private val bkashData: BKashCreateResponse
 ): DaggerDialogFragment() {
 
     private var binding by autoCleared<BKashDialogFragmentBinding>()
@@ -54,8 +53,8 @@ class BKashDialogFragment internal constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val paymentRequest = BKashPaymentRequest(checkout.amount, checkout.intent)
-        request = Gson().toJson(paymentRequest)
+//        val paymentRequest = BKashPaymentRequest(checkout.amount, checkout.intent)
+//        request = Gson().toJson(paymentRequest)
 
         val webSettings: WebSettings = binding.webView.settings
         webSettings.javaScriptEnabled = true
@@ -120,7 +119,8 @@ class BKashDialogFragment internal constructor(
             }
         }
 
-        binding.webView.loadUrl("file:///android_asset/www/checkout_120.html")
+//        binding.webView.loadUrl("file:///android_asset/www/checkout_120.html")
+        binding.webView.loadUrl(bkashData.bkashURL)
     }
 
     inner class JavaScriptWebViewInterface(context: Context) {

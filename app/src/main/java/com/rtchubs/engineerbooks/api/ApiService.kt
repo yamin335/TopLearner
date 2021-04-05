@@ -5,6 +5,7 @@ import com.rtchubs.engineerbooks.api.Api.ContentType
 import com.rtchubs.engineerbooks.models.AdSliderResponse
 import com.rtchubs.engineerbooks.models.LiveClassScheduleResponse
 import com.rtchubs.engineerbooks.models.OfferResponse
+import com.rtchubs.engineerbooks.models.bkash.BKashPaymentUrlResponse
 import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
 import com.rtchubs.engineerbooks.models.common.MyAccountListResponse
 import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
@@ -88,6 +89,9 @@ interface ApiService {
 
     @GET(ApiEndPoint.SLIDER_ADS)
     suspend fun getAds(): Response<AdSliderResponse>
+
+    @POST(ApiEndPoint.BKASH_PAY)
+    suspend fun bkashPaymentUrl(@Body jsonString: JsonObject): Response<BKashPaymentUrlResponse>
 
 
     @Multipart
