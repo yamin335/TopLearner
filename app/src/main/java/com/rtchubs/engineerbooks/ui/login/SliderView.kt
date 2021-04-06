@@ -18,8 +18,14 @@ class SliderView(private val adSlider: AdSlider, mContext: Context) : BaseSlider
         val target: ImageView = v.findViewById(R.id.slideImage)
         val titleText: TextView = v.findViewById(R.id.slideTitleText)
 
-        titleText.text = adSlider.title
-        val temp = "${ApiEndPoint.SLIDER_IMAGE}/${adSlider.logo}"
+        if (adSlider.title.isNullOrBlank()) {
+            titleText.visibility = View.GONE
+        } else {
+            titleText.visibility = View.VISIBLE
+            titleText.text = adSlider.title
+        }
+
+        //val temp = "${ApiEndPoint.SLIDER_IMAGE}/${adSlider.logo}"
         Glide.with(context)
             .load("${ApiEndPoint.SLIDER_IMAGE}/${adSlider.logo}")
             .placeholder(R.drawable.slider_image_1)

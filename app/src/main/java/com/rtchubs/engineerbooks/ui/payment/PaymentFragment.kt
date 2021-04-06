@@ -9,9 +9,7 @@ import androidx.navigation.fragment.navArgs
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.PaymentFragmentBinding
-import com.rtchubs.engineerbooks.models.bkash.BKashCheckout
 import com.rtchubs.engineerbooks.models.bkash.BKashCreateResponse
-import com.rtchubs.engineerbooks.models.bkash.BKashPaymentResponse
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.models.transactions.CreateOrderBody
 import com.rtchubs.engineerbooks.ui.bkash.BKashDialogFragment
@@ -61,9 +59,9 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 hideKeyboard()
                 if (args.book.bookID == it.BookID) {
                     findNavController().popBackStack()
-                    showSuccessToast(requireContext(), "Successfully purchased")
+                    showSuccessToast(requireContext(), "Payment Successful")
                 } else {
-                    showErrorToast(requireContext(), "Purchase is not successful!")
+                    showErrorToast(requireContext(), "Payment is not successful!")
                 }
             }
         })
@@ -126,7 +124,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 viewModel.amount.value ?: "0",
                 invoiceNumber ?: generateInvoiceID()).observe(viewLifecycleOwner, Observer { response ->
                     response?.let {
-                        shoWBkashDialog(it)
+                        shoWBkashDialog(viewModel.amount.value ?: "0", it)
                     }
             })
 
@@ -161,24 +159,24 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         viewModel.getAllOffers(userData.CityID, userData.UpazilaID)
     }
 
-    private fun shoWBkashDialog(bkashData: BKashCreateResponse) {
+    private fun shoWBkashDialog(amount: String, bkashData: BKashCreateResponse) {
         // --------bKash start--------
 
-        val checkout = BKashCheckout(viewModel.amount.value ?: "0", "authorization", "two")
+        //val checkout = BKashCheckout(viewModel.amount.value ?: "0", "authorization", "two")
 
         bkashPgwDialog = BKashDialogFragment(object : BKashDialogFragment.BkashPaymentCallback {
-            override fun onPaymentSuccess(bkashResponse: BKashPaymentResponse) {
-                saveBKaskPayment(bkashResponse)
+            override fun onPaymentSuccess() {
+                saveBKaskPayment(amount, bkashData)
                 bkashPgwDialog.dismiss()
             }
 
             override fun onPaymentFailed() {
-                showErrorToast(requireContext(), "Purchase is not successful, Payment failed!")
+                showErrorToast(requireContext(), "Payment failed!")
                 bkashPgwDialog.dismiss()
             }
 
             override fun onPaymentCancelled() {
-                showErrorToast(requireContext(), "Purchase is not successful, Payment cancelled!")
+                showErrorToast(requireContext(), "Payment cancelled!")
                 bkashPgwDialog.dismiss()
             }
 
@@ -189,19 +187,19 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         // --------bKash End--------
     }
 
-    private fun saveBKaskPayment(response: BKashPaymentResponse) {
+    private fun saveBKaskPayment(amount: String, bkashData: BKashCreateResponse) {
         val firstName = userData.first_name ?: ""
         val lastName = userData.last_name ?: ""
 
-        val amount = response.amount.toDouble()
+        val amount = amount.toDouble()
         viewModel.createOrder(
             CreateOrderBody(
                 userData.id ?: 0, userData.mobile ?: "",
                 amount.toInt(), 0, 0,
                 0, "", userData.upazila ?: "", userData.city ?: "",
-                userData.UpazilaID ?: 0, userData.CityID ?: 0, invoiceNumber ?: generateInvoiceID(),
-                "", response.paymentID, args.book.bookID ?: 0, userData.class_id ?: 0,
-                "$firstName $lastName", args.book.bookName ?: "", response.transactionID
+                userData.UpazilaID ?: 0, userData.CityID ?: 0, bkashData.invoicenumber ?: "N/A",
+                "", bkashData.paymentID ?: "N/A", args.book.bookID ?: 0, userData.class_id ?: 0,
+                "$firstName $lastName", args.book.bookName ?: "", bkashData.paymentID ?: "N/A"
             )
         )
     }

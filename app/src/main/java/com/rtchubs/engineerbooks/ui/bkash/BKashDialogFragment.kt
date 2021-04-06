@@ -13,12 +13,10 @@ import android.view.ViewGroup
 import android.webkit.*
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
-import com.google.gson.Gson
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.binding.FragmentDataBindingComponent
 import com.rtchubs.engineerbooks.databinding.BKashDialogFragmentBinding
 import com.rtchubs.engineerbooks.models.bkash.BKashCreateResponse
-import com.rtchubs.engineerbooks.models.bkash.BKashPaymentResponse
 import com.rtchubs.engineerbooks.util.autoCleared
 import dagger.android.support.DaggerDialogFragment
 
@@ -95,6 +93,7 @@ class BKashDialogFragment internal constructor(
                 request: WebResourceRequest?
             ): Boolean {
                 val url = request?.url?.toString()
+
                 if (url == "https://www.bkash.com/terms-and-conditions") {
                     val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(myIntent)
@@ -110,6 +109,15 @@ class BKashDialogFragment internal constructor(
             }
 
             override fun onPageFinished(view: WebView, url: String?) {
+
+                if (url?.contains("status=success") == true && url.contains("backend.engineersmath.com/bkashsuccess")) {
+                    callBack.onPaymentSuccess()
+                }
+
+                if (url?.contains("status=failure") == true && url.contains("backend.engineersmath.com/bkashsuccess")) {
+                    callBack.onPaymentFailed()
+                }
+
                 val paymentRequestJson = "{paymentRequest:$request}"
                 binding.webView.loadUrl("javascript:callReconfigure( $paymentRequestJson )")
                 binding.webView.loadUrl("javascript:clickPayButton()")
@@ -129,8 +137,8 @@ class BKashDialogFragment internal constructor(
         // Handle event from the web page
         @JavascriptInterface
         fun onPaymentSuccess(response: String) {
-            val paymentResponse = Gson().fromJson(response, BKashPaymentResponse::class.java)
-            callBack.onPaymentSuccess(paymentResponse)
+//            val paymentResponse = Gson().fromJson(response, BKashPaymentResponse::class.java)
+//            callBack.onPaymentSuccess(paymentResponse)
         }
 
         @JavascriptInterface
@@ -145,7 +153,7 @@ class BKashDialogFragment internal constructor(
     }
 
     interface BkashPaymentCallback {
-        fun onPaymentSuccess(bkashResponse: BKashPaymentResponse)
+        fun onPaymentSuccess()
         fun onPaymentFailed()
         fun onPaymentCancelled()
     }
