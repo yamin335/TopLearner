@@ -160,6 +160,10 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
             navigateTo(MoreFragmentDirections.actionMoreFragmentToEcodeFragment())
         }
 
+        viewDataBinding.mTransactions.setOnClickListener {
+            navigateTo(MoreFragmentDirections.actionMoreFragmentToTransactionFragment())
+        }
+
 //        viewDataBinding.mSocialMedia.setOnClickListener {
 //            socialMediaBottomSheetDialog.show(childFragmentManager, "#Social_Media_Bottom_Modal")
 //        }

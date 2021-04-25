@@ -289,6 +289,58 @@
                             app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"/>
                     </RelativeLayout>
                 </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
+                <View
+                    android:background="?android:attr/listDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:visibility="gone"
+                    android:layout_marginStart="56dp"/>
+                <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                    android:id="@+id/mTransactions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:contentPaddingLeft="16dp"
+                    app:contentPaddingRight="10dp"
+                    app:contentPaddingTop="8dp"
+                    app:contentPaddingBottom="8dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/icTransaction"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="8dp"
+                            android:padding="2dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@drawable/icons8_transaction_80"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="লেনদেন সমূহ"
+                            android:textSize="18sp"
+                            android:gravity="center_vertical"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/icTransaction"
+                            android:layout_toStartOf="@id/arrow0"/>
+                        <ImageView
+                            android:id="@+id/arrow0"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            app:tint="@color/grayColor"
+                            android:visibility="gone"
+                            android:layout_alignParentEnd="true"
+                            app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"/>
+                    </RelativeLayout>
+                </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
                 <View
                     android:background="?android:attr/listDivider"
                     android:layout_width="match_parent"

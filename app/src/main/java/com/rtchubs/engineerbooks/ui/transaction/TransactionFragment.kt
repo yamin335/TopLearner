@@ -1,9 +1,6 @@
 package com.rtchubs.engineerbooks.ui.transaction
 
-import android.content.Context
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -11,7 +8,6 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.TransactionFragmentBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
-import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 
 class TransactionFragment : BaseFragment<TransactionFragmentBinding, TransactionViewModel>() {
@@ -24,40 +20,15 @@ class TransactionFragment : BaseFragment<TransactionFragmentBinding, Transaction
         viewModelFactory
     }
 
-    private var drawerListener: NavDrawerHandlerCallback? = null
-
     lateinit var transactionAdapter: TransactionListAdapter
     lateinit var adminTransactionAdapter: AdminTransactionListAdapter
 
     lateinit var userData: InquiryAccount
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        if (context is NavDrawerHandlerCallback) {
-            drawerListener = context
-        } else {
-            throw RuntimeException("$context must implement LoginHandlerCallback")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        drawerListener = null
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.toolbar_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        registerToolbar(viewDataBinding.toolbar)
+
         userData = preferencesHelper.getUser()
 
         adminTransactionAdapter = AdminTransactionListAdapter(appExecutors) {
@@ -78,10 +49,6 @@ class TransactionFragment : BaseFragment<TransactionFragmentBinding, Transaction
 
 //        viewDataBinding.linearSummary.visibility = View.VISIBLE
 //        viewDataBinding.recyclerTransactions.adapter = adminTransactionAdapter
-
-        viewDataBinding.appLogo.setOnClickListener {
-            drawerListener?.toggleNavDrawer()
-        }
 
         viewModel.salesInvoice.observe(viewLifecycleOwner, Observer { allTransaction ->
             allTransaction?.let {

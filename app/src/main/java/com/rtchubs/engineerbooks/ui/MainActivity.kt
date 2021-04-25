@@ -151,9 +151,9 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
 
         val navGraphIds = listOf(
             R.navigation.home_nav_graph,
-            R.navigation.pay_nav_graph,
+            R.navigation.free_book_nav_graph,
             R.navigation.live_nav_graph,
-            R.navigation.transaction_nav_graph,
+            R.navigation.my_course_nav_graph,
             R.navigation.more_nav_graph
         )
 

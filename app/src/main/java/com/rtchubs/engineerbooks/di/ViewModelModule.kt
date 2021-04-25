@@ -10,16 +10,15 @@ import com.rtchubs.engineerbooks.ui.MainActivityViewModel
 import com.rtchubs.engineerbooks.ui.about_us.AboutUsViewModel
 import com.rtchubs.engineerbooks.ui.chapter_list.ChapterListViewModel
 import com.rtchubs.engineerbooks.ui.e_code.ECodeViewModel
+import com.rtchubs.engineerbooks.ui.free_book.FreeBooksViewModel
 import com.rtchubs.engineerbooks.ui.history.HistoryViewModel
-import com.rtchubs.engineerbooks.ui.home.HomeViewModel
-import com.rtchubs.engineerbooks.ui.home.Tab3ViewModel
-import com.rtchubs.engineerbooks.ui.home.Tab2ViewModel
-import com.rtchubs.engineerbooks.ui.home.VideoListViewModel
+import com.rtchubs.engineerbooks.ui.home.*
 import com.rtchubs.engineerbooks.ui.live_class_schedule.LiveClassScheduleViewModel
 import com.rtchubs.engineerbooks.ui.live_video.LiveVideoViewModel
 import com.rtchubs.engineerbooks.ui.login.SignInViewModel
 import com.rtchubs.engineerbooks.ui.login.ViewPagerViewModel
 import com.rtchubs.engineerbooks.ui.more.MoreViewModel
+import com.rtchubs.engineerbooks.ui.my_course.MyCourseViewModel
 import com.rtchubs.engineerbooks.ui.notice_board.NoticeBoardViewModel
 import com.rtchubs.engineerbooks.ui.offer.OfferViewModel
 import com.rtchubs.engineerbooks.ui.otp_signin.OtpSignInViewModel
@@ -31,7 +30,6 @@ import com.rtchubs.engineerbooks.ui.profile_signin.ProfileSignInViewModel
 import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditViewModel
 import com.rtchubs.engineerbooks.ui.profiles.ProfileSettingsViewModel
 import com.rtchubs.engineerbooks.ui.settings.SettingsViewModel
-import com.rtchubs.engineerbooks.ui.home.Tab1ViewModel
 import com.rtchubs.engineerbooks.ui.splash.SplashViewModel
 import com.rtchubs.engineerbooks.ui.terms_and_conditions.TermsViewModel
 import com.rtchubs.engineerbooks.ui.transaction.TransactionViewModel
@@ -213,4 +211,14 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(LiveClassActivityViewModel::class)
     abstract fun bindLiveClassActivityViewModel(viewModel: LiveClassActivityViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FreeBooksViewModel::class)
+    abstract fun bindFreeBooksViewModel(viewModel: FreeBooksViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MyCourseViewModel::class)
+    abstract fun bindMyCourseViewModel(viewModel: MyCourseViewModel): ViewModel
 }

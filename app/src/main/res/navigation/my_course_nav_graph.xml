@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_course_nav"
+    app:startDestination="@id/myCourseFragment">
+
+    <fragment
+        android:id="@+id/myCourseFragment"
+        android:name="com.rtchubs.engineerbooks.ui.my_course.MyCourseFragment"
+        android:label="My Course"
+        tools:layout="@layout/fragment_my_course" />
+
+    <include app:graph="@navigation/drawer_nav_graph" />
+</navigation>

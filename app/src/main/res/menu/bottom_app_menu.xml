@@ -4,14 +4,14 @@
 
     <item
         android:id="@+id/home_nav"
-        android:title="@string/books"
+        android:title="Course"
+        app:showAsAction="always"
+        android:icon="@drawable/icons8_course_80"/>
+    <item
+        android:id="@+id/free_book_nav"
+        android:title="Free Books"
         app:showAsAction="always"
         android:icon="@drawable/icons8_open_book_80"/>
-    <item
-        android:id="@+id/pay_nav"
-        android:title="History"
-        app:showAsAction="always"
-        android:icon="@drawable/icons8_history_80"/>
     <item
         android:id="@+id/live_nav"
         android:icon="@drawable/ic_live"
@@ -25,9 +25,9 @@
 <!--        android:checked="false" />-->
 
     <item
-        android:id="@+id/transaction_nav"
-        android:title="Payments"
-        android:icon="@drawable/icons8_transaction_80"
+        android:id="@+id/my_course_nav"
+        android:title="My Course"
+        android:icon="@drawable/icons8_my_course_80"
         app:showAsAction="always"/>
     <item
         android:id="@+id/more_nav"

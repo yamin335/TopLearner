@@ -65,9 +65,9 @@ class HistoryFragment: BaseFragment<HistoryFragmentBinding, HistoryViewModel>() 
         historyListAdapter = HistoryListAdapter(
             appExecutors
         ) { item ->
-            item.chapter?.let {
-                navigateTo(HistoryFragmentDirections.actionPayFragmentToLoadWebViewFragment2(it))
-            }
+//            item.chapter?.let {
+//                navigateTo(HistoryFragmentDirections.actionPayFragmentToLoadWebViewFragment2(it))
+//            }
         }
 
         viewDataBinding.rvHistory.adapter = historyListAdapter

@@ -5,16 +5,15 @@ import com.rtchubs.engineerbooks.ui.about_us.AboutUsFragment
 import com.rtchubs.engineerbooks.ui.bkash.BKashDialogFragment
 import com.rtchubs.engineerbooks.ui.chapter_list.ChapterListFragment
 import com.rtchubs.engineerbooks.ui.e_code.ECodeFragment
+import com.rtchubs.engineerbooks.ui.free_book.FreeBooksFragment
 import com.rtchubs.engineerbooks.ui.history.HistoryFragment
-import com.rtchubs.engineerbooks.ui.home.Home2Fragment
-import com.rtchubs.engineerbooks.ui.home.Tab3Fragment
-import com.rtchubs.engineerbooks.ui.home.Tab2Fragment
-import com.rtchubs.engineerbooks.ui.home.VideoListFragment
+import com.rtchubs.engineerbooks.ui.home.*
 import com.rtchubs.engineerbooks.ui.live_class_schedule.LiveClassScheduleFragment
 import com.rtchubs.engineerbooks.ui.live_video.LiveVideoFragment
 import com.rtchubs.engineerbooks.ui.login.SignInFragment
 import com.rtchubs.engineerbooks.ui.login.ViewPagerFragment
 import com.rtchubs.engineerbooks.ui.more.MoreFragment
+import com.rtchubs.engineerbooks.ui.my_course.MyCourseFragment
 import com.rtchubs.engineerbooks.ui.notice_board.NoticeBoardFragment
 import com.rtchubs.engineerbooks.ui.offer.OfferFragment
 import com.rtchubs.engineerbooks.ui.otp_signin.OtpSignInFragment
@@ -29,7 +28,6 @@ import com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment
 import com.rtchubs.engineerbooks.ui.profiles.PartnerProfileFragment
 import com.rtchubs.engineerbooks.ui.profiles.ProfileSettingsFragment
 import com.rtchubs.engineerbooks.ui.settings.SettingsFragment
-import com.rtchubs.engineerbooks.ui.home.Tab1Fragment
 import com.rtchubs.engineerbooks.ui.splash.SplashFragment
 import com.rtchubs.engineerbooks.ui.terms_and_conditions.TermsAndConditionsFragment
 import com.rtchubs.engineerbooks.ui.transaction.TransactionFragment
@@ -142,4 +140,10 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributePartnerProfileFragment(): PartnerProfileFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeFreeBooksFragment(): FreeBooksFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeMyCourseFragment(): MyCourseFragment
 }
