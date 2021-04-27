@@ -1403,13 +1403,13 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="transactionFragment">
+                  <entry key="myCourseFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
                             <option name="x" value="12" />
-                            <option name="y" value="150" />
+                            <option name="y" value="12" />
                           </Point>
                         </option>
                       </LayoutPositions>

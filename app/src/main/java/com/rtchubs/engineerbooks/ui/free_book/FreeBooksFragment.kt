@@ -1,7 +1,6 @@
 package com.rtchubs.engineerbooks.ui.free_book
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -14,13 +13,9 @@ import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.FreeBooksFragmentBinding
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
-import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
-import com.rtchubs.engineerbooks.ui.LogoutHandlerCallback
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
-import com.rtchubs.engineerbooks.ui.home.HomeClassListAdapter
 import com.rtchubs.engineerbooks.ui.login.SliderView
-import com.rtchubs.engineerbooks.util.isTimeAndZoneAutomatic
 
 class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewModel>() {
     companion object {
@@ -34,65 +29,25 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
         viewModelFactory
     }
 
-    private var listener: LogoutHandlerCallback? = null
-
     private var drawerListener: NavDrawerHandlerCallback? = null
 
     lateinit var userData: InquiryAccount
 
-    private var homeClassListAdapter: HomeClassListAdapter? = null
-
-    var timeChangeListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
-        when (key) {
-            AppPreferencesHelper.KEY_DEVICE_TIME_CHANGED -> {
-                homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
-
-                if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
-                    //preferencesHelper.isDeviceTimeChanged = true
-                    homeClassListAdapter?.setTimeChangeStatus(true)
-                }
-            }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        preferencesHelper.preference.registerOnSharedPreferenceChangeListener(timeChangeListener)
-
-        homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
-
-        if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
-            preferencesHelper.isDeviceTimeChanged = true
-            homeClassListAdapter?.setTimeChangeStatus(true)
-        }
-    }
+    private var freeBookListAdapter: FreeBookListAdapter? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is LogoutHandlerCallback) {
-            listener = context
-        } else {
-            throw RuntimeException("$context must implement LoginHandlerCallback")
-        }
 
         if (context is NavDrawerHandlerCallback) {
             drawerListener = context
         } else {
             throw RuntimeException("$context must implement LoginHandlerCallback")
         }
-
-        preferencesHelper.preference.registerOnSharedPreferenceChangeListener(timeChangeListener)
-
-        if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
-            preferencesHelper.isDeviceTimeChanged = true
-        }
     }
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
         drawerListener = null
-        preferencesHelper.preference.unregisterOnSharedPreferenceChangeListener(timeChangeListener)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,35 +63,12 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
         mActivity.window?.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
         )
-        preferencesHelper.preference.registerOnSharedPreferenceChangeListener(timeChangeListener)
-
-        if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
-            preferencesHelper.isDeviceTimeChanged = true
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        preferencesHelper.preference.registerOnSharedPreferenceChangeListener(timeChangeListener)
-
         userData = preferencesHelper.getUser()
-        //registerToolbar(viewDataBinding.toolbar)
-
-//        viewDataBinding.cardTopUp.setOnClickListener {
-//            navController.navigate(Home2FragmentDirections.actionHome2FragmentToTopUpMobileFragment(
-//                TopUpHelper()
-//            ))
-//        }
-//
-//        val token = preferencesHelper.getAccessTokenHeader()
-//
-//        paymentListAdapter = PaymentMethodListAdapter(appExecutors) {
-//            //navController.navigate(HomeFragmentDirections.actionBooksToChapterList(it))
-//        }
-//
-//
-//
         viewModel.slideDataList.observe(viewLifecycleOwner, Observer {
             it?.let { ads ->
                 ads.forEach { slideData ->
@@ -150,39 +82,11 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
         viewDataBinding.sliderLayout.setPresetTransformer(SliderLayout.Transformer.Default)
         viewDataBinding.sliderLayout.startAutoCycle()
 
-//        val chapterList = listOf(
-//            Chapter(1, "Chapter One", null, null),
-//            Chapter(2, "Chapter Two", null, null),
-//            Chapter(3, "Chapter Three", null, null),
-//            Chapter(4, "Chapter Four", null, null),
-//            Chapter(5, "Chapter Five", null, null),
-//            Chapter(6, "Chapter Six", null, null),
-//            Chapter(7, "Chapter Seven", null, null),
-//            Chapter(8, "Chapter Eight", null, null),
-//            Chapter(9, "Chapter Nine", null, null),
-//            Chapter(10, "Chapter Ten", null, null)
-//        )
-//
-//        val bookList = listOf(
-//            Book(1, "Class One", "", chapterList),
-//            Book(1, "Class Two", "", chapterList),
-//            Book(1, "Class Three", "", chapterList),
-//            Book(1, "Class Four", "", chapterList),
-//            Book(1, "Class Five", "", chapterList),
-//            Book(1, "Class Six", "", chapterList),
-//            Book(1, "Class Seven", "", chapterList),
-//            Book(1, "Class Eight", "", chapterList),
-//            Book(1, "Class Nine", "", chapterList),
-//            Book(1, "Class Ten", "", chapterList),
-//            Book(1, "HSC 1st Year", "", chapterList),
-//            Book(1, "HSC 2nd Year", "", chapterList)
-//        )
-
         viewDataBinding.appLogo.setOnClickListener {
             drawerListener?.toggleNavDrawer()
         }
 
-        homeClassListAdapter = HomeClassListAdapter(appExecutors, userData.customer_type_id) {
+        freeBookListAdapter = FreeBookListAdapter(appExecutors) {
 //            if (userData.customer_type_id == 2) {
 //                navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
 //            } else {
@@ -220,48 +124,13 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
 
         viewModel.allBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
             books?.let {
-//                val tempList = ArrayList<ClassWiseBook>()
-//                var i = 1
-//                it.forEach { book ->
-//                    book.id = i++
-//                    tempList.add(book)
-//                }
-//                allBookList = tempList
-                allBookList = it as ArrayList<ClassWiseBook>
-                homeClassListAdapter?.submitList(allBookList)
-
-                homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
-
-                if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
-                    preferencesHelper.isDeviceTimeChanged = true
-                    homeClassListAdapter?.setTimeChangeStatus(true)
-                }
-
-                val book = preferencesHelper.getPaidBook()
-                if (book.isPaid && book.classID == userData.class_id) {
-                    homeClassListAdapter?.setPaymentStatus(book.isPaid)
-                } else {
-                    homeClassListAdapter?.setPaymentStatus(false)
-                }
-//                homeClassListAdapter.submitList(tempList)
+                val temp = it.filter { item -> item.price ?: 0.0 <= 0.0 }
+                allBookList = temp as ArrayList<ClassWiseBook>
+                freeBookListAdapter?.submitList(allBookList)
             }
         })
 
-        homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
-
-        if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
-            preferencesHelper.isDeviceTimeChanged = true
-            homeClassListAdapter?.setTimeChangeStatus(true)
-        }
-
-        val paidBook = preferencesHelper.getPaidBook()
-        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
-            homeClassListAdapter?.setPaymentStatus(paidBook.isPaid)
-        } else {
-            homeClassListAdapter?.setPaymentStatus(false)
-        }
-
-        viewDataBinding.homeClassListRecycler.adapter = homeClassListAdapter
+        viewDataBinding.homeClassListRecycler.adapter = freeBookListAdapter
 
         viewModel.allBooks.observe(viewLifecycleOwner, Observer { books ->
             books?.let {
@@ -270,7 +139,6 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
                 }
             }
         })
-//        viewModel.getAcademicBooks(userData.mobile ?: "", userData.class_id ?: 0)
 
         if (userData.customer_type_id == 2) {
             viewModel.getAdminPanelBooks()
@@ -280,59 +148,5 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
 
         viewModel.getAds()
 
-//        viewModel.slideDataList.forEach { slideData ->
-//            val slide = SliderView(requireContext())
-//            slide.sliderTextTitle = slideData.textTitle
-//            slide.sliderTextDescription = slideData.descText
-//            slide.sliderImage(slideData.slideImage)
-//            viewDataBinding.sliderLayout.addSlider(slide)
-//        }
-//
-//        viewDataBinding.item1.setOnClickListener {
-//            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book1))
-//        }
-//
-//        viewDataBinding.item2.setOnClickListener {
-//            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book2))
-//        }
-//
-//        viewDataBinding.item3.setOnClickListener {
-//            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book3))
-//        }
-//
-//        viewDataBinding.item4.setOnClickListener {
-//            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book4))
-//        }
-//
-//        viewDataBinding.item5.setOnClickListener {
-//            navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(book5))
-//        }
-//
-//        viewDataBinding.item6.setOnClickListener {
-//            navController.navigate(Home2FragmentDirections.actionHome2FragmentToMoreBookListFragment())
-//        }
-//
-//        Log.e("res", preferencesHelper.getAccessTokenHeader())
-//        paymentListAdapter.submitList(viewModel.paymentMethodList)
-//        viewDataBinding.recyclerPaymentMethods.adapter = paymentListAdapter
-//
-//
-//
-//        paymentListAdapter.onClicked.observe(viewLifecycleOwner, Observer {
-//            if (it != null) {
-//                if (it.id == "-1") {
-//                    /**
-//                     * add payment method
-//                     */
-//                    val action = Home2FragmentDirections.actionHome2FragmentToAddPaymentMethodsFragment()
-//                    navController.navigate(action)
-//                }
-//            }
-//        })
     }
-
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        inflater.inflate(R.menu.toolbar_menu, menu)
-//        super.onCreateOptionsMenu(menu, inflater)
-//    }
 }

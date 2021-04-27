@@ -8,6 +8,7 @@
     <color name="grayColor">#808080</color>
     <color name="buttonTextDisableColor">#383838</color>
     <color name="themeBackgroundColor">#F2F2F2</color>
+    <color name="themeTextColor">#454545</color>
 
     // Custom Toast Colors
     <color name="toast_error">#d32f2f</color>

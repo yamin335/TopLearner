@@ -54,6 +54,7 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@color/themeBackgroundColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -63,27 +64,73 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-                <com.daimajia.slider.library.SliderLayout
-                    android:id="@+id/sliderLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="3"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="0dp"
-                    custom:auto_cycle="false"
-                    custom:pager_animation="Accordion" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/homeClassListRecycler"
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/sliderView"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="7"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="32dp"
+                    android:layout_weight="1"
                     android:clipToPadding="false"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:spanCount="3"
-                    tools:listitem="@layout/list_item_home_class_list"/>
+                    android:clipChildren="false" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPrevious"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Previous"
+                        app:rippleColor="@color/accent"
+                        android:textAllCaps="false"
+                        android:textColor="@color/accent"
+                        app:backgroundTint="@android:color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/indicatorView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintBottom_toTopOf="@+id/btnPrevious"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:itemCount="3"
+                        tools:listitem="@layout/list_item_slider_indicator" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnNext"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:backgroundTint="@android:color/white"
+                        android:text="Next"
+                        android:textAllCaps="false"
+                        android:textColor="@color/accent"
+                        app:rippleColor="@color/accent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </LinearLayout>
 
             <LinearLayout
