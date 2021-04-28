@@ -35,6 +35,9 @@
                 android:name="book"
                 app:argType="com.rtchubs.engineerbooks.models.home.ClassWiseBook" />
         </action>
+        <action
+            android:id="@+id/action_home2Fragment_to_courseDetailsFragment"
+            app:destination="@id/courseDetailsFragment" />
 
     </fragment>
 
@@ -77,5 +80,10 @@
     </fragment>
 
     <include app:graph="@navigation/chapter_nav_graph" />
+    <fragment
+        android:id="@+id/courseDetailsFragment"
+        android:name="com.rtchubs.engineerbooks.ui.home.CourseDetailsFragment"
+        android:label="CourseDetailsFragment"
+        tools:layout="@layout/fragment_course_details"/>
 
 </navigation>

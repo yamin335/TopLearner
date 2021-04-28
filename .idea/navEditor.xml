@@ -612,8 +612,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="469" />
-                            <option name="y" value="-588" />
+                            <option name="x" value="605" />
+                            <option name="y" value="-686" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -640,17 +640,34 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="courseDetailsFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="377" />
+                            <option name="y" value="-802" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="home2Fragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="191" />
-                            <option name="y" value="-430" />
+                            <option name="x" value="135" />
+                            <option name="y" value="-544" />
                           </Point>
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_home2Fragment_to_chapter_nav">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_home2Fragment_to_paymentFragment">
                               <value>
                                 <LayoutPositions />
@@ -666,8 +683,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="787" />
-                            <option name="y" value="-507" />
+                            <option name="x" value="840" />
+                            <option name="y" value="-688" />
                           </Point>
                         </option>
                       </LayoutPositions>

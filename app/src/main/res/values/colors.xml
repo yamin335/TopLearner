@@ -9,6 +9,11 @@
     <color name="buttonTextDisableColor">#383838</color>
     <color name="themeBackgroundColor">#F2F2F2</color>
     <color name="themeTextColor">#454545</color>
+    <color name="themeColorRed">#BF0000</color>
+    <color name="card1">#26BF0000</color>
+    <color name="card2">#262196F3</color>
+    <color name="card3">#268BC34A</color>
+    <color name="chipBgColor">#1A0AB939</color>
 
     // Custom Toast Colors
     <color name="toast_error">#d32f2f</color>

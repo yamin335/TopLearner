@@ -142,7 +142,7 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
 //
 //
         courseCategoryListAdapter = CourseCategoryListAdapter(appExecutors) {
-
+            navigateTo(Home2FragmentDirections.actionHome2FragmentToCourseDetailsFragment())
         }
 
         viewModel.slideDataList.observe(viewLifecycleOwner, Observer {

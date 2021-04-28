@@ -146,4 +146,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeMyCourseFragment(): MyCourseFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeCourseDetailsFragment(): CourseDetailsFragment
 }
