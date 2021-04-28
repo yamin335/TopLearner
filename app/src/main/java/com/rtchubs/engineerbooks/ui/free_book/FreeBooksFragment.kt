@@ -87,6 +87,7 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
         }
 
         freeBookListAdapter = FreeBookListAdapter(appExecutors) {
+            navController.navigate(FreeBooksFragmentDirections.actionFreeBooksFragmentToChapterNav(it))
 //            if (userData.customer_type_id == 2) {
 //                navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
 //            } else {
@@ -128,6 +129,7 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
                 allBookList = temp as ArrayList<ClassWiseBook>
                 freeBookListAdapter?.submitList(allBookList)
             }
+            viewDataBinding.emptyView.visibility = if (allBookList.isEmpty()) View.VISIBLE else View.GONE
         })
 
         viewDataBinding.homeClassListRecycler.adapter = freeBookListAdapter

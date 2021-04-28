@@ -13,6 +13,7 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.HomeFragment2Binding
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
+import com.rtchubs.engineerbooks.models.home.CourseCategory
 import com.rtchubs.engineerbooks.models.home.PaidBook
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
@@ -42,6 +43,8 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
     lateinit var userData: InquiryAccount
 
     private var homeClassListAdapter: HomeClassListAdapter? = null
+
+    private lateinit var courseCategoryListAdapter: CourseCategoryListAdapter
 
     var timeChangeListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
         when (key) {
@@ -138,6 +141,10 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
 //
 //
 //
+        courseCategoryListAdapter = CourseCategoryListAdapter(appExecutors) {
+
+        }
+
         viewModel.slideDataList.observe(viewLifecycleOwner, Observer {
             it?.let { ads ->
                 ads.forEach { slideData ->
@@ -185,20 +192,20 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
 
         homeClassListAdapter = HomeClassListAdapter(appExecutors, userData.customer_type_id) {
             if (userData.customer_type_id == 2) {
-                navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
+                navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterNav(it))
             } else {
                 if (!preferencesHelper.isDeviceTimeChanged) {
 
                     if (it.price ?: 0.0 > 0.0) {
                         val paidBook = preferencesHelper.getPaidBook()
                         if (paidBook.isPaid && paidBook.classID == userData.class_id) {
-                            navigateTo(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
+                            navigateTo(Home2FragmentDirections.actionHome2FragmentToChapterNav(it))
                         } else {
                             val book = PaidBook(it.id, it.name, userData.class_id, userData.ClassName, false, it.price ?: 0.0)
                             navigateTo(Home2FragmentDirections.actionHome2FragmentToPaymentFragment(book))
                         }
                     } else {
-                        navigateTo(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
+                        navigateTo(Home2FragmentDirections.actionHome2FragmentToChapterNav(it))
                     }
                 } else {
                     if (isTimeAndZoneAutomatic(context)) {
@@ -245,7 +252,11 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
                     homeClassListAdapter?.setPaymentStatus(false)
                 }
 //                homeClassListAdapter.submitList(tempList)
+
+                val list = arrayListOf(CourseCategory(1, "সপ্তম শ্রেণী", allBookList), CourseCategory(2, "অষ্টম শ্রেণী",allBookList), CourseCategory(3, "নবম শ্রেণী",allBookList))
+                courseCategoryListAdapter.submitList(list)
             }
+            viewDataBinding.emptyView.visibility = if (allBookList.isEmpty()) View.VISIBLE else View.GONE
         })
 
         homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
@@ -262,7 +273,8 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
             homeClassListAdapter?.setPaymentStatus(false)
         }
 
-        viewDataBinding.homeClassListRecycler.adapter = homeClassListAdapter
+//        viewDataBinding.homeClassListRecycler.adapter = homeClassListAdapter
+        viewDataBinding.homeClassListRecycler.adapter = courseCategoryListAdapter
 
         viewModel.allBooks.observe(viewLifecycleOwner, Observer { books ->
             books?.let {

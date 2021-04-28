@@ -10,20 +10,13 @@
         android:id="@+id/home2Fragment"
         android:name="com.rtchubs.engineerbooks.ui.home.Home2Fragment"
         android:label="QPay" >
-        <action
-            android:id="@+id/action_home2Fragment_to_chapterListFragment"
-            app:destination="@id/chapterListFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-        <action
-            android:id="@+id/action_home2Fragment_to_moreBookListFragment"
-            app:destination="@id/moreBookListFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+<!--        <action-->
+<!--            android:id="@+id/action_home2Fragment_to_chapterListFragment"-->
+<!--            app:destination="@id/chapterListFragment"-->
+<!--            app:enterAnim="@anim/slide_in_right"-->
+<!--            app:exitAnim="@anim/slide_out_left"-->
+<!--            app:popEnterAnim="@anim/slide_in_left"-->
+<!--            app:popExitAnim="@anim/slide_out_right"/>-->
         <action
             android:id="@+id/action_home2Fragment_to_paymentFragment"
             app:destination="@id/paymentFragment"
@@ -31,21 +24,25 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_home2Fragment_to_chapter_nav"
+            app:destination="@id/chapter_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="book"
+                app:argType="com.rtchubs.engineerbooks.models.home.ClassWiseBook" />
+        </action>
+
     </fragment>
 
     <fragment
         android:id="@+id/chapterListFragment"
         android:name="com.rtchubs.engineerbooks.ui.chapter_list.ChapterListFragment"
         android:label="Chapters"
-        tools:layout="@layout/fragment_home">
-
-        <action
-            android:id="@+id/action_chapterList_to_VideoPlay"
-            app:destination="@id/videoPlayFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+        tools:layout="@layout/fragment_chapter_list">
 
         <action
             android:id="@+id/action_chapterList_to_WebView"
@@ -59,17 +56,6 @@
             app:argType="com.rtchubs.engineerbooks.models.home.ClassWiseBook" />
     </fragment>
 
-
-    <fragment
-        android:id="@+id/videoPlayFragment"
-        android:name="com.rtchubs.engineerbooks.ui.video_play.VideoPlayFragment"
-        android:label="Video"
-        tools:layout="@layout/fragment_home">
-        <argument
-            android:name="chapterUrl"
-            app:argType="string" />
-    </fragment>
-
     <fragment
         android:id="@+id/loadWebViewFragment"
         android:name="com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment"
@@ -81,18 +67,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/moreBookListFragment"
-        android:name="com.rtchubs.engineerbooks.ui.home.MoreBookListFragment"
-        android:label="Book List" >
-        <action
-            android:id="@+id/action_moreBookListFragment_to_chapterListFragment"
-            app:destination="@id/chapterListFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-    </fragment>
-    <fragment
         android:id="@+id/paymentFragment"
         android:name="com.rtchubs.engineerbooks.ui.payment.PaymentFragment"
         android:label="PaymentFragment"
@@ -101,4 +75,7 @@
             android:name="book"
             app:argType="com.rtchubs.engineerbooks.models.home.PaidBook" />
     </fragment>
+
+    <include app:graph="@navigation/chapter_nav_graph" />
+
 </navigation>

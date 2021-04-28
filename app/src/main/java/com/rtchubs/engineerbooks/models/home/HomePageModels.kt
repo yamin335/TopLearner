@@ -26,3 +26,5 @@ data class AllBookModel(val id: Int?, val uuid: String, val book_type_id: Int?, 
 data class AllBookData(val books: List<AllBookModel>?)
 
 data class PaidBook(var bookID: Int?, var bookName: String?, var classID: Int?, var className: String?, var isPaid: Boolean, var price: Double): Serializable
+
+data class CourseCategory(val udid: Int, val name: String?, val books: List<ClassWiseBook>?)

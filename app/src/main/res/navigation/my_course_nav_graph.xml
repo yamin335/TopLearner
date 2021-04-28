@@ -9,7 +9,20 @@
         android:id="@+id/myCourseFragment"
         android:name="com.rtchubs.engineerbooks.ui.my_course.MyCourseFragment"
         android:label="My Course"
-        tools:layout="@layout/fragment_my_course" />
+        tools:layout="@layout/fragment_my_course" >
+        <action
+            android:id="@+id/action_myCourseFragment_to_chapter_nav"
+            app:destination="@id/chapter_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="book"
+                app:argType="com.rtchubs.engineerbooks.models.home.ClassWiseBook" />
+        </action>
+    </fragment>
 
     <include app:graph="@navigation/drawer_nav_graph" />
+    <include app:graph="@navigation/chapter_nav_graph" />
 </navigation>

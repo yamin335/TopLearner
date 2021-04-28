@@ -1,6 +1,7 @@
 package com.rtchubs.engineerbooks.ui.my_course
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -13,8 +14,11 @@ import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.MyCourseFragmentBinding
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
+import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
+import com.rtchubs.engineerbooks.util.isTimeAndZoneAutomatic
+import com.rtchubs.engineerbooks.util.showWarningToast
 
 class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel>() {
     companion object {
@@ -39,6 +43,31 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
     private var totalCourse = 0
     private var currentCourse = 0
 
+    var timeChangeListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
+        when (key) {
+            AppPreferencesHelper.KEY_DEVICE_TIME_CHANGED -> {
+                myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
+
+                if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
+                    //preferencesHelper.isDeviceTimeChanged = true
+                    myCourseListAdapter.setTimeChangeStatus(true)
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        preferencesHelper.preference.registerOnSharedPreferenceChangeListener(timeChangeListener)
+
+        myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
+
+        if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
+            preferencesHelper.isDeviceTimeChanged = true
+            myCourseListAdapter.setTimeChangeStatus(true)
+        }
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is NavDrawerHandlerCallback) {
@@ -46,11 +75,18 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
         } else {
             throw RuntimeException("$context must implement LoginHandlerCallback")
         }
+
+        preferencesHelper.preference.registerOnSharedPreferenceChangeListener(timeChangeListener)
+
+        if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
+            preferencesHelper.isDeviceTimeChanged = true
+        }
     }
 
     override fun onDetach() {
         super.onDetach()
         drawerListener = null
+        preferencesHelper.preference.unregisterOnSharedPreferenceChangeListener(timeChangeListener)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,10 +102,18 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
         mActivity.window?.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
         )
+
+        preferencesHelper.preference.registerOnSharedPreferenceChangeListener(timeChangeListener)
+
+        if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
+            preferencesHelper.isDeviceTimeChanged = true
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        preferencesHelper.preference.registerOnSharedPreferenceChangeListener(timeChangeListener)
 
         userData = preferencesHelper.getUser()
 
@@ -77,7 +121,42 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             drawerListener?.toggleNavDrawer()
         }
 
-        myCourseListAdapter = MyCourseSliderAdapter()
+        myCourseListAdapter = MyCourseSliderAdapter(userData.customer_type_id) {
+            if (userData.customer_type_id == 2) {
+                navController.navigate(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
+            } else {
+                if (!preferencesHelper.isDeviceTimeChanged) {
+
+                    if (it.price ?: 0.0 > 0.0) {
+                        val paidBook = preferencesHelper.getPaidBook()
+                        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
+                            navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
+                        } else {
+//                            val book = PaidBook(it.id, it.name, userData.class_id, userData.ClassName, false, it.price ?: 0.0)
+//                            navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
+                            showWarningToast(requireContext(), "Please pay first!")
+                        }
+                    } else {
+                        navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
+                    }
+                } else {
+                    if (isTimeAndZoneAutomatic(context)) {
+                        if (checkNetworkStatus(true)) {
+                            preferencesHelper.isDeviceTimeChanged = false
+                            myCourseListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
+
+                            if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
+                                preferencesHelper.isDeviceTimeChanged = true
+                                myCourseListAdapter?.setTimeChangeStatus(true)
+                            }
+                            viewModel.getAcademicBooks(userData.mobile ?: "", userData.class_id ?: 0)
+                        }
+                    } else {
+                        showWarningToast(requireContext(), "Please auto adjust your device time!")
+                    }
+                }
+            }
+        }
         myCourseSliderIndicatorAdapter = MyCourseSliderIndicatorAdapter(totalCourse)
 
         viewDataBinding.indicatorView.adapter = myCourseSliderIndicatorAdapter
@@ -98,56 +177,54 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             }
         }
 
+        myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
+
+        if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
+            preferencesHelper.isDeviceTimeChanged = true
+            myCourseListAdapter.setTimeChangeStatus(true)
+        }
+
+        val paidBook = preferencesHelper.getPaidBook()
+        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
+            myCourseListAdapter.setPaymentStatus(paidBook.isPaid)
+        } else {
+            myCourseListAdapter.setPaymentStatus(false)
+        }
+
         viewDataBinding.sliderView.apply {
             adapter = myCourseListAdapter
             registerOnPageChangeCallback(sliderPageChangeCallback)
             isUserInputEnabled = true
         }
-//        {
-//            if (userData.customer_type_id == 2) {
-//                navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
-//            } else {
-//                if (!preferencesHelper.isDeviceTimeChanged) {
-//
-//                    if (it.price ?: 0.0 > 0.0) {
-//                        val paidBook = preferencesHelper.getPaidBook()
-//                        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
-//                            navigateTo(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
-//                        } else {
-//                            val book = PaidBook(it.id, it.name, userData.class_id, userData.ClassName, false, it.price ?: 0.0)
-//                            navigateTo(Home2FragmentDirections.actionHome2FragmentToPaymentFragment(book))
-//                        }
-//                    } else {
-//                        navigateTo(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
-//                    }
-//                } else {
-//                    if (isTimeAndZoneAutomatic(context)) {
-//                        if (checkNetworkStatus(true)) {
-//                            preferencesHelper.isDeviceTimeChanged = false
-//                            homeClassListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
-//
-//                            if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
-//                                preferencesHelper.isDeviceTimeChanged = true
-//                                homeClassListAdapter?.setTimeChangeStatus(true)
-//                            }
-//                            viewModel.getAcademicBooks(userData.mobile ?: "", userData.class_id ?: 0)
-//                        }
-//                    } else {
-//                        showWarningToast(requireContext(), "Please auto adjust your device time!")
-//                    }
-//                }
-//            }
-//        }
 
         viewModel.allBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
             books?.let {
-                val temp = it.filter { item -> item.price ?: 0.0 > 0.0  }
+
+                myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
+
+                if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
+                    preferencesHelper.isDeviceTimeChanged = true
+                    myCourseListAdapter.setTimeChangeStatus(true)
+                }
+
+                var isBookPaid = false
+                val book = preferencesHelper.getPaidBook()
+                if (book.isPaid && book.classID == userData.class_id) {
+                    myCourseListAdapter.setPaymentStatus(book.isPaid)
+                    isBookPaid = book.isPaid
+                } else {
+                    myCourseListAdapter.setPaymentStatus(false)
+                }
+
+                val temp = it.filter { item -> item.price ?: 0.0 > 0.0 && isBookPaid }
                 allBookList = temp as ArrayList<ClassWiseBook>
                 totalCourse = allBookList.size
                 myCourseSliderIndicatorAdapter = MyCourseSliderIndicatorAdapter(totalCourse)
                 viewDataBinding.indicatorView.adapter = myCourseSliderIndicatorAdapter
                 myCourseListAdapter.submitList(allBookList)
             }
+            viewDataBinding.emptyView.visibility = if (allBookList.isEmpty()) View.VISIBLE else View.GONE
+            viewDataBinding.footer.visibility = if (allBookList.isNotEmpty()) View.VISIBLE else View.GONE
         })
 
         viewDataBinding.btnNext.setOnClickListener {

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chapter_nav"
+    tools:ignore="InvalidNavigation"
+    app:startDestination="@id/chapterListFragment">
+
+    <fragment
+        android:id="@+id/chapterListFragment"
+        android:name="com.rtchubs.engineerbooks.ui.chapter_list.ChapterListFragment"
+        android:label="Chapters"
+        tools:layout="@layout/fragment_chapter_list">
+
+        <action
+            android:id="@+id/action_chapterList_to_WebView"
+            app:destination="@id/loadWebViewFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <argument
+            android:name="book"
+            app:argType="com.rtchubs.engineerbooks.models.home.ClassWiseBook" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/loadWebViewFragment"
+        android:name="com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment"
+        android:label="Video"
+        tools:layout="@layout/fragment_load_web_view">
+        <argument
+            android:name="chapter"
+            app:argType="com.rtchubs.engineerbooks.models.chapter.BookChapter" />
+    </fragment>
+
+</navigation>

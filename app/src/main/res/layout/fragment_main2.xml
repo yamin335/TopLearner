@@ -62,12 +62,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@android:color/white"
                 android:orientation="vertical">
                 <com.daimajia.slider.library.SliderLayout
                     android:id="@+id/sliderLayout"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="3"
+                    android:visibility="gone"
                     android:layout_marginTop="0dp"
                     android:layout_marginBottom="0dp"
                     custom:auto_cycle="false"
@@ -81,10 +83,26 @@
                     android:paddingTop="4dp"
                     android:paddingBottom="32dp"
                     android:clipToPadding="false"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:spanCount="3"
-                    tools:listitem="@layout/list_item_home_class_list"/>
+                    tools:listitem="@layout/list_item_course_category"/>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/emptyView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="No Course Found"
+                android:textAlignment="center"
+                android:layout_centerInParent="true"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
                 android:id="@+id/progressView"

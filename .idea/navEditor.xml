@@ -355,6 +355,49 @@
             </LayoutPositions>
           </value>
         </entry>
+        <entry key="chapter_nav_graph.xml">
+          <value>
+            <LayoutPositions>
+              <option name="myPositions">
+                <map>
+                  <entry key="chapterListFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="251" />
+                            <option name="y" value="207" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_chapterList_to_WebView">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="loadWebViewFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="608" />
+                            <option name="y" value="211" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </LayoutPositions>
+          </value>
+        </entry>
         <entry key="drawer_nav_graph.xml">
           <value>
             <LayoutPositions>
@@ -428,28 +471,14 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="chapterListFragment2">
+                  <entry key="chapter_nav_graph">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="64" />
-                            <option name="y" value="-473" />
+                            <option name="x" value="156" />
+                            <option name="y" value="-367" />
                           </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_chapterList_to_VideoPlay">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_chapterList_to_WebView">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -475,33 +504,9 @@
                             <option name="y" value="-476" />
                           </Point>
                         </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
-                  <entry key="loadWebViewFragment2">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="166" />
-                            <option name="y" value="-15" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
-                  <entry key="payFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="-95" />
-                            <option name="y" value="3" />
-                          </Point>
-                        </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_payFragment_to_loadWebViewFragment2">
+                            <entry key="action_freeBooksFragment_to_chapter_nav">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -613,11 +618,6 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_chapterList_to_VideoPlay">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
                             <entry key="action_chapterList_to_WebView">
                               <value>
                                 <LayoutPositions />
@@ -628,13 +628,13 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="exams_nav_graph">
+                  <entry key="chapter_nav_graph">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="274" />
-                            <option name="y" value="-757" />
+                            <option name="x" value="167" />
+                            <option name="y" value="-22" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -645,27 +645,12 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="469" />
-                            <option name="y" value="-206" />
+                            <option name="x" value="191" />
+                            <option name="y" value="-430" />
                           </Point>
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_home2Fragment_to_chapterListFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_home2Fragment_to_exams_nav_graph">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_home2Fragment_to_moreBookListFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
                             <entry key="action_home2Fragment_to_paymentFragment">
                               <value>
                                 <LayoutPositions />
@@ -681,30 +666,9 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="838" />
-                            <option name="y" value="-414" />
+                            <option name="x" value="787" />
+                            <option name="y" value="-507" />
                           </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
-                  <entry key="moreBookListFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="277" />
-                            <option name="y" value="-396" />
-                          </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_moreBookListFragment_to_chapterListFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -714,20 +678,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="844" />
-                            <option name="y" value="-41" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
-                  <entry key="videoPlayFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="834" />
-                            <option name="y" value="-773" />
+                            <option name="x" value="697" />
+                            <option name="y" value="-137" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -1391,13 +1343,25 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="chapter_nav_graph">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="308" />
+                            <option name="y" value="116" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="drawer_nav_graph">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="12" />
-                            <option name="y" value="12" />
+                            <option name="x" value="-182" />
+                            <option name="y" value="92" />
                           </Point>
                         </option>
                       </LayoutPositions>

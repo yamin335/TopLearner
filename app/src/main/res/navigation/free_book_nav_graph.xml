@@ -10,6 +10,17 @@
         android:name="com.rtchubs.engineerbooks.ui.free_book.FreeBooksFragment"
         android:label="Free Books"
         tools:layout="@layout/fragment_free_books" >
+        <action
+            android:id="@+id/action_freeBooksFragment_to_chapter_nav"
+            app:destination="@id/chapter_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="book"
+                app:argType="com.rtchubs.engineerbooks.models.home.ClassWiseBook" />
+        </action>
     </fragment>
 
 <!--    <fragment-->
@@ -37,7 +48,8 @@
 <!--    </fragment>-->
 
     <include app:graph="@navigation/drawer_nav_graph" />
-<!--    <fragment-->
+    <include app:graph="@navigation/chapter_nav_graph" />
+    <!--    <fragment-->
 <!--        android:id="@+id/loadWebViewFragment2"-->
 <!--        android:name="com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment"-->
 <!--        android:label="LoadWebViewFragment"-->
