@@ -17,6 +17,7 @@
 package com.rtchubs.engineerbooks.binding
 
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.text.Html
 import android.view.*
@@ -39,10 +40,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputLayout
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiCallStatus
-import com.rtchubs.engineerbooks.util.Validator
-import com.rtchubs.engineerbooks.util.afterTextChanged
-import com.rtchubs.engineerbooks.util.isValid
-import com.rtchubs.engineerbooks.util.openWebsiteUrl
+import com.rtchubs.engineerbooks.util.*
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
 
 /**
@@ -59,6 +58,25 @@ class FragmentBindingAdapters {
     @BindingAdapter(value = ["imageUrl", "imageRequestListener"], requireAll = false)
     fun bindImage(imageView: ImageView, url: String?, listener: RequestListener<Drawable?>?) {
         Glide.with(imageView.context).load(url).listener(listener).into(imageView)
+    }
+
+    @BindingAdapter(value = ["roundImageUrl", "imageRequestListener"], requireAll = false)
+    fun loadRoundImage(imageView: ImageView, url: String?, listener: RequestListener<Drawable?>?) {
+        val placeholder: BitmapDrawable? =
+            BitmapUtilss.transformDrawable( // has white background because it's not transparent, so rounding will be visible
+                imageView.context,
+                ContextCompat.getDrawable(
+                    imageView.context,
+                    R.drawable.doctor_1
+                ),
+                RoundedCornersTransformation(
+                    128,
+                    0,
+                    RoundedCornersTransformation.CornerType.ALL
+                ),
+                256
+            )
+        Glide.with(imageView.context).load(url).circleCrop().placeholder(placeholder).listener(listener).into(imageView)
     }
 
     @BindingAdapter("visibleGone", "animGravity", requireAll = false)

@@ -1,349 +1,471 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data class="CourseDetailsFragmentBinding">
         <variable
             name="viewModel"
             type="com.rtchubs.engineerbooks.ui.home.CourseDetailsViewModel" />
     </data>
-    <androidx.core.widget.NestedScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-        <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="match_parent">
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/appbar"
+            android:layout_height="match_parent"
+            android:layout_above="@id/footer"
+            android:layout_marginBottom="-32dp"
+            android:paddingBottom="32dp"
+            android:clipToPadding="false"
+            android:background="#f2f2f2"
+            android:fillViewport="true">
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AppBarOverlayWhite"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/video_view"
-                app:layout_constraintVertical_bias="0.0">
-
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/toolbar"
+                android:layout_height="match_parent">
+                <com.google.android.material.appbar.AppBarLayout
+                    android:id="@+id/appbar"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:layout_gravity="center"
-                    android:background="@color/themeColorRed"
-                    android:textAlignment="center"
-                    app:contentInsetStartWithNavigation="0dp"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"
-                    app:title="Engineers"
-                    app:titleTextColor="@android:color/white" />
-
-            </com.google.android.material.appbar.AppBarLayout>
-
-            <com.google.android.exoplayer2.ui.PlayerView
-                android:id="@+id/video_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="16:9"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <LinearLayout
-                android:id="@+id/linearLayout3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appbar"
-                app:layout_constraintVertical_bias="0.0">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/card1"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="0dp"
-                        app:cardUseCompatPadding="false">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_margin="12dp"
-                            app:srcCompat="@drawable/exo_icon_circular_play"
-                            app:tint="@color/themeColorRed" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="center"
-                        android:text="লাইভ ক্লাস"
-                        android:textColor="@color/themeTextColor" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="center"
-                        android:text="১২৫ টি"
-                        android:textColor="@color/themeTextColor"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/card3"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="0dp"
-                        app:cardUseCompatPadding="false">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_margin="12dp"
-                            app:srcCompat="@drawable/ic_baseline_access_time_24" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="center"
-                        android:text="সময়কাল"
-                        android:textColor="@color/themeTextColor" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="center"
-                        android:text="২৮ দিন"
-                        android:textColor="@color/themeTextColor"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/card2"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="0dp"
-                        app:cardUseCompatPadding="false">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_margin="12dp"
-                            app:srcCompat="@drawable/ic_baseline_groups_24" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="center"
-                        android:text="শিক্ষার্থী সংখ্যা"
-                        android:textColor="@color/themeTextColor" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="center"
-                        android:text="১২৫ জন"
-                        android:textColor="@color/themeTextColor"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-                app:layout_constraintVertical_bias="0.0">
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroup"
-                    android:layout_width="match_parent"
-                    app:singleSelection="false"
-                    app:chipSpacingHorizontal="6dp"
-                    app:chipSpacingVertical="6dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="8dp"
+                    android:theme="@style/AppTheme.AppBarOverlayWhite"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/text1"
+                    app:layout_constraintTop_toBottomOf="@+id/video_view"
                     app:layout_constraintVertical_bias="0.0">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/jan"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                    <com.google.android.material.appbar.MaterialToolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:layout_gravity="center"
+                        android:background="@color/themeColorRed"
+                        android:textAlignment="center"
+                        app:contentInsetStartWithNavigation="0dp"
+                        app:popupTheme="@style/AppTheme.PopupOverlay"
+                        app:title="Engineers"
+                        app:titleTextColor="@android:color/white" />
+
+                </com.google.android.material.appbar.AppBarLayout>
+
+                <com.google.android.exoplayer2.ui.PlayerView
+                    android:id="@+id/video_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="16:9"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/appbar"
+                    app:layout_constraintVertical_bias="0.0">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/card1"
+                            app:cardCornerRadius="8dp"
+                            app:cardElevation="0dp"
+                            app:cardUseCompatPadding="false">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_margin="12dp"
+                                app:srcCompat="@drawable/exo_icon_circular_play"
+                                app:tint="@color/themeColorRed" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginEnd="8dp"
+                            android:gravity="center"
+                            android:text="লাইভ ক্লাস"
+                            android:textColor="@color/themeTextColor" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:gravity="center"
+                            android:text="১২৫ টি"
+                            android:textColor="@color/themeTextColor"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/card3"
+                            app:cardCornerRadius="8dp"
+                            app:cardElevation="0dp"
+                            app:cardUseCompatPadding="false">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_margin="12dp"
+                                app:srcCompat="@drawable/ic_baseline_access_time_24" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginEnd="8dp"
+                            android:gravity="center"
+                            android:text="সময়কাল"
+                            android:textColor="@color/themeTextColor" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:gravity="center"
+                            android:text="২৮ দিন"
+                            android:textColor="@color/themeTextColor"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/card2"
+                            app:cardCornerRadius="8dp"
+                            app:cardElevation="0dp"
+                            app:cardUseCompatPadding="false">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_margin="12dp"
+                                app:srcCompat="@drawable/ic_baseline_groups_24" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginEnd="8dp"
+                            android:gravity="center"
+                            android:text="শিক্ষার্থী সংখ্যা"
+                            android:textColor="@color/themeTextColor" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:gravity="center"
+                            android:text="১২৫ জন"
+                            android:textColor="@color/themeTextColor"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+                    app:layout_constraintVertical_bias="0.0">
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroup"
+                        android:layout_width="match_parent"
+                        app:singleSelection="false"
+                        app:chipSpacingHorizontal="6dp"
+                        app:chipSpacingVertical="6dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/text1"
+                        app:layout_constraintVertical_bias="0.0">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/jan"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="বিষয় ৫ টি"
+                            android:textColor="@color/themeTextColor"
+                            app:chipBackgroundColor="@color/chipBgColor"
+                            app:checkedIcon="@drawable/ic_round_done_outline_24"
+                            app:checkedIconTint="@color/accent"
+                            android:checked="true"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginEnd="0dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="0dp"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/feb"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="কুইজ ১৫০+"
+                            android:textColor="@color/themeTextColor"
+                            app:chipBackgroundColor="@color/chipBgColor"
+                            app:checkedIcon="@drawable/ic_round_done_outline_24"
+                            android:checked="true"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginEnd="0dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="0dp"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/march"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="নৈর্বক্তিক ৫০০০+"
+                            android:textColor="@color/themeTextColor"
+                            app:chipBackgroundColor="@color/chipBgColor"
+                            app:checkedIcon="@drawable/ic_round_done_outline_24"
+                            android:checked="true"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginEnd="0dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="0dp"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/april"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="তথ্য ৩০+"
+                            android:textColor="@color/themeTextColor"
+                            app:chipBackgroundColor="@color/chipBgColor"
+                            app:checkedIcon="@drawable/ic_round_done_outline_24"
+                            android:checked="true"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginEnd="0dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="0dp"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/may"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="নোট ৭০+"
+                            android:textColor="@color/themeTextColor"
+                            app:chipBackgroundColor="@color/chipBgColor"
+                            app:checkedIcon="@drawable/ic_round_done_outline_24"
+                            android:checked="true"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginEnd="0dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="0dp"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/july"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="পরীক্ষা ৫টি"
+                            android:textColor="@color/themeTextColor"
+                            app:chipBackgroundColor="@color/chipBgColor"
+                            app:checkedIcon="@drawable/ic_round_done_outline_24"
+                            android:checked="true"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginEnd="0dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="0dp"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/aug"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="অ্যানিমেশান ১২টি"
+                            android:textColor="@color/themeTextColor"
+                            app:chipBackgroundColor="@color/chipBgColor"
+                            app:checkedIcon="@drawable/ic_round_done_outline_24"
+                            android:checked="true"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginEnd="0dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="0dp"/>
+                    </com.google.android.material.chip.ChipGroup>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center_vertical"
+                        android:textSize="16sp"
+                        android:text="শিক্ষকবৃন্দ"
+                        android:textColor="@color/themeTextColor" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/teachersRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="horizontal"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:clipToPadding="false"
+                        tools:listitem="@layout/list_item_teachers_for_course_details"
+                        tools:itemCount="3"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/courseDetailsRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="vertical"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:clipToPadding="false"
+                        tools:listitem="@layout/list_item_course_details"
+                        tools:itemCount="3"/>
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="32dp"
+            app:cardUseCompatPadding="false"
+            app:contentPadding="0dp"
+            android:layout_marginBottom="-16dp"
+            app:strokeColor="#F2F7FF"
+            app:strokeWidth="0.5dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="আপনার কোন প্রোমো কোড আছে?"
+                    android:gravity="center"
+                    android:textColor="@color/red"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:background="?attr/selectableItemBackground"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="বিষয় ৫ টি"
+                        android:textSize="20sp"
+                        android:text="@string/taka_sign"
+                        android:gravity="center"
                         android:textColor="@color/themeTextColor"
-                        app:chipBackgroundColor="@color/chipBgColor"
-                        app:checkedIcon="@drawable/ic_round_done_outline_24"
-                        app:checkedIconTint="@color/accent"
-                        android:checked="true"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginEnd="0dp"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginBottom="0dp"/>
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/feb"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:textStyle="bold"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="12dp"/>
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="কুইজ ১৫০+"
+                        android:textSize="16sp"
+                        android:text="@string/cost"
+                        android:gravity="center"
                         android:textColor="@color/themeTextColor"
-                        app:chipBackgroundColor="@color/chipBgColor"
-                        app:checkedIcon="@drawable/ic_round_done_outline_24"
-                        android:checked="true"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginEnd="0dp"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginBottom="0dp"/>
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/march"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:textStyle="bold"/>
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="নৈর্বক্তিক ৫০০০+"
+                        android:textSize="16sp"
+                        android:text="2500"
+                        android:gravity="center"
                         android:textColor="@color/themeTextColor"
-                        app:chipBackgroundColor="@color/chipBgColor"
-                        app:checkedIcon="@drawable/ic_round_done_outline_24"
-                        android:checked="true"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginEnd="0dp"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginBottom="0dp"/>
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/april"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
-                        android:layout_width="wrap_content"
+                        android:textStyle="bold"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="তথ্য ৩০+"
-                        android:textColor="@color/themeTextColor"
-                        app:chipBackgroundColor="@color/chipBgColor"
-                        app:checkedIcon="@drawable/ic_round_done_outline_24"
-                        android:checked="true"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginEnd="0dp"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginBottom="0dp"/>
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/may"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="নোট ৭০+"
-                        android:textColor="@color/themeTextColor"
-                        app:chipBackgroundColor="@color/chipBgColor"
-                        app:checkedIcon="@drawable/ic_round_done_outline_24"
-                        android:checked="true"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginEnd="0dp"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginBottom="0dp"/>
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/july"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="পরীক্ষা ৫টি"
-                        android:textColor="@color/themeTextColor"
-                        app:chipBackgroundColor="@color/chipBgColor"
-                        app:checkedIcon="@drawable/ic_round_done_outline_24"
-                        android:checked="true"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginEnd="0dp"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginBottom="0dp"/>
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/aug"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="অ্যানিমেশান ১২টি"
-                        android:textColor="@color/themeTextColor"
-                        app:chipBackgroundColor="@color/chipBgColor"
-                        app:checkedIcon="@drawable/ic_round_done_outline_24"
-                        android:checked="true"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginEnd="0dp"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginBottom="0dp"/>
-                </com.google.android.material.chip.ChipGroup>
-
+                        android:layout_weight="1"
+                        android:insetBottom="0dp"
+                        android:insetTop="0dp"
+                        android:text="এখনই কিনুন"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginStart="24dp"
+                        app:cornerRadius="8dp"/>
+                </LinearLayout>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="8dp"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="যে কোন সমস্যার ক্ষেত্রেঃ ০১৭১০৯৯৮৮৭৭ (সকাল ১০টা - রাত ৮টা)"
                     android:gravity="center_vertical"
-                    android:textSize="16sp"
-                    android:text="শিক্ষকবৃন্দ"
-                    android:textColor="@color/themeTextColor" />
+                    android:textColor="@color/themeTextColor"
+                    android:background="?attr/selectableItemBackground"/>
             </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+        </com.google.android.material.card.MaterialCardView>
+    </RelativeLayout>
 </layout>

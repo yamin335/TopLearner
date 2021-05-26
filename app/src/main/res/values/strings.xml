@@ -1,4 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="taka_sign">৳</string>
+    <string name="cost"><strike>10000</strike></string>
+
     // QPay String Resources
     <string name="app_name">Engineers Apps</string>
     <string name="internet_error_msg">Please check Your internet connection!</string>

@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DefaultItemAnimator
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -11,6 +12,8 @@ import com.google.android.exoplayer2.util.MimeTypes
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.CourseDetailsFragmentBinding
+import com.rtchubs.engineerbooks.models.home.CourseSubject
+import com.rtchubs.engineerbooks.models.home.CourseTeacher
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 
 class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseDetailsViewModel>() {
@@ -25,7 +28,8 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
     private var playWhenReady = true
     private var currentWindow = 0
     private var playbackPosition: Long = 0
-
+    private lateinit var teachersAdapter: CourseDetailsTeachersListAdapter
+    private lateinit var subjectsAdapter: CourseDetailsSubjectListAdapter
 
     private fun initializePlayer() {
         val trackSelector = DefaultTrackSelector(requireContext())
@@ -89,5 +93,34 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         super.onViewCreated(view, savedInstanceState)
         registerToolbar(viewDataBinding.toolbar)
 
+        val teacheers = listOf(CourseTeacher(1, "Alexander Houluo", "University of Dhaka"),
+            CourseTeacher(2, "Alexander Houluo", "University of Dhaka"),
+            CourseTeacher(3, "Alexander Houluo", "University of Dhaka"),
+            CourseTeacher(4, "Alexander Houluo", "University of Dhaka"),
+            CourseTeacher(5, "Alexander Houluo", "University of Dhaka"),
+            CourseTeacher(6, "Alexander Houluo", "University of Dhaka"))
+
+        teachersAdapter = CourseDetailsTeachersListAdapter(appExecutors) {
+
+        }
+
+        viewDataBinding.teachersRecycler.adapter = teachersAdapter
+        teachersAdapter.submitList(teacheers)
+
+        val subjects = listOf(
+            CourseSubject(1, "Subject - 1"),
+            CourseSubject(2, "Subject - 2"),
+            CourseSubject(3, "Subject - 3"),
+            CourseSubject(4, "Subject - 4"),
+            CourseSubject(5, "Subject - 5"),
+            CourseSubject(6, "Subject - 6"))
+
+        subjectsAdapter = CourseDetailsSubjectListAdapter(appExecutors) {
+
+        }
+        viewDataBinding.courseDetailsRecycler.setHasFixedSize(true)
+        viewDataBinding.courseDetailsRecycler.itemAnimator = DefaultItemAnimator()
+        viewDataBinding.courseDetailsRecycler.adapter = subjectsAdapter
+        subjectsAdapter.submitList(subjects)
     }
 }
