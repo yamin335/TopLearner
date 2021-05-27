@@ -16,7 +16,7 @@ import com.rtchubs.engineerbooks.databinding.CourseDetailsTeacherListItemBinding
 import com.rtchubs.engineerbooks.models.home.CourseTeacher
 import com.rtchubs.engineerbooks.util.DataBoundListAdapter
 
-class CourseDetailsTeachersListAdapter(
+class CourseTeachersListAdapter(
     private val appExecutors: AppExecutors,
     private val itemCallback: ((CourseTeacher) -> Unit)
 ) : DataBoundListAdapter<CourseTeacher, CourseDetailsTeacherListItemBinding>(

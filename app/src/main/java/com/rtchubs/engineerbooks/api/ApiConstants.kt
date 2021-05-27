@@ -47,6 +47,7 @@ object Api {
     const val ADMIN_API_ROOT = "adminbackend.engineersmath.com"
     const val API_ROOT_URL = "$PROTOCOL://$API_ROOT/"
     const val ADMIN_API_ROOT_URL = "$PROTOCOL://$ADMIN_API_ROOT/"
+    const val COURSE_IMAGE_ROOT_URL = "${ADMIN_API_ROOT_URL}images/courselogo/"
     const val API_REPO = "api"
     const val AUTH_REPO = "auth"
     const val PUBLIC_REPO = "public"
@@ -122,6 +123,8 @@ object ApiEndPoint {
     const val PARTNER_PROFILE_IMAGE = "${ADMIN_API_ROOT_URL}partnerfiles/profile"
     const val SLIDER_IMAGE = "$ADMIN_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/ads"
     const val SLIDER_ADS = "$API_VERSION/$PUBLIC_REPO/getads"
+
+    const val ALL_COURSE = "$API_REPO/get/courses"
 
     const val REQUESTOTP = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}/request-otp"
     const val REGISTRATION = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}"

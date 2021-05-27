@@ -4,7 +4,7 @@
     <data class="CourseDetailsSubjectListItemBinding">
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.home.CourseSubject" />
+            type="com.rtchubs.engineerbooks.models.home.CourseContent" />
     </data>
     <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/cardSubject"
@@ -37,7 +37,7 @@
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
                     android:layout_marginTop="3dp"
-                    android:text="@{item.title}"
+                    android:text="@{item.chapter_title}"
                     tools:text="Course Subject Name"
                     android:textColor="@color/themeTextColor"
                     android:textSize="16sp"

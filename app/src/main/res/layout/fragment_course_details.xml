@@ -364,17 +364,50 @@
                         tools:listitem="@layout/list_item_teachers_for_course_details"
                         tools:itemCount="3"/>
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginEnd="16dp"
+                        android:gravity="center_vertical"
+                        android:textSize="16sp"
+                        android:text="কোর্সের বিষয়বস্তু"
+                        android:textColor="@color/themeTextColor" />
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/courseDetailsRecycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         android:orientation="vertical"
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
                         android:clipToPadding="false"
-                        tools:listitem="@layout/list_item_course_details"
+                        tools:listitem="@layout/list_item_course_content"
+                        tools:itemCount="3"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginEnd="16dp"
+                        android:gravity="center_vertical"
+                        android:textSize="16sp"
+                        android:text="FAQ"
+                        android:textColor="@color/themeTextColor" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/faqRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="vertical"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:clipToPadding="false"
+                        tools:listitem="@layout/list_item_course_faq"
                         tools:itemCount="3"/>
                 </LinearLayout>
 
@@ -426,24 +459,27 @@
                         android:paddingStart="0dp"
                         android:paddingEnd="12dp"/>
                     <TextView
+                        android:id="@+id/price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
-                        android:text="@string/cost"
+                        tools:text="@string/cost"
                         android:gravity="center"
                         android:textColor="@color/themeTextColor"
                         android:textStyle="bold"/>
                     <TextView
+                        android:id="@+id/discountPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
-                        android:text="2500"
+                        tools:text="2500"
                         android:gravity="center"
                         android:textColor="@color/themeTextColor"
                         android:textStyle="bold"
                         android:paddingStart="12dp"
                         android:paddingEnd="12dp"/>
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnBuyNow"
                         style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -463,8 +499,7 @@
                     android:layout_gravity="center_horizontal"
                     android:text="যে কোন সমস্যার ক্ষেত্রেঃ ০১৭১০৯৯৮৮৭৭ (সকাল ১০টা - রাত ৮টা)"
                     android:gravity="center_vertical"
-                    android:textColor="@color/themeTextColor"
-                    android:background="?attr/selectableItemBackground"/>
+                    android:textColor="@color/themeTextColor"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </RelativeLayout>

@@ -9,9 +9,11 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.rtchubs.engineerbooks.api.*
+import com.rtchubs.engineerbooks.api.ResponseCodes.CODE_SUCCESS
 import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
 import com.rtchubs.engineerbooks.models.AdSlider
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
+import com.rtchubs.engineerbooks.models.home.Course
 import com.rtchubs.engineerbooks.models.registration.DefaultResponse
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.repos.HomeRepository
@@ -41,6 +43,12 @@ class HomeViewModel @Inject constructor(
             emit(list)
         }
     }
+
+    val allCourseList: MutableLiveData<List<Course>> by lazy {
+        MutableLiveData<List<Course>>()
+    }
+
+
 
     fun saveBooksInDB(books: List<ClassWiseBook>) {
         try {
@@ -100,6 +108,40 @@ class HomeViewModel @Inject constructor(
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
                         allBooks.postValue(apiResponse.body.data?.books)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                    }
+                    is ApiErrorResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                    }
+                }
+            }
+        }
+    }
+
+    fun getAllCourses() {
+        if (checkNetworkStatus(false)) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(repository.allCourseRepo())) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        if (apiResponse.body.code != CODE_SUCCESS) {
+                            toastError.postValue(apiResponse.body.message ?: AppConstants.serverConnectionErrorMessage)
+                            return@launch
+                        }
+                        if (apiResponse.body.data?.courses?.data.isNullOrEmpty()) {
+                            toastError.postValue(apiResponse.body.message ?: AppConstants.noCourseFoundMessage)
+                            return@launch
+                        }
+                        allCourseList.postValue(apiResponse.body.data?.courses?.data)
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)

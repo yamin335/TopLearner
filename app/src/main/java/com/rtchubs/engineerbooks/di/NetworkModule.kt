@@ -1,14 +1,16 @@
 package com.rtchubs.engineerbooks.di
 
-import com.rtchubs.engineerbooks.api.Api
-import com.rtchubs.engineerbooks.api.TokenAuthenticator
-import com.rtchubs.engineerbooks.api.ApiService
 import com.rtchubs.engineerbooks.api.AdminApiService
+import com.rtchubs.engineerbooks.api.Api
+import com.rtchubs.engineerbooks.api.ApiService
+import com.rtchubs.engineerbooks.api.TokenAuthenticator
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.util.LiveDataCallAdapterFactory
 import dagger.Module
 import dagger.Provides
-import okhttp3.*
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
@@ -114,7 +116,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    @Named("Media")
+    @Named("Admin")
     fun provideMediaRetrofitBuilder(
         liveDataCallAdapterFactory: LiveDataCallAdapterFactory,
         nullOrEmptyConverterFactory: Converter.Factory,
@@ -185,7 +187,7 @@ class NetworkModule {
     @Singleton
     fun provideMediaApiService(
         okHttpClient: OkHttpClient,
-        @Named("Media") retrofitBuilder: Retrofit.Builder
+        @Named("Admin") retrofitBuilder: Retrofit.Builder
     ): AdminApiService {
         return retrofitBuilder
             .client(okHttpClient).build()

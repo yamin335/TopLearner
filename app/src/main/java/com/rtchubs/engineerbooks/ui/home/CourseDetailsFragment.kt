@@ -1,20 +1,29 @@
 package com.rtchubs.engineerbooks.ui.home
 
+import android.annotation.SuppressLint
+import android.graphics.Paint
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DefaultItemAnimator
-import com.google.android.exoplayer2.MediaItem
+import at.huber.youtubeExtractor.VideoMeta
+import at.huber.youtubeExtractor.YouTubeExtractor
+import at.huber.youtubeExtractor.YtFile
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.util.MimeTypes
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.CourseDetailsFragmentBinding
-import com.rtchubs.engineerbooks.models.home.CourseSubject
-import com.rtchubs.engineerbooks.models.home.CourseTeacher
+import com.rtchubs.engineerbooks.models.home.PaidBook
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
+
 
 class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseDetailsViewModel>() {
 
@@ -28,10 +37,93 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
     private var playWhenReady = true
     private var currentWindow = 0
     private var playbackPosition: Long = 0
-    private lateinit var teachersAdapter: CourseDetailsTeachersListAdapter
-    private lateinit var subjectsAdapter: CourseDetailsSubjectListAdapter
+    private lateinit var teachersAdapter: CourseTeachersListAdapter
+    private lateinit var contentsAdapter: CourseContentListAdapter
+    private lateinit var faqsAdapter: CourseFaqListAdapter
 
+    private val args: CourseDetailsFragmentArgs by navArgs()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        registerToolbar(viewDataBinding.toolbar)
+
+        val course = args.course
+        var price = 0.0
+
+        if (course.discount_price != null && course.discount_price != 0) {
+            viewDataBinding.price.apply {
+                paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                text = course.price.toString()
+            }
+            viewDataBinding.discountPrice.visibility = View.VISIBLE
+            viewDataBinding.discountPrice.text = course.discount_price.toString()
+            price = course.discount_price?.toDouble() ?: 0.0
+        } else {
+            viewDataBinding.price.apply {
+                paintFlags = paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                text = course.price.toString()
+            }
+            viewDataBinding.discountPrice.visibility = View.GONE
+            price = course.price?.toDouble() ?: 0.0
+        }
+
+        viewDataBinding.btnBuyNow.setOnClickListener {
+            navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToPaymentFragment(
+                PaidBook(0, course.title, 1, course.class_name, false, price)
+            ))
+        }
+
+//        val teacheers = listOf(
+//            CourseTeachers(1, "Alexander Houluo", "University of Dhaka"),
+//            CourseTeachers(2, "Alexander Houluo", "University of Dhaka"),
+//            CourseTeachers(3, "Alexander Houluo", "University of Dhaka"),
+//            CourseTeachers(4, "Alexander Houluo", "University of Dhaka"),
+//            CourseTeachers(5, "Alexander Houluo", "University of Dhaka"),
+//            CourseTeachers(6, "Alexander Houluo", "University of Dhaka")
+//        )
+
+        teachersAdapter = CourseTeachersListAdapter(appExecutors) {
+
+        }
+
+        viewDataBinding.teachersRecycler.adapter = teachersAdapter
+        teachersAdapter.submitList(course.course_teachers)
+
+//        val subjects = listOf(
+//            CourseSubject(1, "Subject - 1"),
+//            CourseSubject(2, "Subject - 2"),
+//            CourseSubject(3, "Subject - 3"),
+//            CourseSubject(4, "Subject - 4"),
+//            CourseSubject(5, "Subject - 5"),
+//            CourseSubject(6, "Subject - 6")
+//        )
+
+        contentsAdapter = CourseContentListAdapter(appExecutors) {
+
+        }
+        viewDataBinding.courseDetailsRecycler.setHasFixedSize(true)
+        viewDataBinding.courseDetailsRecycler.itemAnimator = DefaultItemAnimator()
+        viewDataBinding.courseDetailsRecycler.adapter = contentsAdapter
+        contentsAdapter.submitList(course.course_content)
+
+        faqsAdapter = CourseFaqListAdapter(appExecutors) {
+
+        }
+        viewDataBinding.faqRecycler.setHasFixedSize(true)
+        viewDataBinding.faqRecycler.itemAnimator = DefaultItemAnimator()
+        viewDataBinding.faqRecycler.adapter = faqsAdapter
+        faqsAdapter.submitList(course.course_faq)
+    }
+
+    private fun mediaSource(uri: Uri): MediaSource {
+        return ExtractorMediaSource.Factory(
+            DefaultHttpDataSourceFactory("exoplayer")
+        ).createMediaSource(uri)
+    }
+
+    @SuppressLint("StaticFieldLeak")
     private fun initializePlayer() {
+        val videoUrl = args.course.vediolink
         val trackSelector = DefaultTrackSelector(requireContext())
         trackSelector.setParameters(
             trackSelector.buildUponParameters().setMaxVideoSizeSd()
@@ -40,15 +132,19 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         player = SimpleExoPlayer.Builder(requireContext()).setTrackSelector(trackSelector).build()
         viewDataBinding.videoView.player = player
 
-        val mediaItem = MediaItem.Builder()
-            .setUri("https://www.youtube.com/api/manifest/dash/id/bf5bb2419360daf1/source/youtube?as=fmp4_audio_clear,fmp4_sd_hd_clear&sparams=ip,ipbits,expire,source,id,as&ip=0.0.0.0&ipbits=0&expire=19000000000&signature=51AF5F39AB0CEC3E5497CD9C900EBFEAECCCB5C7.8506521BFC350652163895D4C26DEE124209AA9E&key=ik0")
-            .setMimeType(MimeTypes.APPLICATION_MPD)
-            .build()
-
-        player?.setMediaItem(mediaItem)
-        player?.playWhenReady = playWhenReady
-        player?.seekTo(currentWindow, playbackPosition)
-        player?.prepare()
+        object : YouTubeExtractor(requireContext()) {
+            override fun onExtractionComplete(ytFiles: SparseArray<YtFile>, vMeta: VideoMeta) {
+                val downloadUrl = ytFiles[18].url
+                try {
+                    player?.addMediaSource(mediaSource(Uri.parse(downloadUrl)))
+                    player?.playWhenReady = playWhenReady
+                    player?.seekTo(currentWindow, playbackPosition)
+                    player?.prepare()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }.extract(videoUrl, true, true)
     }
 
     private fun releasePlayer() {
@@ -87,40 +183,5 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         if (Build.VERSION.SDK_INT >= 24) {
             releasePlayer()
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        registerToolbar(viewDataBinding.toolbar)
-
-        val teacheers = listOf(CourseTeacher(1, "Alexander Houluo", "University of Dhaka"),
-            CourseTeacher(2, "Alexander Houluo", "University of Dhaka"),
-            CourseTeacher(3, "Alexander Houluo", "University of Dhaka"),
-            CourseTeacher(4, "Alexander Houluo", "University of Dhaka"),
-            CourseTeacher(5, "Alexander Houluo", "University of Dhaka"),
-            CourseTeacher(6, "Alexander Houluo", "University of Dhaka"))
-
-        teachersAdapter = CourseDetailsTeachersListAdapter(appExecutors) {
-
-        }
-
-        viewDataBinding.teachersRecycler.adapter = teachersAdapter
-        teachersAdapter.submitList(teacheers)
-
-        val subjects = listOf(
-            CourseSubject(1, "Subject - 1"),
-            CourseSubject(2, "Subject - 2"),
-            CourseSubject(3, "Subject - 3"),
-            CourseSubject(4, "Subject - 4"),
-            CourseSubject(5, "Subject - 5"),
-            CourseSubject(6, "Subject - 6"))
-
-        subjectsAdapter = CourseDetailsSubjectListAdapter(appExecutors) {
-
-        }
-        viewDataBinding.courseDetailsRecycler.setHasFixedSize(true)
-        viewDataBinding.courseDetailsRecycler.itemAnimator = DefaultItemAnimator()
-        viewDataBinding.courseDetailsRecycler.adapter = subjectsAdapter
-        subjectsAdapter.submitList(subjects)
     }
 }

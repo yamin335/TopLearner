@@ -7,11 +7,11 @@ import com.rtchubs.engineerbooks.models.LiveClassScheduleResponse
 import com.rtchubs.engineerbooks.models.OfferResponse
 import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
 import com.rtchubs.engineerbooks.models.home.AllBookResponse
+import com.rtchubs.engineerbooks.models.home.AllCourseResponse
 import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
 import com.rtchubs.engineerbooks.models.notice_board.NoticeResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.AddCardOrBankResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.BankOrCardListResponse
-import com.rtchubs.engineerbooks.models.transactions.PartnerTransactionResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
@@ -41,7 +41,12 @@ class HomeRepository @Inject constructor(@Named("auth") private val authApiServi
         }
     }
 
+    suspend fun allCourseRepo(): Response<AllCourseResponse> {
 
+        return withContext(Dispatchers.IO) {
+            adminApiService.getAllCourse()
+        }
+    }
 
     suspend fun requestBankListRepo(type:String,token:String): Response<BankOrCardListResponse> {
         return withContext(Dispatchers.IO) {

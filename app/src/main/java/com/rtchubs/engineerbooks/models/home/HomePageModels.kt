@@ -29,6 +29,6 @@ data class PaidBook(var bookID: Int?, var bookName: String?, var classID: Int?, 
 
 data class CourseCategory(val udid: Int, val name: String?, val books: List<ClassWiseBook>?)
 
-data class CourseTeacher(var id: Int, var name: String, var university: String)
+data class CourseTeachers(var id: Int, var name: String, var university: String)
 
 data class CourseSubject(var id: Int, var title: String, var isExpanded: Boolean = false)

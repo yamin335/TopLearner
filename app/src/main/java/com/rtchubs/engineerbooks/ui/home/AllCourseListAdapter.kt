@@ -12,23 +12,24 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.rtchubs.engineerbooks.AppExecutors
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.Api
 import com.rtchubs.engineerbooks.databinding.CourseListItemBinding
-import com.rtchubs.engineerbooks.models.home.ClassWiseBook
+import com.rtchubs.engineerbooks.models.home.Course
 import com.rtchubs.engineerbooks.util.DataBoundListAdapter
 
-class CourseListAdapter(
+class AllCourseListAdapter(
     private val appExecutors: AppExecutors,
-    private val itemCallback: ((ClassWiseBook) -> Unit)
-) : DataBoundListAdapter<ClassWiseBook, CourseListItemBinding>(
-    appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<ClassWiseBook>() {
-        override fun areItemsTheSame(oldItem: ClassWiseBook, newItem: ClassWiseBook): Boolean {
-            return oldItem.udid == newItem.udid
+    private val itemCallback: ((Course) -> Unit)
+) : DataBoundListAdapter<Course, CourseListItemBinding>(
+    appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<Course>() {
+        override fun areItemsTheSame(oldItem: Course, newItem: Course): Boolean {
+            return oldItem.id == newItem.id
         }
 
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(
-            oldItem: ClassWiseBook,
-            newItem: ClassWiseBook
+            oldItem: Course,
+            newItem: Course
         ): Boolean {
             return oldItem == newItem
         }
@@ -44,8 +45,8 @@ class CourseListAdapter(
 
     override fun bind(binding: CourseListItemBinding, position: Int) {
         val item = getItem(position)
-//        binding.item = item
-//        binding.url = "${ApiEndPoint.LOGO}/${item.logo}"
+        binding.item = item
+        binding.url = "${Api.COURSE_IMAGE_ROOT_URL}${item.logourl}"
         binding.imageRequestListener = object: RequestListener<Drawable> {
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
                 binding.thumbnail.setImageResource(R.drawable.engineers)

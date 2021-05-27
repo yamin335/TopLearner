@@ -5,6 +5,7 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto">
 
     <data class="HomeFragment2Binding">
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.rtchubs.engineerbooks.ui.home.HomeViewModel" />
@@ -76,18 +77,32 @@
                     custom:pager_animation="Accordion" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/homeClassListRecycler"
+                    android:id="@+id/courseRecycler"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="7"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
                     android:paddingTop="4dp"
                     android:paddingBottom="32dp"
-                    android:clipToPadding="false"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:spanCount="3"
-                    tools:listitem="@layout/list_item_course_category"/>
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="2"
+                    android:orientation="vertical"
+                    tools:listitem="@layout/list_item_course"/>
+
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/homeClassListRecycler"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:layout_weight="7"-->
+<!--                    android:paddingTop="4dp"-->
+<!--                    android:paddingBottom="32dp"-->
+<!--                    android:clipToPadding="false"-->
+<!--                    android:layout_marginStart="5dp"-->
+<!--                    android:layout_marginEnd="5dp"-->
+<!--                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--                    app:spanCount="3"-->
+<!--                    tools:listitem="@layout/list_item_course_category"/>-->
             </LinearLayout>
 
             <TextView
@@ -96,6 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="No Course Found"
+                android:visibility="@{viewModel.allCourseList.size() > 0 ? View.GONE : View.VISIBLE}"
                 android:textAlignment="center"
                 android:layout_centerInParent="true"
                 android:textSize="24sp"

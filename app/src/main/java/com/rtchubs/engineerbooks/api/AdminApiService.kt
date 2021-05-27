@@ -1,6 +1,7 @@
 package com.rtchubs.engineerbooks.api
 
 import com.rtchubs.engineerbooks.models.home.AllBookResponse
+import com.rtchubs.engineerbooks.models.home.AllCourseResponse
 import com.rtchubs.engineerbooks.models.registration.ProfileImageUploadResponse
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -17,4 +18,7 @@ interface AdminApiService {
 
     @GET(ApiEndPoint.ALL_BOOKS)
     suspend fun getAllBooks(): Response<AllBookResponse>
+
+    @POST(ApiEndPoint.ALL_COURSE)
+    suspend fun getAllCourse(): Response<AllCourseResponse>
 }
