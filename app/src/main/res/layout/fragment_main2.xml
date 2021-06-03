@@ -85,10 +85,9 @@
                     android:paddingBottom="32dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:spanCount="2"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="vertical"
-                    tools:listitem="@layout/list_item_course"/>
+                    tools:listitem="@layout/list_item_course_category"/>
 
 <!--                <androidx.recyclerview.widget.RecyclerView-->
 <!--                    android:id="@+id/homeClassListRecycler"-->
@@ -111,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="No Course Found"
-                android:visibility="@{viewModel.allCourseList.size() > 0 ? View.GONE : View.VISIBLE}"
+                android:visibility="@{viewModel.allCourseCategoryList.size() > 0 ? View.GONE : View.VISIBLE}"
                 android:textAlignment="center"
                 android:layout_centerInParent="true"
                 android:textSize="24sp"

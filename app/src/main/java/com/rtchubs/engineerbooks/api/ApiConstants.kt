@@ -124,7 +124,8 @@ object ApiEndPoint {
     const val SLIDER_IMAGE = "$ADMIN_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/ads"
     const val SLIDER_ADS = "$API_VERSION/$PUBLIC_REPO/getads"
 
-    const val ALL_COURSE = "$API_REPO/get/courses"
+    const val ALL_COURSE = "$API_REPO/get/coursecatagories/all"
+    const val ALL_FAQS = "$API_REPO/get/course_faq/all"
 
     const val REQUESTOTP = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}/request-otp"
     const val REGISTRATION = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}"

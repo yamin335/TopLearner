@@ -13,7 +13,7 @@ import com.rtchubs.engineerbooks.api.ResponseCodes.CODE_SUCCESS
 import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
 import com.rtchubs.engineerbooks.models.AdSlider
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
-import com.rtchubs.engineerbooks.models.home.Course
+import com.rtchubs.engineerbooks.models.home.CourseCategory
 import com.rtchubs.engineerbooks.models.registration.DefaultResponse
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.repos.HomeRepository
@@ -44,8 +44,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    val allCourseList: MutableLiveData<List<Course>> by lazy {
-        MutableLiveData<List<Course>>()
+    val allCourseCategoryList: MutableLiveData<List<CourseCategory>> by lazy {
+        MutableLiveData<List<CourseCategory>>()
     }
 
 
@@ -137,11 +137,11 @@ class HomeViewModel @Inject constructor(
                             toastError.postValue(apiResponse.body.message ?: AppConstants.serverConnectionErrorMessage)
                             return@launch
                         }
-                        if (apiResponse.body.data?.courses?.data.isNullOrEmpty()) {
+                        if (apiResponse.body.data?.CourseCatagorys.isNullOrEmpty()) {
                             toastError.postValue(apiResponse.body.message ?: AppConstants.noCourseFoundMessage)
                             return@launch
                         }
-                        allCourseList.postValue(apiResponse.body.data?.courses?.data)
+                        allCourseCategoryList.postValue(apiResponse.body.data?.CourseCatagorys)
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)

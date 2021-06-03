@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DefaultItemAnimator
 import at.huber.youtubeExtractor.VideoMeta
@@ -24,7 +25,6 @@ import com.rtchubs.engineerbooks.databinding.CourseDetailsFragmentBinding
 import com.rtchubs.engineerbooks.models.home.PaidBook
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 
-
 class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseDetailsViewModel>() {
 
     override val bindingVariable: Int
@@ -37,9 +37,9 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
     private var playWhenReady = true
     private var currentWindow = 0
     private var playbackPosition: Long = 0
-    private lateinit var teachersAdapter: CourseTeachersListAdapter
-    private lateinit var contentsAdapter: CourseContentListAdapter
-    private lateinit var faqsAdapter: CourseFaqListAdapter
+    private lateinit var teachersAdapter: TeachersListAdapter
+    private lateinit var contentsAdapter: CourseChapterListAdapter
+    private lateinit var faqsAdapter: FaqListAdapter
 
     private val args: CourseDetailsFragmentArgs by navArgs()
 
@@ -82,12 +82,11 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
 //            CourseTeachers(6, "Alexander Houluo", "University of Dhaka")
 //        )
 
-        teachersAdapter = CourseTeachersListAdapter(appExecutors) {
+        teachersAdapter = TeachersListAdapter(appExecutors) {
 
         }
-
         viewDataBinding.teachersRecycler.adapter = teachersAdapter
-        teachersAdapter.submitList(course.course_teachers)
+        teachersAdapter.submitList(course.teachers)
 
 //        val subjects = listOf(
 //            CourseSubject(1, "Subject - 1"),
@@ -98,21 +97,25 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
 //            CourseSubject(6, "Subject - 6")
 //        )
 
-        contentsAdapter = CourseContentListAdapter(appExecutors) {
+        contentsAdapter = CourseChapterListAdapter(appExecutors) {
 
         }
         viewDataBinding.courseDetailsRecycler.setHasFixedSize(true)
         viewDataBinding.courseDetailsRecycler.itemAnimator = DefaultItemAnimator()
         viewDataBinding.courseDetailsRecycler.adapter = contentsAdapter
-        contentsAdapter.submitList(course.course_content)
+        contentsAdapter.submitList(course.course_chapter)
 
-        faqsAdapter = CourseFaqListAdapter(appExecutors) {
+        faqsAdapter = FaqListAdapter(appExecutors) {
 
         }
-        viewDataBinding.faqRecycler.setHasFixedSize(true)
         viewDataBinding.faqRecycler.itemAnimator = DefaultItemAnimator()
         viewDataBinding.faqRecycler.adapter = faqsAdapter
-        faqsAdapter.submitList(course.course_faq)
+
+        viewModel.allFaqList.observe(viewLifecycleOwner, Observer {
+            faqsAdapter.submitList(it)
+        })
+
+        viewModel.getAllFaqs()
     }
 
     private fun mediaSource(uri: Uri): MediaSource {
@@ -133,8 +136,9 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         viewDataBinding.videoView.player = player
 
         object : YouTubeExtractor(requireContext()) {
-            override fun onExtractionComplete(ytFiles: SparseArray<YtFile>, vMeta: VideoMeta) {
-                val downloadUrl = ytFiles[18].url
+            override fun onExtractionComplete(ytFiles: SparseArray<YtFile>?, vMeta: VideoMeta?) {
+                if (ytFiles == null) return
+                val downloadUrl = ytFiles[18]?.url
                 try {
                     player?.addMediaSource(mediaSource(Uri.parse(downloadUrl)))
                     player?.playWhenReady = playWhenReady

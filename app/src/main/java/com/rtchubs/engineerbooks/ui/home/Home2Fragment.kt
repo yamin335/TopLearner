@@ -40,7 +40,6 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
     private var homeClassListAdapter: HomeClassListAdapter? = null
 
     private lateinit var courseCategoryListAdapter: CourseCategoryListAdapter
-    private lateinit var allCourseListAdapter: AllCourseListAdapter
 
     var timeChangeListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
         when (key) {
@@ -138,13 +137,14 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
 //
 //
 
-        allCourseListAdapter = AllCourseListAdapter(appExecutors) {
+        courseCategoryListAdapter = CourseCategoryListAdapter(appExecutors) {
             navigateTo(Home2FragmentDirections.actionHome2FragmentToCourseDetailsFragment(it))
         }
-        viewDataBinding.courseRecycler.adapter = allCourseListAdapter
 
-        viewModel.allCourseList.observe(viewLifecycleOwner, Observer {
-            allCourseListAdapter.submitList(it)
+        viewDataBinding.courseRecycler.adapter = courseCategoryListAdapter
+
+        viewModel.allCourseCategoryList.observe(viewLifecycleOwner, Observer {
+            courseCategoryListAdapter.submitList(it)
         })
 
         viewModel.getAllCourses()

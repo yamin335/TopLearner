@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data class="CourseFaqListItemBinding">
+    <data class="FaqListItemBinding">
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.home.CourseFaq" />
+            type="com.rtchubs.engineerbooks.models.faq.Faq" />
     </data>
     <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/cardSubject"

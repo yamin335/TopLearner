@@ -12,23 +12,24 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.rtchubs.engineerbooks.AppExecutors
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.Api.ADMIN_API_ROOT_URL
 import com.rtchubs.engineerbooks.databinding.CourseDetailsTeacherListItemBinding
-import com.rtchubs.engineerbooks.models.home.CourseTeacher
+import com.rtchubs.engineerbooks.models.home.Teacher
 import com.rtchubs.engineerbooks.util.DataBoundListAdapter
 
-class CourseTeachersListAdapter(
+class TeachersListAdapter(
     private val appExecutors: AppExecutors,
-    private val itemCallback: ((CourseTeacher) -> Unit)
-) : DataBoundListAdapter<CourseTeacher, CourseDetailsTeacherListItemBinding>(
-    appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<CourseTeacher>() {
-        override fun areItemsTheSame(oldItem: CourseTeacher, newItem: CourseTeacher): Boolean {
+    private val itemCallback: ((Teacher) -> Unit)
+) : DataBoundListAdapter<Teacher, CourseDetailsTeacherListItemBinding>(
+    appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<Teacher>() {
+        override fun areItemsTheSame(oldItem: Teacher, newItem: Teacher): Boolean {
             return oldItem.id == newItem.id
         }
 
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(
-            oldItem: CourseTeacher,
-            newItem: CourseTeacher
+            oldItem: Teacher,
+            newItem: Teacher
         ): Boolean {
             return oldItem == newItem
         }
@@ -45,7 +46,7 @@ class CourseTeachersListAdapter(
     override fun bind(binding: CourseDetailsTeacherListItemBinding, position: Int) {
         val item = getItem(position)
         binding.item = item
-        binding.url = ""
+        binding.url = "$ADMIN_API_ROOT_URL${item.image_url}"
         binding.imageRequestListener = object: RequestListener<Drawable> {
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
                 //binding.proPic.setImageResource(R.drawable.doctor_1)

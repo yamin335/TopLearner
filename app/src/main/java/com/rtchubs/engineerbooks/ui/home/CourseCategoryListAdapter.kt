@@ -8,16 +8,17 @@ import androidx.recyclerview.widget.DiffUtil
 import com.rtchubs.engineerbooks.AppExecutors
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.CourseCategoryListItemBinding
+import com.rtchubs.engineerbooks.models.home.Course
 import com.rtchubs.engineerbooks.models.home.CourseCategory
 import com.rtchubs.engineerbooks.util.DataBoundListAdapter
 
 class CourseCategoryListAdapter(
     private val appExecutors: AppExecutors,
-    private val itemCallback: ((CourseCategory) -> Unit)
+    private val itemCallback: ((Course) -> Unit)
 ) : DataBoundListAdapter<CourseCategory, CourseCategoryListItemBinding>(
     appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<CourseCategory>() {
         override fun areItemsTheSame(oldItem: CourseCategory, newItem: CourseCategory): Boolean {
-            return oldItem.udid == newItem.udid
+            return oldItem.id == newItem.id
         }
 
         @SuppressLint("DiffUtilEquals")
@@ -39,13 +40,13 @@ class CourseCategoryListAdapter(
 
     override fun bind(binding: CourseCategoryListItemBinding, position: Int) {
         val item = getItem(position)
-        binding.categoryName = item.name
+        binding.categoryName = item.title
 
-        val courseAdapter = CourseListAdapter(appExecutors) {
-            itemCallback.invoke(item)
+        val courseAdapter = AllCourseListAdapter(appExecutors) {
+            itemCallback.invoke(it)
         }
 
         binding.courseRecycler.adapter = courseAdapter
-        courseAdapter.submitList(item.books)
+        courseAdapter.submitList(item.courses)
     }
 }

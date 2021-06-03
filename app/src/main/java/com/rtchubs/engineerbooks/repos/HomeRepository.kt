@@ -6,8 +6,9 @@ import com.rtchubs.engineerbooks.api.ApiService
 import com.rtchubs.engineerbooks.models.LiveClassScheduleResponse
 import com.rtchubs.engineerbooks.models.OfferResponse
 import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
+import com.rtchubs.engineerbooks.models.faq.AllFaqResponse
 import com.rtchubs.engineerbooks.models.home.AllBookResponse
-import com.rtchubs.engineerbooks.models.home.AllCourseResponse
+import com.rtchubs.engineerbooks.models.home.AllCourseCategoryResponse
 import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
 import com.rtchubs.engineerbooks.models.notice_board.NoticeResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.AddCardOrBankResponse
@@ -41,10 +42,15 @@ class HomeRepository @Inject constructor(@Named("auth") private val authApiServi
         }
     }
 
-    suspend fun allCourseRepo(): Response<AllCourseResponse> {
-
+    suspend fun allCourseRepo(): Response<AllCourseCategoryResponse> {
         return withContext(Dispatchers.IO) {
             adminApiService.getAllCourse()
+        }
+    }
+
+    suspend fun allFaqRepo(): Response<AllFaqResponse> {
+        return withContext(Dispatchers.IO) {
+            adminApiService.getAllFaqs()
         }
     }
 
