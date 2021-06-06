@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.SimpleItemAnimator
 import at.huber.youtubeExtractor.VideoMeta
 import at.huber.youtubeExtractor.YouTubeExtractor
 import at.huber.youtubeExtractor.YtFile
@@ -19,6 +20,7 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.material.chip.Chip
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.CourseDetailsFragmentBinding
@@ -48,7 +50,7 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         registerToolbar(viewDataBinding.toolbar)
 
         val course = args.course
-        var price = 0.0
+        val price: Double
 
         if (course.discount_price != null && course.discount_price != 0) {
             viewDataBinding.price.apply {
@@ -71,6 +73,14 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
             navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToPaymentFragment(
                 PaidBook(0, course.title, 1, course.class_name, false, price)
             ))
+        }
+
+        course.course_items?.let {
+            for (courseItem in it) {
+                val chip = layoutInflater.inflate(R.layout.chip_for_course_details, viewDataBinding.chipGroup, false) as Chip
+                chip.text = courseItem.description
+                viewDataBinding.chipGroup.addView(chip)
+            }
         }
 
 //        val teacheers = listOf(
@@ -100,8 +110,9 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         contentsAdapter = CourseChapterListAdapter(appExecutors) {
 
         }
+        (viewDataBinding.courseDetailsRecycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         viewDataBinding.courseDetailsRecycler.setHasFixedSize(true)
-        viewDataBinding.courseDetailsRecycler.itemAnimator = DefaultItemAnimator()
+        //viewDataBinding.courseDetailsRecycler.itemAnimator = DefaultItemAnimator()
         viewDataBinding.courseDetailsRecycler.adapter = contentsAdapter
         contentsAdapter.submitList(course.course_chapter)
 

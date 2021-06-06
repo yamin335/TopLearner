@@ -31,7 +31,7 @@ data class CourseChapter(val id: Int?, val created_at: String?, val updated_at: 
                          val animation: List<Animation>?, var isExpanded: Boolean = false): Serializable
 
 data class Animation(val id: Int?, val created_at: String?, val updated_at: String?,
-                     val course_chapter_id: Int?, val title: String?, val name: String?): Serializable
+                     val course_chapter_id: Int?, val title: String?, val name: String?, val type: String?): Serializable
 
 data class Teacher(val id: Int?, val created_at: String?, val updated_at: String?,
                    val other_show: String?, val official: String?, val mobile: String?,

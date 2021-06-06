@@ -2,7 +2,6 @@ package com.rtchubs.engineerbooks.ui.home
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
@@ -41,12 +40,12 @@ class FaqListAdapter(
     override fun bind(binding: FaqListItemBinding, position: Int) {
         val item = getItem(position)
         binding.item = item
-        binding.arrowIndicator.setOnClickListener {
-            toggleExpanded(item, binding)
-        }
 
-        binding.title.setOnClickListener {
+        binding.expandableLayout.isExpanded = item.isExpanded
+
+        binding.topBar.setOnClickListener {
             toggleExpanded(item, binding)
+            binding.expandableLayout.isExpanded = item.isExpanded
         }
     }
 
@@ -55,8 +54,8 @@ class FaqListAdapter(
         item.isExpanded = !item.isExpanded
         //toggle.duration = if (item.isExpanded) 200L else 150L
         //TransitionManager.beginDelayedTransition(binding.root as ViewGroup, toggle)
-        binding.answer.animate().duration = 200
-        binding.answer.visibility = if (item.isExpanded) View.VISIBLE else View.GONE
+        //binding.answer.animate().duration = 200
+        //binding.answer.visibility = if (item.isExpanded) View.VISIBLE else View.GONE
         //binding.arrowIndicator.setImageResource(if (item.isExpanded) R.drawable.ic_baseline_keyboard_arrow_up_24 else R.drawable.ic_baseline_keyboard_arrow_down_24)
         if (item.isExpanded) {
             binding.arrowIndicator.animate().setDuration(200).rotation(180F)

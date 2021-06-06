@@ -40,5 +40,11 @@ class AnimationListAdapter(
     override fun bind(binding: AnimationListItemBinding, position: Int) {
         val item = getItem(position)
         binding.item = item
+
+        if (item.type == "Lecture Sheet") {
+            binding.icon.setImageResource(R.drawable.ic_twotone_assignment_24)
+        } else {
+            binding.icon.setImageResource(R.drawable.ic_twotone_play_circle_24)
+        }
     }
 }

@@ -298,4 +298,5 @@ dependencies {
     implementation 'com.github.HaarigerHarald:android-youtubeExtractor:master-SNAPSHOT'
 
     implementation 'com.google.guava:guava:27.0.1-android'
+    implementation 'com.github.cachapa:ExpandableLayout:2.9.2'
 }

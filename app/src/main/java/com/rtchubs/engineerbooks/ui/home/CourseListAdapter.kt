@@ -58,7 +58,7 @@ class CourseListAdapter(
         }
 
 
-        binding.btnPayment.setOnClickListener {
+        binding.btnVisit.setOnClickListener {
             itemCallback.invoke(item)
         }
     }

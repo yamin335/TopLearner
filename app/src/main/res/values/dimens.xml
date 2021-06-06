@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+
+    <dimen name="list_item_vertical_padding">24dp</dimen>
+    <dimen name="list_item_horizontal_padding">16dp</dimen>
+
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="small_icon_width">27dp</dimen>

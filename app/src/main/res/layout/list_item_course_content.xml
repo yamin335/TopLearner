@@ -20,24 +20,27 @@
         app:cardElevation="8dp"
         app:strokeColor="#F2F7FF"
         app:strokeWidth="0.5dp"
-        app:contentPadding="16dp"
+        app:contentPadding="0dp"
         app:cardUseCompatPadding="false">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <LinearLayout
+                android:id="@+id/topBar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:padding="16dp">
 
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginTop="3dp"
                     android:text="@{item.title}"
+                    android:gravity="center_vertical"
                     tools:text="Course Subject Name"
                     android:textColor="@color/themeTextColor"
                     android:textSize="16sp"
@@ -54,14 +57,28 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </LinearLayout>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/details"
+
+            <net.cachapa.expandablelayout.ExpandableLayout
+                android:id="@+id/expandable_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="4"
-                tools:listitem="@layout/list_item_animation"
-                android:visibility="gone"/>
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingBottom="16dp"
+                app:el_duration="500"
+                app:el_expanded="false"
+                app:el_parallax="0.0">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/list_item_animation"
+                    android:visibility="visible"/>
+
+            </net.cachapa.expandablelayout.ExpandableLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

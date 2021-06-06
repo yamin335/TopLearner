@@ -59,7 +59,11 @@ class AllCourseListAdapter(
         }
 
 
-        binding.btnPayment.setOnClickListener {
+        binding.btnVisit.setOnClickListener {
+            itemCallback.invoke(item)
+        }
+
+        binding.rootCard.setOnClickListener {
             itemCallback.invoke(item)
         }
     }

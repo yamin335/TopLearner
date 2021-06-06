@@ -225,121 +225,14 @@
                         app:chipSpacingHorizontal="6dp"
                         app:chipSpacingVertical="6dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="8dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/text1"
-                        app:layout_constraintVertical_bias="0.0">
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/jan"
-                            style="@style/Widget.MaterialComponents.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="বিষয় ৫ টি"
-                            android:textColor="@color/themeTextColor"
-                            app:chipBackgroundColor="@color/chipBgColor"
-                            app:checkedIcon="@drawable/ic_round_done_outline_24"
-                            app:checkedIconTint="@color/accent"
-                            android:checked="true"
-                            android:layout_marginStart="0dp"
-                            android:layout_marginEnd="0dp"
-                            android:layout_marginTop="0dp"
-                            android:layout_marginBottom="0dp"/>
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/feb"
-                            style="@style/Widget.MaterialComponents.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="কুইজ ১৫০+"
-                            android:textColor="@color/themeTextColor"
-                            app:chipBackgroundColor="@color/chipBgColor"
-                            app:checkedIcon="@drawable/ic_round_done_outline_24"
-                            android:checked="true"
-                            android:layout_marginStart="0dp"
-                            android:layout_marginEnd="0dp"
-                            android:layout_marginTop="0dp"
-                            android:layout_marginBottom="0dp"/>
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/march"
-                            style="@style/Widget.MaterialComponents.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="নৈর্বক্তিক ৫০০০+"
-                            android:textColor="@color/themeTextColor"
-                            app:chipBackgroundColor="@color/chipBgColor"
-                            app:checkedIcon="@drawable/ic_round_done_outline_24"
-                            android:checked="true"
-                            android:layout_marginStart="0dp"
-                            android:layout_marginEnd="0dp"
-                            android:layout_marginTop="0dp"
-                            android:layout_marginBottom="0dp"/>
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/april"
-                            style="@style/Widget.MaterialComponents.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="তথ্য ৩০+"
-                            android:textColor="@color/themeTextColor"
-                            app:chipBackgroundColor="@color/chipBgColor"
-                            app:checkedIcon="@drawable/ic_round_done_outline_24"
-                            android:checked="true"
-                            android:layout_marginStart="0dp"
-                            android:layout_marginEnd="0dp"
-                            android:layout_marginTop="0dp"
-                            android:layout_marginBottom="0dp"/>
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/may"
-                            style="@style/Widget.MaterialComponents.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="নোট ৭০+"
-                            android:textColor="@color/themeTextColor"
-                            app:chipBackgroundColor="@color/chipBgColor"
-                            app:checkedIcon="@drawable/ic_round_done_outline_24"
-                            android:checked="true"
-                            android:layout_marginStart="0dp"
-                            android:layout_marginEnd="0dp"
-                            android:layout_marginTop="0dp"
-                            android:layout_marginBottom="0dp"/>
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/july"
-                            style="@style/Widget.MaterialComponents.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="পরীক্ষা ৫টি"
-                            android:textColor="@color/themeTextColor"
-                            app:chipBackgroundColor="@color/chipBgColor"
-                            app:checkedIcon="@drawable/ic_round_done_outline_24"
-                            android:checked="true"
-                            android:layout_marginStart="0dp"
-                            android:layout_marginEnd="0dp"
-                            android:layout_marginTop="0dp"
-                            android:layout_marginBottom="0dp"/>
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/aug"
-                            style="@style/Widget.MaterialComponents.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="অ্যানিমেশান ১২টি"
-                            android:textColor="@color/themeTextColor"
-                            app:chipBackgroundColor="@color/chipBgColor"
-                            app:checkedIcon="@drawable/ic_round_done_outline_24"
-                            android:checked="true"
-                            android:layout_marginStart="0dp"
-                            android:layout_marginEnd="0dp"
-                            android:layout_marginTop="0dp"
-                            android:layout_marginBottom="0dp"/>
-                    </com.google.android.material.chip.ChipGroup>
+                        app:layout_constraintVertical_bias="0.0"/>
 
                     <TextView
                         android:layout_width="match_parent"

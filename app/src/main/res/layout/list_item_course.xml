@@ -22,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:clickable="false"
-        android:focusable="false"
+        app:rippleColor="#f1f1f1"
         app:cardBackgroundColor="@color/white"
         app:cardElevation="0dp"
         app:strokeColor="@color/themeColorVeryLight"
@@ -95,7 +94,7 @@
                 tools:text="Class One" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnPayment"
+                android:id="@+id/btnVisit"
                 style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
