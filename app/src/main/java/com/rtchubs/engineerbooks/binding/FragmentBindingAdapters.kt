@@ -135,8 +135,8 @@ class FragmentBindingAdapters {
             placeholder?.let { imageView.setTag(R.integer.placeholder, placeholder) }
 
             errorDrawable?.let { imageView.setTag(R.integer.errorDrawable, errorDrawable) }
-            val requestCreator = Picasso.get()
-                .load(if (url == null || url.contains("http")) url else MEDIA_URL + url)
+//            val requestCreator = Picasso.get()
+//                .load(if (url == null || url.contains("http")) url else MEDIA_URL + url)
             val placeholderLatest = imageView.getTag(R.integer.placeholder) as Drawable?
             val errorDrawableLatest = imageView.getTag(R.integer.errorDrawable) as Drawable?
 

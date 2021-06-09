@@ -9,6 +9,7 @@ import android.util.SparseArray
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -47,10 +48,16 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        registerToolbar(viewDataBinding.toolbar)
+        //registerToolbar(viewDataBinding.toolbar)
 
         val course = args.course
         val price: Double
+
+        viewDataBinding.title.text = course.title
+
+        viewDataBinding.backButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         if (course.discount_price != null && course.discount_price != 0) {
             viewDataBinding.price.apply {
@@ -70,8 +77,8 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         }
 
         viewDataBinding.btnBuyNow.setOnClickListener {
-            navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToPaymentFragment(
-                PaidBook(0, course.title, 1, course.class_name, false, price)
+            navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToPaymentNav(
+                PaidBook(course.book_id, course.title, 1, course.class_name, false, price)
             ))
         }
 

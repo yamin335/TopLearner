@@ -14,11 +14,19 @@ import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.models.transactions.CreateOrderBody
 import com.rtchubs.engineerbooks.ui.bkash.BKashDialogFragment
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
-import com.rtchubs.engineerbooks.ui.home.Home2Fragment
 import com.rtchubs.engineerbooks.util.getMilliFromDate
 import com.rtchubs.engineerbooks.util.hideKeyboard
 import com.rtchubs.engineerbooks.util.showErrorToast
 import com.rtchubs.engineerbooks.util.showSuccessToast
+import com.sslcommerz.library.payment.Classes.PayUsingSSLCommerz
+import com.sslcommerz.library.payment.Listener.OnPaymentResultListener
+import com.sslcommerz.library.payment.Util.ConstantData.CurrencyType
+import com.sslcommerz.library.payment.Util.ConstantData.ErrorKeys
+import com.sslcommerz.library.payment.Util.ConstantData.SdkCategory
+import com.sslcommerz.library.payment.Util.ConstantData.SdkType
+import com.sslcommerz.library.payment.Util.JsonModel.TransactionInfo
+import com.sslcommerz.library.payment.Util.Model.MandatoryFieldModel
+import timber.log.Timber
 import java.security.SecureRandom
 
 class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>() {
@@ -50,9 +58,9 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewModel.salesInvoice.observe(viewLifecycleOwner, Observer { invoice ->
             invoice?.let {
-                Home2Fragment.allBookList.map { classWiseBook ->
-                    classWiseBook.isPaid = true
-                }
+//                Home2Fragment.allBookList.map { classWiseBook ->
+//                    classWiseBook.isPaid = true
+//                }
                 val paidBook = args.book
                 paidBook.isPaid = true
                 preferencesHelper.savePaidBook(paidBook)
@@ -120,13 +128,15 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewDataBinding.btnPayNow.setOnClickListener {
 
-            viewModel.getBkashPaymentUrl(userData.mobile ?: "",
-                viewModel.amount.value ?: "0",
-                invoiceNumber ?: generateInvoiceID()).observe(viewLifecycleOwner, Observer { response ->
-                    response?.let {
-                        shoWBkashDialog(viewModel.amount.value ?: "0", it)
-                    }
-            })
+            callPayment()
+
+//            viewModel.getBkashPaymentUrl(userData.mobile ?: "",
+//                viewModel.amount.value ?: "0",
+//                invoiceNumber ?: generateInvoiceID()).observe(viewLifecycleOwner, Observer { response ->
+//                    response?.let {
+//                        shoWBkashDialog(viewModel.amount.value ?: "0", it)
+//                    }
+//            })
 
 //            val checkout = Checkout()
 //            checkout.setAmount("10")
@@ -208,5 +218,52 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         val random1 = "${1 + SecureRandom().nextInt(99999)}"
         val random2 = "${1 + SecureRandom().nextInt(99999)}"
         return "${random1}${random2}"
+    }
+
+    private fun saveSSLPayment(response: TransactionInfo) {
+        val firstName = userData.first_name ?: ""
+        val lastName = userData.last_name ?: ""
+
+        viewModel.createOrder(
+            CreateOrderBody(
+                userData.id ?: 0, userData.mobile ?: "",
+                response.amount.toDouble().toInt(), 0, 0,
+                0, "", userData.upazila ?: "", userData.city ?: "",
+                userData.UpazilaID ?: 0, userData.CityID ?: 0, invoiceNumber ?: "N/A",
+                "", response.bankTranId ?: "N/A", args.book.bookID ?: 0, userData.class_id ?: 0,
+                "$firstName $lastName", args.book.bookName ?: "", response.amount ?: "N/A"
+            )
+        )
+    }
+
+    private fun callPayment() {
+        val mandatoryFieldModel = MandatoryFieldModel("testbox", "qwerty", viewModel.amount.value ?: "0", invoiceNumber ?: generateInvoiceID(), CurrencyType.BDT, SdkType.TESTBOX, SdkCategory.BANK_LIST)
+
+        PayUsingSSLCommerz.getInstance().setData(requireActivity(), mandatoryFieldModel, null, null, null, object :
+            OnPaymentResultListener {
+            override fun transactionSuccess(transactionInfo: TransactionInfo) {
+                if (transactionInfo.riskLevel == "0") {
+                    Timber.d("Transaction Successfully completed")
+                    saveSSLPayment(transactionInfo)
+                } else {
+                    Timber.d("Transaction in risk.")
+                }
+            }
+
+            override fun transactionFail(transactionInfo: TransactionInfo) {
+                Timber.d("Transaction Fail")
+            }
+
+            override fun error(i: Int) {
+                when (i) {
+                    ErrorKeys.USER_INPUT_ERROR -> Timber.e("User Input Error")
+                    ErrorKeys.INTERNET_CONNECTION_ERROR -> Timber.e("INTERNET_CONNECTION_ERROR")
+                    ErrorKeys.DATA_PARSING_ERROR -> Timber.e("DATA_PARSING_ERROR")
+                    ErrorKeys.CANCEL_TRANSACTION_ERROR -> Timber.e("CANCEL_TRANSACTION_ERROR")
+                    ErrorKeys.SERVER_ERROR -> Timber.e("SERVER_ERROR")
+                    ErrorKeys.NETWORK_ERROR -> Timber.e("NETWORK_ERROR")
+                }
+            }
+        })
     }
 }

@@ -46,13 +46,6 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
         <action
-            android:id="@+id/action_moreFragment_to_paymentFragmentMore"
-            app:destination="@id/paymentFragmentMore"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-        <action
             android:id="@+id/action_moreFragment_to_partnerProfileFragment"
             app:destination="@id/partnerProfileFragment"
             app:enterAnim="@anim/slide_in_right"
@@ -66,6 +59,18 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_moreFragment_to_payment_nav"
+            app:destination="@id/payment_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="book"
+                app:argType="com.rtchubs.engineerbooks.models.home.PaidBook" />
+        </action>
+
     </fragment>
 
     <fragment
@@ -116,15 +121,6 @@
         android:label="Select Class"
         tools:layout="@layout/fragment_class_edit"/>
     <fragment
-        android:id="@+id/paymentFragmentMore"
-        android:name="com.rtchubs.engineerbooks.ui.payment.PaymentFragmentMore"
-        android:label="PaymentFragment"
-        tools:layout="@layout/fragment_payment">
-        <argument
-            android:name="book"
-            app:argType="com.rtchubs.engineerbooks.models.home.PaidBook" />
-    </fragment>
-    <fragment
         android:id="@+id/noticeBoardFragment"
         android:name="com.rtchubs.engineerbooks.ui.notice_board.NoticeBoardFragment"
         android:label="Notice Board"
@@ -154,4 +150,5 @@
         android:name="com.rtchubs.engineerbooks.ui.transaction.TransactionFragment"
         android:label="Transactions"
         tools:layout="@layout/fragment_transaction" />
+    <include app:graph="@navigation/payment_nav_graph" />
 </navigation>

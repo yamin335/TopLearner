@@ -8,11 +8,9 @@ import com.rtchubs.engineerbooks.binding.FragmentDataBindingComponent
 import com.rtchubs.engineerbooks.di.DaggerAppComponent
 import com.rtchubs.engineerbooks.util.AppConstants
 import com.rtchubs.engineerbooks.util.AppConstants.downloadFolder
-import com.rtchubs.engineerbooks.util.AppConstants.unzippedFolder
 import com.rtchubs.engineerbooks.util.FileUtils
 import com.rtchubs.engineerbooks.util.NotificationUtils
 import com.rtchubs.engineerbooks.worker.DaggerWorkerFactory
-import com.squareup.picasso.Picasso
 import dagger.android.support.DaggerApplication
 import javax.inject.Inject
 
@@ -24,8 +22,8 @@ class App : DaggerApplication() {
 
     @Inject
     lateinit var workerFactory: DaggerWorkerFactory
-    @Inject
-    lateinit var picasso: Picasso
+//    @Inject
+//    lateinit var picasso: Picasso
     override fun applicationInjector() = applicationInjector
 
     override fun onCreate() {
@@ -41,7 +39,7 @@ class App : DaggerApplication() {
 
 
         //set picasso to support http protocol
-        Picasso.setSingletonInstance(picasso)
+//        Picasso.setSingletonInstance(picasso)
 
         DataBindingUtil.setDefaultComponent(FragmentDataBindingComponent())
 

@@ -8,23 +8,18 @@ import com.rtchubs.engineerbooks.local_db.db.AppDatabase
 import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.util.AppConstants
-import com.squareup.picasso.BuildConfig
-import com.squareup.picasso.OkHttp3Downloader
-import com.squareup.picasso.Picasso
 import dagger.Module
 import dagger.Provides
-import okhttp3.OkHttpClient
 import javax.inject.Singleton
-
 
 @Module(
     includes = [
         ViewModelModule::class,
         NetworkModule::class,
-        WorkerBindingModule::class]
+        WorkerBindingModule::class
+    ]
 )
 class AppModule {
-
     @Singleton
     @Provides
     fun provideDb(app: Application): AppDatabase {
@@ -43,13 +38,13 @@ class AppModule {
         return db.historyDao()
     }
 
-    @Singleton
-    @Provides
-    fun providePicasso(app: Application, okHttpClient: OkHttpClient) = Picasso.Builder(app)
-        .downloader(OkHttp3Downloader(okHttpClient))
-        .listener { _, _, e -> if (BuildConfig.DEBUG) e.printStackTrace() }
-        .loggingEnabled(BuildConfig.DEBUG)
-        .build()
+    //    @Singleton
+    //    @Provides
+    //    fun providePicasso(app: Application, okHttpClient: OkHttpClient) = Picasso.Builder(app)
+    //        .downloader(OkHttp3Downloader(okHttpClient))
+    //        .listener { _, _, e -> if (BuildConfig.DEBUG) e.printStackTrace() }
+    //        .loggingEnabled(BuildConfig.DEBUG)
+    //        .build()
 
     /*@Singleton
     @Provides

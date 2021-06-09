@@ -209,7 +209,14 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
 
                 var isBookPaid = false
                 val book = preferencesHelper.getPaidBook()
-                if (book.isPaid && book.classID == userData.class_id) {
+//                if (book.isPaid && book.classID == userData.class_id) {
+//                    myCourseListAdapter.setPaymentStatus(book.isPaid)
+//                    isBookPaid = book.isPaid
+//                } else {
+//                    myCourseListAdapter.setPaymentStatus(false)
+//                }
+
+                if (book.isPaid) {
                     myCourseListAdapter.setPaymentStatus(book.isPaid)
                     isBookPaid = book.isPaid
                 } else {

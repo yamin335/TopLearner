@@ -25,7 +25,7 @@
                 <com.google.android.material.appbar.AppBarLayout
                     android:id="@+id/appbar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="?attr/actionBarSize"
                     android:theme="@style/AppTheme.AppBarOverlayWhite"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -33,17 +33,34 @@
                     app:layout_constraintTop_toBottomOf="@+id/video_view"
                     app:layout_constraintVertical_bias="0.0">
 
-                    <com.google.android.material.appbar.MaterialToolbar
-                        android:id="@+id/toolbar"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="?attr/actionBarSize"
-                        android:layout_gravity="center"
-                        android:background="@color/themeColorRed"
-                        android:textAlignment="center"
-                        app:contentInsetStartWithNavigation="0dp"
-                        app:popupTheme="@style/AppTheme.PopupOverlay"
-                        app:title="Engineers"
-                        app:titleTextColor="@android:color/white" />
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:background="@color/themeColorRed">
+                        <TextView
+                            android:id="@+id/backButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="Back"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="8dp"
+                            app:drawableStartCompat="@drawable/ic_baseline_arrow_back_ios_new_24" />
+
+                        <TextView
+                            android:id="@+id/title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            tools:text="Title"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="32dp" />
+                    </LinearLayout>
 
                 </com.google.android.material.appbar.AppBarLayout>
 
@@ -64,6 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

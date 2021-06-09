@@ -125,7 +125,7 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
         viewDataBinding.mPayment.setOnClickListener {
             val paidBook = preferencesHelper.getPaidBook()
             if (paidBook.isPaid) {
-                navigateTo(MoreFragmentDirections.actionMoreFragmentToPaymentFragmentMore(paidBook))
+                navigateTo(MoreFragmentDirections.actionMoreFragmentToPaymentNav(paidBook))
             } else {
                 showWarningToast(requireContext(), "Please go to book list and choose your desired book!")
             }

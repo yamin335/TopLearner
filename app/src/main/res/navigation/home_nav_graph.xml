@@ -10,20 +10,6 @@
         android:id="@+id/home2Fragment"
         android:name="com.rtchubs.engineerbooks.ui.home.Home2Fragment"
         android:label="QPay" >
-<!--        <action-->
-<!--            android:id="@+id/action_home2Fragment_to_chapterListFragment"-->
-<!--            app:destination="@id/chapterListFragment"-->
-<!--            app:enterAnim="@anim/slide_in_right"-->
-<!--            app:exitAnim="@anim/slide_out_left"-->
-<!--            app:popEnterAnim="@anim/slide_in_left"-->
-<!--            app:popExitAnim="@anim/slide_out_right"/>-->
-        <action
-            android:id="@+id/action_home2Fragment_to_paymentFragment"
-            app:destination="@id/paymentFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
         <action
             android:id="@+id/action_home2Fragment_to_chapter_nav"
             app:destination="@id/chapter_nav"
@@ -37,8 +23,11 @@
         </action>
         <action
             android:id="@+id/action_home2Fragment_to_courseDetailsFragment"
-            app:destination="@id/courseDetailsFragment" />
-
+            app:destination="@id/courseDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -69,17 +58,8 @@
             app:argType="com.rtchubs.engineerbooks.models.chapter.BookChapter" />
     </fragment>
 
-    <fragment
-        android:id="@+id/paymentFragment"
-        android:name="com.rtchubs.engineerbooks.ui.payment.PaymentFragment"
-        android:label="PaymentFragment"
-        tools:layout="@layout/fragment_payment">
-        <argument
-            android:name="book"
-            app:argType="com.rtchubs.engineerbooks.models.home.PaidBook" />
-    </fragment>
-
     <include app:graph="@navigation/chapter_nav_graph" />
+
     <fragment
         android:id="@+id/courseDetailsFragment"
         android:name="com.rtchubs.engineerbooks.ui.home.CourseDetailsFragment"
@@ -89,12 +69,18 @@
             android:name="course"
             app:argType="com.rtchubs.engineerbooks.models.home.Course" />
         <action
-            android:id="@+id/action_courseDetailsFragment_to_paymentFragment"
-            app:destination="@id/paymentFragment"
+            android:id="@+id/action_courseDetailsFragment_to_payment_nav"
+            app:destination="@id/payment_nav"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="book"
+                app:argType="com.rtchubs.engineerbooks.models.home.PaidBook" />
+        </action>
     </fragment>
+
+    <include app:graph="@navigation/payment_nav_graph" />
 
 </navigation>
