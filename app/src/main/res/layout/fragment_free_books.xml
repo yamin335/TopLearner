@@ -73,6 +73,38 @@
                     custom:auto_cycle="false"
                     custom:pager_animation="Accordion" />
 
+                <LinearLayout
+                    android:id="@+id/linearClass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/linearGenderAndBD">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:text="শ্রেণীঃ"
+                        android:textColor="@color/themeColor"
+                        android:textSize="16sp" />
+
+                    <Spinner
+                        android:id="@+id/spClass"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:layout_height="45dp"
+                        android:layout_marginEnd="16dp"
+                        android:spinnerMode="dropdown"
+                        android:background="@drawable/rounded_bd_spinner" />
+                </LinearLayout>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/homeClassListRecycler"
                     android:layout_width="match_parent"

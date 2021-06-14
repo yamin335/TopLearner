@@ -34,6 +34,7 @@ class ViewPagerFragment : BaseFragment<ViewPagerBinding, ViewPagerViewModel>() {
 
         viewModel.slideDataList.observe(viewLifecycleOwner, Observer {
             it?.let { ads ->
+                viewDataBinding.sliderLayout.removeAllSliders()
                 ads.forEach { slideData ->
                     val slide = SliderView(slideData, requireContext())
                     viewDataBinding.sliderLayout.addSlider(slide)

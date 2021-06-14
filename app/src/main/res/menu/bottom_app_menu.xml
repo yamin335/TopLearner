@@ -27,7 +27,7 @@
     <item
         android:id="@+id/my_course_nav"
         android:title="My Course"
-        android:icon="@drawable/icons8_my_course_80"
+        android:icon="@drawable/nav_icon_my_course"
         app:showAsAction="always"/>
     <item
         android:id="@+id/more_nav"

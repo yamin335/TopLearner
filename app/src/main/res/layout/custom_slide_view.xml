@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data class="SlideBinding"></data>
+    <data class="SlideBinding"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -39,6 +39,7 @@
             android:paddingBottom="5dp"
             android:textColor="@color/white"
             android:textSize="18sp"
+            android:visibility="gone"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/slideImage"
             app:layout_constraintEnd_toEndOf="parent"

@@ -11,7 +11,7 @@ import com.rtchubs.engineerbooks.databinding.AnimationListItemBinding
 import com.rtchubs.engineerbooks.models.home.Animation
 import com.rtchubs.engineerbooks.util.DataBoundListAdapter
 
-class AnimationListAdapter(
+class CourseTopicListAdapter(
     private val appExecutors: AppExecutors,
     private val itemCallback: ((Animation) -> Unit)
 ) : DataBoundListAdapter<Animation, AnimationListItemBinding>(
@@ -41,10 +41,46 @@ class AnimationListAdapter(
         val item = getItem(position)
         binding.item = item
 
-        if (item.type == "Lecture Sheet") {
-            binding.icon.setImageResource(R.drawable.ic_twotone_assignment_24)
-        } else {
-            binding.icon.setImageResource(R.drawable.ic_twotone_play_circle_24)
+        when (item.type) {
+            "3D Class" -> {
+                binding.icon.setImageResource(R.drawable.topic_ic_3d)
+            }
+
+            "Animation" -> {
+                binding.icon.setImageResource(R.drawable.topic_ic_animation)
+            }
+
+            "Creative Question" -> {
+                binding.icon.setImageResource(R.drawable.topic_ic_creative_questions)
+            }
+
+            "Live class" -> {
+                binding.icon.setImageResource(R.drawable.topic_ic_live_class)
+            }
+
+            "MCQ" -> {
+                binding.icon.setImageResource(R.drawable.topic_ic_mcq)
+            }
+
+            "Quiz test" -> {
+                binding.icon.setImageResource(R.drawable.topic_ic_quiz_test)
+            }
+
+            "Solve sheet" -> {
+                binding.icon.setImageResource(R.drawable.topic_ic_solve_sheet)
+            }
+
+            "Somadhan" -> {
+                binding.icon.setImageResource(R.drawable.topic_ic_somadhan)
+            }
+
+            "Video" -> {
+                binding.icon.setImageResource(R.drawable.topic_ic_video)
+            }
+
+            else -> {
+                binding.icon.setImageResource(R.drawable.topic_ic_video)
+            }
         }
     }
 }

@@ -52,14 +52,16 @@
 
                         <TextView
                             android:id="@+id/title"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            tools:text="Title"
+                            android:layout_marginEnd="8dp"
+                            tools:text="Title slfk sfjsdkf jfsdf ;fjs;fj f;js;fj kfskfskdf jsjsdjfsjfds jfjfslkjflksjdflkjslkfjsl flfksdjflk"
                             android:textColor="@color/white"
-                            android:textSize="20sp"
                             android:textStyle="bold"
-                            android:layout_marginStart="32dp" />
+                            android:lines="2"
+                            android:ellipsize="end"
+                            android:layout_marginStart="16dp" />
                     </LinearLayout>
 
                 </com.google.android.material.appbar.AppBarLayout>
@@ -68,6 +70,9 @@
                     android:id="@+id/video_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    app:fastforward_increment="2000"
+                    app:rewind_increment="2000"
+                    app:controller_layout_id="@layout/custom_exo_player_control_view"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="16:9"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -306,7 +311,7 @@
                         android:layout_marginEnd="16dp"
                         android:gravity="center_vertical"
                         android:textSize="16sp"
-                        android:text="FAQ"
+                        android:text="সাধারণ জিজ্ঞাসা"
                         android:textColor="@color/themeTextColor" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -348,11 +353,11 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:layout_gravity="center_horizontal"
-                    android:text="আপনার কোন প্রোমো কোড আছে?"
+                    android:text="আপনার জন্য আমাদের স্পেশাল ডিস্কাউন্ট পেতে এখনই কোর্সটি কিনুন।"
                     android:gravity="center"
-                    android:textColor="@color/red"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
+                    android:textColor="@color/secondary_blue_1"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
                     android:background="?attr/selectableItemBackground"/>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -395,9 +400,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:insetBottom="0dp"
-                        android:insetTop="0dp"
-                        android:text="এখনই কিনুন"
+                        android:text="এখনই কোর্সটি কিনুন"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
                         android:layout_marginStart="24dp"

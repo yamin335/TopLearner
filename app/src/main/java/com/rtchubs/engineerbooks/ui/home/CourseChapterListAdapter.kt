@@ -48,7 +48,7 @@ class CourseChapterListAdapter(
             binding.expandableLayout.isExpanded = item.isExpanded
         }
 
-        val animationListAdapter = AnimationListAdapter(appExecutors) {
+        val animationListAdapter = CourseTopicListAdapter(appExecutors) {
 
         }
 
