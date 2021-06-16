@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -12,6 +14,7 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.FreeBooksFragmentBinding
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
+import com.rtchubs.engineerbooks.models.registration.AcademicClass
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
@@ -20,6 +23,7 @@ import com.rtchubs.engineerbooks.ui.login.SliderView
 class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewModel>() {
     companion object {
         var allBookList = ArrayList<ClassWiseBook>()
+        private var allClass = ArrayList<AcademicClass>()
     }
     override val bindingVariable: Int
         get() = BR.viewModel
@@ -34,6 +38,24 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
     lateinit var userData: InquiryAccount
 
     private var freeBookListAdapter: FreeBookListAdapter? = null
+
+    private var titleClassList = arrayOf("--Select Class--")
+    lateinit var classAdapter: ArrayAdapter<String>
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getAds()
+        if (allClass.isEmpty()) {
+            viewModel.getAcademicClass()
+        }
+        if (userData.customer_type_id == 2) {
+            viewDataBinding.linearClass.visibility = View.GONE
+            viewModel.getAdminPanelBooks()
+        } else {
+            viewDataBinding.linearClass.visibility = View.VISIBLE
+            viewModel.getAcademicBooks(userData.mobile ?: "", viewModel.selectedClassId?.toInt() ?: 0)
+        }
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -63,12 +85,13 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
         mActivity.window?.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
         )
+        userData = preferencesHelper.getUser()
+        viewModel.selectedClassId = userData.class_id?.toString()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userData = preferencesHelper.getUser()
         viewModel.slideDataList.observe(viewLifecycleOwner, Observer {
             it?.let { ads ->
                 viewDataBinding.sliderLayout.removeAllSliders()
@@ -143,13 +166,75 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
             }
         })
 
-        if (userData.customer_type_id == 2) {
-            viewModel.getAdminPanelBooks()
-        } else {
-            viewModel.getAcademicBooks(userData.mobile ?: "", userData.class_id ?: 0)
+        
+        val tempClass = Array(allClass.size + 1) {""}
+        tempClass[0] = "--Select Class--"
+        allClass.forEachIndexed { index, academicClass ->
+            tempClass[index + 1] = academicClass.name ?: "Unknown"
+        }
+        titleClassList = tempClass
+        classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
+        classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        viewDataBinding.spClass.adapter = classAdapter
+
+        viewDataBinding.spClass.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                if (position > 0) {
+                    try {
+                        if (allClass.isNotEmpty()) {
+                            viewModel.selectedClassId = allClass[position - 1].id
+                            viewModel.getAcademicBooks(userData.mobile ?: "", viewModel.selectedClassId?.toInt() ?: 0)
+                        }
+                    } catch (e: IndexOutOfBoundsException) {
+                        e.printStackTrace()
+                    }
+                } else {
+                    viewModel.selectedClassId = userData.class_id?.toString()
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        viewModel.getAds()
+        var academicClassIndex = 0
+        for (index in allClass.indices) {
+            val academicClass = allClass[index]
+            if (academicClass.id != null && academicClass.id == viewModel.selectedClassId) {
+                academicClassIndex = index + 1
+            }
+        }
+        viewDataBinding.spClass.setSelection(academicClassIndex, true)
 
+        viewModel.allAcademicClass.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            if (allClass.isEmpty()) {
+                it?.let {
+                    val temp = Array(it.size + 1) {""}
+                    temp[0] = "--Select Class--"
+                    it.forEachIndexed { index, academicClass ->
+                        temp[index + 1] = academicClass.name ?: "Unknown"
+                    }
+                    titleClassList = temp
+                    classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
+                    classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    viewDataBinding.spClass.adapter = classAdapter
+                    allClass = it as ArrayList<AcademicClass>
+
+                    academicClassIndex = 0
+                    for (index in allClass.indices) {
+                        val academicClass = allClass[index]
+                        if (academicClass.id != null && academicClass.id == viewModel.selectedClassId) {
+                            academicClassIndex = index + 1
+                        }
+                    }
+                    viewDataBinding.spClass.setSelection(academicClassIndex, true)
+                }
+            }
+        })
     }
 }

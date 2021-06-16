@@ -52,8 +52,12 @@ class CourseChapterListAdapter(
 
         }
 
+        val temp = item.animation
+
         binding.details.adapter = animationListAdapter
         animationListAdapter.submitList(item.animation)
+
+
     }
 
     fun toggleExpanded(item: CourseChapter, binding: CourseDetailsSubjectListItemBinding) {

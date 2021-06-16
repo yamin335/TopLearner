@@ -126,6 +126,8 @@ object ApiEndPoint {
 
     const val ALL_COURSE = "$API_REPO/get/coursecatagories/all"
     const val ALL_FAQS = "$API_REPO/get/course_faq/all"
+    const val PURCHASE_COURSE = "$API_VERSION/course/purchase"
+    const val MY_COURSES = "$API_VERSION/course/mycourses"
 
     const val REQUESTOTP = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}/request-otp"
     const val REGISTRATION = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_INQUIRE}"

@@ -4,6 +4,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.ApiService
 import com.rtchubs.engineerbooks.models.bkash.BKashPaymentUrlResponse
+import com.rtchubs.engineerbooks.models.payment.CoursePaymentRequest
+import com.rtchubs.engineerbooks.models.payment.CoursePaymentResponse
 import com.rtchubs.engineerbooks.models.transactions.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -20,6 +22,14 @@ class TransactionRepository @Inject constructor(@Named("auth") private val authA
 
         return withContext(Dispatchers.IO) {
             authApiService.createOrder(jsonObject)
+        }
+    }
+
+    suspend fun purchaseCourseRepo(request: CoursePaymentRequest): Response<CoursePaymentResponse> {
+        val jsonObject = Gson().toJson(request) ?: ""
+
+        return withContext(Dispatchers.IO) {
+            authApiService.purchaseCourse(jsonObject)
         }
     }
 

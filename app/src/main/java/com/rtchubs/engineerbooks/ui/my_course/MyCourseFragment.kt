@@ -17,6 +17,7 @@ import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
+import com.rtchubs.engineerbooks.ui.home.Home2Fragment
 import com.rtchubs.engineerbooks.util.isTimeAndZoneAutomatic
 import com.rtchubs.engineerbooks.util.showWarningToast
 
@@ -126,28 +127,28 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
                 navController.navigate(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
             } else {
                 if (!preferencesHelper.isDeviceTimeChanged) {
-
-                    if (it.price ?: 0.0 > 0.0) {
-                        val paidBook = preferencesHelper.getPaidBook()
-                        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
-                            navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
-                        } else {
-//                            val book = PaidBook(it.id, it.name, userData.class_id, userData.ClassName, false, it.price ?: 0.0)
+                    navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
+//                    if (it.price ?: 0.0 > 0.0) {
+//                        val paidBook = preferencesHelper.getPaidBook()
+//                        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
 //                            navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
-                            showWarningToast(requireContext(), "Please pay first!")
-                        }
-                    } else {
-                        navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
-                    }
+//                        } else {
+////                            val book = PaidBook(it.id, it.name, userData.class_id, userData.ClassName, false, it.price ?: 0.0)
+////                            navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
+//                            showWarningToast(requireContext(), "Please pay first!")
+//                        }
+//                    } else {
+//                        navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
+//                    }
                 } else {
                     if (isTimeAndZoneAutomatic(context)) {
                         if (checkNetworkStatus(true)) {
                             preferencesHelper.isDeviceTimeChanged = false
-                            myCourseListAdapter?.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
+                            myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
 
                             if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
                                 preferencesHelper.isDeviceTimeChanged = true
-                                myCourseListAdapter?.setTimeChangeStatus(true)
+                                myCourseListAdapter.setTimeChangeStatus(true)
                             }
                             viewModel.getAcademicBooks(userData.mobile ?: "", userData.class_id ?: 0)
                         }
@@ -184,12 +185,12 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             myCourseListAdapter.setTimeChangeStatus(true)
         }
 
-        val paidBook = preferencesHelper.getPaidBook()
-        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
-            myCourseListAdapter.setPaymentStatus(paidBook.isPaid)
-        } else {
-            myCourseListAdapter.setPaymentStatus(false)
-        }
+//        val paidBook = preferencesHelper.getPaidBook()
+//        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
+//            myCourseListAdapter.setPaymentStatus(paidBook.isPaid)
+//        } else {
+//            myCourseListAdapter.setPaymentStatus(false)
+//        }
 
         viewDataBinding.sliderView.apply {
             adapter = myCourseListAdapter
@@ -197,42 +198,42 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             isUserInputEnabled = true
         }
 
-        viewModel.allBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
-            books?.let {
-
-                myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
-
-                if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
-                    preferencesHelper.isDeviceTimeChanged = true
-                    myCourseListAdapter.setTimeChangeStatus(true)
-                }
-
-                var isBookPaid = false
-                val book = preferencesHelper.getPaidBook()
-//                if (book.isPaid && book.classID == userData.class_id) {
+//        viewModel.allBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
+//            books?.let {
+//
+//                myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
+//
+//                if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
+//                    preferencesHelper.isDeviceTimeChanged = true
+//                    myCourseListAdapter.setTimeChangeStatus(true)
+//                }
+//
+//                var isBookPaid = false
+//                val book = preferencesHelper.getPaidBook()
+////                if (book.isPaid && book.classID == userData.class_id) {
+////                    myCourseListAdapter.setPaymentStatus(book.isPaid)
+////                    isBookPaid = book.isPaid
+////                } else {
+////                    myCourseListAdapter.setPaymentStatus(false)
+////                }
+//
+//                if (book.isPaid) {
 //                    myCourseListAdapter.setPaymentStatus(book.isPaid)
 //                    isBookPaid = book.isPaid
 //                } else {
 //                    myCourseListAdapter.setPaymentStatus(false)
 //                }
-
-                if (book.isPaid) {
-                    myCourseListAdapter.setPaymentStatus(book.isPaid)
-                    isBookPaid = book.isPaid
-                } else {
-                    myCourseListAdapter.setPaymentStatus(false)
-                }
-
-                val temp = it.filter { item -> item.price ?: 0.0 > 0.0 && isBookPaid }
-                allBookList = temp as ArrayList<ClassWiseBook>
-                totalCourse = allBookList.size
-                myCourseSliderIndicatorAdapter = MyCourseSliderIndicatorAdapter(totalCourse)
-                viewDataBinding.indicatorView.adapter = myCourseSliderIndicatorAdapter
-                myCourseListAdapter.submitList(allBookList)
-            }
-            viewDataBinding.emptyView.visibility = if (allBookList.isEmpty()) View.VISIBLE else View.GONE
-            viewDataBinding.footer.visibility = if (allBookList.isNotEmpty()) View.VISIBLE else View.GONE
-        })
+//
+//                val temp = it.filter { item -> item.price ?: 0.0 > 0.0 && isBookPaid }
+//                allBookList = temp as ArrayList<ClassWiseBook>
+//                totalCourse = allBookList.size
+//                myCourseSliderIndicatorAdapter = MyCourseSliderIndicatorAdapter(totalCourse)
+//                viewDataBinding.indicatorView.adapter = myCourseSliderIndicatorAdapter
+//                myCourseListAdapter.submitList(allBookList)
+//            }
+//            viewDataBinding.emptyView.visibility = if (allBookList.isEmpty()) View.VISIBLE else View.GONE
+//            viewDataBinding.footer.visibility = if (allBookList.isNotEmpty()) View.VISIBLE else View.GONE
+//        })
 
         viewDataBinding.btnNext.setOnClickListener {
             viewDataBinding.btnPrevious.visibility = View.VISIBLE
@@ -254,12 +255,66 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             }
         }
 
+        viewModel.allBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
+            books?.let {
+                allBookList = it as ArrayList<ClassWiseBook>
+            }
+        })
+
         viewModel.allBooks.observe(viewLifecycleOwner, Observer { books ->
             books?.let {
                 if (it.isNotEmpty()) {
                     viewModel.saveBooksInDB(it)
                 }
             }
+        })
+
+        viewModel.myCourses.observe(viewLifecycleOwner, Observer {
+            val allPaidBooks = ArrayList<ClassWiseBook>()
+            it?.let { courses ->
+                myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
+
+                if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
+                    preferencesHelper.isDeviceTimeChanged = true
+                    myCourseListAdapter.setTimeChangeStatus(true)
+                }
+
+//                var isBookPaid = false
+//                val book = preferencesHelper.getPaidBook()
+//                if (book.isPaid && book.classID == userData.class_id) {
+//                    myCourseListAdapter.setPaymentStatus(book.isPaid)
+//                    isBookPaid = book.isPaid
+//                } else {
+//                    myCourseListAdapter.setPaymentStatus(false)
+//                }
+                myCourseListAdapter.setPaymentStatus(true)
+//                if (book.isPaid) {
+//                    myCourseListAdapter.setPaymentStatus(book.isPaid)
+//                    isBookPaid = book.isPaid
+//                } else {
+//                    myCourseListAdapter.setPaymentStatus(false)
+//                }
+
+//                val temp = it.filter { item -> item.price ?: 0.0 > 0.0 && isBookPaid }
+//                allBookList = temp as ArrayList<ClassWiseBook>
+
+                val allPaidBooksIds = ArrayList<Int?>()
+                for (paidCourse in courses) {
+                    if (Home2Fragment.allCourseList.containsKey(paidCourse.course_id)) {
+                        allPaidBooksIds.add(Home2Fragment.allCourseList[paidCourse.course_id]?.book_id)
+                    }
+                }
+
+                for (book in allBookList) {
+                    if (allPaidBooksIds.contains(book.id)) allPaidBooks.add(book)
+                }
+                totalCourse = allPaidBooks.size
+                myCourseSliderIndicatorAdapter = MyCourseSliderIndicatorAdapter(totalCourse)
+                viewDataBinding.indicatorView.adapter = myCourseSliderIndicatorAdapter
+                myCourseListAdapter.submitList(allPaidBooks)
+            }
+            viewDataBinding.emptyView.visibility = if (allPaidBooks.isEmpty()) View.VISIBLE else View.GONE
+            viewDataBinding.footer.visibility = if (allPaidBooks.isNotEmpty()) View.VISIBLE else View.GONE
         })
 
         if (userData.customer_type_id == 2) {

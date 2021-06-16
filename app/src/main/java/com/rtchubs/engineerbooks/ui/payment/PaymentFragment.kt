@@ -10,6 +10,7 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.PaymentFragmentBinding
 import com.rtchubs.engineerbooks.models.bkash.BKashCreateResponse
+import com.rtchubs.engineerbooks.models.payment.CoursePaymentRequest
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.models.transactions.CreateOrderBody
 import com.rtchubs.engineerbooks.ui.bkash.BKashDialogFragment
@@ -65,12 +66,14 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 paidBook.isPaid = true
                 preferencesHelper.savePaidBook(paidBook)
                 hideKeyboard()
-                if (args.book.bookID == it.BookID) {
-                    findNavController().popBackStack()
-                    showSuccessToast(requireContext(), "Payment Successful")
-                } else {
-                    showErrorToast(requireContext(), "Payment is not successful!")
-                }
+                findNavController().popBackStack()
+                showSuccessToast(requireContext(), "Payment Successful")
+//                if (args.book.bookID == it.BookID) {
+//                    findNavController().popBackStack()
+//                    showSuccessToast(requireContext(), "Payment Successful")
+//                } else {
+//                    showErrorToast(requireContext(), "Payment is not successful!")
+//                }
             }
         })
 
@@ -224,7 +227,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         val firstName = userData.first_name ?: ""
         val lastName = userData.last_name ?: ""
 
-        viewModel.createOrder(
+        viewModel.purchaseCourse(
             CreateOrderBody(
                 userData.id ?: 0, userData.mobile ?: "",
                 response.amount.toDouble().toInt(), 0, 0,
@@ -232,6 +235,9 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 userData.UpazilaID ?: 0, userData.CityID ?: 0, invoiceNumber ?: "N/A",
                 "", response.bankTranId ?: "N/A", args.book.bookID ?: 0, userData.class_id ?: 0,
                 "$firstName $lastName", args.book.bookName ?: "", response.amount ?: "N/A"
+            ),
+            CoursePaymentRequest(
+                userData.mobile, userData.id, args.course.id, args.course.price, response.amount.toDouble().toInt()
             )
         )
     }

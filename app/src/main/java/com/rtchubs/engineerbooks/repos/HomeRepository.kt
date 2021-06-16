@@ -1,5 +1,6 @@
 package com.rtchubs.engineerbooks.repos
 
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.rtchubs.engineerbooks.api.AdminApiService
 import com.rtchubs.engineerbooks.api.ApiService
@@ -10,6 +11,8 @@ import com.rtchubs.engineerbooks.models.faq.AllFaqResponse
 import com.rtchubs.engineerbooks.models.home.AllBookResponse
 import com.rtchubs.engineerbooks.models.home.AllCourseCategoryResponse
 import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
+import com.rtchubs.engineerbooks.models.my_course.MyCourseListRequest
+import com.rtchubs.engineerbooks.models.my_course.MyCourseListResponse
 import com.rtchubs.engineerbooks.models.notice_board.NoticeResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.AddCardOrBankResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.BankOrCardListResponse
@@ -45,6 +48,12 @@ class HomeRepository @Inject constructor(@Named("auth") private val authApiServi
     suspend fun allCourseRepo(): Response<AllCourseCategoryResponse> {
         return withContext(Dispatchers.IO) {
             adminApiService.getAllCourse()
+        }
+    }
+
+    suspend fun myCoursesRepo(request: MyCourseListRequest): Response<MyCourseListResponse> {
+        return withContext(Dispatchers.IO) {
+            apiService.getAllMyCourses(Gson().toJson(request))
         }
     }
 

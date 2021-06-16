@@ -54,7 +54,7 @@ class CourseTopicListAdapter(
                 binding.icon.setImageResource(R.drawable.topic_ic_creative_questions)
             }
 
-            "Live class" -> {
+            "Live Class" -> {
                 binding.icon.setImageResource(R.drawable.topic_ic_live_class)
             }
 
@@ -62,11 +62,15 @@ class CourseTopicListAdapter(
                 binding.icon.setImageResource(R.drawable.topic_ic_mcq)
             }
 
-            "Quiz test" -> {
+            "Quiz Test" -> {
                 binding.icon.setImageResource(R.drawable.topic_ic_quiz_test)
             }
 
-            "Solve sheet" -> {
+            "Lecture Sheet" -> {
+                binding.icon.setImageResource(R.drawable.topic_ic_solve_sheet)
+            }
+
+            "Solve Sheet" -> {
                 binding.icon.setImageResource(R.drawable.topic_ic_solve_sheet)
             }
 

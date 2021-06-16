@@ -2,20 +2,20 @@ package com.rtchubs.engineerbooks.ui.free_book
 
 import android.app.Application
 import android.database.sqlite.SQLiteException
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
 import com.rtchubs.engineerbooks.models.AdSlider
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
+import com.rtchubs.engineerbooks.models.registration.AcademicClass
 import com.rtchubs.engineerbooks.models.registration.DefaultResponse
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.repos.HomeRepository
 import com.rtchubs.engineerbooks.repos.MediaRepository
+import com.rtchubs.engineerbooks.repos.RegistrationRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
 import com.rtchubs.engineerbooks.util.AppConstants
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -28,6 +28,7 @@ class FreeBooksViewModel @Inject constructor(
     private val application: Application,
     private val repository: HomeRepository,
     private val mediaRepository: MediaRepository,
+    private val registrationRepository: RegistrationRepository,
     private val bookChapterDao: BookChapterDao
 ) : BaseViewModel(application) {
     val defaultResponse: MutableLiveData<DefaultResponse> = MutableLiveData()
@@ -41,6 +42,12 @@ class FreeBooksViewModel @Inject constructor(
             emit(list)
         }
     }
+
+    val allAcademicClass: MutableLiveData<List<AcademicClass>> by lazy {
+        MutableLiveData<List<AcademicClass>>()
+    }
+
+    var selectedClassId: String? = null
 
     fun saveBooksInDB(books: List<ClassWiseBook>) {
         try {
@@ -146,7 +153,7 @@ class FreeBooksViewModel @Inject constructor(
         }
     }
 
-    fun requestBankList(type:String) {
+    fun getAcademicClass() {
         if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -155,26 +162,16 @@ class FreeBooksViewModel @Inject constructor(
             }
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
-            Log.e("token", preferencesHelper.getAccessTokenHeader())
             viewModelScope.launch(handler) {
-                when (val apiResponse =
-                    ApiResponse.create(repository.requestBankListRepo(type,preferencesHelper.getAccessTokenHeader()))) {
+                when (val apiResponse = ApiResponse.create(registrationRepository.getAcademicClassRepo())) {
                     is ApiSuccessResponse -> {
-                        var d=DefaultResponse(apiResponse.body.toString(), "", "", true)
-                        defaultResponse.postValue(d)
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        allAcademicClass.postValue(apiResponse.body.data?.classes)
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
-                        Log.e("error", apiResponse.errorMessage)
-                        defaultResponse.postValue(
-                            Gson().fromJson(
-                                apiResponse.errorMessage,
-                                DefaultResponse::class.java
-                            )
-                        )
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }

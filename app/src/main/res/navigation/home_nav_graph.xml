@@ -78,6 +78,9 @@
             <argument
                 android:name="book"
                 app:argType="com.rtchubs.engineerbooks.models.home.PaidBook" />
+            <argument
+                android:name="course"
+                app:argType="com.rtchubs.engineerbooks.models.home.Course" />
         </action>
     </fragment>
 

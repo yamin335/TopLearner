@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.models.Offer
 import com.rtchubs.engineerbooks.models.bkash.BKashCreateResponse
+import com.rtchubs.engineerbooks.models.payment.CoursePaymentRequest
 import com.rtchubs.engineerbooks.models.transactions.CreateOrderBody
 import com.rtchubs.engineerbooks.models.transactions.Salesinvoice
 import com.rtchubs.engineerbooks.repos.HomeRepository
@@ -118,4 +119,30 @@ class PaymentViewModel @Inject constructor(private val application: Application,
             }
         }
     }
+
+    fun purchaseCourse(createOrderBody: CreateOrderBody, coursePaymentRequest: CoursePaymentRequest) {
+        if (checkNetworkStatus(true)) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(serverConnectionErrorMessage)
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(repository.purchaseCourseRepo(coursePaymentRequest))) {
+                    is ApiSuccessResponse -> {
+                        createOrder(createOrderBody)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                    }
+                    is ApiErrorResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                    }
+                }
+            }
+        }
+    }
+
 }

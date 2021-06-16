@@ -53,32 +53,37 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         val course = args.course
         val price: Double
 
+        val totalPrice = course.price ?: 0
+        val totalDiscount = course.discount_price ?: 0
+
         viewDataBinding.title.text = course.title
 
         viewDataBinding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
 
-        if (course.discount_price != null && course.discount_price != 0) {
+        if (totalDiscount != 0) {
             viewDataBinding.price.apply {
                 paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                text = course.price.toString()
+                text = totalPrice.toString()
             }
             viewDataBinding.discountPrice.visibility = View.VISIBLE
-            viewDataBinding.discountPrice.text = course.discount_price.toString()
-            price = course.discount_price?.toDouble() ?: 0.0
+            val discountedPrice = totalPrice - totalDiscount
+            viewDataBinding.discountPrice.text = discountedPrice.toString()
+            price = discountedPrice.toDouble()
         } else {
             viewDataBinding.price.apply {
                 paintFlags = paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                text = course.price.toString()
+                text = totalPrice.toString()
             }
             viewDataBinding.discountPrice.visibility = View.GONE
-            price = course.price?.toDouble() ?: 0.0
+            price = totalPrice.toDouble()
         }
 
         viewDataBinding.btnBuyNow.setOnClickListener {
             navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToPaymentNav(
-                PaidBook(course.book_id, course.title, 1, course.class_name, false, price)
+                PaidBook(course.book_id, course.title, 1, course.class_name, false, price),
+                course
             ))
         }
 

@@ -12,6 +12,8 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.HomeFragment2Binding
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
+import com.rtchubs.engineerbooks.models.home.Course
+import com.rtchubs.engineerbooks.models.home.CourseCategory
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
 import com.rtchubs.engineerbooks.ui.LogoutHandlerCallback
@@ -22,6 +24,8 @@ import com.rtchubs.engineerbooks.util.isTimeAndZoneAutomatic
 class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
     companion object {
         var allBookList = ArrayList<ClassWiseBook>()
+        var allCourseCategoryList = ArrayList<CourseCategory>()
+        var allCourseList = HashMap<Int?, Course?>()
     }
     override val bindingVariable: Int
         get() = BR.viewModel
@@ -63,6 +67,10 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
             preferencesHelper.isDeviceTimeChanged = true
             homeClassListAdapter?.setTimeChangeStatus(true)
+        }
+
+        if (allCourseCategoryList.isEmpty()) {
+            viewModel.getAllCourses()
         }
     }
 
@@ -144,10 +152,17 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         viewDataBinding.courseRecycler.adapter = courseCategoryListAdapter
 
         viewModel.allCourseCategoryList.observe(viewLifecycleOwner, Observer {
-            courseCategoryListAdapter.submitList(it)
+            allCourseCategoryList = it as ArrayList<CourseCategory>
+            courseCategoryListAdapter.submitList(allCourseCategoryList)
+            val courses = HashMap<Int?, Course?>()
+            CourseFilteringForLoop@ for (courseCategory in allCourseCategoryList) {
+                val courseList = courseCategory.courses ?: continue@CourseFilteringForLoop
+                for (course in courseList) {
+                    courses[course.id] = course
+                }
+            }
+            allCourseList = courses
         })
-
-        viewModel.getAllCourses()
 
 
 //        courseCategoryListAdapter = CourseCategoryListAdapter(appExecutors) {

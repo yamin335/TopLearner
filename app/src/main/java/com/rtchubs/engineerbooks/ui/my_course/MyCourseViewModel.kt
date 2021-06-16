@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
+import com.rtchubs.engineerbooks.models.my_course.MyCourse
+import com.rtchubs.engineerbooks.models.my_course.MyCourseListRequest
 import com.rtchubs.engineerbooks.repos.HomeRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
 import com.rtchubs.engineerbooks.util.AppConstants
@@ -27,9 +29,41 @@ class MyCourseViewModel @Inject constructor(
         MutableLiveData<List<ClassWiseBook>>()
     }
 
+    val myCourses: MutableLiveData<List<MyCourse>> by lazy {
+        MutableLiveData<List<MyCourse>>()
+    }
+
     val allBooksFromDB: LiveData<List<ClassWiseBook>> = liveData {
         bookChapterDao.getAllBooks().collect { list ->
             emit(list)
+        }
+    }
+
+    fun getMyCourses(mobile: String) {
+        if (checkNetworkStatus(false)) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(repository.myCoursesRepo(
+                    MyCourseListRequest(mobile)
+                ))) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        myCourses.postValue(apiResponse.body.data?.courses)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                    }
+                    is ApiErrorResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                    }
+                }
+            }
         }
     }
 
@@ -61,6 +95,7 @@ class MyCourseViewModel @Inject constructor(
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
                         allBooks.postValue(apiResponse.body.data?.books)
+                        getMyCourses(mobile)
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
