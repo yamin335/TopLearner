@@ -7,6 +7,7 @@ import com.rtchubs.engineerbooks.api.Api.API_VERSION
 import com.rtchubs.engineerbooks.api.Api.AUTH_REPO
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_BANK
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_BANK_INFO
+import com.rtchubs.engineerbooks.api.Api.DIRECTORY_BOOK
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_BOOKS
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CARD
 import com.rtchubs.engineerbooks.api.Api.DIRECTORY_CHAPTERS
@@ -67,6 +68,7 @@ object Api {
     const val DIRECTORY_UPDATE_PROFILE = "updateprofile"
     const val DIRECTORY_PROFILE_INFO = "info"
     const val DIRECTORY_BOOKS = "books"
+    const val DIRECTORY_BOOK = "book"
     const val DIRECTORY_PROFILE_IMAGES = "profilephotos"
     const val DIRECTORY_TRANSACTION = "transactions"
     const val DIRECTORY_ORDER = "createorder"
@@ -104,6 +106,7 @@ object ApiEndPoint {
     const val PROFILE_UPDATE = "$API_VERSION/$ACCOUNT_REPO/${DIRECTORY_UPDATE_PROFILE}"
     const val PROFILE_INFO = "$API_VERSION/$ACCOUNT_REPO/${DIRECTORY_PROFILE_INFO}"
     const val BOOKS = "$API_VERSION/$ACCOUNT_REPO/${DIRECTORY_BOOKS}"
+    const val BOOK = "$API_VERSION/$ACCOUNT_REPO/${DIRECTORY_BOOK}"
     const val UPLOAD_PHOTOES = "$API_REPO/${DIRECTORY_PROFILE_PHOTOS}"
     const val PROFILE_IMAGES = "$ADMIN_API_ROOT_URL$DIRECTORY_PROFILE_IMAGES"
     const val TRANSACTION = "$API_VERSION/$SALES_REPO/${DIRECTORY_TRANSACTION}"

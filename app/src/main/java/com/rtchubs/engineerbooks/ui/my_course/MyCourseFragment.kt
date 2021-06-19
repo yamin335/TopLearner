@@ -13,18 +13,15 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.MyCourseFragmentBinding
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
+import com.rtchubs.engineerbooks.models.home.Course
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
-import com.rtchubs.engineerbooks.ui.home.Home2Fragment
 import com.rtchubs.engineerbooks.util.isTimeAndZoneAutomatic
 import com.rtchubs.engineerbooks.util.showWarningToast
 
 class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel>() {
-    companion object {
-        var allBookList = ArrayList<ClassWiseBook>()
-    }
     override val bindingVariable: Int
         get() = BR.viewModel
     override val layoutId: Int
@@ -43,6 +40,8 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
 
     private var totalCourse = 0
     private var currentCourse = 0
+    var allCourseList = HashMap<Int?, Course?>()
+    var allMyCourseBookIds = ArrayList<Int>()
 
     var timeChangeListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
         when (key) {
@@ -67,6 +66,7 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             preferencesHelper.isDeviceTimeChanged = true
             myCourseListAdapter.setTimeChangeStatus(true)
         }
+        viewModel.getMyCourses(userData.mobile)
     }
 
     override fun onAttach(context: Context) {
@@ -123,11 +123,14 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
         }
 
         myCourseListAdapter = MyCourseSliderAdapter(userData.customer_type_id) {
+            val book = ClassWiseBook(it.id, it.udid,
+                it.name, it.title, it.author, it.isPaid,
+                it.book_type_id, it.price, it.status, it.logo)
             if (userData.customer_type_id == 2) {
-                navController.navigate(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
+                navController.navigate(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book))
             } else {
                 if (!preferencesHelper.isDeviceTimeChanged) {
-                    navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
+                    navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book))
 //                    if (it.price ?: 0.0 > 0.0) {
 //                        val paidBook = preferencesHelper.getPaidBook()
 //                        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
@@ -145,12 +148,11 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
                         if (checkNetworkStatus(true)) {
                             preferencesHelper.isDeviceTimeChanged = false
                             myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
-
                             if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
                                 preferencesHelper.isDeviceTimeChanged = true
                                 myCourseListAdapter.setTimeChangeStatus(true)
                             }
-                            viewModel.getAcademicBooks(userData.mobile ?: "", userData.class_id ?: 0)
+                            viewModel.getMyCourses(userData.mobile)
                         }
                     } else {
                         showWarningToast(requireContext(), "Please auto adjust your device time!")
@@ -255,22 +257,36 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             }
         }
 
-        viewModel.allBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
-            books?.let {
-                allBookList = it as ArrayList<ClassWiseBook>
-            }
-        })
-
-        viewModel.allBooks.observe(viewLifecycleOwner, Observer { books ->
-            books?.let {
-                if (it.isNotEmpty()) {
-                    viewModel.saveBooksInDB(it)
+        viewModel.allCourseCategoriesFromDB.observe(viewLifecycleOwner, Observer {
+            val courses = HashMap<Int?, Course?>()
+            CourseFilteringForLoop@ for (courseCategory in it) {
+                val courseList = courseCategory.courses ?: continue@CourseFilteringForLoop
+                for (course in courseList) {
+                    courses[course.id] = course
                 }
             }
+            allCourseList = courses
+        })
+
+        viewModel.allMyCourseBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
+            books?.let {
+                if (it.isNotEmpty()) {
+                    totalCourse = it.size
+                    myCourseSliderIndicatorAdapter = MyCourseSliderIndicatorAdapter(totalCourse)
+                    viewDataBinding.indicatorView.adapter = myCourseSliderIndicatorAdapter
+                    myCourseListAdapter.submitList(it)
+
+                    allMyCourseBookIds.clear()
+                    for (book in it) {
+                        allMyCourseBookIds.add(book.id)
+                    }
+                }
+            }
+            viewDataBinding.emptyView.visibility = if (books == null || books.isEmpty()) View.VISIBLE else View.GONE
+            viewDataBinding.footer.visibility = if (books != null && books.isNotEmpty()) View.VISIBLE else View.GONE
         })
 
         viewModel.myCourses.observe(viewLifecycleOwner, Observer {
-            val allPaidBooks = ArrayList<ClassWiseBook>()
             it?.let { courses ->
                 myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
 
@@ -300,28 +316,16 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
 
                 val allPaidBooksIds = ArrayList<Int?>()
                 for (paidCourse in courses) {
-                    if (Home2Fragment.allCourseList.containsKey(paidCourse.course_id)) {
-                        allPaidBooksIds.add(Home2Fragment.allCourseList[paidCourse.course_id]?.book_id)
+                    if (allCourseList.containsKey(paidCourse.course_id)) {
+                        allPaidBooksIds.add(allCourseList[paidCourse.course_id]?.book_id)
                     }
                 }
 
-                for (book in allBookList) {
-                    if (allPaidBooksIds.contains(book.id)) allPaidBooks.add(book)
+                for (id in allPaidBooksIds) {
+                    if (!allMyCourseBookIds.contains(id)) viewModel.getMyCourseBook(id)
                 }
-                totalCourse = allPaidBooks.size
-                myCourseSliderIndicatorAdapter = MyCourseSliderIndicatorAdapter(totalCourse)
-                viewDataBinding.indicatorView.adapter = myCourseSliderIndicatorAdapter
-                myCourseListAdapter.submitList(allPaidBooks)
             }
-            viewDataBinding.emptyView.visibility = if (allPaidBooks.isEmpty()) View.VISIBLE else View.GONE
-            viewDataBinding.footer.visibility = if (allPaidBooks.isNotEmpty()) View.VISIBLE else View.GONE
         })
-
-        if (userData.customer_type_id == 2) {
-            viewModel.getAdminPanelBooks()
-        } else {
-            viewModel.getAcademicBooks(userData.mobile ?: "", userData.class_id ?: 0)
-        }
     }
 
     inner class SliderPageChangeCallback(private val listener: (Int) -> Unit) : ViewPager2.OnPageChangeCallback() {

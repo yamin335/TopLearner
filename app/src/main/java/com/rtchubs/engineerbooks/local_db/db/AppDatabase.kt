@@ -6,17 +6,23 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
+import com.rtchubs.engineerbooks.local_db.dao.CourseDao
 import com.rtchubs.engineerbooks.local_db.dao.HistoryDao
+import com.rtchubs.engineerbooks.local_db.dao.MyCourseDao
 import com.rtchubs.engineerbooks.local_db.dbo.ChapterItem
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
+import com.rtchubs.engineerbooks.models.home.CourseCategory
+import com.rtchubs.engineerbooks.models.my_course.MyCourseBook
 
 /**
  * Main database.
  */
 @Database(
     entities = [
+        CourseCategory::class,
         ClassWiseBook::class,
+        MyCourseBook::class,
         ChapterItem::class,
         HistoryItem::class
     ],
@@ -29,6 +35,8 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun bookChapterDao(): BookChapterDao
     abstract fun historyDao(): HistoryDao
+    abstract fun courseDao(): CourseDao
+    abstract fun myCourseDao(): MyCourseDao
 
     companion object {
 

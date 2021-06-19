@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.rtchubs.engineerbooks.models.chapter.BookChapter
 import com.rtchubs.engineerbooks.models.chapter.ChapterField
+import com.rtchubs.engineerbooks.models.home.Course
 import java.lang.reflect.Type
 
 class RoomDataTypeConverter {
@@ -13,7 +14,13 @@ class RoomDataTypeConverter {
     }
 
     @TypeConverter
-    fun bookChaptersToJsonString(value: List<BookChapter>) = gson.toJson(value)
+    fun courseListToJsonString(value: List<Course>): String? = gson.toJson(value)
+
+    @TypeConverter
+    fun jsonStringToCourseList(value: String): List<Course> = gson.fromJson(value, Array<Course>::class.java).toList()
+
+    @TypeConverter
+    fun bookChaptersToJsonString(value: List<BookChapter>): String? = gson.toJson(value)
 
     @TypeConverter
     fun jsonStringToBookChapters(value: String): List<BookChapter> = gson.fromJson(value, Array<BookChapter>::class.java).toList()

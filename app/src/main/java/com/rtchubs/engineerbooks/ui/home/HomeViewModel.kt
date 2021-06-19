@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.api.ResponseCodes.CODE_SUCCESS
-import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
+import com.rtchubs.engineerbooks.local_db.dao.CourseDao
 import com.rtchubs.engineerbooks.models.AdSlider
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.home.CourseCategory
@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(
     private val application: Application,
     private val repository: HomeRepository,
     private val mediaRepository: MediaRepository,
-    private val bookChapterDao: BookChapterDao
+    private val courseDao: CourseDao
 ) : BaseViewModel(application) {
     val defaultResponse: MutableLiveData<DefaultResponse> = MutableLiveData()
 
@@ -38,8 +38,8 @@ class HomeViewModel @Inject constructor(
         MutableLiveData<List<ClassWiseBook>>()
     }
 
-    val allBooksFromDB: LiveData<List<ClassWiseBook>> = liveData {
-        bookChapterDao.getAllBooks().collect { list ->
+    val allCourseCategoriesFromDB: LiveData<List<CourseCategory>> = liveData {
+        courseDao.getAllCourseCategories().collect { list ->
             emit(list)
         }
     }
@@ -50,14 +50,14 @@ class HomeViewModel @Inject constructor(
 
 
 
-    fun saveBooksInDB(books: List<ClassWiseBook>) {
+    fun saveCourseCategoriesInDB(courseCategories: List<CourseCategory>) {
         try {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
             }
 
             viewModelScope.launch(handler) {
-                bookChapterDao.updateBooks(books)
+                courseDao.updateAllCourseCategories(courseCategories)
             }
         } catch (e: SQLiteException) {
             e.printStackTrace()

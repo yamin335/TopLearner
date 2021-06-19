@@ -13,14 +13,14 @@ import com.bumptech.glide.request.target.Target
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiEndPoint
 import com.rtchubs.engineerbooks.databinding.MyCourseListItemBinding
-import com.rtchubs.engineerbooks.models.home.ClassWiseBook
+import com.rtchubs.engineerbooks.models.my_course.MyCourseBook
 
 class MyCourseSliderAdapter(
     private val customerTypeID: Int?,
-    private val itemCallback: ((ClassWiseBook) -> Unit)
+    private val itemCallback: ((MyCourseBook) -> Unit)
 ): RecyclerView.Adapter<MyCourseSliderAdapter.ViewHolder>() {
 
-    private var slides: ArrayList<ClassWiseBook> = ArrayList()
+    private var slides: ArrayList<MyCourseBook> = ArrayList()
     private var isPaid = false
     private var isTimeChanged = false
 
@@ -37,8 +37,8 @@ class MyCourseSliderAdapter(
         return slides.size
     }
 
-    fun submitList(slides: List<ClassWiseBook>) {
-        this.slides = slides as ArrayList<ClassWiseBook>
+    fun submitList(slides: List<MyCourseBook>) {
+        this.slides = slides as ArrayList<MyCourseBook>
         notifyDataSetChanged()
     }
 
@@ -54,7 +54,7 @@ class MyCourseSliderAdapter(
 
     inner class ViewHolder (private val binding: MyCourseListItemBinding) : RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("ClickableViewAccessibility")
-        fun bind(item: ClassWiseBook) {
+        fun bind(item: MyCourseBook) {
             binding.item = item
 
             binding.url = "${ApiEndPoint.LOGO}/${item.logo}"

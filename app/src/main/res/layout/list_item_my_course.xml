@@ -15,7 +15,7 @@
             type="String" />
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.home.ClassWiseBook" />
+            type="com.rtchubs.engineerbooks.models.my_course.MyCourseBook" />
     </data>
 
     <LinearLayout

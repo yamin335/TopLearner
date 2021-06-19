@@ -1,5 +1,7 @@
 package com.rtchubs.engineerbooks.models.home
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.io.Serializable
 
 data class AllCourseCategoryResponse(val code: Int?, val message: String?,
@@ -7,7 +9,8 @@ data class AllCourseCategoryResponse(val code: Int?, val message: String?,
 
 data class AllCourseCategoryResponseData(val CourseCatagorys: List<CourseCategory>?): Serializable
 
-data class CourseCategory(val id: Int?, val created_at: String?, val updated_at: String?,
+@Entity(tableName = "course_category")
+data class CourseCategory(@PrimaryKey(autoGenerate = false) val id: Int?, val created_at: String?, val updated_at: String?,
                           val title: String?, val name: String?, val courses: List<Course>?): Serializable
 
 data class Course(val id: Int?, val name: String?, val created_at: String?,
