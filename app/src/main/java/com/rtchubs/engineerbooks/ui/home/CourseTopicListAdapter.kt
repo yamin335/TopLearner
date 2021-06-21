@@ -82,6 +82,10 @@ class CourseTopicListAdapter(
                 binding.icon.setImageResource(R.drawable.topic_ic_video)
             }
 
+            "Chapter Content" -> {
+                binding.icon.setImageResource(R.drawable.topic_ic_chapter_content)
+            }
+
             else -> {
                 binding.icon.setImageResource(R.drawable.topic_ic_video)
             }

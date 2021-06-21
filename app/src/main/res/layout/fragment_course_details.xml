@@ -353,7 +353,8 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:layout_gravity="center_horizontal"
-                    android:text="আপনার জন্য আমাদের স্পেশাল ডিস্কাউন্ট পেতে এখনই কোর্সটি কিনুন।"
+                    android:text="আপনার জন্য আমাদের স্পেশাল ডিস্কাউন্ট পেতে এখনই কোর্সটি কিনুন। কাস্টমার কেয়ারঃ ০১৭৫৫৬৬০৬৬৫
+"
                     android:gravity="center"
                     android:textColor="@color/secondary_blue_1"
                     android:paddingStart="8dp"
@@ -363,7 +364,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="8dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -401,19 +403,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="এখনই কোর্সটি কিনুন"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
                         android:layout_marginStart="24dp"
                         app:cornerRadius="8dp"/>
                 </LinearLayout>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:layout_gravity="center_horizontal"
-                    android:text="যে কোন সমস্যার ক্ষেত্রেঃ ০১৭১০৯৯৮৮৭৭ (সকাল ১০টা - রাত ৮টা)"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/themeTextColor"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </RelativeLayout>
