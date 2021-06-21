@@ -14,12 +14,12 @@ import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.MyCourseFragmentBinding
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.home.Course
+import com.rtchubs.engineerbooks.models.my_course.MyCourse
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.isTimeAndZoneAutomatic
-import com.rtchubs.engineerbooks.util.showWarningToast
 
 class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel>() {
     override val bindingVariable: Int
@@ -122,43 +122,48 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             drawerListener?.toggleNavDrawer()
         }
 
-        myCourseListAdapter = MyCourseSliderAdapter(userData.customer_type_id) {
-            val book = ClassWiseBook(it.id, it.udid,
-                it.name, it.title, it.author, it.isPaid,
-                it.book_type_id, it.price, it.status, it.logo)
-            if (userData.customer_type_id == 2) {
-                navController.navigate(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book))
-            } else {
-                if (!preferencesHelper.isDeviceTimeChanged) {
-                    navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book))
-//                    if (it.price ?: 0.0 > 0.0) {
-//                        val paidBook = preferencesHelper.getPaidBook()
-//                        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
-//                            navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
-//                        } else {
-////                            val book = PaidBook(it.id, it.name, userData.class_id, userData.ClassName, false, it.price ?: 0.0)
+        myCourseListAdapter = MyCourseSliderAdapter(userData.customer_type_id) { myCourse ->
+            val bookId = myCourse.book_id ?: return@MyCourseSliderAdapter
+            viewModel.getMyCourseBookFromDB(bookId).observe(viewLifecycleOwner, Observer {
+                val book = ClassWiseBook(it.id, it.udid,
+                    it.name, it.title, it.author, it.isPaid,
+                    it.book_type_id, it.price, it.status, it.logo)
+                navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book))
+            })
+
+//            if (userData.customer_type_id == 2) {
+//                navController.navigate(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book))
+//            } else {
+//                if (!preferencesHelper.isDeviceTimeChanged) {
+//                    navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book))
+////                    if (it.price ?: 0.0 > 0.0) {
+////                        val paidBook = preferencesHelper.getPaidBook()
+////                        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
 ////                            navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
-//                            showWarningToast(requireContext(), "Please pay first!")
+////                        } else {
+//////                            val book = PaidBook(it.id, it.name, userData.class_id, userData.ClassName, false, it.price ?: 0.0)
+//////                            navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
+////                            showWarningToast(requireContext(), "Please pay first!")
+////                        }
+////                    } else {
+////                        navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
+////                    }
+//                } else {
+//                    if (isTimeAndZoneAutomatic(context)) {
+//                        if (checkNetworkStatus(true)) {
+//                            preferencesHelper.isDeviceTimeChanged = false
+//                            myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
+//                            if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
+//                                preferencesHelper.isDeviceTimeChanged = true
+//                                myCourseListAdapter.setTimeChangeStatus(true)
+//                            }
+//                            viewModel.getMyCourses(userData.mobile)
 //                        }
 //                    } else {
-//                        navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
+//                        showWarningToast(requireContext(), "Please auto adjust your device time!")
 //                    }
-                } else {
-                    if (isTimeAndZoneAutomatic(context)) {
-                        if (checkNetworkStatus(true)) {
-                            preferencesHelper.isDeviceTimeChanged = false
-                            myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
-                            if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
-                                preferencesHelper.isDeviceTimeChanged = true
-                                myCourseListAdapter.setTimeChangeStatus(true)
-                            }
-                            viewModel.getMyCourses(userData.mobile)
-                        }
-                    } else {
-                        showWarningToast(requireContext(), "Please auto adjust your device time!")
-                    }
-                }
-            }
+//                }
+//            }
         }
         myCourseSliderIndicatorAdapter = MyCourseSliderIndicatorAdapter(totalCourse)
 
@@ -271,23 +276,28 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
         viewModel.allMyCourseBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
             books?.let {
                 if (it.isNotEmpty()) {
-                    totalCourse = it.size
-                    myCourseSliderIndicatorAdapter = MyCourseSliderIndicatorAdapter(totalCourse)
-                    viewDataBinding.indicatorView.adapter = myCourseSliderIndicatorAdapter
-                    myCourseListAdapter.submitList(it)
-
                     allMyCourseBookIds.clear()
                     for (book in it) {
                         allMyCourseBookIds.add(book.id)
                     }
                 }
             }
-            viewDataBinding.emptyView.visibility = if (books == null || books.isEmpty()) View.VISIBLE else View.GONE
-            viewDataBinding.footer.visibility = if (books != null && books.isNotEmpty()) View.VISIBLE else View.GONE
         })
 
         viewModel.myCourses.observe(viewLifecycleOwner, Observer {
-            it?.let { courses ->
+            it?.let { myCourses ->
+
+                val courses = ArrayList<MyCourse>()
+                for (course in myCourses) {
+                    if (allCourseList.containsKey(course.course_id)) {
+                        val tempCourse = allCourseList[course.course_id]
+                        course.title = tempCourse?.title
+                        course.logo = tempCourse?.logourl
+                        course.book_id = tempCourse?.book_id
+                        courses.add(course)
+                    }
+                }
+
                 myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
 
                 if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
@@ -324,6 +334,14 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
                 for (id in allPaidBooksIds) {
                     if (!allMyCourseBookIds.contains(id)) viewModel.getMyCourseBook(id)
                 }
+
+                totalCourse = courses.size
+                myCourseSliderIndicatorAdapter = MyCourseSliderIndicatorAdapter(totalCourse)
+                viewDataBinding.indicatorView.adapter = myCourseSliderIndicatorAdapter
+                myCourseListAdapter.submitList(courses)
+
+                viewDataBinding.emptyView.visibility = if (courses.isEmpty()) View.VISIBLE else View.GONE
+                viewDataBinding.footer.visibility = if (courses.isNotEmpty()) View.VISIBLE else View.GONE
             }
         })
     }

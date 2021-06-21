@@ -46,6 +46,22 @@ class MyCourseViewModel @Inject constructor(
         }
     }
 
+    fun getMyCourseBookFromDB(bookId: Int): LiveData<MyCourseBook> {
+        val book = MutableLiveData<MyCourseBook>()
+        try {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+            }
+
+            viewModelScope.launch(handler) {
+                book.postValue(myCourseDao.getMyCourseBook(bookId))
+            }
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+        }
+        return book
+    }
+
     fun saveMyPaidBook(myCourseBook: MyCourseBook) {
         try {
             val handler = CoroutineExceptionHandler { _, exception ->

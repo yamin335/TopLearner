@@ -21,6 +21,9 @@ interface MyCourseDao {
     @Query("SELECT * FROM my_course_paid_books")
     fun getAllMyCourseBooks(): Flow<List<MyCourseBook>>
 
+    @Query("SELECT * FROM my_course_paid_books WHERE id = :bookId")
+    suspend fun getMyCourseBook(bookId: Int): MyCourseBook
+
 //    @Query("SELECT COUNT(id) FROM history")
 //    fun getHistoryItemsCount(): Flow<Int>
 

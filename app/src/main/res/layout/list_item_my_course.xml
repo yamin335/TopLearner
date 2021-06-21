@@ -14,11 +14,20 @@
             name="url"
             type="String" />
         <variable
+            name="totalAmount"
+            type="String" />
+        <variable
+            name="paidAmount"
+            type="String" />
+        <variable
+            name="dueAmount"
+            type="String" />
+        <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.my_course.MyCourseBook" />
+            type="com.rtchubs.engineerbooks.models.my_course.MyCourse" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -32,7 +41,8 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:gravity="center"
-            android:text="@{item.name}"
+            android:layout_alignParentTop="true"
+            android:text="@{item.title}"
             android:textColor="@color/themeTextColor"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -42,13 +52,15 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:text="Class One" />
 
-        <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/rootCard"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="24dp"
+            android:layout_below="@id/title"
+            android:layout_above="@id/btnPayment"
             android:clickable="true"
             android:focusable="true"
             app:cardBackgroundColor="@color/white"
@@ -63,161 +75,96 @@
 
                 <ImageView
                     android:id="@+id/thumbnail"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:padding="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:layout_marginTop="16dp"
+                    android:adjustViewBounds="true"
                     app:imageRequestListener="@{imageRequestListener}"
                     app:imageUrl="@{url}"
                     app:srcCompat="@drawable/engineers" />
 
-                <TextView
-                    android:id="@+id/label"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal"
                     android:gravity="center"
-                    android:text="@{item.name}"
-                    android:textColor="@color/themeTextColor"
-                    android:textStyle="bold"
-                    tools:text="Class One" />
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="কোর্স ফিঃ"
+                        android:textSize="16sp"
+                        android:textColor="@color/themeTextColor"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{totalAmount}"
+                        android:textSize="16sp"
+                        android:layout_marginStart="8dp"
+                        android:textColor="@color/themeTextColor"
+                        tools:text="১০০০ টাকা" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/subLabel"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:orientation="horizontal"
                     android:gravity="center"
-                    android:text="@{item.name}"
-                    android:textColor="@color/md_teal_A400"
-                    android:textSize="12sp"
-                    tools:text="Class One" />
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="পরিশোধঃ"
+                        android:textSize="16sp"
+                        android:textColor="@color/themeTextColor"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{paidAmount}"
+                        android:textSize="16sp"
+                        android:layout_marginStart="8dp"
+                        android:textColor="@color/themeTextColor"
+                        tools:text="২০০ টাকা" />
+                </LinearLayout>
 
-            </LinearLayout>
-        </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
-
-        <com.google.android.material.circularreveal.cardview.CircularRevealCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="0dp"
-            >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
-
-                <TextView
-                    android:id="@+id/feeAmount"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:gravity="center_vertical"
-                    android:text="কোর্স ফিঃ ১০০০ টাকা"
-                    android:textColor="@color/themeTextColor"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:layout_marginBottom="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="বাকিঃ"
+                        android:textSize="16sp"
+                        android:textColor="@color/themeTextColor"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{dueAmount}"
+                        android:textSize="16sp"
+                        android:layout_marginStart="8dp"
+                        android:textColor="@color/themeTextColor"
+                        tools:text="৮০০ টাকা" />
+                </LinearLayout>
 
             </LinearLayout>
-        </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
-
-        <com.google.android.material.circularreveal.cardview.CircularRevealCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="0dp"
-            >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
-
-                <TextView
-                    android:id="@+id/paidAmount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:gravity="center_vertical"
-                    android:text="পরিশোধঃ ২০০ টাকা"
-                    android:textColor="@color/themeTextColor"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-            </LinearLayout>
-        </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
-
-        <com.google.android.material.circularreveal.cardview.CircularRevealCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="0dp"
-            >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
-
-                <TextView
-                    android:id="@+id/dueAmount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:gravity="center_vertical"
-                    android:text="বাকিঃ ৮০০ টাকা"
-                    android:textColor="@color/themeTextColor"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-            </LinearLayout>
-        </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPayment"
@@ -230,10 +177,10 @@
             android:textColor="@android:color/white"
             android:windowSoftInputMode="adjustResize"
             android:textAllCaps="false"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="0dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="24dp"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
-            android:backgroundTint="@color/red_btn"/>
-    </LinearLayout>
+            android:backgroundTint="@color/md_green_500"/>
+    </RelativeLayout>
 </layout>
