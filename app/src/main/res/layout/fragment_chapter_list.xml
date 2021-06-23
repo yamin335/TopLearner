@@ -53,7 +53,7 @@
             android:id="@+id/emptyView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="এই বইটির কার্যক্রম চলছে, খুব শীঘ্রই প্রকাশ করা হবে। আমাদের সাথেই থাকুন। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+            android:text="@string/empty_chapter_text"
             android:visibility="visible"
             android:textSize="15sp"
             android:gravity="center"

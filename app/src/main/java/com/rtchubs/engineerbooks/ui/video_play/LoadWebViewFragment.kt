@@ -40,6 +40,7 @@ import com.rtchubs.engineerbooks.AppGlobalValues
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiCallStatus
+import com.rtchubs.engineerbooks.api.ApiEndPoint.PDF
 import com.rtchubs.engineerbooks.api.ApiEndPoint.VIDEOS
 import com.rtchubs.engineerbooks.databinding.WebViewBinding
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
@@ -126,6 +127,8 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
     lateinit var commonMessageBottomSheetDialog: CommonMessageBottomSheetDialog
 
     var systemUiVisibility: Int = 0
+
+    var pdfForFragment = ""
 
     private val usbDetectionReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -350,8 +353,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
             if (value == null && downloadingFile != null) {
                 FileUtils.deleteFileFromExternalStorage(downloadingFile!!)
-                commonMessageBottomSheetDialog.message =
-                    "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
                 commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
                 //showErrorToast(requireContext(), "This video is not available now")
             }
@@ -530,8 +532,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         )
                         val fileName = videoItem.video_filename
                         if (fileName.isNullOrBlank()) {
-                            commonMessageBottomSheetDialog.message =
-                                "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                            commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
                             commonMessageBottomSheetDialog.show(
                                 childFragmentManager,
                                 "#Common_Message_Dialog"
@@ -580,11 +581,32 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
             value?.let {
                 childFragmentManager.setFragmentResult(
                     "loadPdf",
-                    bundleOf("pdfFilePath" to "${it.first}/${it.second}")
+                    bundleOf("pdfFilePath" to "${it.first}/${it.second}", "fragment" to pdfForFragment)
                 )
                 viewModel.filesInDownloadPool.remove(it.second)
             }
         })
+
+        childFragmentManager.setFragmentResultListener(
+            "downloadPDF",
+            viewLifecycleOwner, FragmentResultListener { key, bundle ->
+                val fragment = bundle.getString("fragment") ?: return@FragmentResultListener
+                pdfForFragment = fragment
+                val name = bundle.getString("name") ?: return@FragmentResultListener
+                val filepath = FileUtils.getLocalStorageFilePath(
+                    requireContext(),
+                    unzippedFolder
+                )
+                val pdfFilePath = "$filepath/$name"
+
+                if (!File(pdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(
+                        name
+                    )) {
+                    viewModel.filesInDownloadPool.add(name)
+                    viewModel.downloadPdfFile("$PDF/$name", filepath, name)
+                }
+            }
+        )
 
         viewModel.solutionPdfFileDownloadResponse.observe(viewLifecycleOwner, Observer { value ->
             value?.let {
@@ -742,8 +764,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         FileUtils.deleteFileFromExternalStorage(inputFile)
                         viewModel.showHideProgress.postValue(false)
                         viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        commonMessageBottomSheetDialog.message =
-                            "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                        commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
                         commonMessageBottomSheetDialog.show(
                             childFragmentManager,
                             "#Common_Message_Dialog"
@@ -755,8 +776,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         FileUtils.deleteFileFromExternalStorage(inputFile)
                         viewModel.showHideProgress.postValue(false)
                         viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        commonMessageBottomSheetDialog.message =
-                            "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                        commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
                         commonMessageBottomSheetDialog.show(
                             childFragmentManager,
                             "#Common_Message_Dialog"
@@ -768,7 +788,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                         FileUtils.deleteFileFromExternalStorage(inputFile)
                         viewModel.showHideProgress.postValue(false)
                         viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        commonMessageBottomSheetDialog.message = "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                        commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
                         commonMessageBottomSheetDialog.show(
                             childFragmentManager,
                             "#Common_Message_Dialog"
@@ -782,7 +802,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                 FileUtils.deleteFileFromExternalStorage(inputFile)
                 viewModel.showHideProgress.postValue(false)
                 viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
-                commonMessageBottomSheetDialog.message = "এই অ্যানিমেশনটির ক্লাস এখনও হয়নি, ক্লাস শেষে একটিভ হবে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।"
+                commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
                 commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
 
                 //showErrorToast(requireContext(), "This video is not available now!")

@@ -44,14 +44,17 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
     private lateinit var bkashPgwDialog: BKashDialogFragment
 
-    private var invoiceNumber: String? = null
+    private lateinit var invoiceNumber: String
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        invoiceNumber = generateInvoiceID()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateStatusBarBackgroundColor("#1E4356")
         registerToolbar(viewDataBinding.toolbar)
-
-        invoiceNumber = generateInvoiceID()
 
         userData = preferencesHelper.getUser()
 
@@ -232,7 +235,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 userData.id ?: 0, userData.mobile ?: "",
                 response.amount.toDouble().toInt(), 0, 0,
                 0, "", userData.upazila ?: "", userData.city ?: "",
-                userData.UpazilaID ?: 0, userData.CityID ?: 0, invoiceNumber ?: "N/A",
+                userData.UpazilaID ?: 0, userData.CityID ?: 0, invoiceNumber,
                 "", response.bankTranId ?: "N/A", args.book.bookID ?: 0, userData.class_id ?: 0,
                 "$firstName $lastName", args.book.bookName ?: "", response.amount ?: "N/A"
             ),
@@ -244,7 +247,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
     private fun callPayment() {
         val amount = viewModel.amount.value?.toDouble() ?: return
-        val sslCommerzInitialization = SSLCommerzInitialization ("testbox","qwerty",  amount, SSLCCurrencyType.BDT,invoiceNumber ?: generateInvoiceID(), "Book", SSLCSdkType.TESTBOX)
+        val sslCommerzInitialization = SSLCommerzInitialization ("testbox","qwerty",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.TESTBOX)
         IntegrateSSLCommerz
             .getInstance(requireContext())
             .addSSLCommerzInitialization(sslCommerzInitialization)

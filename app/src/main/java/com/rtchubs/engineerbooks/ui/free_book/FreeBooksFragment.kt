@@ -48,13 +48,14 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
         if (allClass.isEmpty()) {
             viewModel.getAcademicClass()
         }
-        if (userData.customer_type_id == 2) {
-            viewDataBinding.linearClass.visibility = View.GONE
-            viewModel.getAdminPanelBooks()
-        } else {
-            viewDataBinding.linearClass.visibility = View.VISIBLE
-            viewModel.getAcademicBooks(userData.mobile ?: "", viewModel.selectedClassId?.toInt() ?: 0)
-        }
+//        if (userData.customer_type_id == 2) {
+//            viewDataBinding.linearClass.visibility = View.GONE
+//            viewModel.getAdminPanelBooks()
+//        } else {
+//            viewDataBinding.linearClass.visibility = View.VISIBLE
+//            viewModel.getAcademicBooks(userData.mobile ?: "", viewModel.selectedClassId?.toInt() ?: 0)
+//        }
+        viewModel.getAcademicBooks(userData.mobile ?: "", viewModel.selectedClassId?.toInt() ?: 0)
     }
 
     override fun onAttach(context: Context) {

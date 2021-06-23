@@ -48,6 +48,12 @@ class VideoListFragment : BaseFragment<VideoListFragmentBinding, VideoListViewMo
 
         viewDataBinding.rvVideoList.adapter = videoListAdapter
 
-        videoListAdapter.submitList(LoadWebViewFragment.chapter.fields?.filter { it.type == "video" })
+        val animationList = LoadWebViewFragment.chapter.fields?.filter { it.type == "video" }
+        if (animationList.isNullOrEmpty()) {
+            viewDataBinding.emptyView.visibility = View.VISIBLE
+        } else {
+            viewDataBinding.emptyView.visibility = View.GONE
+            videoListAdapter.submitList(animationList)
+        }
     }
 }
