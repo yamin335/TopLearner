@@ -128,7 +128,7 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
                 val book = ClassWiseBook(it.id, it.udid,
                     it.name, it.title, it.author, it.isPaid,
                     it.book_type_id, it.price, it.status, it.logo)
-                navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book))
+                navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book.id, book.title))
             })
 
 //            if (userData.customer_type_id == 2) {

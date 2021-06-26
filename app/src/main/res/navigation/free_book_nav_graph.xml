@@ -18,8 +18,13 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right">
             <argument
-                android:name="book"
-                app:argType="com.rtchubs.engineerbooks.models.home.ClassWiseBook" />
+                android:name="id"
+                app:argType="integer" />
+            <argument
+                android:name="title"
+                app:argType="string"
+                app:nullable="true"
+                android:defaultValue="Book Chapters" />
         </action>
     </fragment>
 

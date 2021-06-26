@@ -38,14 +38,17 @@
                 android:id="@+id/icDownload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/ic_baseline_save_alt_24"
-                app:tint="@color/accent" />
+                app:srcCompat="@drawable/ic_baseline_menu_24"
+                app:tint="@color/albumColorPrimaryBlack" />
 
             <ImageView
                 android:id="@+id/thumbnail"
@@ -86,15 +89,15 @@
                 android:maxLines="3"
                 android:orientation="horizontal"
                 android:text="@{item.title}"
-                tools:text="@string/video_des_dummy_text"
                 android:textSize="12sp"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/icDownload"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/title"
                 app:layout_constraintTop_toBottomOf="@+id/title"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="@string/video_des_dummy_text" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

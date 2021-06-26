@@ -18,8 +18,13 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right">
             <argument
-                android:name="book"
-                app:argType="com.rtchubs.engineerbooks.models.home.ClassWiseBook" />
+                android:name="id"
+                app:argType="integer" />
+            <argument
+                android:name="title"
+                app:argType="string"
+                app:nullable="true"
+                android:defaultValue="Book Chapters" />
         </action>
         <action
             android:id="@+id/action_home2Fragment_to_courseDetailsFragment"
@@ -28,34 +33,6 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/chapterListFragment"
-        android:name="com.rtchubs.engineerbooks.ui.chapter_list.ChapterListFragment"
-        android:label="Chapters"
-        tools:layout="@layout/fragment_chapter_list">
-
-        <action
-            android:id="@+id/action_chapterList_to_WebView"
-            app:destination="@id/loadWebViewFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-        <argument
-            android:name="book"
-            app:argType="com.rtchubs.engineerbooks.models.home.ClassWiseBook" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/loadWebViewFragment"
-        android:name="com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment"
-        android:label="Video"
-        tools:layout="@layout/fragment_load_web_view">
-        <argument
-            android:name="chapter"
-            app:argType="com.rtchubs.engineerbooks.models.chapter.BookChapter" />
     </fragment>
 
     <include app:graph="@navigation/chapter_nav_graph" />
@@ -76,11 +53,34 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right">
             <argument
-                android:name="book"
-                app:argType="com.rtchubs.engineerbooks.models.home.PaidBook" />
+                android:name="bookId"
+                app:argType="integer" />
             <argument
-                android:name="course"
-                app:argType="com.rtchubs.engineerbooks.models.home.Course" />
+                android:name="bookName"
+                app:argType="string"
+                app:nullable="true" />
+            <argument
+                android:name="courseId"
+                app:argType="integer" />
+            <argument
+                android:name="coursePrice"
+                app:argType="string" />
+        </action>
+        <action
+            android:id="@+id/action_courseDetailsFragment_to_chapter_nav"
+            app:destination="@id/chapter_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="id"
+                app:argType="integer" />
+            <argument
+                android:name="title"
+                app:argType="string"
+                app:nullable="true"
+                android:defaultValue="Book Chapters" />
         </action>
     </fragment>
 

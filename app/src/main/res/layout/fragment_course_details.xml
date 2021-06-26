@@ -56,7 +56,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
                             android:layout_marginEnd="8dp"
-                            tools:text="Title slfk sfjsdkf jfsdf ;fjs;fj f;js;fj kfskfskdf jsjsdjfsjfds jfjfslkjflksjdflkjslkfjsl flfksdjflk"
+                            tools:text="Title"
                             android:textColor="@color/white"
                             android:textStyle="bold"
                             android:lines="2"
@@ -258,6 +258,7 @@
                         app:layout_constraintVertical_bias="0.0"/>
 
                     <TextView
+                        android:id="@+id/tvLabelTeacher"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -280,11 +281,27 @@
                         tools:listitem="@layout/list_item_teachers_for_course_details"
                         tools:itemCount="3"/>
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnBookDetails"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="কোর্সের নমুনা দেখুন"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="@color/toast_success"
+                        app:cornerRadius="26dp"
+                        app:rippleColor="@android:color/white" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="32dp"
+                        android:layout_marginTop="20dp"
                         android:layout_marginEnd="16dp"
                         android:gravity="center_vertical"
                         android:textSize="16sp"

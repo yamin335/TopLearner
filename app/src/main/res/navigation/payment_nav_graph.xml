@@ -12,10 +12,17 @@
         android:label="PaymentFragment"
         tools:layout="@layout/fragment_payment">
         <argument
-            android:name="book"
-            app:argType="com.rtchubs.engineerbooks.models.home.PaidBook" />
+            android:name="bookId"
+            app:argType="integer" />
         <argument
-            android:name="course"
-            app:argType="com.rtchubs.engineerbooks.models.home.Course" />
+            android:name="bookName"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="courseId"
+            app:argType="integer" />
+        <argument
+            android:name="coursePrice"
+            app:argType="string" />
     </fragment>
 </navigation>

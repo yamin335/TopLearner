@@ -5,7 +5,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class VideoTabViewPagerAdapter internal constructor(
     private val size: Int,
-    fragment: Fragment
+    fragment: Fragment,
+    private val isTab4: Boolean = false
 ) : FragmentStateAdapter(fragment) {
 
     override fun getItemCount(): Int {
@@ -14,7 +15,7 @@ class VideoTabViewPagerAdapter internal constructor(
 
     override fun createFragment(position: Int): Fragment {
         return when(position) {
-            0 -> VideoListFragment()
+            0 -> if (isTab4) Tab1Fragment() else VideoListFragment()
             1 -> Tab1Fragment()
             2 -> Tab2Fragment()
             3 -> Tab3Fragment()

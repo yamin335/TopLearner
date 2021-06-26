@@ -607,34 +607,13 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="chapterListFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="605" />
-                            <option name="y" value="-686" />
-                          </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_chapterList_to_WebView">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
                   <entry key="chapter_nav_graph">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="167" />
-                            <option name="y" value="-22" />
+                            <option name="x" value="523" />
+                            <option name="y" value="-229" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -651,6 +630,11 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_courseDetailsFragment_to_chapter_nav">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_courseDetailsFragment_to_payment_nav">
                               <value>
                                 <LayoutPositions />
@@ -682,24 +666,7 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
-                            <entry key="action_home2Fragment_to_payment_nav">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
                           </map>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
-                  <entry key="loadWebViewFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="840" />
-                            <option name="y" value="-688" />
-                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -709,8 +676,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="459" />
-                            <option name="y" value="-152" />
+                            <option name="x" value="726" />
+                            <option name="y" value="-701" />
                           </Point>
                         </option>
                       </LayoutPositions>

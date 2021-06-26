@@ -5,9 +5,9 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.DataSource
@@ -18,19 +18,16 @@ import com.rtchubs.engineerbooks.AppExecutors
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiEndPoint
 import com.rtchubs.engineerbooks.databinding.VideoListItemBinding
-import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
-import com.rtchubs.engineerbooks.models.VideoItem
 import com.rtchubs.engineerbooks.models.chapter.ChapterField
 import com.rtchubs.engineerbooks.util.AppConstants
 import com.rtchubs.engineerbooks.util.DataBoundListAdapter
 import com.rtchubs.engineerbooks.util.FileUtils
-import kotlinx.coroutines.launch
 import java.io.File
 
 class VideoListAdapter(
     private val appExecutors: AppExecutors,
-    private val itemCallback: ((ChapterField) -> Unit)? = null
-
+    private val itemCallback: ((ChapterField) -> Unit)? = null,
+    private val downloadCallback: ((ChapterField) -> Unit)? = null
 ) : DataBoundListAdapter<ChapterField, VideoListItemBinding>(
     appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<ChapterField>() {
         override fun areItemsTheSame(oldItem: ChapterField, newItem: ChapterField): Boolean {
@@ -60,16 +57,38 @@ class VideoListAdapter(
 
     override fun bind(binding: VideoListItemBinding, position: Int) {
         val item = getItem(position)
+        val context = binding.root.context
         val filepath = FileUtils.getLocalStorageFilePath(
-            binding.root.context,
+            context,
             AppConstants.downloadFolder
         )
         val fileName = item.video_filename ?: ""
         val videoFile = File(filepath, fileName)
-        if (videoFile.exists()) {
+
+        if (fileName.isEmpty()) {
             binding.icDownload.visibility = View.GONE
-        } else {
+            binding.videoListItemCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.white))
+        } else if (videoFile.exists()) {
             binding.icDownload.visibility = View.VISIBLE
+            binding.videoListItemCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorFileAvailable))
+        } else if (!videoFile.exists()) {
+            binding.icDownload.visibility = View.VISIBLE
+            binding.videoListItemCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorFileUnAvailable))
+        } else {
+            binding.icDownload.visibility = View.GONE
+            binding.videoListItemCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.white))
+        }
+
+        binding.videoListItemCard.setOnClickListener {
+            itemCallback?.invoke(item)
+            checkedPosition = position
+            notifyDataSetChanged()
+        }
+
+        binding.icDownload.setOnClickListener {
+            downloadCallback?.invoke(item)
+            checkedPosition = position
+            notifyDataSetChanged()
         }
 
         binding.item = item
@@ -95,12 +114,6 @@ class VideoListAdapter(
             else -> {
                 binding.videoListItemCard.strokeWidth = 0
             }
-        }
-
-        binding.videoListItemCard.setOnClickListener {
-            itemCallback?.invoke(item)
-            checkedPosition = position
-            notifyDataSetChanged()
         }
     }
 }

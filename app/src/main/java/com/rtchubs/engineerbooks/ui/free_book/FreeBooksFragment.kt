@@ -112,7 +112,7 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
         }
 
         freeBookListAdapter = FreeBookListAdapter(appExecutors) {
-            navController.navigate(FreeBooksFragmentDirections.actionFreeBooksFragmentToChapterNav(it))
+            navController.navigate(FreeBooksFragmentDirections.actionFreeBooksFragmentToChapterNav(it.id, it.title))
 //            if (userData.customer_type_id == 2) {
 //                navController.navigate(Home2FragmentDirections.actionHome2FragmentToChapterListFragment(it))
 //            } else {

@@ -31,12 +31,17 @@ class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterList
         super.onViewCreated(view, savedInstanceState)
         registerToolbar(viewDataBinding.toolbar)
 
-        viewDataBinding.toolbar.title = args.book.title
+        viewDataBinding.toolbar.title = args.title
 
         chapterListAdapter = ChapterListAdapter(appExecutors) { chapter ->
-            LoadWebViewFragment.tab1Title = chapter.fields?.first { it.type == "Tab1" }?.name ?: ""
-            LoadWebViewFragment.tab2Title = chapter.fields?.first { it.type == "Tab2" }?.name ?: ""
-            LoadWebViewFragment.tab3Title = chapter.fields?.first { it.type == "Tab3" }?.name ?: ""
+            try {
+                LoadWebViewFragment.tab1Title = chapter.fields?.first { it.type == "Tab1" }?.name ?: ""
+                LoadWebViewFragment.tab2Title = chapter.fields?.first { it.type == "Tab2" }?.name ?: ""
+                LoadWebViewFragment.tab3Title = chapter.fields?.first { it.type == "Tab3" }?.name ?: ""
+                LoadWebViewFragment.tab4Title = chapter.fields?.first { it.type == "Tab4" }?.name ?: ""
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
             navController.navigate(
                 //ChapterListFragmentDirections.actionChapterListToVideoPlay("vedio_file")
                 ChapterListFragmentDirections.actionChapterListToWebView(chapter)
@@ -45,7 +50,7 @@ class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterList
 
         viewDataBinding.rvChapterList.adapter = chapterListAdapter
 
-        bookID = args.book.udid
+        //bookID = args.book.udid
 
         viewModel.chapterListFromDB.observe(viewLifecycleOwner, Observer { chapters ->
             chapters?.let {
@@ -66,6 +71,6 @@ class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterList
             }
         })
 
-        viewModel.getChapterList(args.book.id)
+        viewModel.getChapterList(args.id)
     }
 }

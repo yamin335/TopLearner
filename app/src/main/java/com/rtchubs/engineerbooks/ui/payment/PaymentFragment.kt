@@ -63,9 +63,9 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 //                Home2Fragment.allBookList.map { classWiseBook ->
 //                    classWiseBook.isPaid = true
 //                }
-                val paidBook = args.book
-                paidBook.isPaid = true
-                preferencesHelper.savePaidBook(paidBook)
+//                val paidBook = args.book
+//                paidBook.isPaid = true
+//                preferencesHelper.savePaidBook(paidBook)
                 hideKeyboard()
                 findNavController().popBackStack()
                 showSuccessToast(requireContext(), "Payment Successful")
@@ -97,8 +97,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
                         if (offer.archived == false && date in firstDate..lastDate) {
                             val offerAmount = offer.offer_amount ?: 0
-                            val temp = args.book.price
-                            var amount = temp.toInt()
+                            var amount = args.coursePrice.toInt()
                             val totalDiscount = offerAmount + discount
                             if (totalDiscount > 0) {
                                 viewDataBinding.linearTotalPayable.visibility = View.VISIBLE
@@ -117,7 +116,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 }
             }
 
-            val amount = args.book.price.toInt()
+            val amount = args.coursePrice.toInt()
             if (discount > 0) {
                 viewDataBinding.linearTotalPayable.visibility = View.VISIBLE
                 viewDataBinding.linearTotalDiscount.visibility = View.VISIBLE
@@ -127,7 +126,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 viewDataBinding.linearTotalPayable.visibility = View.GONE
                 viewDataBinding.linearTotalDiscount.visibility = View.GONE
             }
-            viewModel.amount.postValue((args.book.price - discount).toString())
+            viewModel.amount.postValue((args.coursePrice.toInt() - discount).toString())
         })
 
         viewDataBinding.btnPayNow.setOnClickListener {
@@ -212,8 +211,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 amount.toInt(), 0, 0,
                 0, "", userData.upazila ?: "", userData.city ?: "",
                 userData.UpazilaID ?: 0, userData.CityID ?: 0, bkashData.invoicenumber ?: "N/A",
-                "", bkashData.paymentID ?: "N/A", args.book.bookID ?: 0, userData.class_id ?: 0,
-                "$firstName $lastName", args.book.bookName ?: "", bkashData.paymentID ?: "N/A"
+                "", bkashData.paymentID ?: "N/A", args.bookId, userData.class_id ?: 0,
+                "$firstName $lastName", args.bookName ?: "", bkashData.paymentID ?: "N/A"
             )
         )
     }
@@ -236,11 +235,11 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 response.amount.toDouble().toInt(), 0, 0,
                 0, "", userData.upazila ?: "", userData.city ?: "",
                 userData.UpazilaID ?: 0, userData.CityID ?: 0, invoiceNumber,
-                "", response.bankTranId ?: "N/A", args.book.bookID ?: 0, userData.class_id ?: 0,
-                "$firstName $lastName", args.book.bookName ?: "", response.amount ?: "N/A"
+                "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
+                "$firstName $lastName", args.bookName ?: "", response.amount ?: "N/A"
             ),
             CoursePaymentRequest(
-                userData.mobile, invoiceNumber,userData.id, args.course.id, args.course.price, response.amount.toDouble().toInt()
+                userData.mobile, invoiceNumber,userData.id, args.courseId, args.coursePrice.toInt(), response.amount.toDouble().toInt()
             )
         )
     }

@@ -15,6 +15,9 @@
     <color name="card3">#268BC34A</color>
     <color name="chipBgColor">#410AB939</color>
 
+    <color name="colorFileAvailable">#8089FF00</color>
+    <color name="colorFileUnAvailable">#80C2E1FF</color>
+
     // Custom Toast Colors
     <color name="toast_error">#d32f2f</color>
     <color name="toast_warning">#C7A90D</color>

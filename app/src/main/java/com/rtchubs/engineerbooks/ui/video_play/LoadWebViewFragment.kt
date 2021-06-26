@@ -40,8 +40,8 @@ import com.rtchubs.engineerbooks.AppGlobalValues
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiCallStatus
+import com.rtchubs.engineerbooks.api.ApiEndPoint
 import com.rtchubs.engineerbooks.api.ApiEndPoint.PDF
-import com.rtchubs.engineerbooks.api.ApiEndPoint.VIDEOS
 import com.rtchubs.engineerbooks.databinding.WebViewBinding
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
 import com.rtchubs.engineerbooks.models.chapter.BookChapter
@@ -51,6 +51,7 @@ import com.rtchubs.engineerbooks.ui.MainActivity
 import com.rtchubs.engineerbooks.ui.ShowHideBottomNavCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.common.CommonMessageBottomSheetDialog
+import com.rtchubs.engineerbooks.ui.common.DownloadOrEraseMessageBottomSheetDialog
 import com.rtchubs.engineerbooks.ui.home.VideoTabViewPagerAdapter
 import com.rtchubs.engineerbooks.util.AppConstants.downloadFolder
 import com.rtchubs.engineerbooks.util.AppConstants.unzippedFolder
@@ -88,7 +89,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).title }
     }
 
-    private val viewPagerPageTitles = arrayOf("অ্যানিমেশন", tab1Title, tab2Title, tab3Title)
+    private val viewPagerPageTitles = arrayOf(if (tab4Title.isEmpty()) "অ্যানিমেশন" else tab4Title, tab1Title, tab2Title, tab3Title)
 //    private val viewPagerPageTitles = arrayOf("Video List", "Questions")
 
     private lateinit var pagerAdapter: VideoTabViewPagerAdapter
@@ -491,7 +492,8 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
         pagerAdapter = VideoTabViewPagerAdapter(
             4,
-            this
+            this,
+            tab4Title.isNotEmpty()
         )
 
         viewDataBinding.viewPager.adapter = pagerAdapter
@@ -555,9 +557,68 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                                 }
                             }
                         } else {
-                            val downloadUrl = "$VIDEOS/$fileName"
-                            viewModel.downloadVideoFile(downloadUrl, filepath, fileName)
-                            downloadingFile = File(filepath, fileName)
+                            showErrorToast(requireContext(), "ভিডিও বা এনিমেশনটি দেখতে পাশের মেনু বাটনে ক্লিক করে ডাউনলোড করে নিন")
+//                            val downloadUrl = "$VIDEOS/$fileName"
+//                            viewModel.downloadVideoFile(downloadUrl, filepath, fileName)
+//                            downloadingFile = File(filepath, fileName)
+                        }
+//                    lifecycleScope.launch {
+//                        playVideo()
+//                    }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        )
+
+        childFragmentManager.setFragmentResultListener(
+            "downloadVideo",
+            viewLifecycleOwner, FragmentResultListener { key, bundle ->
+                val videoItem = bundle.getSerializable("VideoItem") as ChapterField?
+                videoItem?.let {
+                    try {
+                        val filepath = FileUtils.getLocalStorageFilePath(
+                            requireContext(),
+                            downloadFolder
+                        )
+                        val unzipFilepath = FileUtils.getLocalStorageFilePath(
+                            requireContext(),
+                            unzippedFolder
+                        )
+                        val fileName = videoItem.video_filename
+                        if (fileName.isNullOrBlank()) {
+                            commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
+                            commonMessageBottomSheetDialog.show(
+                                childFragmentManager,
+                                "#Common_Message_Dialog"
+                            )
+                            //showWarningToast(requireContext(), "This video is not available now")
+                            return@FragmentResultListener
+                        }
+                        val videoFile = File(filepath, fileName)
+                        if (videoFile.exists()) {
+                            val downloadOrEraseMessageBottomSheetDialog = DownloadOrEraseMessageBottomSheetDialog({
+                                viewModel.showHideProgress.postValue(true)
+                                FileUtils.deleteFileFromExternalStorage(videoFile)
+                                val videoFolderName = fileName.substring(0, fileName.lastIndexOf("."))
+
+                                val videoFolder = File(unzipFilepath, videoFolderName)
+                                if (videoFolder.exists() && videoFolder.isDirectory) {
+                                    FileUtils.deleteFileFromExternalStorage(videoFolder)
+                                }
+                                viewModel.showHideProgress.postValue(false)
+                            })
+                            downloadOrEraseMessageBottomSheetDialog.isCancelable = true
+                            downloadOrEraseMessageBottomSheetDialog.showNow(parentFragmentManager, "#AnimationDeleteDialog")
+                        } else {
+                            val downloadOrEraseMessageBottomSheetDialog = DownloadOrEraseMessageBottomSheetDialog({
+                                val downloadUrl = "${ApiEndPoint.VIDEOS}/$fileName"
+                                viewModel.downloadVideoFile(downloadUrl, filepath, fileName)
+                                downloadingFile = File(filepath, fileName)
+                            }, true)
+                            downloadOrEraseMessageBottomSheetDialog.isCancelable = true
+                            downloadOrEraseMessageBottomSheetDialog.showNow(parentFragmentManager, "#AnimationDownloadDialog")
                         }
 //                    lifecycleScope.launch {
 //                        playVideo()
@@ -986,6 +1047,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         var tab1Title = ""
         var tab2Title = ""
         var tab3Title = ""
+        var tab4Title = ""
     }
 }
 

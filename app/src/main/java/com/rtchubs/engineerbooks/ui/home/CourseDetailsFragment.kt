@@ -25,7 +25,6 @@ import com.google.android.material.chip.Chip
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.CourseDetailsFragmentBinding
-import com.rtchubs.engineerbooks.models.home.PaidBook
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 
 class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseDetailsViewModel>() {
@@ -51,7 +50,7 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         //registerToolbar(viewDataBinding.toolbar)
 
         val course = args.course
-        val price: Double
+        val price: String
 
         val totalPrice = course.price ?: 0
         val totalDiscount = course.discount_price ?: 0
@@ -70,21 +69,18 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
             viewDataBinding.discountPrice.visibility = View.VISIBLE
             val discountedPrice = totalPrice - totalDiscount
             viewDataBinding.discountPrice.text = discountedPrice.toString()
-            price = discountedPrice.toDouble()
+            price = discountedPrice.toString()
         } else {
             viewDataBinding.price.apply {
                 paintFlags = paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 text = totalPrice.toString()
             }
             viewDataBinding.discountPrice.visibility = View.GONE
-            price = totalPrice.toDouble()
+            price = totalPrice.toString()
         }
 
         viewDataBinding.btnBuyNow.setOnClickListener {
-            navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToPaymentNav(
-                PaidBook(course.book_id, course.title, 1, course.class_name, false, price),
-                course
-            ))
+            navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToPaymentNav(course.book_id ?: 0, course.title, course.id ?:0, price))
         }
 
         course.course_items?.let {
@@ -109,6 +105,7 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         }
         viewDataBinding.teachersRecycler.adapter = teachersAdapter
         teachersAdapter.submitList(course.teachers)
+        viewDataBinding.tvLabelTeacher.visibility = if (course.teachers.isNullOrEmpty()) View.GONE else View.VISIBLE
 
 //        val subjects = listOf(
 //            CourseSubject(1, "Subject - 1"),
@@ -137,6 +134,10 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         viewModel.allFaqList.observe(viewLifecycleOwner, Observer {
             faqsAdapter.submitList(it)
         })
+
+        viewDataBinding.btnBookDetails.setOnClickListener {
+            navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToChapterNav(1, "গণিত বই (ষষ্ঠ শ্রেনী) ফ্রি"))
+        }
 
         viewModel.getAllFaqs()
     }

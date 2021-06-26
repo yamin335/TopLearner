@@ -40,11 +40,11 @@ class VideoListFragment : BaseFragment<VideoListFragmentBinding, VideoListViewMo
             }
         )
 
-        videoListAdapter = VideoListAdapter (
-            appExecutors
-        ) { item ->
+        videoListAdapter = VideoListAdapter ( appExecutors, { item ->
             setFragmentResult("playVideo", bundleOf("VideoItem" to item))
-        }
+        }, { item ->
+            setFragmentResult("downloadVideo", bundleOf("VideoItem" to item))
+        })
 
         viewDataBinding.rvVideoList.adapter = videoListAdapter
 
