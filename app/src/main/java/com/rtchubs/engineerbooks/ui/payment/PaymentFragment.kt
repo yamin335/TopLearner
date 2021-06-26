@@ -240,7 +240,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 "$firstName $lastName", args.book.bookName ?: "", response.amount ?: "N/A"
             ),
             CoursePaymentRequest(
-                userData.mobile, userData.id, args.course.id, args.course.price, response.amount.toDouble().toInt()
+                userData.mobile, invoiceNumber,userData.id, args.course.id, args.course.price, response.amount.toDouble().toInt()
             )
         )
     }

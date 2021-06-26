@@ -18,7 +18,7 @@ data class CreateOrderBody(var StudentID: Int = 0, var StudentMobile: String = "
                            var DueAmount: Int = 0, var discount: Int = 0,
                            var institute: String = "", var upazila: String = "",
                            var city: String = "", var UpazilaID: Int = 0,
-                           var CityID: Int = 0, var Invoiceid: String = "",
+                           var CityID: Int = 0, var InvoiceID: String = "",
                            var ReferenceID: String = "", var PayemtReferenceID: String = "",
                            var BookID: Int = 0, var ClassID: Int = 0,
                            var StudentName: String = "", var BookName: String = "",
