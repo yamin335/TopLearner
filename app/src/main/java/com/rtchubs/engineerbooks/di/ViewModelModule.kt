@@ -226,4 +226,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(CourseDetailsViewModel::class)
     abstract fun bindCourseDetailsViewModel(viewModel: CourseDetailsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(Tab4ViewModel::class)
+    abstract fun bindTab4ViewModel(viewModel: Tab4ViewModel): ViewModel
 }

@@ -13,6 +13,7 @@ import com.rtchubs.engineerbooks.local_db.dbo.ChapterItem
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.home.CourseCategory
+import com.rtchubs.engineerbooks.models.my_course.MyCourse
 import com.rtchubs.engineerbooks.models.my_course.MyCourseBook
 
 /**
@@ -22,6 +23,7 @@ import com.rtchubs.engineerbooks.models.my_course.MyCourseBook
     entities = [
         CourseCategory::class,
         ClassWiseBook::class,
+        MyCourse::class,
         MyCourseBook::class,
         ChapterItem::class,
         HistoryItem::class

@@ -40,9 +40,29 @@ class MyCourseViewModel @Inject constructor(
         }
     }
 
+    val allMyCoursesFromDB: LiveData<List<MyCourse>> = liveData {
+        myCourseDao.getAllMyCourses().collect { list ->
+            emit(list)
+        }
+    }
+
     val allCourseCategoriesFromDB: LiveData<List<CourseCategory>> = liveData {
         courseDao.getAllCourseCategories().collect { list ->
             emit(list)
+        }
+    }
+
+    fun saveMyCoursesInDB(myCourses: List<MyCourse>) {
+        try {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+            }
+
+            viewModelScope.launch(handler) {
+                myCourseDao.updateAllMyCourses(myCourses)
+            }
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
         }
     }
 

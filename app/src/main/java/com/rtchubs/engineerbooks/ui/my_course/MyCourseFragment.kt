@@ -286,7 +286,12 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
 
         viewModel.myCourses.observe(viewLifecycleOwner, Observer {
             it?.let { myCourses ->
+                viewModel.saveMyCoursesInDB(myCourses)
+            }
+        })
 
+        viewModel.allMyCoursesFromDB.observe(viewLifecycleOwner, Observer {
+            it?.let { myCourses ->
                 val courses = ArrayList<MyCourse>()
                 for (course in myCourses) {
                     if (allCourseList.containsKey(course.course_id)) {

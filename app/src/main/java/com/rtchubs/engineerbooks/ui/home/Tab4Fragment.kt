@@ -25,14 +25,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
-class Tab1Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab1ViewModel>() {
+class Tab4Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab4ViewModel>() {
 
     override val bindingVariable: Int
         get() = BR.viewModel
     override val layoutId: Int
         get() = R.layout.fragment_chapter_details_cmn_tab
 
-    override val viewModel: Tab1ViewModel by viewModels { viewModelFactory }
+    override val viewModel: Tab4ViewModel by viewModels { viewModelFactory }
 
     lateinit var pdfFileReceiver: BroadcastReceiver
 
@@ -96,7 +96,7 @@ class Tab1Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab1ViewMode
         }
 
         try {
-            val chapterFields = LoadWebViewFragment.chapter.fields?.filter { it.type == "Tab1" }
+            val chapterFields = LoadWebViewFragment.chapter.fields?.filter { it.type == "Tab4" }
             if (chapterFields.isNullOrEmpty()) {
                 viewDataBinding.emptyView.visibility = View.VISIBLE
                 viewDataBinding.loader.visibility = View.GONE
@@ -143,7 +143,7 @@ class Tab1Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab1ViewMode
 
     companion object {
         var pdfFilePath = ""
-        const val TAG = "Tab1Fragment"
+        const val TAG = "Tab4Fragment"
     }
 
     override fun onDetach() {

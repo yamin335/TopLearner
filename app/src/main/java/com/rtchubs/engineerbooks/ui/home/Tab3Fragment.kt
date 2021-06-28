@@ -1,33 +1,53 @@
 package com.rtchubs.engineerbooks.ui.home
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.webkit.*
 import androidx.core.os.bundleOf
-import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.github.barteksc.pdfviewer.util.FitPolicy
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
-import com.rtchubs.engineerbooks.databinding.QuizListFragmentBinding
+import com.rtchubs.engineerbooks.databinding.ChapterDetailsTabFragmentBinding
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment
+import com.rtchubs.engineerbooks.util.AppConstants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
-class Tab3Fragment : BaseFragment<QuizListFragmentBinding, Tab3ViewModel>() {
+class Tab3Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab3ViewModel>() {
 
     override val bindingVariable: Int
         get() = BR.viewModel
     override val layoutId: Int
-        get() = R.layout.fragment_quiz_list
+        get() = R.layout.fragment_chapter_details_cmn_tab
 
     override val viewModel: Tab3ViewModel by viewModels { viewModelFactory }
+
+    lateinit var pdfFileReceiver: BroadcastReceiver
+
+    override fun onResume() {
+        super.onResume()
+        loadPDF(File(pdfFilePath))
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(pdfFileReceiver,
+            IntentFilter(AppConstants.TYPE_LOAD_PDF)
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(pdfFileReceiver)
+    }
 
     //lateinit var quizListAdapter: QuizListAdapter
 
@@ -35,20 +55,16 @@ class Tab3Fragment : BaseFragment<QuizListFragmentBinding, Tab3ViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        parentFragmentManager.setFragmentResultListener(
-            "loadPdf",
-            viewLifecycleOwner, FragmentResultListener { key, bundle ->
-                if (bundle.getString("fragmeent") == TAG) {
-                    pdfFilePath = bundle.getString("pdfFilePath") ?: ""
-
-                    if (pdfFilePath == "") {
-                        viewDataBinding.loader.visibility = View.GONE
-                    } else {
-                        loadPDF(File(pdfFilePath))
-                    }
+        pdfFileReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action != null && intent.action == AppConstants.TYPE_LOAD_PDF) {
+                    loadPDF(File(pdfFilePath))
                 }
             }
-        )
+        }
+
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(pdfFileReceiver,
+            IntentFilter(AppConstants.TYPE_LOAD_PDF))
 
         val webSettings = viewDataBinding.webView.settings
         webSettings.javaScriptEnabled = true
@@ -84,21 +100,32 @@ class Tab3Fragment : BaseFragment<QuizListFragmentBinding, Tab3ViewModel>() {
 
         try {
             val chapterFields = LoadWebViewFragment.chapter.fields?.filter { it.type == "Tab3" }
-            val solution = chapterFields?.first()?.link
+            if (chapterFields.isNullOrEmpty()) {
+                viewDataBinding.emptyView.visibility = View.VISIBLE
+                viewDataBinding.loader.visibility = View.GONE
+                return
+            }
+            val data = chapterFields.first().link
 
-            if (solution.isNullOrBlank() || solution == "null") {
+            if (data.isNullOrBlank() || data == "null") {
                 viewDataBinding.emptyView.visibility = View.VISIBLE
             } else {
                 viewDataBinding.emptyView.visibility = View.GONE
-                if (solution.contains(".pdf", true)) {
+                if (data.contains(".pdf", true)) {
+                    viewDataBinding.nestedScrollableHost.visibility = View.VISIBLE
+                    viewDataBinding.webView.visibility = View.GONE
                     loadPDF(File(pdfFilePath))
-                    setFragmentResult("downloadPDF", bundleOf("fragment" to TAG, "name" to solution))
+                    setFragmentResult("downloadPDF", bundleOf("fragment" to TAG, "url" to data))
                 } else {
-                    viewDataBinding.webView.loadUrl(solution)
+                    viewDataBinding.nestedScrollableHost.visibility = View.GONE
+                    viewDataBinding.webView.visibility = View.VISIBLE
+                    viewDataBinding.webView.loadUrl(data)
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            viewDataBinding.emptyView.visibility = View.VISIBLE
+            viewDataBinding.loader.visibility = View.GONE
         }
 
 //        quizListAdapter = QuizListAdapter(
@@ -157,8 +184,8 @@ class Tab3Fragment : BaseFragment<QuizListFragmentBinding, Tab3ViewModel>() {
     }
 
     companion object {
-        private var pdfFilePath = ""
-        private const val TAG = "Tab3Fragment"
+        var pdfFilePath = ""
+        const val TAG = "Tab3Fragment"
     }
 
     override fun onDetach() {

@@ -1,14 +1,27 @@
 package com.rtchubs.engineerbooks.local_db.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
+import com.rtchubs.engineerbooks.models.my_course.MyCourse
 import com.rtchubs.engineerbooks.models.my_course.MyCourseBook
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MyCourseDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addMyCourses(myCourses: List<MyCourse>)
+
+    @Query("SELECT * FROM my_course")
+    fun getAllMyCourses(): Flow<List<MyCourse>>
+
+    @Query("DELETE FROM my_course")
+    suspend fun deleteAllMyCourses()
+
+    @Transaction
+    suspend fun updateAllMyCourses(myCourses: List<MyCourse>) {
+        deleteAllMyCourses()
+        addMyCourses(myCourses)
+    }
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addItemToMyCourseBooks(myCourseBook: MyCourseBook): Long
 

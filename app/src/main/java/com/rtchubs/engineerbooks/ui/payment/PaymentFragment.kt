@@ -46,6 +46,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
     private lateinit var invoiceNumber: String
 
+    var discount = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         invoiceNumber = generateInvoiceID()
@@ -85,7 +87,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         })
 
         viewModel.offers.observe(viewLifecycleOwner, Observer {
-            val discount = (userData.discount_amount ?: 0.0).toInt()
+            discount = (userData.discount_amount ?: 0.0).toInt()
             it?.let { offers ->
                 if (offers.isNotEmpty()) {
                     offers.forEach { offer ->
@@ -209,7 +211,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             CreateOrderBody(
                 userData.id ?: 0, userData.mobile ?: "",
                 amount.toInt(), 0, 0,
-                0, "", userData.upazila ?: "", userData.city ?: "",
+                discount, "", userData.upazila ?: "", userData.city ?: "",
                 userData.UpazilaID ?: 0, userData.CityID ?: 0, bkashData.invoicenumber ?: "N/A",
                 "", bkashData.paymentID ?: "N/A", args.bookId, userData.class_id ?: 0,
                 "$firstName $lastName", args.bookName ?: "", bkashData.paymentID ?: "N/A"

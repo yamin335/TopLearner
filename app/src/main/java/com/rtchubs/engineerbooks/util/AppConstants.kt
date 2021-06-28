@@ -23,6 +23,8 @@ object AppConstants {
     const val downloadServiceNotificationChannelDescription = "Shows the progress of an ongoing download"
     const val typePdf = "pdf"
     const val typeVideo = "video"
+    const val TYPE_LOAD_PDF = "loadPdf"
+    const val PDF_FILE_PATH = "pdfFilePath"
     const val generalUserTypeID = 1
     const val adminUserTypeID = 2
 }

@@ -33,6 +33,7 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -41,7 +42,6 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.api.ApiEndPoint
-import com.rtchubs.engineerbooks.api.ApiEndPoint.PDF
 import com.rtchubs.engineerbooks.databinding.WebViewBinding
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
 import com.rtchubs.engineerbooks.models.chapter.BookChapter
@@ -52,7 +52,9 @@ import com.rtchubs.engineerbooks.ui.ShowHideBottomNavCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.common.CommonMessageBottomSheetDialog
 import com.rtchubs.engineerbooks.ui.common.DownloadOrEraseMessageBottomSheetDialog
-import com.rtchubs.engineerbooks.ui.home.VideoTabViewPagerAdapter
+import com.rtchubs.engineerbooks.ui.home.*
+import com.rtchubs.engineerbooks.util.AppConstants.PDF_FILE_PATH
+import com.rtchubs.engineerbooks.util.AppConstants.TYPE_LOAD_PDF
 import com.rtchubs.engineerbooks.util.AppConstants.downloadFolder
 import com.rtchubs.engineerbooks.util.AppConstants.unzippedFolder
 import com.rtchubs.engineerbooks.util.FLAGS_FULLSCREEN
@@ -211,6 +213,10 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
     override fun onDestroy() {
         super.onDestroy()
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        tab1Title = ""
+        tab2Title = ""
+        tab3Title = ""
+        tab4Title = ""
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -640,10 +646,23 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
         viewModel.pdfFileDownloadResponse.observe(viewLifecycleOwner, Observer { value ->
             value?.let {
-                childFragmentManager.setFragmentResult(
-                    "loadPdf",
-                    bundleOf("pdfFilePath" to "${it.first}/${it.second}", "fragment" to pdfForFragment)
-                )
+                when(pdfForFragment) {
+                    Tab1Fragment.TAG -> {
+                        Tab1Fragment.pdfFilePath = "${it.first}/${it.second}"
+                    }
+                    Tab2Fragment.TAG -> {
+                        Tab2Fragment.pdfFilePath = "${it.first}/${it.second}"
+                    }
+                    Tab3Fragment.TAG -> {
+                        Tab3Fragment.pdfFilePath = "${it.first}/${it.second}"
+                    }
+                    Tab4Fragment.TAG -> {
+                        Tab4Fragment.pdfFilePath = "${it.first}/${it.second}"
+                    }
+                }
+                val pdfFileIntent = Intent(TYPE_LOAD_PDF)
+                pdfFileIntent.putExtra(PDF_FILE_PATH, "${it.first}/${it.second}")
+                LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(pdfFileIntent)
                 viewModel.filesInDownloadPool.remove(it.second)
             }
         })
@@ -653,18 +672,19 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
             viewLifecycleOwner, FragmentResultListener { key, bundle ->
                 val fragment = bundle.getString("fragment") ?: return@FragmentResultListener
                 pdfForFragment = fragment
-                val name = bundle.getString("name") ?: return@FragmentResultListener
+                val url = bundle.getString("url") ?: return@FragmentResultListener
                 val filepath = FileUtils.getLocalStorageFilePath(
                     requireContext(),
                     unzippedFolder
                 )
-                val pdfFilePath = "$filepath/$name"
+                val fileName = url.split("/").last()
+                val pdfFilePath = "$filepath/$fileName"
 
                 if (!File(pdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(
-                        name
+                        fileName
                     )) {
-                    viewModel.filesInDownloadPool.add(name)
-                    viewModel.downloadPdfFile("$PDF/$name", filepath, name)
+                    viewModel.filesInDownloadPool.add(fileName)
+                    viewModel.downloadPdfFile(url, filepath, fileName)
                 }
             }
         )
