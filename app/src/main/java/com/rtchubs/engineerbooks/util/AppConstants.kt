@@ -16,6 +16,7 @@ object AppConstants {
     const val otpWaitMessage = "Please wait until you get an OTP code!"
     const val registrationSuccessMessage = "Welcome! to QPay. Please login to continue."
     const val saveSuccessfulMessage = "Saved Successfully!"
+    const val downloadedPdfFiles = "downloaded_pdf_files"
     const val downloadFolder = "downloaded_files"
     const val unzippedFolder = "unzipped_files"
     const val downloadServiceNotificationChannelID = "downloaded_service_notification_channel_id"

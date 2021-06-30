@@ -53,6 +53,7 @@ import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.common.CommonMessageBottomSheetDialog
 import com.rtchubs.engineerbooks.ui.common.DownloadOrEraseMessageBottomSheetDialog
 import com.rtchubs.engineerbooks.ui.home.*
+import com.rtchubs.engineerbooks.util.AppConstants
 import com.rtchubs.engineerbooks.util.AppConstants.PDF_FILE_PATH
 import com.rtchubs.engineerbooks.util.AppConstants.TYPE_LOAD_PDF
 import com.rtchubs.engineerbooks.util.AppConstants.downloadFolder
@@ -91,8 +92,10 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).title }
     }
 
-    private val viewPagerPageTitles = arrayOf(if (tab4Title.isEmpty()) "অ্যানিমেশন" else tab4Title, tab1Title, tab2Title, tab3Title)
+//    private val viewPagerPageTitles = arrayOf(if (tab4Title.isEmpty()) "অ্যানিমেশন" else tab4Title, tab1Title, tab2Title, tab3Title)
 //    private val viewPagerPageTitles = arrayOf("Video List", "Questions")
+
+    private val viewPagerPageTitles = arrayOf("অ্যানিমেশন", tab1Title, tab2Title, tab3Title)
 
     private lateinit var pagerAdapter: VideoTabViewPagerAdapter
 
@@ -151,6 +154,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
     override fun onResume() {
         super.onResume()
         detectUSB()
+        viewDataBinding.webView.loadUrl("https://filedn.com/lknC2WxBGrLhvR1B4TaXzbQ/MATH7_3Q8KA/MATH7_3Q8KA_player.html")
         // get notified when download is complete
 //        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
 //            downloadCompleteReceiver,
@@ -169,7 +173,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
         // How are we charging?
         val chargePlug: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
-        if (chargePlug == BatteryManager.BATTERY_PLUGGED_USB) isUSBPluggedIn = true
+        if (chargePlug == BatteryManager.BATTERY_PLUGGED_USB) isUSBPluggedIn = false
     }
 
     override fun onPause() {
@@ -663,7 +667,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                 val pdfFileIntent = Intent(TYPE_LOAD_PDF)
                 pdfFileIntent.putExtra(PDF_FILE_PATH, "${it.first}/${it.second}")
                 LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(pdfFileIntent)
-                viewModel.filesInDownloadPool.remove(it.second)
+                filesInDownloadPool.remove(it.second)
             }
         })
 
@@ -675,15 +679,15 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                 val url = bundle.getString("url") ?: return@FragmentResultListener
                 val filepath = FileUtils.getLocalStorageFilePath(
                     requireContext(),
-                    unzippedFolder
+                    AppConstants.downloadedPdfFiles
                 )
                 val fileName = url.split("/").last()
                 val pdfFilePath = "$filepath/$fileName"
 
-                if (!File(pdfFilePath).exists() && !viewModel.filesInDownloadPool.contains(
+                if (!File(pdfFilePath).exists() && !filesInDownloadPool.contains(
                         fileName
                     )) {
-                    viewModel.filesInDownloadPool.add(fileName)
+                    filesInDownloadPool.add(fileName)
                     viewModel.downloadPdfFile(url, filepath, fileName)
                 }
             }
@@ -695,7 +699,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                     "loadSolutionPdf",
                     bundleOf("solutionPdfFilePath" to "${it.first}/${it.second}")
                 )
-                viewModel.filesInDownloadPool.remove(it.second)
+                filesInDownloadPool.remove(it.second)
             }
         })
 
@@ -1068,6 +1072,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         var tab2Title = ""
         var tab3Title = ""
         var tab4Title = ""
+        val filesInDownloadPool = ArrayList<String>()
     }
 }
 

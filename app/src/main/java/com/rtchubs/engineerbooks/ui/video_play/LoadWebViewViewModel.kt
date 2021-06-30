@@ -31,8 +31,6 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
         }
     }
 
-    val filesInDownloadPool = ArrayList<String>()
-
     val videoFileDownloadResponse: MutableLiveData<Pair<String, String>> by lazy {
         MutableLiveData<Pair<String, String>>()
     }

@@ -15,7 +15,8 @@ class VideoTabViewPagerAdapter internal constructor(
 
     override fun createFragment(position: Int): Fragment {
         return when(position) {
-            0 -> if (isTab4) Tab4Fragment() else VideoListFragment()
+            //0 -> if (isTab4) Tab4Fragment() else VideoListFragment()
+            0 -> VideoListFragment()
             1 -> Tab1Fragment()
             2 -> Tab2Fragment()
             3 -> Tab3Fragment()

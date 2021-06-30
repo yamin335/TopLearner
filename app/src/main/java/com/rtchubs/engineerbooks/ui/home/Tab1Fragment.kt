@@ -21,6 +21,7 @@ import com.rtchubs.engineerbooks.databinding.ChapterDetailsTabFragmentBinding
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment
 import com.rtchubs.engineerbooks.util.AppConstants
+import com.rtchubs.engineerbooks.util.FileUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
@@ -112,8 +113,19 @@ class Tab1Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab1ViewMode
                 if (data.contains(".pdf", true)) {
                     viewDataBinding.nestedScrollableHost.visibility = View.VISIBLE
                     viewDataBinding.webView.visibility = View.GONE
-                    loadPDF(File(pdfFilePath))
-                    setFragmentResult("downloadPDF", bundleOf("fragment" to TAG, "url" to data))
+                    val filepath = FileUtils.getLocalStorageFilePath(
+                        requireContext(),
+                        AppConstants.downloadedPdfFiles
+                    )
+                    val fileName = data.split("/").last()
+                    val path = "$filepath/$fileName"
+
+                    if (File(path).exists()) {
+                        pdfFilePath = path
+                        loadPDF(File(pdfFilePath))
+                    } else {
+                        setFragmentResult("downloadPDF", bundleOf("fragment" to TAG, "url" to data))
+                    }
                 } else {
                     viewDataBinding.nestedScrollableHost.visibility = View.GONE
                     viewDataBinding.webView.visibility = View.VISIBLE
