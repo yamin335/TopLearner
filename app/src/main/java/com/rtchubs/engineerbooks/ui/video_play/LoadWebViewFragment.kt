@@ -476,8 +476,6 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
         viewDataBinding.webView.webViewClient = object : WebViewClient() {
 
-
-
             override fun shouldOverrideKeyEvent(view: WebView?, event: KeyEvent?): Boolean {
                 return super.shouldOverrideKeyEvent(view, event)
                 var tt = "S"
@@ -795,6 +793,23 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
     }
 
+//    inner class JavaScriptWebViewInterface(context: Context) {
+//        var mContext: Context = context
+//
+//        // Handle event from the web page
+//        @JavascriptInterface
+//        fun createPayment() {
+//            viewModel.createBkashCheckout(paymentRequest, createBkash, billPaymentHelper)
+//            viewModel.bkashToken = createBkash.authToken
+//        }
+//
+//        @JavascriptInterface
+//        fun executePayment() {
+//            viewModel.executeBkashPayment()
+//        }
+//
+//    }
+
 //    private fun downloadFile(downloadUrl: String, filePath: String, fileName: String, fileType: String) {
 //        val intent = Intent(requireContext(), DownloadService::class.java)
 //        intent.putExtra(AppConstants.DOWNLOAD_URL, downloadUrl)
@@ -1000,6 +1015,8 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
             restoreSystemUI()
             bottomNavShowHideCallback?.showOrHideBottomNav(true)
         } else {
+            viewDataBinding.webView
+                .loadUrl("javascript:(function(){var elem = document.getElementById('tscVideoContent-video-div'); if (elem.requestFullscreen) { elem.requestFullscreen(); }})()");
             viewDataBinding.webView.evaluateJavascript("javascript:enableFullScreen()") {
                 Log.d("JavaScriptReturnValue:", it)
             }
