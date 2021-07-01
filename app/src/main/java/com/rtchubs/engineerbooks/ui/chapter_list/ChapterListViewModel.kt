@@ -39,7 +39,21 @@ class ChapterListViewModel @Inject constructor(
             }
 
             viewModelScope.launch(handler) {
-                bookChapterDao.addChapters(ChapterItem(bookId, chapters))
+                bookChapterDao.updateChapters(ChapterItem(bookId, chapters))
+            }
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+        }
+    }
+
+    fun deleteAllBookChaptersFromDB() {
+        try {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+            }
+
+            viewModelScope.launch(handler) {
+                bookChapterDao.deleteAllChapters()
             }
         } catch (e: SQLiteException) {
             e.printStackTrace()

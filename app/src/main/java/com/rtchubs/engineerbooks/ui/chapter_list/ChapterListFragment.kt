@@ -27,6 +27,16 @@ class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterList
 
     val args: ChapterListFragmentArgs by navArgs()
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getChapterList(args.id)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.deleteAllBookChaptersFromDB()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         registerToolbar(viewDataBinding.toolbar)
@@ -55,6 +65,7 @@ class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterList
         viewModel.chapterListFromDB.observe(viewLifecycleOwner, Observer { chapters ->
             chapters?.let {
                 if (it.chapters.isNullOrEmpty()) {
+                    chapterListAdapter.submitList(it.chapters)
                     viewDataBinding.emptyView.visibility = View.VISIBLE
                 } else {
                     chapterListAdapter.submitList(it.chapters)
@@ -64,13 +75,7 @@ class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterList
         })
 
         viewModel.chapterList.observe(viewLifecycleOwner, Observer { chapters ->
-            chapters?.let {
-                if (it.isNotEmpty()) {
-                    viewModel.saveBookChaptersInDB(bookID, chapters)
-                }
-            }
+            viewModel.saveBookChaptersInDB(bookID, chapters ?: ArrayList())
         })
-
-        viewModel.getChapterList(args.id)
     }
 }
