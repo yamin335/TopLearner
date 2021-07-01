@@ -22,11 +22,21 @@ interface BookChapterDao {
         addBooks(books)
     }
 
+    @Query("DELETE FROM chapters")
+    suspend fun deleteAllChapters()
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addChapters(bookChapters: ChapterItem): Long
 
     @Query("SELECT * FROM chapters WHERE bookId = :bookId")
     fun getBookChapters(bookId: String): Flow<ChapterItem>
+
+    @Transaction
+    suspend fun updateChapters(bookChapters: ChapterItem) {
+        deleteAllChapters()
+        addChapters(bookChapters)
+    }
+
 //
 //    @Update
 //    fun updateUsers(bookChapters: BookChapters)
