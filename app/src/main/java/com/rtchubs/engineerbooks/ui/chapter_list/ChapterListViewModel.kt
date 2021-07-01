@@ -46,14 +46,14 @@ class ChapterListViewModel @Inject constructor(
         }
     }
 
-    fun deleteAllBookChaptersFromDB() {
+    fun deleteAChapterFromDB(bookId: String) {
         try {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
             }
 
             viewModelScope.launch(handler) {
-                bookChapterDao.deleteAllChapters()
+                bookChapterDao.deleteAChapter(bookId)
             }
         } catch (e: SQLiteException) {
             e.printStackTrace()

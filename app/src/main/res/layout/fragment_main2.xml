@@ -52,13 +52,27 @@
             app:layout_constraintTop_toBottomOf="@+id/customToolbar"
             app:layout_constraintVertical_bias="0.0" />
 
+        <TextView
+            android:id="@+id/syncText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Syncing from Network..."
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view2"
+            app:layout_constraintVertical_bias="0.0"
+            android:visibility="@{viewModel.allCourseCategoryList.size() > 0 ? View.GONE : View.VISIBLE}" />
+
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view2">
+            app:layout_constraintTop_toBottomOf="@+id/syncText">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -129,7 +143,7 @@
                 android:elevation="1dp"
                 android:focusable="true"
                 android:gravity="center"
-                app:showLoader="@{viewModel.apiCallStatus}">
+                android:visibility="@{viewModel.allCourseCategoriesFromDB.size() > 0 ? View.GONE : View.VISIBLE}">
 
                 <ProgressBar
                     android:id="@+id/loader"

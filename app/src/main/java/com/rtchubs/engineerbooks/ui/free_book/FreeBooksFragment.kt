@@ -149,8 +149,11 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
         }
 
         viewModel.allBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
-            books?.let {
-                val temp = it.filter { item -> item.price ?: 0.0 <= 0.0 }
+            if (books.isNullOrEmpty()) {
+                allBookList = books as ArrayList<ClassWiseBook>
+                freeBookListAdapter?.submitList(allBookList)
+            } else {
+                val temp = books.filter { item -> item.price ?: 0.0 <= 0.0 }
                 allBookList = temp as ArrayList<ClassWiseBook>
                 freeBookListAdapter?.submitList(allBookList)
             }
@@ -160,11 +163,7 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
         viewDataBinding.homeClassListRecycler.adapter = freeBookListAdapter
 
         viewModel.allBooks.observe(viewLifecycleOwner, Observer { books ->
-            books?.let {
-                if (it.isNotEmpty()) {
-                    viewModel.saveBooksInDB(it)
-                }
-            }
+            viewModel.saveBooksInDB(books ?: ArrayList())
         })
 
         

@@ -22,8 +22,11 @@ interface BookChapterDao {
         addBooks(books)
     }
 
-    @Query("DELETE FROM chapters")
-    suspend fun deleteAllChapters()
+//    @Query("DELETE FROM chapters")
+//    suspend fun deleteAllChapters()
+
+    @Query("DELETE FROM chapters WHERE bookId = :bookId")
+    suspend fun deleteAChapter(bookId: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addChapters(bookChapters: ChapterItem): Long
@@ -33,7 +36,7 @@ interface BookChapterDao {
 
     @Transaction
     suspend fun updateChapters(bookChapters: ChapterItem) {
-        deleteAllChapters()
+        deleteAChapter(bookChapters.bookId)
         addChapters(bookChapters)
     }
 

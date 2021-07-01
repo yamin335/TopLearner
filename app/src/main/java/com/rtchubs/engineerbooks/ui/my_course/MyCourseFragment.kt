@@ -285,9 +285,7 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
         })
 
         viewModel.myCourses.observe(viewLifecycleOwner, Observer {
-            it?.let { myCourses ->
-                viewModel.saveMyCoursesInDB(myCourses)
-            }
+            viewModel.saveMyCoursesInDB(it ?: ArrayList())
         })
 
         viewModel.allMyCoursesFromDB.observe(viewLifecycleOwner, Observer {
