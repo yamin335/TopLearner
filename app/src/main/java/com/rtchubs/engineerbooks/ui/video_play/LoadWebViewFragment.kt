@@ -650,16 +650,16 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
             value?.let {
                 when(pdfForFragment) {
                     Tab1Fragment.TAG -> {
-                        Tab1Fragment.pdfFilePath = "${it.first}/${it.second}"
+                        Tab1Fragment.pdfFilePath1 = "${it.first}/${it.second}"
                     }
                     Tab2Fragment.TAG -> {
-                        Tab2Fragment.pdfFilePath = "${it.first}/${it.second}"
+                        Tab2Fragment.pdfFilePath2 = "${it.first}/${it.second}"
                     }
                     Tab3Fragment.TAG -> {
-                        Tab3Fragment.pdfFilePath = "${it.first}/${it.second}"
+                        Tab3Fragment.pdfFilePath3 = "${it.first}/${it.second}"
                     }
                     Tab4Fragment.TAG -> {
-                        Tab4Fragment.pdfFilePath = "${it.first}/${it.second}"
+                        Tab4Fragment.pdfFilePath4 = "${it.first}/${it.second}"
                     }
                 }
                 val pdfFileIntent = Intent(TYPE_LOAD_PDF)
@@ -680,11 +680,9 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                     AppConstants.downloadedPdfFiles
                 )
                 val fileName = url.split("/").last()
-                val pdfFilePath = "$filepath/$fileName"
+                //val pdfFilePath = "$filepath/$fileName"
 
-                if (!File(pdfFilePath).exists() && !filesInDownloadPool.contains(
-                        fileName
-                    )) {
+                if (!filesInDownloadPool.contains(fileName)) {
                     filesInDownloadPool.add(fileName)
                     viewModel.downloadPdfFile(url, filepath, fileName)
                 }
