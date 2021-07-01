@@ -118,7 +118,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
 //    private lateinit var source: String
 //    private lateinit var destination: String
-    private val password = "1234".toCharArray()
+    private val password = "Engg6587".toCharArray()
 
     private var bottomNavShowHideCallback: ShowHideBottomNavCallback? = null
 
@@ -154,7 +154,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
     override fun onResume() {
         super.onResume()
         detectUSB()
-        viewDataBinding.webView.loadUrl("https://filedn.com/lknC2WxBGrLhvR1B4TaXzbQ/MATH7_3Q8KA/MATH7_3Q8KA_player.html")
+        //viewDataBinding.webView.loadUrl("https://filedn.com/lknC2WxBGrLhvR1B4TaXzbQ/MATH7_3Q8KA/MATH7_3Q8KA_player.html")
         // get notified when download is complete
 //        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
 //            downloadCompleteReceiver,
@@ -173,7 +173,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
         }
         // How are we charging?
         val chargePlug: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
-        if (chargePlug == BatteryManager.BATTERY_PLUGGED_USB) isUSBPluggedIn = false
+        if (chargePlug == BatteryManager.BATTERY_PLUGGED_USB) isUSBPluggedIn = true
     }
 
     override fun onPause() {

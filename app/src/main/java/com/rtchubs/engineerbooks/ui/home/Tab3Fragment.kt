@@ -79,12 +79,20 @@ class Tab3Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab3ViewMode
         viewDataBinding.webView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
-                viewDataBinding.loader.visibility = View.VISIBLE
+                try  {
+                    viewDataBinding.loader.visibility = View.VISIBLE
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                viewDataBinding.loader.visibility = View.GONE
+                try  {
+                    viewDataBinding.loader.visibility = View.GONE
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
 
             override fun onReceivedHttpError(
