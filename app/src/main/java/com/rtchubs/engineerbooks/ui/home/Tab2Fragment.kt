@@ -37,9 +37,11 @@ class Tab2Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab2ViewMode
 
     lateinit var pdfFileReceiver: BroadcastReceiver
 
+    private var pdfUrl = ""
+
     override fun onResume() {
         super.onResume()
-        loadPDF(File(pdfFilePath))
+        loadPDF(File(pdfFilePath2))
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(pdfFileReceiver,
             IntentFilter(AppConstants.TYPE_LOAD_PDF)
         )
@@ -57,7 +59,7 @@ class Tab2Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab2ViewMode
         pdfFileReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (intent?.action != null && intent.action == AppConstants.TYPE_LOAD_PDF) {
-                    loadPDF(File(pdfFilePath))
+                    loadPDF(File(pdfFilePath2))
                 }
             }
         }
@@ -119,6 +121,7 @@ class Tab2Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab2ViewMode
             } else {
                 viewDataBinding.emptyView.visibility = View.GONE
                 if (data.contains(".pdf", true)) {
+                    pdfUrl = data
                     viewDataBinding.nestedScrollableHost.visibility = View.VISIBLE
                     viewDataBinding.webView.visibility = View.GONE
                     val filepath = FileUtils.getLocalStorageFilePath(
@@ -129,10 +132,10 @@ class Tab2Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab2ViewMode
                     val path = "$filepath/$fileName"
 
                     if (File(path).exists()) {
-                        Tab1Fragment.pdfFilePath = path
-                        loadPDF(File(Tab1Fragment.pdfFilePath))
+                        pdfFilePath2 = path
+                        loadPDF(File(pdfFilePath2))
                     } else {
-                        setFragmentResult("downloadPDF", bundleOf("fragment" to Tab1Fragment.TAG, "url" to data))
+                        setFragmentResult("downloadPDF", bundleOf("fragment" to TAG, "url" to pdfUrl))
                     }
                 } else {
                     viewDataBinding.nestedScrollableHost.visibility = View.GONE
@@ -154,6 +157,9 @@ class Tab2Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab2ViewMode
                     .pageFitPolicy(FitPolicy.WIDTH)
                     .enableSwipe(true)
                     .swipeHorizontal(false)
+                    .onError {
+                        setFragmentResult("downloadPDF", bundleOf("fragment" to TAG, "url" to pdfUrl))
+                    }
                     .load()
                 viewDataBinding.loader.visibility = View.GONE
                 viewDataBinding.emptyView.visibility = View.GONE
@@ -162,12 +168,12 @@ class Tab2Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab2ViewMode
     }
 
     companion object {
-        var pdfFilePath = ""
+        var pdfFilePath2 = ""
         const val TAG = "Tab2Fragment"
     }
 
     override fun onDetach() {
         super.onDetach()
-        pdfFilePath = ""
+        pdfFilePath2 = ""
     }
 }

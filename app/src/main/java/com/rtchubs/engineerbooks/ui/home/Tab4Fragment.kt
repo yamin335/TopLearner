@@ -21,6 +21,7 @@ import com.rtchubs.engineerbooks.databinding.ChapterDetailsTabFragmentBinding
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment
 import com.rtchubs.engineerbooks.util.AppConstants
+import com.rtchubs.engineerbooks.util.FileUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
@@ -36,9 +37,11 @@ class Tab4Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab4ViewMode
 
     lateinit var pdfFileReceiver: BroadcastReceiver
 
+    private var pdfUrl = ""
+
     override fun onResume() {
         super.onResume()
-        loadPDF(File(pdfFilePath))
+        loadPDF(File(pdfFilePath4))
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(pdfFileReceiver,
             IntentFilter(AppConstants.TYPE_LOAD_PDF))
     }
@@ -55,7 +58,7 @@ class Tab4Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab4ViewMode
         pdfFileReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (intent?.action != null && intent.action == AppConstants.TYPE_LOAD_PDF) {
-                    loadPDF(File(pdfFilePath))
+                    loadPDF(File(pdfFilePath4))
                 }
             }
         }
@@ -110,10 +113,22 @@ class Tab4Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab4ViewMode
             } else {
                 viewDataBinding.emptyView.visibility = View.GONE
                 if (data.contains(".pdf", true)) {
+                    pdfUrl = data
                     viewDataBinding.nestedScrollableHost.visibility = View.VISIBLE
                     viewDataBinding.webView.visibility = View.GONE
-                    loadPDF(File(pdfFilePath))
-                    setFragmentResult("downloadPDF", bundleOf("fragment" to TAG, "url" to data))
+                    val filepath = FileUtils.getLocalStorageFilePath(
+                        requireContext(),
+                        AppConstants.downloadedPdfFiles
+                    )
+                    val fileName = data.split("/").last()
+                    val path = "$filepath/$fileName"
+
+                    if (File(path).exists()) {
+                        pdfFilePath4 = path
+                        loadPDF(File(pdfFilePath4))
+                    } else {
+                        setFragmentResult("downloadPDF", bundleOf("fragment" to TAG, "url" to pdfUrl))
+                    }
                 } else {
                     viewDataBinding.nestedScrollableHost.visibility = View.GONE
                     viewDataBinding.webView.visibility = View.VISIBLE
@@ -134,6 +149,9 @@ class Tab4Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab4ViewMode
                     .pageFitPolicy(FitPolicy.WIDTH)
                     .enableSwipe(true)
                     .swipeHorizontal(false)
+                    .onError {
+                        setFragmentResult("downloadPDF", bundleOf("fragment" to TAG, "url" to pdfUrl))
+                    }
                     .load()
                 viewDataBinding.loader.visibility = View.GONE
                 viewDataBinding.emptyView.visibility = View.GONE
@@ -142,12 +160,12 @@ class Tab4Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab4ViewMode
     }
 
     companion object {
-        var pdfFilePath = ""
+        var pdfFilePath4 = ""
         const val TAG = "Tab4Fragment"
     }
 
     override fun onDetach() {
         super.onDetach()
-        pdfFilePath = ""
+        pdfFilePath4 = ""
     }
 }
