@@ -146,11 +146,7 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         viewDataBinding.courseRecycler.adapter = courseCategoryListAdapter
 
         viewModel.allCourseCategoryList.observe(viewLifecycleOwner, Observer { courseCategories ->
-            courseCategories?.let {
-                if (it.isNotEmpty()) {
-                    viewModel.saveCourseCategoriesInDB(it)
-                }
-            }
+            viewModel.saveCourseCategoriesInDB(courseCategories ?: ArrayList())
         })
 
         viewModel.allCourseCategoriesFromDB.observe(viewLifecycleOwner, Observer {
