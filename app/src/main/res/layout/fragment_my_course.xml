@@ -5,6 +5,7 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto">
 
     <data class="MyCourseFragmentBinding">
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.rtchubs.engineerbooks.ui.my_course.MyCourseViewModel" />
@@ -158,7 +159,7 @@
                 android:elevation="1dp"
                 android:focusable="true"
                 android:gravity="center"
-                app:showLoader="@{viewModel.apiCallStatus}">
+                android:visibility="@{viewModel.allMyCourseBooksFromDB.size() > 0 ? View.GONE : View.VISIBLE}">
 
                 <ProgressBar
                     android:id="@+id/loader"
