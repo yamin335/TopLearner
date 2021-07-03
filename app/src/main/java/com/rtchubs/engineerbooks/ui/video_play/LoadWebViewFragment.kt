@@ -17,7 +17,6 @@ import android.os.Bundle
 import android.transition.Transition
 import android.transition.TransitionInflater
 import android.transition.TransitionManager
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -1007,17 +1006,17 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
     override fun onNewConfiguration(newConfig: Configuration) {
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            viewDataBinding.webView.evaluateJavascript("javascript:disableFullScreen()") {
-                Log.d("JavaScriptReturnValue:", it)
-            }
+//            viewDataBinding.webView.evaluateJavascript("javascript:disableFullScreen()") {
+//                Log.d("JavaScriptReturnValue:", it)
+//            }
             restoreSystemUI()
             bottomNavShowHideCallback?.showOrHideBottomNav(true)
         } else {
-            viewDataBinding.webView
-                .loadUrl("javascript:(function(){var elem = document.getElementById('tscVideoContent-video-div'); if (elem.requestFullscreen) { elem.requestFullscreen(); }})()");
-            viewDataBinding.webView.evaluateJavascript("javascript:enableFullScreen()") {
-                Log.d("JavaScriptReturnValue:", it)
-            }
+//            viewDataBinding.webView
+//                .loadUrl("javascript:(function(){var elem = document.getElementById('tscVideoContent-video-div'); if (elem.requestFullscreen) { elem.requestFullscreen(); }})()");
+//            viewDataBinding.webView.evaluateJavascript("javascript:enableFullScreen()") {
+//                Log.d("JavaScriptReturnValue:", it)
+//            }
             hideSystemUI()
             bottomNavShowHideCallback?.showOrHideBottomNav(false)
         }
