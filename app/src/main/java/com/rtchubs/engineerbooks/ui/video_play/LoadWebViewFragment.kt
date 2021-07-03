@@ -40,7 +40,7 @@ import com.rtchubs.engineerbooks.AppGlobalValues
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiCallStatus
-import com.rtchubs.engineerbooks.api.ApiEndPoint
+import com.rtchubs.engineerbooks.api.ApiEndPoint.VIDEOS
 import com.rtchubs.engineerbooks.databinding.WebViewBinding
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
 import com.rtchubs.engineerbooks.models.chapter.BookChapter
@@ -564,10 +564,10 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                                 }
                             }
                         } else {
-                            showErrorToast(requireContext(), "ভিডিও বা এনিমেশনটি দেখতে পাশের মেনু বাটনে ক্লিক করে ডাউনলোড করে নিন")
-//                            val downloadUrl = "$VIDEOS/$fileName"
-//                            viewModel.downloadVideoFile(downloadUrl, filepath, fileName)
-//                            downloadingFile = File(filepath, fileName)
+                            //showErrorToast(requireContext(), "ভিডিও বা এনিমেশনটি দেখতে পাশের মেনু বাটনে ক্লিক করে ডাউনলোড করে নিন")
+                            val downloadUrl = "$VIDEOS/$fileName"
+                            viewModel.downloadVideoFile(downloadUrl, filepath, fileName)
+                            downloadingFile = File(filepath, fileName)
                         }
 //                    lifecycleScope.launch {
 //                        playVideo()
@@ -620,7 +620,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
                             downloadOrEraseMessageBottomSheetDialog.showNow(parentFragmentManager, "#AnimationDeleteDialog")
                         } else {
                             val downloadOrEraseMessageBottomSheetDialog = DownloadOrEraseMessageBottomSheetDialog({
-                                val downloadUrl = "${ApiEndPoint.VIDEOS}/$fileName"
+                                val downloadUrl = "$VIDEOS/$fileName"
                                 viewModel.downloadVideoFile(downloadUrl, filepath, fileName)
                                 downloadingFile = File(filepath, fileName)
                             }, true)
