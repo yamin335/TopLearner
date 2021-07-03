@@ -26,6 +26,7 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.CourseDetailsFragmentBinding
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
+import com.rtchubs.engineerbooks.util.showErrorToast
 
 class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseDetailsViewModel>() {
 
@@ -136,7 +137,20 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         })
 
         viewDataBinding.btnBookDetails.setOnClickListener {
-            navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToChapterNav(1, "গণিত বই (ষষ্ঠ শ্রেনী) ফ্রি"))
+            val bookId = course.demo_book_id
+            if (bookId == null) {
+                showErrorToast(requireContext(), "কোন বই পাওয়া যায় নি")
+                return@setOnClickListener
+            }
+
+            viewModel.getCourseFreeBookFromDB(bookId).observe(viewLifecycleOwner, Observer {
+                val book = it
+                if (book == null) {
+                    showErrorToast(requireContext(), "কোন বই পাওয়া যায় নি")
+                    return@Observer
+                }
+                navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToChapterNav(book.id, book.title))
+            })
         }
 
         viewModel.getAllFaqs()
