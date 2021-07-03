@@ -10,6 +10,9 @@ interface BookChapterDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addBooks(books: List<ClassWiseBook>)
 
+    @Query("SELECT * FROM books WHERE id = :bookId")
+    suspend fun getCourseFreeBook(bookId: Int): ClassWiseBook
+
     @Query("DELETE FROM books")
     suspend fun deleteAllBooks()
 

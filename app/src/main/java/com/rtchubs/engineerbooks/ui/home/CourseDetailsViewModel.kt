@@ -1,10 +1,14 @@
 package com.rtchubs.engineerbooks.ui.home
 
 import android.app.Application
+import android.database.sqlite.SQLiteException
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
+import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
 import com.rtchubs.engineerbooks.models.faq.Faq
+import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.repos.HomeRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
 import com.rtchubs.engineerbooks.util.AppConstants
@@ -14,11 +18,28 @@ import javax.inject.Inject
 
 class CourseDetailsViewModel @Inject constructor(
     private val application: Application,
-    private val homeRepository: HomeRepository
+    private val homeRepository: HomeRepository,
+    private val bookChapterDao: BookChapterDao
     ) : BaseViewModel(application) {
 
     val allFaqList: MutableLiveData<List<Faq>> by lazy {
         MutableLiveData<List<Faq>>()
+    }
+
+    fun getCourseFreeBookFromDB(bookId: Int): LiveData<ClassWiseBook> {
+        val book = MutableLiveData<ClassWiseBook>()
+        try {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+            }
+
+            viewModelScope.launch(handler) {
+                book.postValue(bookChapterDao.getCourseFreeBook(bookId))
+            }
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+        }
+        return book
     }
 
     fun getAllFaqs() {

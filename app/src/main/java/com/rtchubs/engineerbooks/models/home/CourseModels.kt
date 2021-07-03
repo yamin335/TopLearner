@@ -14,7 +14,7 @@ data class CourseCategory(@PrimaryKey(autoGenerate = false) val id: Int?, val cr
                           val title: String?, val name: String?, val courses: List<Course>?): Serializable
 
 data class Course(val id: Int?, val name: String?, val created_at: String?,
-                  val updated_at: String?, val book_id: Int?, val title: String?,
+                  val updated_at: String?, val book_id: Int?, val demo_book_id: Int?, val title: String?,
                   val vediolink: String?, val price: Int?, val discount_price: Int?,
                   val status: Int?, val description: String?, val class_name: String?,
                   val book_type_id: Int?, val logourl: String?, val starttime: String?,
