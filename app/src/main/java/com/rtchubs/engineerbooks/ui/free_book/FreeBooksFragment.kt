@@ -44,7 +44,6 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
 
     override fun onResume() {
         super.onResume()
-        viewModel.getAds()
         if (allClass.isEmpty()) {
             viewModel.getAcademicClass()
         }
@@ -236,5 +235,7 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
                 }
             }
         })
+
+        viewModel.getAds()
     }
 }
