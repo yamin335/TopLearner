@@ -13,6 +13,7 @@ import com.daimajia.slider.library.SliderLayout
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.FreeBooksFragmentBinding
+import com.rtchubs.engineerbooks.models.AdSlider
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.registration.AcademicClass
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
@@ -22,8 +23,9 @@ import com.rtchubs.engineerbooks.ui.login.SliderView
 
 class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewModel>() {
     companion object {
-        var allBookList = ArrayList<ClassWiseBook>()
         private var allClass = ArrayList<AcademicClass>()
+        private var adBanners = ArrayList<AdSlider>()
+        private val alreadyLoadedClass = ArrayList<Int>()
     }
     override val bindingVariable: Int
         get() = BR.viewModel
@@ -44,9 +46,6 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
 
     override fun onResume() {
         super.onResume()
-        if (allClass.isEmpty()) {
-            viewModel.getAcademicClass()
-        }
 //        if (userData.customer_type_id == 2) {
 //            viewDataBinding.linearClass.visibility = View.GONE
 //            viewModel.getAdminPanelBooks()
@@ -54,7 +53,8 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
 //            viewDataBinding.linearClass.visibility = View.VISIBLE
 //            viewModel.getAcademicBooks(userData.mobile ?: "", viewModel.selectedClassId?.toInt() ?: 0)
 //        }
-        viewModel.getAcademicBooks(userData.mobile ?: "", viewModel.selectedClassId?.toInt() ?: 0)
+        viewModel.getAcademicClass()
+        //viewModel.getAcademicBooks(userData.mobile ?: "", viewModel.selectedClassId?.toInt() ?: 0)
     }
 
     override fun onAttach(context: Context) {
@@ -86,19 +86,18 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
         )
         userData = preferencesHelper.getUser()
-        viewModel.selectedClassId = userData.class_id?.toString()
+        viewModel.selectedClassId = userData.class_id ?: 0
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.slideDataList.observe(viewLifecycleOwner, Observer {
-            it?.let { ads ->
-                viewDataBinding.sliderLayout.removeAllSliders()
-                ads.forEach { slideData ->
-                    val slide = SliderView(slideData, requireContext())
-                    viewDataBinding.sliderLayout.addSlider(slide)
-                }
+            adBanners = it as ArrayList<AdSlider>? ?: ArrayList()
+            viewDataBinding.sliderLayout.removeAllSliders()
+            adBanners.forEach { slideData ->
+                val slide = SliderView(slideData, requireContext())
+                viewDataBinding.sliderLayout.addSlider(slide)
             }
         })
 
@@ -147,22 +146,24 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
 //            }
         }
 
-        viewModel.allBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
+        viewModel.allFreeBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
             if (books.isNullOrEmpty()) {
-                allBookList = books as ArrayList<ClassWiseBook>
-                freeBookListAdapter?.submitList(allBookList)
+                freeBookListAdapter?.submitList(books as ArrayList<ClassWiseBook>)
             } else {
                 val temp = books.filter { item -> item.price ?: 0.0 <= 0.0 }
-                allBookList = temp as ArrayList<ClassWiseBook>
-                freeBookListAdapter?.submitList(allBookList)
+                freeBookListAdapter?.submitList(temp as ArrayList<ClassWiseBook>)
             }
-            viewDataBinding.emptyView.visibility = if (allBookList.isEmpty()) View.VISIBLE else View.GONE
         })
 
         viewDataBinding.homeClassListRecycler.adapter = freeBookListAdapter
 
-        viewModel.allBooks.observe(viewLifecycleOwner, Observer { books ->
-            viewModel.saveBooksInDB(books ?: ArrayList())
+        viewModel.allBooks.observe(viewLifecycleOwner, Observer { pairedValue ->
+            if (alreadyLoadedClass.isEmpty()) {
+                viewModel.updateBooksInDB(pairedValue.second ?: ArrayList())
+            } else {
+                viewModel.saveBooksInDB(pairedValue.second ?: ArrayList())
+            }
+            alreadyLoadedClass.add(pairedValue.first)
         })
 
         
@@ -187,14 +188,17 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
                 if (position > 0) {
                     try {
                         if (allClass.isNotEmpty()) {
-                            viewModel.selectedClassId = allClass[position - 1].id
-                            viewModel.getAcademicBooks(userData.mobile ?: "", viewModel.selectedClassId?.toInt() ?: 0)
+                            viewModel.selectedClassId = allClass[position - 1].id?.toInt() ?: 0
+                            if (!alreadyLoadedClass.contains(viewModel.selectedClassId)) {
+                                viewModel.getAcademicBooks(userData.mobile ?: "", viewModel.selectedClassId)
+                            }
+                            //viewModel.getAcademicBooks(userData.mobile ?: "", viewModel.selectedClassId?.toInt() ?: 0)
                         }
                     } catch (e: IndexOutOfBoundsException) {
                         e.printStackTrace()
                     }
                 } else {
-                    viewModel.selectedClassId = userData.class_id?.toString()
+                    viewModel.selectedClassId = userData.class_id ?: 0
                 }
             }
 
@@ -204,38 +208,50 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
         var academicClassIndex = 0
         for (index in allClass.indices) {
             val academicClass = allClass[index]
-            if (academicClass.id != null && academicClass.id == viewModel.selectedClassId) {
+            if (academicClass.id != null && academicClass.id == viewModel.selectedClassId.toString()) {
                 academicClassIndex = index + 1
             }
         }
         viewDataBinding.spClass.setSelection(academicClassIndex, true)
 
         viewModel.allAcademicClass.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            if (allClass.isEmpty()) {
-                it?.let {
-                    val temp = Array(it.size + 1) {""}
-                    temp[0] = "--Select Class--"
-                    it.forEachIndexed { index, academicClass ->
-                        temp[index + 1] = academicClass.name ?: "Unknown"
-                    }
-                    titleClassList = temp
-                    classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
-                    classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    viewDataBinding.spClass.adapter = classAdapter
-                    allClass = it as ArrayList<AcademicClass>
+            it?.let {
+                val temp = Array(it.size + 1) {""}
+                temp[0] = "--Select Class--"
+                it.forEachIndexed { index, academicClass ->
+                    temp[index + 1] = academicClass.name ?: "Unknown"
+                }
+                titleClassList = temp
+                classAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titleClassList)
+                classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                viewDataBinding.spClass.adapter = classAdapter
+                allClass = it as ArrayList<AcademicClass>
 
-                    academicClassIndex = 0
-                    for (index in allClass.indices) {
-                        val academicClass = allClass[index]
-                        if (academicClass.id != null && academicClass.id == viewModel.selectedClassId) {
-                            academicClassIndex = index + 1
-                        }
+                academicClassIndex = 0
+                for (index in allClass.indices) {
+                    val academicClass = allClass[index]
+                    if (academicClass.id != null && academicClass.id == viewModel.selectedClassId.toString()) {
+                        academicClassIndex = index + 1
                     }
-                    viewDataBinding.spClass.setSelection(academicClassIndex, true)
+                }
+                viewDataBinding.spClass.setSelection(academicClassIndex, true)
+                viewModel.selectedClassId = viewModel.selectedClassId
+
+//                lifecycleScope.launch {
+//
+//                }
+
+                for (cls in allClass) {
+                    val id = cls.id
+                    if (id != null && !alreadyLoadedClass.contains(id.toInt())) {
+                        viewModel.getAcademicBooks(userData.mobile ?: "", id.toInt())
+                    }
                 }
             }
         })
 
-        viewModel.getAds()
+        if (adBanners.isEmpty()) {
+            viewModel.getAds()
+        }
     }
 }

@@ -19,6 +19,9 @@ interface BookChapterDao {
     @Query("SELECT * FROM books")
     fun getAllBooks(): Flow<List<ClassWiseBook>>
 
+    @Query("SELECT * FROM books WHERE book_type_id = :classId")
+    suspend fun getClassWiseBooks(classId: Int): List<ClassWiseBook>
+
     @Transaction
     suspend fun updateBooks(books: List<ClassWiseBook>) {
         deleteAllBooks()
