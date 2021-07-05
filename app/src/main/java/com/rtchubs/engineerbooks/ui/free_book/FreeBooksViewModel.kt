@@ -92,7 +92,10 @@ class FreeBooksViewModel @Inject constructor(
             }
 
             viewModelScope.launch(handler) {
-                bookChapterDao.addBooks(books)
+                val numbers = bookChapterDao.addBooks(books)
+                if (numbers.isNotEmpty()) {
+                    getFreeBookFromDB()
+                }
             }
         } catch (e: SQLiteException) {
             e.printStackTrace()
@@ -152,6 +155,8 @@ class FreeBooksViewModel @Inject constructor(
                     }
                 }
             }
+        } else {
+            apiCallStatus.postValue(ApiCallStatus.ERROR)
         }
     }
 

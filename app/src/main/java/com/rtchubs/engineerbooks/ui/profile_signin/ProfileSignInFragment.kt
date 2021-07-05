@@ -22,7 +22,6 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.darwin.viola.still.FaceDetectionListener
 import com.google.android.gms.vision.Frame
 import com.google.android.gms.vision.face.FaceDetector
 import com.rtchubs.engineerbooks.BR
@@ -70,7 +69,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
     lateinit var nidFrontCameraLauncher: ActivityResultLauncher<Intent>
     lateinit var nidBackCameraLauncher: ActivityResultLauncher<Intent>
 
-    lateinit var imageCropperListener: FaceDetectionListener
+    //lateinit var imageCropperListener: FaceDetectionListener
     lateinit var currentPhotoPath: String
 
     lateinit var registrationHelper: InquiryAccount

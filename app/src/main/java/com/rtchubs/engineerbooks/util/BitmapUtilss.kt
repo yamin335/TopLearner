@@ -14,14 +14,11 @@ import android.provider.MediaStore.Images
 import android.util.Base64
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.camera.core.ExperimentalGetImage
-import androidx.camera.core.ImageProxy
 import androidx.exifinterface.media.ExifInterface
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.Transformation
 import com.bumptech.glide.load.engine.Resource
 import com.bumptech.glide.load.resource.bitmap.BitmapResource
-import com.rtchubs.engineerbooks.nid_scan.FrameMetadata
 import java.io.*
 import java.nio.ByteBuffer
 import java.util.*
@@ -55,52 +52,52 @@ object BitmapUtilss {
     /**
      * Converts NV21 format byte buffer to bitmap.
      */
-    fun getBitmap(data: ByteBuffer, metadata: FrameMetadata): Bitmap? {
-        data.rewind()
-        val imageInBuffer = ByteArray(data.limit())
-        data[imageInBuffer, 0, imageInBuffer.size]
-        try {
-            val image = YuvImage(
-                imageInBuffer,
-                ImageFormat.NV21,
-                metadata.getWidth(),
-                metadata.getHeight(),
-                null
-            )
-            val stream = ByteArrayOutputStream()
-            image.compressToJpeg(
-                Rect(
-                    0,
-                    0,
-                    metadata.getWidth(),
-                    metadata.getHeight()
-                ), 80, stream
-            )
-            val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
-            stream.close()
-            return rotateBitmap(bmp, metadata.getRotation(), false, false)
-        } catch (e: Exception) {
-            Log.e("VisionProcessorBase", "Error: " + e.message)
-        }
-        return null
-    }
+//    fun getBitmap(data: ByteBuffer, metadata: FrameMetadata): Bitmap? {
+//        data.rewind()
+//        val imageInBuffer = ByteArray(data.limit())
+//        data[imageInBuffer, 0, imageInBuffer.size]
+//        try {
+//            val image = YuvImage(
+//                imageInBuffer,
+//                ImageFormat.NV21,
+//                metadata.getWidth(),
+//                metadata.getHeight(),
+//                null
+//            )
+//            val stream = ByteArrayOutputStream()
+//            image.compressToJpeg(
+//                Rect(
+//                    0,
+//                    0,
+//                    metadata.getWidth(),
+//                    metadata.getHeight()
+//                ), 80, stream
+//            )
+//            val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
+//            stream.close()
+//            return rotateBitmap(bmp, metadata.getRotation(), false, false)
+//        } catch (e: Exception) {
+//            Log.e("VisionProcessorBase", "Error: " + e.message)
+//        }
+//        return null
+//    }
 
     /**
      * Converts a YUV_420_888 image from CameraX API to a bitmap.
      */
-    @RequiresApi(VERSION_CODES.KITKAT)
-    @ExperimentalGetImage
-    fun getBitmap(image: ImageProxy): Bitmap? {
-        val frameMetadata: FrameMetadata = FrameMetadata.Builder()
-            .setWidth(image.width)
-            .setHeight(image.height)
-            .setRotation(image.imageInfo.rotationDegrees)
-            .build()
-        val nv21Buffer = yuv420ThreePlanesToNV21(
-            image.image!!.planes, image.width, image.height
-        )
-        return getBitmap(nv21Buffer, frameMetadata)
-    }
+//    @RequiresApi(VERSION_CODES.KITKAT)
+//    @ExperimentalGetImage
+//    fun getBitmap(image: ImageProxy): Bitmap? {
+//        val frameMetadata: FrameMetadata = FrameMetadata.Builder()
+//            .setWidth(image.width)
+//            .setHeight(image.height)
+//            .setRotation(image.imageInfo.rotationDegrees)
+//            .build()
+//        val nv21Buffer = yuv420ThreePlanesToNV21(
+//            image.image!!.planes, image.width, image.height
+//        )
+//        return getBitmap(nv21Buffer, frameMetadata)
+//    }
 
     /**
      * Rotates a bitmap if it is converted from a bytebuffer.

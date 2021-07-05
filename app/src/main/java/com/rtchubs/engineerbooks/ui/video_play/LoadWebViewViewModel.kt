@@ -118,6 +118,8 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
             viewModelScope.launch(handler) {
                 pdfFileDownloadResponse.postValue(downloadFile(downloadUrl, filePath, fileName))
             }
+        } else {
+            apiCallStatus.postValue(ApiCallStatus.ERROR)
         }
     }
 
@@ -130,6 +132,8 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
             viewModelScope.launch(handler) {
                 solutionPdfFileDownloadResponse.postValue(downloadFile(downloadUrl, filePath, fileName))
             }
+        } else {
+            apiCallStatus.postValue(ApiCallStatus.ERROR)
         }
     }
 

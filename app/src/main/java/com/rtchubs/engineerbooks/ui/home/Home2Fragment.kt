@@ -67,6 +67,7 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         }
 
         viewModel.getAllCourses()
+        viewModel.getAllFreeBooks()
     }
 
     override fun onAttach(context: Context) {
@@ -151,7 +152,9 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         })
 
         viewModel.allCourseCategoriesFromDB.observe(viewLifecycleOwner, Observer {
-            viewModel.apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+            if (!it.isNullOrEmpty()) {
+                viewModel.apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+            }
             courseCategoryListAdapter.submitList(it)
         })
 

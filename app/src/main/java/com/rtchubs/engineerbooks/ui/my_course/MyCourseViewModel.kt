@@ -82,7 +82,7 @@ class MyCourseViewModel @Inject constructor(
         return book
     }
 
-    fun saveMyPaidBook(myCourseBook: MyCourseBook) {
+    private fun saveMyPaidBook(myCourseBook: MyCourseBook) {
         try {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -122,6 +122,8 @@ class MyCourseViewModel @Inject constructor(
                     }
                 }
             }
+        } else {
+            apiCallStatus.postValue(ApiCallStatus.ERROR)
         }
     }
 
@@ -150,6 +152,8 @@ class MyCourseViewModel @Inject constructor(
                     }
                 }
             }
+        } else {
+            apiCallStatus.postValue(ApiCallStatus.ERROR)
         }
     }
 }

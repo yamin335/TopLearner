@@ -25,7 +25,6 @@ import com.sslwireless.sslcommerzlibrary.model.util.SSLCCurrencyType
 import com.sslwireless.sslcommerzlibrary.model.util.SSLCSdkType
 import com.sslwireless.sslcommerzlibrary.view.singleton.IntegrateSSLCommerz
 import com.sslwireless.sslcommerzlibrary.viewmodel.listener.SSLCTransactionResponseListener
-import timber.log.Timber
 import java.security.SecureRandom
 
 class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>() {
@@ -255,15 +254,15 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             .buildApiCall(object : SSLCTransactionResponseListener {
                 override fun transactionSuccess(p0: SSLCTransactionInfoModel?) {
                     if (p0?.riskLevel == "0") {
-                        Timber.d("Transaction Successfully completed")
+                        //Timber.d("Transaction Successfully completed")
                         saveSSLPayment(p0)
                     } else {
-                        Timber.d("Transaction in risk.")
+                        //Timber.d("Transaction in risk.")
                     }
                 }
 
                 override fun transactionFail(p0: String?) {
-                    Timber.d("Transaction Fail")
+                    //Timber.d("Transaction Fail")
                 }
 
                 override fun merchantValidationError(p0: String?) {

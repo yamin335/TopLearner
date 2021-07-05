@@ -14,13 +14,12 @@ import com.rtchubs.engineerbooks.util.AppConstants.FILE_NAME
 import com.rtchubs.engineerbooks.util.AppConstants.FILE_PATH
 import com.rtchubs.engineerbooks.util.AppConstants.FILE_TYPE
 import com.rtchubs.engineerbooks.util.AtomicNumberGenerator
-import com.rtchubs.engineerbooks.util.FileUtils
 import com.rtchubs.engineerbooks.util.NotificationUtils
-import timber.log.Timber
-import java.io.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
 import kotlin.math.abs
 
 class DownloadService : Service() {
@@ -158,7 +157,7 @@ class DownloadService : Service() {
                                 setContentText("$currentProgress%")
                             }
                             NotificationManagerCompat.from(context).notify(notificationId, notificationBuilder.build())
-                            Timber.e("downloadedSize:%s", currentProgress)
+                            //Timber.e("downloadedSize:%s", currentProgress)
                         }
                     }
                 }

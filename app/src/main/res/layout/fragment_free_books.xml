@@ -141,7 +141,7 @@
                 android:elevation="1dp"
                 android:gravity="center"
                 android:layout_marginTop="180dp"
-                showLoader="@{viewModel.apiCallStatus}">
+                app:showLoader="@{viewModel.apiCallStatus}">
 
                 <ProgressBar
                     android:id="@+id/loader"

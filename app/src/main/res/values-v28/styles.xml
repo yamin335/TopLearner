@@ -1,6 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="CameraXTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
-    </style>
-</resources>
+<resources></resources>

@@ -1,6 +1,5 @@
 package com.rtchubs.engineerbooks.di
 
-import com.rtchubs.engineerbooks.nid_scan.NIDScanCameraXFragment
 import com.rtchubs.engineerbooks.ui.about_us.AboutUsFragment
 import com.rtchubs.engineerbooks.ui.bkash.BKashDialogFragment
 import com.rtchubs.engineerbooks.ui.chapter_list.ChapterListFragment
@@ -50,9 +49,6 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeHistoryFragment(): HistoryFragment
-
-    @ContributesAndroidInjector
-    abstract fun contributeNIDScanCameraXFragment(): NIDScanCameraXFragment
 
     @ContributesAndroidInjector
     abstract fun contributeMoreFragment(): MoreFragment

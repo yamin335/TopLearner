@@ -118,7 +118,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="gone"
-                app:srcCompat="@drawable/ic_clear_black_24dp"
+                app:srcCompat="@drawable/ic_baseline_clear_24"
                 android:background="?attr/selectableItemBackground"
                 android:padding="4dp"
                 app:tint="#808080" />
