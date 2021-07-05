@@ -3,7 +3,6 @@ package com.rtchubs.engineerbooks.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.rtchubs.engineerbooks.ViewModelFactory
-import com.rtchubs.engineerbooks.nid_scan.NIDScanCameraXViewModel
 import com.rtchubs.engineerbooks.ui.LiveClassActivityViewModel
 import com.rtchubs.engineerbooks.ui.LoginActivityViewModel
 import com.rtchubs.engineerbooks.ui.MainActivityViewModel
@@ -90,12 +89,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SignInViewModel::class)
     abstract fun bindSignInViewModel(viewModel: SignInViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(NIDScanCameraXViewModel::class)
-    abstract fun bindNIDScanCameraXViewModel(viewModel: NIDScanCameraXViewModel): ViewModel
-
 
     @Binds
     @IntoMap

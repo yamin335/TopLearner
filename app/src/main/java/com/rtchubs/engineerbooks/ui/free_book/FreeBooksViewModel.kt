@@ -155,6 +155,8 @@ class FreeBooksViewModel @Inject constructor(
                     }
                 }
             }
+        } else {
+            apiCallStatus.postValue(ApiCallStatus.ERROR)
         }
     }
 

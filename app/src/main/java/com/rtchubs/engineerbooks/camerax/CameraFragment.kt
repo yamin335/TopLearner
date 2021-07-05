@@ -22,7 +22,6 @@ import android.webkit.MimeTypeMap
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.core.ImageCapture.Metadata
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -38,16 +37,13 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.text.Text
-import com.google.mlkit.vision.text.TextRecognition
-import kotlinx.android.synthetic.main.fragment_camera.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.models.NIDBackModel
 import com.rtchubs.engineerbooks.models.NIDFrontModel
 import com.rtchubs.engineerbooks.ui.MainActivity
+import kotlinx.android.synthetic.main.fragment_camera.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
@@ -136,121 +132,121 @@ class CameraFragment : Fragment() {
         }
     }
 
-    fun runTextRecognition(bitmap: Bitmap) {
-        val image = InputImage.fromBitmap(bitmap, 0)
-        val recognizer = TextRecognition.getClient()
-        recognizer.process(image)
-            .addOnSuccessListener { texts ->
-                processTextRecognitionResult(texts)
-            }
-            .addOnFailureListener { e -> // Task failed with an exception
-                e.printStackTrace()
-            }
-    }
+//    fun runTextRecognition(bitmap: Bitmap) {
+//        val image = InputImage.fromBitmap(bitmap, 0)
+//        val recognizer = TextRecognition.getClient()
+//        recognizer.process(image)
+//            .addOnSuccessListener { texts ->
+//                processTextRecognitionResult(texts)
+//            }
+//            .addOnFailureListener { e -> // Task failed with an exception
+//                e.printStackTrace()
+//            }
+//    }
 
-    private fun processTextRecognitionResult(texts: Text) {
-        val blocks = texts.textBlocks
-        if (blocks.size == 0) {
-            progress.visibility = View.GONE
-            Toast.makeText(requireContext(), "No text found", Toast.LENGTH_LONG).show()
-            return
-        } else if (isCapturingFrontSide && blocks.size < 5) {
-            progress.visibility = View.GONE
-            Toast.makeText(requireContext(), "Valid NID Not Found, Please Try Again!", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        if (isCapturingFrontSide) {
-            if (blocks[0].text.contains("People's Republic of Bangladesh") && blocks[0].text.contains("National ID Card")) {
-                for (i in blocks.indices) {
-                    if (blocks[i].text.trim() == "Name") {
-                        if (blocks[i + 1].text.trim().length >= 3) {
-                            nidFrontData.name = blocks[i + 1].text.trim()
-                        } else {
-                            progress.visibility = View.GONE
-                            Toast.makeText(requireContext(), "Valid NID Not Found, Please Try Again!", Toast.LENGTH_LONG).show()
-                            return
-                        }
-                    }
-
-                    if (blocks[i].text.contains("Date of Birth")) {
-                        val textArray = blocks[i].text.split("Birth")
-                        if (textArray.size == 2 && textArray[1].trim().length >= 11) {
-                            nidFrontData.birthDate = textArray[1].trim()
-                        } else {
-                            progress.visibility = View.GONE
-                            Toast.makeText(requireContext(), "Valid NID Not Found, Please Try Again!", Toast.LENGTH_LONG).show()
-                            return
-                        }
-                    }
-
-                    if ((blocks[i].text.trim() == "NID No." || blocks[i].text.trim() == "NID No" || blocks[i].text.trim() == "NIO No." || blocks[i].text.trim() == "NIO No") && blocks[i + 1].text.trim().length == 12) {
-                        nidFrontData.nidNo = blocks[i + 1].text.trim()
-                    } else if (blocks[i].text.contains("NID No.") || blocks[i].text.contains("NIO No.") || blocks[i].text.contains("NID No") || blocks[i].text.contains("NIO No.")) {
-                        val textArray = blocks[i].text.split(".")
-                        if (textArray.size == 2 && textArray[1].trim().length == 12) {
-                            nidFrontData.nidNo = textArray[1].trim()
-                        } else {
-                            progress.visibility = View.GONE
-                            Toast.makeText(requireContext(), "Valid NID Not Found, Please Try Again!", Toast.LENGTH_LONG).show()
-                            return
-                        }
-                    }
-
-                    if ( i + 1 == blocks.size && nidFrontData.name.isNotBlank() && nidFrontData.birthDate.isNotBlank() && nidFrontData.nidNo.isNotBlank()) {
-                        isCapturingFrontSide = false
-                        frontBackText.text = "Back of NID Card"
-                        progress.visibility = View.GONE
-                    } else if ( i + 1 == blocks.size && (nidFrontData.name.isEmpty() && nidFrontData.birthDate.isEmpty() && nidFrontData.nidNo.isEmpty())){
-                        progress.visibility = View.GONE
-                        Toast.makeText(requireContext(), "Valid NID Not Found, Please Try Again!", Toast.LENGTH_LONG).show()
-                        return
-                    }
-                    if (i < blocks.size - 1) {
-
-                    }
-                }
-            } else {
-                progress.visibility = View.GONE
-                Toast.makeText(requireContext(), "Valid NID Not Found, Please Try Again!", Toast.LENGTH_LONG).show()
-                return
-            }
-        } else {
-            for (i in blocks.indices) {
-                val text = blocks[i].text.trim()
-                if (text.contains("Blood Group")) {
-                    val textArray = text.split("Group")
-                    if (textArray.size == 2) {
-                        nidBackData.bloodGroup = textArray[1].removePrefix(":").trim()
-                    }
-                } else if (text.contains("Place of Birth")) {
-                    val textArray = text.split("Birth")
-                    if (textArray.size == 2) {
-                        nidBackData.birthPlace = textArray[1].removePrefix(":").trim()
-                    }
-                } else if (text.contains("Issue Date")) {
-                    val textArray = text.split("Date")
-                    if (textArray.size == 2) {
-                        nidBackData.nidIssueDate = textArray[1].removePrefix(":").trim()
-                    }
-                }
-            }
-
-            if (nidBackData.bloodGroup.isEmpty() || nidBackData.birthPlace.isEmpty() || nidBackData.nidIssueDate.isEmpty()){
-                progress.visibility = View.GONE
-                Toast.makeText(requireContext(), "Valid NID Not Found, Please Try Again!", Toast.LENGTH_LONG).show()
-                return
-            } else {
-                isBackSideCaptured = true
-            }
-        }
-
-//        if (isCapturingFrontSide == false && isBackSideCaptured == true) {
+//    private fun processTextRecognitionResult(texts: Text) {
+//        val blocks = texts.textBlocks
+//        if (blocks.size == 0) {
 //            progress.visibility = View.GONE
-//            val action = CameraFragmentDirections.actionCameraFragmentToProfileSignInFragment(NIDDataModels(false, nidFrontData, nidBackData))
-//            findNavController().navigate(action)
+//            Toast.makeText(requireContext(), "No text found", Toast.LENGTH_LONG).show()
+//            return
+//        } else if (isCapturingFrontSide && blocks.size < 5) {
+//            progress.visibility = View.GONE
+//            Toast.makeText(requireContext(), "Valid NID Not Found, Please Try Again!", Toast.LENGTH_LONG).show()
+//            return
 //        }
-    }
+//
+//        if (isCapturingFrontSide) {
+//            if (blocks[0].text.contains("People's Republic of Bangladesh") && blocks[0].text.contains("National ID Card")) {
+//                for (i in blocks.indices) {
+//                    if (blocks[i].text.trim() == "Name") {
+//                        if (blocks[i + 1].text.trim().length >= 3) {
+//                            nidFrontData.name = blocks[i + 1].text.trim()
+//                        } else {
+//                            progress.visibility = View.GONE
+//                            Toast.makeText(requireContext(), "Valid NID Not Found, Please Try Again!", Toast.LENGTH_LONG).show()
+//                            return
+//                        }
+//                    }
+//
+//                    if (blocks[i].text.contains("Date of Birth")) {
+//                        val textArray = blocks[i].text.split("Birth")
+//                        if (textArray.size == 2 && textArray[1].trim().length >= 11) {
+//                            nidFrontData.birthDate = textArray[1].trim()
+//                        } else {
+//                            progress.visibility = View.GONE
+//                            Toast.makeText(requireContext(), "Valid NID Not Found, Please Try Again!", Toast.LENGTH_LONG).show()
+//                            return
+//                        }
+//                    }
+//
+//                    if ((blocks[i].text.trim() == "NID No." || blocks[i].text.trim() == "NID No" || blocks[i].text.trim() == "NIO No." || blocks[i].text.trim() == "NIO No") && blocks[i + 1].text.trim().length == 12) {
+//                        nidFrontData.nidNo = blocks[i + 1].text.trim()
+//                    } else if (blocks[i].text.contains("NID No.") || blocks[i].text.contains("NIO No.") || blocks[i].text.contains("NID No") || blocks[i].text.contains("NIO No.")) {
+//                        val textArray = blocks[i].text.split(".")
+//                        if (textArray.size == 2 && textArray[1].trim().length == 12) {
+//                            nidFrontData.nidNo = textArray[1].trim()
+//                        } else {
+//                            progress.visibility = View.GONE
+//                            Toast.makeText(requireContext(), "Valid NID Not Found, Please Try Again!", Toast.LENGTH_LONG).show()
+//                            return
+//                        }
+//                    }
+//
+//                    if ( i + 1 == blocks.size && nidFrontData.name.isNotBlank() && nidFrontData.birthDate.isNotBlank() && nidFrontData.nidNo.isNotBlank()) {
+//                        isCapturingFrontSide = false
+//                        frontBackText.text = "Back of NID Card"
+//                        progress.visibility = View.GONE
+//                    } else if ( i + 1 == blocks.size && (nidFrontData.name.isEmpty() && nidFrontData.birthDate.isEmpty() && nidFrontData.nidNo.isEmpty())){
+//                        progress.visibility = View.GONE
+//                        Toast.makeText(requireContext(), "Valid NID Not Found, Please Try Again!", Toast.LENGTH_LONG).show()
+//                        return
+//                    }
+//                    if (i < blocks.size - 1) {
+//
+//                    }
+//                }
+//            } else {
+//                progress.visibility = View.GONE
+//                Toast.makeText(requireContext(), "Valid NID Not Found, Please Try Again!", Toast.LENGTH_LONG).show()
+//                return
+//            }
+//        } else {
+//            for (i in blocks.indices) {
+//                val text = blocks[i].text.trim()
+//                if (text.contains("Blood Group")) {
+//                    val textArray = text.split("Group")
+//                    if (textArray.size == 2) {
+//                        nidBackData.bloodGroup = textArray[1].removePrefix(":").trim()
+//                    }
+//                } else if (text.contains("Place of Birth")) {
+//                    val textArray = text.split("Birth")
+//                    if (textArray.size == 2) {
+//                        nidBackData.birthPlace = textArray[1].removePrefix(":").trim()
+//                    }
+//                } else if (text.contains("Issue Date")) {
+//                    val textArray = text.split("Date")
+//                    if (textArray.size == 2) {
+//                        nidBackData.nidIssueDate = textArray[1].removePrefix(":").trim()
+//                    }
+//                }
+//            }
+//
+//            if (nidBackData.bloodGroup.isEmpty() || nidBackData.birthPlace.isEmpty() || nidBackData.nidIssueDate.isEmpty()){
+//                progress.visibility = View.GONE
+//                Toast.makeText(requireContext(), "Valid NID Not Found, Please Try Again!", Toast.LENGTH_LONG).show()
+//                return
+//            } else {
+//                isBackSideCaptured = true
+//            }
+//        }
+//
+////        if (isCapturingFrontSide == false && isBackSideCaptured == true) {
+////            progress.visibility = View.GONE
+////            val action = CameraFragmentDirections.actionCameraFragmentToProfileSignInFragment(NIDDataModels(false, nidFrontData, nidBackData))
+////            findNavController().navigate(action)
+////        }
+//    }
 
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -483,7 +479,7 @@ class CameraFragment : Fragment() {
                                     resource: Bitmap,
                                     transition: com.bumptech.glide.request.transition.Transition<in Bitmap?>?
                                 ) {
-                                    runTextRecognition(resource)
+                                    //runTextRecognition(resource)
                                 }
 
                                 override fun onLoadCleared(placeholder: Drawable?) {

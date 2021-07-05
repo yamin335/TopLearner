@@ -28,7 +28,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.transition.Slide
@@ -40,7 +39,10 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputLayout
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.api.ApiCallStatus
-import com.rtchubs.engineerbooks.util.*
+import com.rtchubs.engineerbooks.util.BitmapUtilss
+import com.rtchubs.engineerbooks.util.Validator
+import com.rtchubs.engineerbooks.util.afterTextChanged
+import com.rtchubs.engineerbooks.util.isValid
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
 
@@ -372,25 +374,25 @@ class FragmentBindingAdapters {
         view.isErrorEnabled = !view.error.isNullOrBlank()
     }
 
-    @BindingAdapter("websiteLink", "hideWhenEmpty", requireAll = false)
-    fun websiteLink(
-        button: View,
-        url: String?,
-        hideWhenEmpty: Boolean = false
-    ) {
-        if (url.isNullOrEmpty()) {
-            if (hideWhenEmpty) {
-                button.isVisible = false
-            } else {
-                button.isClickable = false
-            }
-            return
-        }
-        button.isVisible = true
-        button.setOnClickListener {
-            openWebsiteUrl(it.context, url)
-        }
-    }
+//    @BindingAdapter("websiteLink", "hideWhenEmpty", requireAll = false)
+//    fun websiteLink(
+//        button: View,
+//        url: String?,
+//        hideWhenEmpty: Boolean = false
+//    ) {
+//        if (url.isNullOrEmpty()) {
+//            if (hideWhenEmpty) {
+//                button.isVisible = false
+//            } else {
+//                button.isClickable = false
+//            }
+//            return
+//        }
+//        button.isVisible = true
+//        button.setOnClickListener {
+//            openWebsiteUrl(it.context, url)
+//        }
+//    }
 
     /*@BindingAdapter(
         "thisNumber",

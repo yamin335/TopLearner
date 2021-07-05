@@ -158,6 +158,8 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             }
+        } else {
+            apiCallStatus.postValue(ApiCallStatus.ERROR)
         }
     }
 
@@ -179,6 +181,8 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             }
+        } else {
+            apiCallStatus.postValue(ApiCallStatus.ERROR)
         }
     }
 

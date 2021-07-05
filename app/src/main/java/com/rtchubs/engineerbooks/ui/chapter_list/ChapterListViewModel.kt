@@ -90,6 +90,8 @@ class ChapterListViewModel @Inject constructor(
                     }
                 }
             }
+        } else {
+            apiCallStatus.postValue(ApiCallStatus.ERROR)
         }
     }
 }

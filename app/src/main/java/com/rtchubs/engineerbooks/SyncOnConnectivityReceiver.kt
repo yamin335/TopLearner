@@ -6,12 +6,11 @@ import android.content.Intent
 import androidx.annotation.Nullable
 import com.rtchubs.engineerbooks.util.CommonUtils
 import com.rtchubs.engineerbooks.util.NetworkUtils
-import timber.log.Timber
 
 
 class SyncOnConnectivityReceiver : BroadcastReceiver() {
     override fun onReceive(@Nullable context: Context?, intent: Intent) {
-        Timber.d("triggering on connectivity change")
+        //Timber.d("triggering on connectivity change")
         if (context != null) {
             if (!NetworkUtils.isNetworkConnected(context)) {
                 CommonUtils.fireErrorMessageEvent(
