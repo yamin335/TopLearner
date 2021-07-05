@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.databinding.HomeFragment2Binding
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
@@ -150,6 +151,7 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         })
 
         viewModel.allCourseCategoriesFromDB.observe(viewLifecycleOwner, Observer {
+            viewModel.apiCallStatus.postValue(ApiCallStatus.SUCCESS)
             courseCategoryListAdapter.submitList(it)
         })
 

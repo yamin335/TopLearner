@@ -39,6 +39,12 @@ class HomeRepository @Inject constructor(@Named("auth") private val authApiServi
         }
     }
 
+    suspend fun allFreeBookRepo(): Response<ClassWiseBookResponse> {
+        return withContext(Dispatchers.IO) {
+            authApiService.getAllFreeBooks()
+        }
+    }
+
     suspend fun singleBookRepo(bookId: Int?): Response<SingleBookResponse> {
         val jsonObjectBody = JsonObject().apply {
             addProperty("id", bookId)

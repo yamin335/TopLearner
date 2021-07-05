@@ -119,37 +119,36 @@
                     tools:listitem="@layout/list_item_home_class_list"/>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/emptyView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="No Free Book Found"
-                android:textAlignment="center"
-                android:layout_centerInParent="true"
-                android:textSize="24sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+<!--            <TextView-->
+<!--                android:id="@+id/emptyView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:text="No Free Book Found"-->
+<!--                android:textAlignment="center"-->
+<!--                android:layout_centerInParent="true"-->
+<!--                android:textSize="24sp"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
 
             <LinearLayout
                 android:id="@+id/progressView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#80FFFFFF"
                 android:orientation="vertical"
-                android:clickable="true"
                 android:elevation="1dp"
-                android:focusable="true"
                 android:gravity="center"
-                android:visibility="@{viewModel.allBooksFromDB.size() > 0 ? View.GONE : View.VISIBLE}">
+                android:layout_marginTop="180dp"
+                showLoader="@{viewModel.apiCallStatus}">
 
                 <ProgressBar
                     android:id="@+id/loader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:elevation="2dp" />
+                    android:elevation="2dp"/>
+
             </LinearLayout>
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

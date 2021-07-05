@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
 import com.rtchubs.engineerbooks.models.AdSlider
+import com.rtchubs.engineerbooks.models.chapter.BookChapter
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.registration.AcademicClass
 import com.rtchubs.engineerbooks.models.registration.DefaultResponse
@@ -31,10 +32,27 @@ class FreeBooksViewModel @Inject constructor(
     private val registrationRepository: RegistrationRepository,
     private val bookChapterDao: BookChapterDao
 ) : BaseViewModel(application) {
+
     val defaultResponse: MutableLiveData<DefaultResponse> = MutableLiveData()
 
     val allBooks: MutableLiveData<List<ClassWiseBook>> by lazy {
         MutableLiveData<List<ClassWiseBook>>()
+    }
+
+    val allFreeBooksFromDB = MutableLiveData<List<ClassWiseBook>>()
+
+    private fun getFreeBookFromDB() {
+        try {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+            }
+
+            viewModelScope.launch(handler) {
+                allFreeBooksFromDB.postValue(bookChapterDao.getClassWiseBooks(selectedClassId))
+            }
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+        }
     }
 
     val allBooksFromDB: LiveData<List<ClassWiseBook>> = liveData {
@@ -47,7 +65,25 @@ class FreeBooksViewModel @Inject constructor(
         MutableLiveData<List<AcademicClass>>()
     }
 
-    var selectedClassId: String? = null
+    var selectedClassId: Int = 0
+        set(value) {
+            field = value
+            getFreeBookFromDB()
+        }
+
+    fun updateBooksInDB(books: List<ClassWiseBook>) {
+        try {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+            }
+
+            viewModelScope.launch(handler) {
+                bookChapterDao.updateBooks(books)
+            }
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+        }
+    }
 
     fun saveBooksInDB(books: List<ClassWiseBook>) {
         try {
@@ -56,7 +92,7 @@ class FreeBooksViewModel @Inject constructor(
             }
 
             viewModelScope.launch(handler) {
-                bookChapterDao.updateBooks(books)
+                bookChapterDao.addBooks(books)
             }
         } catch (e: SQLiteException) {
             e.printStackTrace()
@@ -93,7 +129,7 @@ class FreeBooksViewModel @Inject constructor(
         }
     }
 
-    fun getAcademicBooks(mobile: String, class_id: Int) {
+    fun getAllFreeBooks() {
         if (checkNetworkStatus(false)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -103,7 +139,7 @@ class FreeBooksViewModel @Inject constructor(
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.allBookRepo(mobile, class_id))) {
+                when (val apiResponse = ApiResponse.create(repository.allFreeBookRepo())) {
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
                         allBooks.postValue(apiResponse.body.data?.books)
@@ -119,39 +155,65 @@ class FreeBooksViewModel @Inject constructor(
         }
     }
 
-    fun getAdminPanelBooks() {
-        if (checkNetworkStatus(false)) {
-            val handler = CoroutineExceptionHandler { _, exception ->
-                exception.printStackTrace()
-                apiCallStatus.postValue(ApiCallStatus.ERROR)
-                toastError.postValue(AppConstants.serverConnectionErrorMessage)
-            }
+//    fun getAcademicBooks(mobile: String, class_id: Int) {
+//        if (checkNetworkStatus(false)) {
+//            val handler = CoroutineExceptionHandler { _, exception ->
+//                exception.printStackTrace()
+//                apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+//            }
+//
+//            apiCallStatus.postValue(ApiCallStatus.LOADING)
+//            viewModelScope.launch(handler) {
+//                when (val apiResponse = ApiResponse.create(repository.allBookRepo(mobile, class_id))) {
+//                    is ApiSuccessResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+//                        allBooks.postValue(Pair(class_id, apiResponse.body.data?.books))
+//                    }
+//                    is ApiEmptyResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+//                    }
+//                    is ApiErrorResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-            apiCallStatus.postValue(ApiCallStatus.LOADING)
-            viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.adminPanelBookRepo())) {
-                    is ApiSuccessResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                        val totalBooks = ArrayList<ClassWiseBook>()
-                        val books = apiResponse.body.data?.books
-                        books?.let {
-                            it.forEach { book ->
-                                totalBooks.add(ClassWiseBook(book.id ?: 0, book.uuid, book.name, book.title, book.authors,
-                                    book.is_paid == 1, book.book_type_id, book.price, book.status,book.logo))
-                            }
-                            allBooks.postValue(totalBooks)
-                        }
-                    }
-                    is ApiEmptyResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
-                    }
-                    is ApiErrorResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.ERROR)
-                    }
-                }
-            }
-        }
-    }
+//    fun  getAdminPanelBooks() {
+//        if (checkNetworkStatus(false)) {
+//            val handler = CoroutineExceptionHandler { _, exception ->
+//                exception.printStackTrace()
+//                apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+//            }
+//
+//            apiCallStatus.postValue(ApiCallStatus.LOADING)
+//            viewModelScope.launch(handler) {
+//                when (val apiResponse = ApiResponse.create(repository.adminPanelBookRepo())) {
+//                    is ApiSuccessResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+//                        val totalBooks = ArrayList<ClassWiseBook>()
+//                        val books = apiResponse.body.data?.books
+//                        books?.let {
+//                            it.forEach { book ->
+//                                totalBooks.add(ClassWiseBook(book.id ?: 0, book.uuid, book.name, book.title, book.authors,
+//                                    book.is_paid == 1, book.book_type_id, book.price, book.status,book.logo))
+//                            }
+//                            allBooks.postValue(totalBooks)
+//                        }
+//                    }
+//                    is ApiEmptyResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+//                    }
+//                    is ApiErrorResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     fun getAcademicClass() {
         if (checkNetworkStatus(true)) {
