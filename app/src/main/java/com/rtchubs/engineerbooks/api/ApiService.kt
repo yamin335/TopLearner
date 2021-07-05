@@ -9,8 +9,8 @@ import com.rtchubs.engineerbooks.models.bkash.BKashPaymentUrlResponse
 import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
 import com.rtchubs.engineerbooks.models.common.MyAccountListResponse
 import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
-import com.rtchubs.engineerbooks.models.my_course.SingleBookResponse
 import com.rtchubs.engineerbooks.models.my_course.MyCourseListResponse
+import com.rtchubs.engineerbooks.models.my_course.SingleBookResponse
 import com.rtchubs.engineerbooks.models.notice_board.NoticeResponse
 import com.rtchubs.engineerbooks.models.payment.CoursePaymentResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.AddCardOrBankResponse
@@ -56,6 +56,9 @@ interface ApiService {
 
     @POST(ApiEndPoint.BOOKS)
     suspend fun getBooks(@Body jsonString: String): Response<ClassWiseBookResponse>
+
+    @POST(ApiEndPoint.ALL_FREE_BOOKS)
+    suspend fun getAllFreeBooks(): Response<ClassWiseBookResponse>
 
     @POST(ApiEndPoint.BOOK)
     suspend fun getBook(@Body jsonString: String): Response<SingleBookResponse>

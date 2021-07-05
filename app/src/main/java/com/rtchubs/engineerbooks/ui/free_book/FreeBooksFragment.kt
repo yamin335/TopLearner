@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import com.daimajia.slider.library.SliderLayout
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.databinding.FreeBooksFragmentBinding
 import com.rtchubs.engineerbooks.models.AdSlider
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
@@ -25,7 +26,6 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
     companion object {
         private var allClass = ArrayList<AcademicClass>()
         private var adBanners = ArrayList<AdSlider>()
-        private val alreadyLoadedClass = ArrayList<Int>()
     }
     override val bindingVariable: Int
         get() = BR.viewModel
@@ -147,6 +147,7 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
         }
 
         viewModel.allFreeBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
+            viewModel.apiCallStatus.postValue(ApiCallStatus.SUCCESS)
             if (books.isNullOrEmpty()) {
                 freeBookListAdapter?.submitList(books as ArrayList<ClassWiseBook>)
             } else {
@@ -157,13 +158,8 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
 
         viewDataBinding.homeClassListRecycler.adapter = freeBookListAdapter
 
-        viewModel.allBooks.observe(viewLifecycleOwner, Observer { pairedValue ->
-            if (alreadyLoadedClass.isEmpty()) {
-                viewModel.updateBooksInDB(pairedValue.second ?: ArrayList())
-            } else {
-                viewModel.saveBooksInDB(pairedValue.second ?: ArrayList())
-            }
-            alreadyLoadedClass.add(pairedValue.first)
+        viewModel.allBooks.observe(viewLifecycleOwner, Observer { books ->
+            viewModel.saveBooksInDB(books ?: ArrayList())
         })
 
         
@@ -189,10 +185,6 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
                     try {
                         if (allClass.isNotEmpty()) {
                             viewModel.selectedClassId = allClass[position - 1].id?.toInt() ?: 0
-                            if (!alreadyLoadedClass.contains(viewModel.selectedClassId)) {
-                                viewModel.getAcademicBooks(userData.mobile ?: "", viewModel.selectedClassId)
-                            }
-                            //viewModel.getAcademicBooks(userData.mobile ?: "", viewModel.selectedClassId?.toInt() ?: 0)
                         }
                     } catch (e: IndexOutOfBoundsException) {
                         e.printStackTrace()
@@ -241,17 +233,18 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
 //
 //                }
 
-                for (cls in allClass) {
-                    val id = cls.id
-                    if (id != null && !alreadyLoadedClass.contains(id.toInt())) {
-                        viewModel.getAcademicBooks(userData.mobile ?: "", id.toInt())
-                    }
-                }
+//                for (cls in allClass) {
+//                    val id = cls.id
+//                    if (id != null && !alreadyLoadedClass.contains(id.toInt())) {
+//                        viewModel.getAcademicBooks(userData.mobile ?: "", id.toInt())
+//                    }
+//                }
             }
         })
 
         if (adBanners.isEmpty()) {
             viewModel.getAds()
         }
+        viewModel.getAllFreeBooks()
     }
 }

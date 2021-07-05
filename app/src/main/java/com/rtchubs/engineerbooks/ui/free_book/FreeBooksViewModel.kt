@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
 import com.rtchubs.engineerbooks.models.AdSlider
+import com.rtchubs.engineerbooks.models.chapter.BookChapter
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.registration.AcademicClass
 import com.rtchubs.engineerbooks.models.registration.DefaultResponse
@@ -34,8 +35,8 @@ class FreeBooksViewModel @Inject constructor(
 
     val defaultResponse: MutableLiveData<DefaultResponse> = MutableLiveData()
 
-    val allBooks: MutableLiveData<Pair<Int, List<ClassWiseBook>?>> by lazy {
-        MutableLiveData<Pair<Int, List<ClassWiseBook>?>>()
+    val allBooks: MutableLiveData<List<ClassWiseBook>> by lazy {
+        MutableLiveData<List<ClassWiseBook>>()
     }
 
     val allFreeBooksFromDB = MutableLiveData<List<ClassWiseBook>>()
@@ -128,7 +129,7 @@ class FreeBooksViewModel @Inject constructor(
         }
     }
 
-    fun getAcademicBooks(mobile: String, class_id: Int) {
+    fun getAllFreeBooks() {
         if (checkNetworkStatus(false)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -138,10 +139,10 @@ class FreeBooksViewModel @Inject constructor(
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.allBookRepo(mobile, class_id))) {
+                when (val apiResponse = ApiResponse.create(repository.allFreeBookRepo())) {
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                        allBooks.postValue(Pair(class_id, apiResponse.body.data?.books))
+                        allBooks.postValue(apiResponse.body.data?.books)
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
@@ -153,6 +154,32 @@ class FreeBooksViewModel @Inject constructor(
             }
         }
     }
+
+//    fun getAcademicBooks(mobile: String, class_id: Int) {
+//        if (checkNetworkStatus(false)) {
+//            val handler = CoroutineExceptionHandler { _, exception ->
+//                exception.printStackTrace()
+//                apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+//            }
+//
+//            apiCallStatus.postValue(ApiCallStatus.LOADING)
+//            viewModelScope.launch(handler) {
+//                when (val apiResponse = ApiResponse.create(repository.allBookRepo(mobile, class_id))) {
+//                    is ApiSuccessResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+//                        allBooks.postValue(Pair(class_id, apiResponse.body.data?.books))
+//                    }
+//                    is ApiEmptyResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+//                    }
+//                    is ApiErrorResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 //    fun  getAdminPanelBooks() {
 //        if (checkNetworkStatus(false)) {

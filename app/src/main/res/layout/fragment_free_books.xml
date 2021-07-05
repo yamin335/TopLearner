@@ -141,7 +141,7 @@
                 android:elevation="1dp"
                 android:gravity="center"
                 android:layout_marginTop="180dp"
-                android:visibility="@{viewModel.allBooksFromDB.size() > 0 ? View.GONE : View.VISIBLE}">
+                showLoader="@{viewModel.apiCallStatus}">
 
                 <ProgressBar
                     android:id="@+id/loader"
