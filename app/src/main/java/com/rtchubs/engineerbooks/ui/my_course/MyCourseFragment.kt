@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.databinding.MyCourseFragmentBinding
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.home.Course
@@ -263,6 +264,9 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
         }
 
         viewModel.allCourseCategoriesFromDB.observe(viewLifecycleOwner, Observer {
+            if (!it.isNullOrEmpty()) {
+                viewModel.apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+            }
             val courses = HashMap<Int?, Course?>()
             CourseFilteringForLoop@ for (courseCategory in it) {
                 val courseList = courseCategory.courses ?: continue@CourseFilteringForLoop

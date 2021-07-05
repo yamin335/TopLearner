@@ -129,7 +129,7 @@
                 android:elevation="1dp"
                 android:focusable="true"
                 android:gravity="center"
-                android:visibility="@{viewModel.allCourseCategoriesFromDB.size() > 0 ? View.GONE : View.VISIBLE}">
+                app:showLoader="@{viewModel.apiCallStatus}">
 
                 <ProgressBar
                     android:id="@+id/loader"
