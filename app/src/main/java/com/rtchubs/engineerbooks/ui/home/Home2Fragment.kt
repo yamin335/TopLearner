@@ -67,6 +67,7 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         }
 
         viewModel.getAllCourses()
+        viewModel.getAllFreeBooks()
     }
 
     override fun onAttach(context: Context) {

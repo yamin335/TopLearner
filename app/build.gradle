@@ -94,9 +94,6 @@ android {
             enableSplit = false
         }
     }
-
-
-
 }
 repositories {
     mavenCentral()
@@ -147,8 +144,8 @@ dependencies {
     api deps.retrofit.converter_scalar
     implementation deps.okhttp_logging_interceptor
 
-    implementation 'com.kofigyan.stateprogressbar:stateprogressbar:1.0.0'
-    implementation 'com.makeramen:roundedimageview:2.3.0'
+//    implementation 'com.kofigyan.stateprogressbar:stateprogressbar:1.0.0'
+//    implementation 'com.makeramen:roundedimageview:2.3.0'
 
 
     implementation deps.event
@@ -174,7 +171,7 @@ dependencies {
     /*picasso*/
     //implementation deps.picasso
     /*cropper*/
-    api deps.cropper
+//    api deps.cropper
 
     // (Recommended) Add the Google Analytics dependency.
     implementation deps.firebase.analytics
@@ -194,12 +191,12 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.2.0-alpha03"
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
-    implementation 'com.hbb20:ccp:2.3.4'
-    implementation 'com.romandanylyk:pageindicatorview:1.0.2@aar'
-    implementation 'com.airbnb.android:lottie:3.4.0'
-    implementation 'com.jaeger.statusbarutil:library:1.5.1'
-
-    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+//    implementation 'com.hbb20:ccp:2.3.4'
+//    implementation 'com.romandanylyk:pageindicatorview:1.0.2@aar'
+//    implementation 'com.airbnb.android:lottie:3.4.0'
+//    implementation 'com.jaeger.statusbarutil:library:1.5.1'
+//
+//    implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
     // CameraX core library
     implementation deps.camerax.core
@@ -220,14 +217,14 @@ dependencies {
     implementation deps.glide.runtime
     kapt deps.glide.compiler
 
-    // EventBus
-    implementation 'de.greenrobot:eventbus:2.4.0'
-
-    // NanoTasks
-    implementation 'com.fabiendevos:nanotasks:1.1.0'
+//    // EventBus
+//    implementation 'de.greenrobot:eventbus:2.4.0'
+//
+//    // NanoTasks
+//    implementation 'com.fabiendevos:nanotasks:1.1.0'
 
     // Joda
-    implementation 'joda-time:joda-time:2.9.3'
+//    implementation 'joda-time:joda-time:2.9.3'
 
     // Floating action button group
     implementation 'com.getbase:floatingactionbutton:1.10.1'

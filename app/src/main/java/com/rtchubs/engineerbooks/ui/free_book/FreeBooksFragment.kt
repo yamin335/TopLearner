@@ -145,6 +145,7 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
 //                }
 //            }
         }
+        viewDataBinding.homeClassListRecycler.adapter = freeBookListAdapter
 
         viewModel.allFreeBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
             if (books.isNullOrEmpty()) {
@@ -156,10 +157,11 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
             }
         })
 
-        viewDataBinding.homeClassListRecycler.adapter = freeBookListAdapter
-
         viewModel.allBooks.observe(viewLifecycleOwner, Observer { books ->
             viewModel.saveBooksInDB(books ?: ArrayList())
+//            lifecycleScope.launch {
+//                delay()
+//            }
         })
 
         

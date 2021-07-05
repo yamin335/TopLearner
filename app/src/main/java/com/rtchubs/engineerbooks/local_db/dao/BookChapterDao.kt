@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface BookChapterDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addBooks(books: List<ClassWiseBook>)
+    suspend fun addBooks(books: List<ClassWiseBook>): List<Long>
 
     @Query("SELECT * FROM books WHERE id = :bookId")
     suspend fun getCourseFreeBook(bookId: Int): ClassWiseBook
