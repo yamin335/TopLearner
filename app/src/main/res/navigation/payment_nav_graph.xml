@@ -24,5 +24,11 @@
         <argument
             android:name="coursePrice"
             app:argType="string" />
+        <argument
+            android:name="courseName"
+            app:argType="string" />
+        <argument
+            android:name="bookThumb"
+            app:argType="string" />
     </fragment>
 </navigation>

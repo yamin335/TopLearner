@@ -237,7 +237,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 0, "", userData.upazila ?: "", userData.city ?: "",
                 userData.UpazilaID ?: 0, userData.CityID ?: 0, invoiceNumber,
                 "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
-                "$firstName $lastName", args.bookName ?: "", response.amount ?: "N/A"
+                "$firstName $lastName", args.bookName ?: "", response.amount ?: "N/A",
+                "", ""
             ),
             CoursePaymentRequest(
                 userData.mobile, invoiceNumber,userData.id, args.courseId, args.coursePrice.toInt(), response.amount.toDouble().toInt()

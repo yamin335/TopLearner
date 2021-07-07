@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
+import com.rtchubs.engineerbooks.local_db.dao.AcademicClassDao
 import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
 import com.rtchubs.engineerbooks.models.AdSlider
 import com.rtchubs.engineerbooks.models.chapter.BookChapter
@@ -30,7 +31,8 @@ class FreeBooksViewModel @Inject constructor(
     private val repository: HomeRepository,
     private val mediaRepository: MediaRepository,
     private val registrationRepository: RegistrationRepository,
-    private val bookChapterDao: BookChapterDao
+    private val bookChapterDao: BookChapterDao,
+    private val academicClassDao: AcademicClassDao
 ) : BaseViewModel(application) {
 
     val defaultResponse: MutableLiveData<DefaultResponse> = MutableLiveData()
@@ -61,8 +63,10 @@ class FreeBooksViewModel @Inject constructor(
         }
     }
 
-    val allAcademicClass: MutableLiveData<List<AcademicClass>> by lazy {
-        MutableLiveData<List<AcademicClass>>()
+    val allAcademicClass: LiveData<List<AcademicClass>> = liveData {
+        academicClassDao.getAllClasses().collect { list ->
+            emit(list)
+        }
     }
 
     var selectedClassId: Int = 0
@@ -70,6 +74,20 @@ class FreeBooksViewModel @Inject constructor(
             field = value
             getFreeBookFromDB()
         }
+
+    private fun updateClassesInDB(classes: List<AcademicClass>) {
+        try {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+            }
+
+            viewModelScope.launch(handler) {
+                academicClassDao.updateAllAcademicClasses(classes)
+            }
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+        }
+    }
 
     fun updateBooksInDB(books: List<ClassWiseBook>) {
         try {
@@ -224,22 +242,17 @@ class FreeBooksViewModel @Inject constructor(
         if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
-                apiCallStatus.postValue(ApiCallStatus.ERROR)
                 toastError.postValue(AppConstants.serverConnectionErrorMessage)
             }
 
-            apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
                 when (val apiResponse = ApiResponse.create(registrationRepository.getAcademicClassRepo())) {
                     is ApiSuccessResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                        allAcademicClass.postValue(apiResponse.body.data?.classes)
+                        updateClassesInDB(apiResponse.body.data?.classes ?: ArrayList())
                     }
                     is ApiEmptyResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }
             }

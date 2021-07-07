@@ -71,6 +71,7 @@ class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, Profi
                 viewDataBinding.earnedMoney.text = "${data.totalamountearns ?: 0} ৳"
                 viewDataBinding.payableAmount.text = "${data.totalamountdue ?: 0} ৳"
                 viewDataBinding.paymentAmount.text = "${data.totalamountpaid ?: 0} ৳"
+                viewDataBinding.noOfStudents.text = "${data.student_numbers ?: 0}"
             }
         })
 

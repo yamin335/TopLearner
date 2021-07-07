@@ -5,16 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
-import com.rtchubs.engineerbooks.local_db.dao.CourseDao
-import com.rtchubs.engineerbooks.local_db.dao.HistoryDao
-import com.rtchubs.engineerbooks.local_db.dao.MyCourseDao
+import com.rtchubs.engineerbooks.local_db.dao.*
 import com.rtchubs.engineerbooks.local_db.dbo.ChapterItem
 import com.rtchubs.engineerbooks.local_db.dbo.HistoryItem
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.home.CourseCategory
 import com.rtchubs.engineerbooks.models.my_course.MyCourse
 import com.rtchubs.engineerbooks.models.my_course.MyCourseBook
+import com.rtchubs.engineerbooks.models.registration.AcademicClass
 
 /**
  * Main database.
@@ -26,7 +24,8 @@ import com.rtchubs.engineerbooks.models.my_course.MyCourseBook
         MyCourse::class,
         MyCourseBook::class,
         ChapterItem::class,
-        HistoryItem::class
+        HistoryItem::class,
+        AcademicClass::class
     ],
     version = 1,
     exportSchema = false
@@ -39,6 +38,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun historyDao(): HistoryDao
     abstract fun courseDao(): CourseDao
     abstract fun myCourseDao(): MyCourseDao
+    abstract fun academicClassDao(): AcademicClassDao
 
     companion object {
 
@@ -54,7 +54,7 @@ abstract class AppDatabase : RoomDatabase() {
             }
 
         private fun buildDatabase(app: Application) =
-            Room.databaseBuilder(app, AppDatabase::class.java, "engineers_apps_database_v1")
+            Room.databaseBuilder(app, AppDatabase::class.java, "engineers_apps_database_v2")
                 // prepopulate the database after onCreate was called
 //                .addCallback(object : Callback() {
 //                    override fun onCreate(db: SupportSQLiteDatabase) {

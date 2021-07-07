@@ -1,5 +1,10 @@
 package com.rtchubs.engineerbooks.models.registration
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import java.io.Serializable
+
 data class DistrictResponse(val code: Number?, val data: DistrictData?, val msg: String?)
 
 data class DistrictData(val districts: List<District>?)
@@ -16,7 +21,9 @@ data class Gender(val id: Int, val name: String?)
 
 data class AcademicClassResponse(val code: Int?, val data: AcademicClassData?, val msg: String?)
 
-data class AcademicClass(val id: String?, val name: String?, val bnname: String?)
+@Entity(tableName = "all_classes")
+data class AcademicClass(@PrimaryKey(autoGenerate = false) @ColumnInfo(name = "id") val id: String,
+                         val name: String?, val bnname: String?): Serializable
 
 data class AcademicClassData(val classes: List<AcademicClass>?)
 

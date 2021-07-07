@@ -8,14 +8,17 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.api.ResponseCodes.CODE_SUCCESS
+import com.rtchubs.engineerbooks.local_db.dao.AcademicClassDao
 import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
 import com.rtchubs.engineerbooks.local_db.dao.CourseDao
 import com.rtchubs.engineerbooks.models.home.ClassWiseBook
 import com.rtchubs.engineerbooks.models.home.CourseCategory
+import com.rtchubs.engineerbooks.models.registration.AcademicClass
 import com.rtchubs.engineerbooks.models.registration.DefaultResponse
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.repos.HomeRepository
 import com.rtchubs.engineerbooks.repos.MediaRepository
+import com.rtchubs.engineerbooks.repos.RegistrationRepository
 import com.rtchubs.engineerbooks.ui.common.BaseViewModel
 import com.rtchubs.engineerbooks.util.AppConstants
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -28,8 +31,10 @@ class HomeViewModel @Inject constructor(
     private val application: Application,
     private val repository: HomeRepository,
     private val mediaRepository: MediaRepository,
+    private val registrationRepository: RegistrationRepository,
     private val courseDao: CourseDao,
-    private val bookChapterDao: BookChapterDao
+    private val bookChapterDao: BookChapterDao,
+    private val academicClassDao: AcademicClassDao
 ) : BaseViewModel(application) {
     val defaultResponse: MutableLiveData<DefaultResponse> = MutableLiveData()
 
@@ -41,6 +46,20 @@ class HomeViewModel @Inject constructor(
 
     val allCourseCategoryList: MutableLiveData<List<CourseCategory>> by lazy {
         MutableLiveData<List<CourseCategory>>()
+    }
+
+    private fun updateClassesInDB(classes: List<AcademicClass>) {
+        try {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+            }
+
+            viewModelScope.launch(handler) {
+                academicClassDao.updateAllAcademicClasses(classes)
+            }
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+        }
     }
 
     fun saveCourseCategoriesInDB(courseCategories: List<CourseCategory>) {
@@ -183,6 +202,27 @@ class HomeViewModel @Inject constructor(
             }
         } else {
             apiCallStatus.postValue(ApiCallStatus.ERROR)
+        }
+    }
+
+    fun getAcademicClass() {
+        if (checkNetworkStatus(true)) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+            }
+
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(registrationRepository.getAcademicClassRepo())) {
+                    is ApiSuccessResponse -> {
+                        updateClassesInDB(apiResponse.body.data?.classes ?: ArrayList())
+                    }
+                    is ApiEmptyResponse -> {
+                    }
+                    is ApiErrorResponse -> {
+                    }
+                }
+            }
         }
     }
 
