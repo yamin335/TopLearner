@@ -43,8 +43,10 @@ import com.rtchubs.engineerbooks.api.Api.PUBLIC_REPO
 import com.rtchubs.engineerbooks.api.Api.SALES_REPO
 
 object Api {
-    const val PROTOCOL = "https"
-    const val API_ROOT = "backend.engineersmath.com"
+//    const val PROTOCOL = "https"
+////    const val API_ROOT = "backend.engineersmath.com"
+    const val PROTOCOL = "http"
+    const val API_ROOT = "54.151.191.40:8081"
     const val ADMIN_API_ROOT = "adminbackend.engineersmath.com"
     const val API_ROOT_URL = "$PROTOCOL://$API_ROOT/"
     const val ADMIN_API_ROOT_URL = "$PROTOCOL://$ADMIN_API_ROOT/"
