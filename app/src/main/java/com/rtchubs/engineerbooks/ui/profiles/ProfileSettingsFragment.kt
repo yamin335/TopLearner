@@ -56,8 +56,8 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 
     override val viewModel: ProfileSettingsViewModel by viewModels { viewModelFactory }
 
-    private var titleClassList = arrayOf("--Select Class--")
-    private var titleGenderList = arrayOf("--Select Gender--")
+    private var titleClassList = arrayOf("--সিলেক্ট করুন--")
+    private var titleGenderList = arrayOf("--সিলেক্ট করুন--")
 
     lateinit var genderAdapter: ArrayAdapter<String>
     lateinit var classAdapter: ArrayAdapter<String>
@@ -112,27 +112,28 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 viewModel.firstName = s?.toString() ?: ""
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-        })
-
-        viewDataBinding.lastName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 viewModel.lastName = s?.toString() ?: ""
             }
 
             override fun afterTextChanged(s: Editable?) {
 
             }
-
         })
+
+//        viewDataBinding.lastName.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+//
+//            }
+//
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                viewModel.lastName = s?.toString() ?: ""
+//            }
+//
+//            override fun afterTextChanged(s: Editable?) {
+//
+//            }
+//
+//        })
 
         viewDataBinding.fatherName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -285,7 +286,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         }
 
         val tempGender = Array(viewModel.allGender.size + 1) {""}
-        tempGender[0] = "--Select Gender--"
+        tempGender[0] = "--সিলেক্ট করুন--"
         viewModel.allGender.forEachIndexed { index, gender ->
             tempGender[index + 1] = gender.name ?: "Unknown"
         }
@@ -317,7 +318,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         }
 
         val tempClass = Array(allClass.size + 1) {""}
-        tempClass[0] = "--Select Class--"
+        tempClass[0] = "--সিলেক্ট করুন--"
         allClass.forEachIndexed { index, academicClass ->
             tempClass[index + 1] = academicClass.name ?: "Unknown"
         }
@@ -380,7 +381,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             if (allClass.isEmpty()) {
                 it?.let {
                     val temp = Array(it.size + 1) { "" }
-                    temp[0] = "--Select Class--"
+                    temp[0] = "--সিলেক্ট করুন--"
                     it.forEachIndexed { index, academicClass ->
                         temp[index + 1] = academicClass.name ?: "Unknown"
                     }
@@ -464,12 +465,12 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             }
             userData.first_name = viewDataBinding.firstName.text.toString()
 
-            if (viewDataBinding.lastName.text.toString().isEmpty()) {
-                viewDataBinding.lastName.requestFocus()
-                showErrorToast(requireContext(), "Please enter last name!")
-                return@setOnClickListener
-            }
-            userData.last_name = viewDataBinding.lastName.text.toString()
+//            if (viewDataBinding.lastName.text.toString().isEmpty()) {
+//                viewDataBinding.lastName.requestFocus()
+//                showErrorToast(requireContext(), "Please enter last name!")
+//                return@setOnClickListener
+//            }
+            userData.last_name = viewDataBinding.firstName.text.toString()
 
             if (viewDataBinding.fatherName.text.toString().isEmpty()) {
                 viewDataBinding.fatherName.requestFocus()
@@ -512,7 +513,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             userData.gender = viewModel.selectedGender?.name
 
             viewModel.selectedClass?.let {
-                userData.class_id = it.id?.toInt()
+                userData.class_id = it.id.toInt()
                 userData.ClassName = it.name
             }
 
@@ -650,11 +651,11 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             viewDataBinding.firstName.setText(viewModel.firstName)
         }
 
-        if (viewModel.lastName.isEmpty()) {
-            viewDataBinding.lastName.setText(user.last_name)
-        } else {
-            viewDataBinding.lastName.setText(viewModel.lastName)
-        }
+//        if (viewModel.lastName.isEmpty()) {
+//            viewDataBinding.lastName.setText(user.last_name)
+//        } else {
+//            viewDataBinding.lastName.setText(viewModel.lastName)
+//        }
 
         if (viewModel.fatherName.isEmpty()) {
             viewDataBinding.fatherName.setText(user.altContactPerson)

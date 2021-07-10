@@ -17,7 +17,7 @@ class CourseTopicListAdapter(
 ) : DataBoundListAdapter<Animation, AnimationListItemBinding>(
     appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<Animation>() {
         override fun areItemsTheSame(oldItem: Animation, newItem: Animation): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.udid == newItem.udid
         }
 
         @SuppressLint("DiffUtilEquals")

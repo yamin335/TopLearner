@@ -90,7 +90,7 @@ class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, Profi
             .placeholder(placeholder)
             .into(viewDataBinding.rivProfileImage)
 
-        viewDataBinding.name.text = "${user.first_name} ${user.last_name}"
+        viewDataBinding.name.text = "${user.first_name}"
         viewDataBinding.fatherName.text = if (user.father_name.isNullOrBlank()) "N/A" else user.father_name
         viewDataBinding.motherName.text = if (user.mother_name.isNullOrBlank()) "N/A" else user.mother_name
         viewDataBinding.mobileNo.text = if (user.mobile.isNullOrBlank()) "N/A" else user.mobile

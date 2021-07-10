@@ -301,7 +301,7 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
                         course.title = tempCourse?.title
                         course.logo = tempCourse?.logourl
                         course.book_id = tempCourse?.book_id
-                        course.endtime = tempCourse?.endtime
+                        //course.endtime = tempCourse?.endtime
                         courses.add(course)
                     }
                 }

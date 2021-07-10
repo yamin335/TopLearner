@@ -106,8 +106,10 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
         if (registrationRemoteHelper.isRegistered == true) {
             viewDataBinding.linearReTypePin.visibility = View.GONE
             viewDataBinding.forgotPassword.visibility = View.VISIBLE
+            viewDataBinding.resetPinLabel.visibility = View.VISIBLE
         } else {
             viewDataBinding.forgotPassword.visibility = View.GONE
+            viewDataBinding.resetPinLabel.visibility = View.GONE
         }
 
 //        viewModel.defaultResponse.observe(viewLifecycleOwner, Observer { response ->

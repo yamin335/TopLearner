@@ -23,7 +23,7 @@ class TeachersListAdapter(
 ) : DataBoundListAdapter<Teacher, CourseDetailsTeacherListItemBinding>(
     appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<Teacher>() {
         override fun areItemsTheSame(oldItem: Teacher, newItem: Teacher): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.teacher_id == newItem.teacher_id
         }
 
         @SuppressLint("DiffUtilEquals")

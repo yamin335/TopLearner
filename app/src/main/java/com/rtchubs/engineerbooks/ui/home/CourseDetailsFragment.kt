@@ -114,8 +114,8 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
 
         }
         viewDataBinding.teachersRecycler.adapter = teachersAdapter
-        teachersAdapter.submitList(course?.teachers)
-        viewDataBinding.tvLabelTeacher.visibility = if (course?.teachers.isNullOrEmpty()) View.GONE else View.VISIBLE
+        teachersAdapter.submitList(course?.course_teachers)
+        viewDataBinding.tvLabelTeacher.visibility = if (course?.course_teachers.isNullOrEmpty()) View.GONE else View.VISIBLE
 
 //        val subjects = listOf(
 //            CourseSubject(1, "Subject - 1"),
@@ -224,7 +224,7 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         lifecycleScope.launch {
             delay(1500)
             CoroutineScope(Dispatchers.Main.immediate).launch {
-                contentsAdapter.submitList(course?.course_chapter)
+                contentsAdapter.submitList(course?.course_chapters)
             }
         }
     }

@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.rtchubs.engineerbooks.api.*
-import com.rtchubs.engineerbooks.api.ResponseCodes.CODE_SUCCESS
 import com.rtchubs.engineerbooks.local_db.dao.AcademicClassDao
 import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
 import com.rtchubs.engineerbooks.local_db.dao.CourseDao
@@ -159,15 +158,27 @@ class HomeViewModel @Inject constructor(
                 when (val apiResponse = ApiResponse.create(repository.allCourseRepo())) {
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                        if (apiResponse.body.code != CODE_SUCCESS) {
-                            toastError.postValue(apiResponse.body.message ?: AppConstants.serverConnectionErrorMessage)
+//                        if (apiResponse.body.code != CODE_SUCCESS) {
+//                            toastError.postValue(apiResponse.body.msg ?: AppConstants.serverConnectionErrorMessage)
+//                            return@launch
+//                        }
+
+                        val courses = apiResponse.body.data?.courses
+                        if (courses.isNullOrEmpty()) {
+                            toastError.postValue(apiResponse.body.msg ?: AppConstants.noCourseFoundMessage)
                             return@launch
                         }
-                        if (apiResponse.body.data?.CourseCatagorys.isNullOrEmpty()) {
-                            toastError.postValue(apiResponse.body.message ?: AppConstants.noCourseFoundMessage)
-                            return@launch
+
+                        val courseMap = courses.groupBy { it.catagory_id }
+                        val courseCategories: ArrayList<CourseCategory> = ArrayList()
+                        for (key in courseMap.keys) {
+                            val courseList = courseMap[key]
+                            val categoryName = if (!courseList.isNullOrEmpty()) courseList[0].catagory_name else "Unknown Courses"
+                            courseCategories.add(CourseCategory(key, categoryName, courseList))
                         }
-                        allCourseCategoryList.postValue(apiResponse.body.data?.CourseCatagorys)
+
+
+                        allCourseCategoryList.postValue(courseCategories)
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)

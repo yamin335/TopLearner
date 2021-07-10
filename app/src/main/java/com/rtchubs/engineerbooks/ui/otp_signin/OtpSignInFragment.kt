@@ -15,7 +15,6 @@ import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.OTPHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.AppConstants.START_TIME_IN_MILLI_SECONDS
-import com.rtchubs.engineerbooks.util.AppConstants.otpWaitMessage
 
 
 class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
@@ -81,8 +80,8 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
         viewModel.registeredOTP.observe(viewLifecycleOwner, Observer { inquiryResponse ->
             inquiryResponse?.data?.Account?.let {
                 registrationRemoteHelper = it
-                viewDataBinding.tvOtpTextDescription.text =
-                    "An OTP Code has been sent to your mobile +88${registrationRemoteHelper.mobile}"
+//                viewDataBinding.tvOtpTextDescription.text =
+//                    "An OTP Code has been sent to your mobile +88${registrationRemoteHelper.mobile}"
                 viewDataBinding.etOtpCode.isEnabled = true
                 viewDataBinding.btnSubmit.isEnabled = true
             }
@@ -92,7 +91,7 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
             startOTPListenerCallback?.onStartOTPListener()
             startTimer()
             viewModel.requestOTPCode(registrationRemoteHelper)
-            viewDataBinding.tvOtpTextDescription.text = otpWaitMessage
+            //viewDataBinding.tvOtpTextDescription.text = otpWaitMessage
             viewDataBinding.etOtpCode.setText("")
 //            viewDataBinding.etOtpCode.isEnabled = false
 //            viewDataBinding.btnSubmit.isEnabled = false
@@ -117,8 +116,8 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
                     )
                     viewModel.verifiedOTP.postValue(null)
                 } else {
-                    viewDataBinding.tvOtpTextDescription.text =
-                        "You entered an invalid OTP code! please request a new code"
+//                    viewDataBinding.tvOtpTextDescription.text =
+//                        "You entered an invalid OTP code! please request a new code"
                     viewDataBinding.etOtpCode.setText("")
 //                    viewDataBinding.etOtpCode.isEnabled = false
 //                    viewDataBinding.btnSubmit.isEnabled = false

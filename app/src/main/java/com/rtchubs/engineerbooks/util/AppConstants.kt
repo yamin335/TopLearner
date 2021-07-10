@@ -13,7 +13,7 @@ object AppConstants {
     const val commonErrorMessage = "Something wrong! please try again later."
     const val serverConnectionErrorMessage = "Can not connect to server! Please try again later."
     const val noCourseFoundMessage = "No course found, Please try again later."
-    const val otpWaitMessage = "Please wait until you get an OTP code!"
+    //const val otpWaitMessage = "Please wait until you get an OTP code!"
     const val registrationSuccessMessage = "Welcome! to QPay. Please login to continue."
     const val saveSuccessfulMessage = "Saved Successfully!"
     const val downloadedPdfFiles = "downloaded_pdf_files"

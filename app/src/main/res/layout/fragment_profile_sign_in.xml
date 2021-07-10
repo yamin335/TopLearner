@@ -26,7 +26,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:theme="@style/AppTheme.AppBarOverlay"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:title="Profile"
+                app:title="প্রোফাইল"
                 app:titleTextColor="@color/white" />
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -70,20 +70,27 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="32dp"
                         android:layout_marginEnd="8dp"
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/rivProfileImage"
                         android:baselineAligned="true">
 
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/compulsory_field_fill_up_hint"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginTop="24dp"
-                            android:layout_marginEnd="8dp"
                             android:orientation="vertical"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -93,7 +100,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
-                                android:text="@string/first_name"
+                                android:text="@string/name_"
                                 android:textColor="@color/white"
                                 android:textSize="16sp" />
 
@@ -102,7 +109,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@null"
-                                android:hint="first name"
+                                android:hint="নাম"
                                 android:textColor="@color/white"
                                 android:textSize="18sp"
                                 android:inputType="text"
@@ -114,45 +121,6 @@
                                 android:layout_height="2dp"
                                 android:layout_marginTop="4dp"
                                 android:background="@color/albumColorPrimary" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="24dp"
-                            android:orientation="vertical"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/rivProfileImage">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:text="@string/last_name"
-                                android:textColor="@color/white"
-                                android:textSize="16sp" />
-
-                            <EditText
-                                android:id="@+id/lastName"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@null"
-                                android:hint="last name"
-                                android:inputType="text"
-                                android:textColor="@color/white"
-                                android:textSize="18sp"
-                                android:theme="@style/EditTextTheme"
-                                android:importantForAutofill="no" />
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="2dp"
-                                android:layout_marginTop="4dp"
-                                android:background="@color/albumColorPrimary" />
-
                         </LinearLayout>
 
                     </LinearLayout>
@@ -182,7 +150,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
-                            android:hint="father name"
+                            android:hint="পিতা"
                             android:textColor="@color/white"
                             android:textSize="18sp"
                             android:inputType="text"
@@ -400,7 +368,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
-                                android:text="Institute"
+                                android:text="প্রতিষ্ঠানঃ"
                                 android:textColor="@color/white"
                                 android:textSize="16sp" />
 
@@ -409,7 +377,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@null"
-                                android:hint="institute"
+                                android:hint="প্রতিষ্ঠানের নাম"
                                 android:inputType="text"
                                 android:textColor="@color/white"
                                 android:textSize="18sp"
@@ -435,7 +403,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
-                                android:text="Roll"
+                                android:text="রোলঃ"
                                 android:textColor="@color/white"
                                 android:textSize="16sp" />
 
@@ -444,7 +412,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@null"
-                                android:hint="class roll"
+                                android:hint="শ্রেণী রোল"
                                 android:inputType="numberDecimal"
                                 android:textColor="@color/white"
                                 android:textSize="18sp"
@@ -477,7 +445,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            android:text="Email Address"
+                            android:text="ইমেইল এড্রেসঃ"
                             android:textColor="@color/white"
                             android:textSize="16sp" />
 
@@ -487,7 +455,7 @@
                             android:layout_height="wrap_content"
                             android:background="@null"
                             android:importantForAutofill="yes"
-                            android:hint="email address"
+                            android:hint="ইমেইল"
                             android:inputType="textEmailAddress"
                             android:textColor="@color/white"
                             android:textSize="18sp"
@@ -519,7 +487,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            android:text="Address"
+                            android:text="ঠিকানাঃ"
                             android:textColor="@color/white"
                             android:textSize="16sp" />
 
@@ -528,7 +496,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
-                            android:hint="address"
+                            android:hint="ঠিকানা"
                             android:importantForAutofill="no"
                             android:textColor="@color/white"
                             android:textSize="18sp"
@@ -609,7 +577,7 @@
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:insetBottom="0dp"
-            android:text="Submit"
+            android:text="সম্পন্ন করুন"
             android:enabled="true"
             android:backgroundTint="@color/button_enable_disable_colors"
             android:textAllCaps="false"

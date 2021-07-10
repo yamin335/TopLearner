@@ -52,10 +52,8 @@ class CourseChapterListAdapter(
 
         }
 
-        val temp = item.animation
-
         binding.details.adapter = animationListAdapter
-        animationListAdapter.submitList(item.animation)
+        animationListAdapter.submitList(item.chapter_contents)
 
 
     }
