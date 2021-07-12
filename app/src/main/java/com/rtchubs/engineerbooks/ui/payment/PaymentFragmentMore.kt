@@ -3,7 +3,6 @@ package com.rtchubs.engineerbooks.ui.payment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.PaymentFragmentBinding
@@ -56,11 +55,11 @@ class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewMode
 //            }
 //        })
 
-        viewModel.amount.observe(viewLifecycleOwner, Observer {  mobileNo ->
-            mobileNo?.let {
-                viewDataBinding.btnPayNow.isEnabled = it.isNotEmpty() && it != "0"
-            }
-        })
+//        viewModel.amount.observe(viewLifecycleOwner, Observer {  mobileNo ->
+//            mobileNo?.let {
+//                viewDataBinding.btnPayNow.isEnabled = it.isNotEmpty() && it != "0"
+//            }
+//        })
 
 //        viewModel.offers.observe(viewLifecycleOwner, Observer {
 //            val discount = (userData.discount_amount ?: 0.0).toInt()
@@ -110,13 +109,13 @@ class PaymentFragmentMore : BaseFragment<PaymentFragmentBinding, PaymentViewMode
 
         viewDataBinding.btnPayNow.setOnClickListener {
 
-            viewModel.getBkashPaymentUrl(userData.mobile ?: "",
-                viewModel.amount.value ?: "0",
-                invoiceNumber ?: generateInvoiceID()).observe(viewLifecycleOwner, Observer { response ->
-                response?.let {
-                    shoWBkashDialog(viewModel.amount.value ?: "0", it)
-                }
-            })
+//            viewModel.getBkashPaymentUrl(userData.mobile ?: "",
+//                viewModel.amount.value ?: "0",
+//                invoiceNumber ?: generateInvoiceID()).observe(viewLifecycleOwner, Observer { response ->
+//                response?.let {
+//                    shoWBkashDialog(viewModel.amount.value ?: "0", it)
+//                }
+//            })
 
 //            val checkout = Checkout()
 //            checkout.setAmount("10")

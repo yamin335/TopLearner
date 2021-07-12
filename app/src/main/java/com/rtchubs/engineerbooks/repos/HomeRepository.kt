@@ -8,7 +8,6 @@ import com.rtchubs.engineerbooks.models.LiveClassScheduleResponse
 import com.rtchubs.engineerbooks.models.OfferResponse
 import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
 import com.rtchubs.engineerbooks.models.faq.AllFaqResponse
-import com.rtchubs.engineerbooks.models.home.AllBookResponse
 import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
 import com.rtchubs.engineerbooks.models.home.CourseCategoryResponse
 import com.rtchubs.engineerbooks.models.my_course.MyCourseListRequest
@@ -55,12 +54,12 @@ class HomeRepository @Inject constructor(@Named("auth") private val authApiServi
         }
     }
 
-    suspend fun adminPanelBookRepo(): Response<AllBookResponse> {
-
-        return withContext(Dispatchers.IO) {
-            adminApiService.getAllBooks()
-        }
-    }
+//    suspend fun adminPanelBookRepo(): Response<AllBookResponse> {
+//
+//        return withContext(Dispatchers.IO) {
+//            adminApiService.getAllBooks()
+//        }
+//    }
 
     suspend fun allCourseRepo(): Response<CourseCategoryResponse> {
         return withContext(Dispatchers.IO) {

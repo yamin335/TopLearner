@@ -27,6 +27,7 @@ import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.CourseDetailsFragmentBinding
 import com.rtchubs.engineerbooks.models.home.Course
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
+import com.rtchubs.engineerbooks.ui.payment.PaymentFragment
 import com.rtchubs.engineerbooks.util.showErrorToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -90,6 +91,14 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         }
 
         viewDataBinding.btnBuyNow.setOnClickListener {
+            PaymentFragment.firstPackageTitle = course?.first_payment_title ?: ""
+            PaymentFragment.secondPackageTitle = course?.second_payment_title ?: ""
+            PaymentFragment.thirdPackageTitle = course?.third_payment_title ?: ""
+
+            PaymentFragment.firstPackagePrice = course?.first_payment_amount ?: 0
+            PaymentFragment.secondPackagePrice = course?.second_payment_amount ?: 0
+            PaymentFragment.thirdPackagePrice = course?.third_payment_amount ?: 0
+
             navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToPaymentNav(course?.book_id ?: 0, course?.title, course?.id ?:0, price, "", ""))
         }
 
