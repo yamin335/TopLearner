@@ -43,11 +43,13 @@ import com.rtchubs.engineerbooks.api.Api.PUBLIC_REPO
 import com.rtchubs.engineerbooks.api.Api.SALES_REPO
 
 object Api {
-//    const val PROTOCOL = "https"
-////    const val API_ROOT = "backend.engineersmath.com"
     const val PROTOCOL = "http"
     const val API_ROOT = "54.151.191.40:8081"
     const val ADMIN_API_ROOT = "adminbackend.engineersmath.com"
+
+//    const val PROTOCOL = "https"
+//    const val API_ROOT = "backend.engineersmath.com"
+//    const val ADMIN_API_ROOT = "adminbackend.engineersmath.com"
     const val API_ROOT_URL = "$PROTOCOL://$API_ROOT/"
     const val ADMIN_API_ROOT_URL = "$PROTOCOL://$ADMIN_API_ROOT/"
     const val COURSE_IMAGE_ROOT_URL = "${ADMIN_API_ROOT_URL}images/courselogo/"
@@ -130,7 +132,8 @@ object ApiEndPoint {
     const val SLIDER_IMAGE = "$ADMIN_API_ROOT_URL$PUBLIC_REPO/$DIRECTORY_UPLOADS/ads"
     const val SLIDER_ADS = "$API_VERSION/$PUBLIC_REPO/getads"
 
-    const val ALL_COURSE = "$API_REPO/get/coursecatagories/all"
+    const val ALL_COURSE = "$API_VERSION/course/getall"
+//    const val ALL_COURSE = "$API_REPO/get/coursecatagories/all"
     const val ALL_FAQS = "$API_REPO/get/course_faq/all"
     const val PURCHASE_COURSE = "$API_VERSION/course/purchase"
     const val MY_COURSES = "$API_VERSION/course/mycourses"

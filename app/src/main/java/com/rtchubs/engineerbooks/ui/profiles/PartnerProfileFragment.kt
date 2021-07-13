@@ -71,6 +71,7 @@ class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, Profi
                 viewDataBinding.earnedMoney.text = "${data.totalamountearns ?: 0} ৳"
                 viewDataBinding.payableAmount.text = "${data.totalamountdue ?: 0} ৳"
                 viewDataBinding.paymentAmount.text = "${data.totalamountpaid ?: 0} ৳"
+                viewDataBinding.noOfStudents.text = "${data.student_numbers ?: 0}"
             }
         })
 
@@ -89,7 +90,7 @@ class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, Profi
             .placeholder(placeholder)
             .into(viewDataBinding.rivProfileImage)
 
-        viewDataBinding.name.text = "${user.first_name} ${user.last_name}"
+        viewDataBinding.name.text = "${user.first_name}"
         viewDataBinding.fatherName.text = if (user.father_name.isNullOrBlank()) "N/A" else user.father_name
         viewDataBinding.motherName.text = if (user.mother_name.isNullOrBlank()) "N/A" else user.mother_name
         viewDataBinding.mobileNo.text = if (user.mobile.isNullOrBlank()) "N/A" else user.mobile

@@ -29,6 +29,16 @@ import java.security.SecureRandom
 
 class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>() {
 
+    companion object {
+        var firstPackagePrice = 0
+        var secondPackagePrice = 0
+        var thirdPackagePrice = 0
+
+        var firstPackageTitle = ""
+        var secondPackageTitle = ""
+        var thirdPackageTitle = ""
+    }
+
     override val bindingVariable: Int
         get() = BR.viewModel
     override val layoutId: Int
@@ -46,6 +56,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
     private lateinit var invoiceNumber: String
 
     var discount = 0
+    var packagePrice = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +69,26 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         registerToolbar(viewDataBinding.toolbar)
 
         userData = preferencesHelper.getUser()
+
+        viewDataBinding.firstPackage.text = "$firstPackageTitle -- ${getString(R.string.taka_sign)}$firstPackagePrice"
+        viewDataBinding.secondPackage.text = "$secondPackageTitle -- ${getString(R.string.taka_sign)}$secondPackagePrice"
+        viewDataBinding.thirdPackage.text = "$thirdPackageTitle -- ${getString(R.string.taka_sign)}$thirdPackagePrice"
+
+        viewModel.promoDiscount.postValue(0)
+        viewModel.personalDiscount.postValue(0)
+        viewModel.offerAmount.postValue(0)
+        viewModel.amount.postValue(0)
+
+        packagePrice = secondPackagePrice
+
+        viewDataBinding.packageGroup.setOnCheckedChangeListener { _, checkedId ->
+            when(checkedId) {
+                R.id.firstPackage -> packagePrice = firstPackagePrice
+                R.id.secondPackage -> packagePrice = secondPackagePrice
+                R.id.thirdPackage -> packagePrice = thirdPackagePrice
+            }
+            viewModel.amount.postValue(packagePrice - discount)
+        }
 
         viewModel.salesInvoice.observe(viewLifecycleOwner, Observer { invoice ->
             invoice?.let {
@@ -79,55 +110,35 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             }
         })
 
-        viewModel.amount.observe(viewLifecycleOwner, Observer {  amount ->
-            amount?.let {
-                viewDataBinding.btnPayNow.isEnabled = it.isNotEmpty() && it != "0"
-            }
-        })
+//        viewModel.amount.observe(viewLifecycleOwner, Observer {  amount ->
+//            amount?.let {
+//                viewDataBinding.btnPayNow.isEnabled = it.isNotEmpty() && it != "0"
+//            }
+//        })
 
         viewModel.offers.observe(viewLifecycleOwner, Observer {
             discount = (userData.discount_amount ?: 0.0).toInt()
-            it?.let { offers ->
-                if (offers.isNotEmpty()) {
-                    offers.forEach { offer ->
-                        val firstDate = offer.FromDate?.split("T")?.first()?.getMilliFromDate()
-                            ?: Long.MAX_VALUE
-                        val lastDate =
-                            offer.EndDate?.split("T")?.first()?.getMilliFromDate() ?: Long.MAX_VALUE
-                        val date = System.currentTimeMillis()
+            viewModel.personalDiscount.postValue(discount)
 
-                        if (offer.archived == false && date in firstDate..lastDate) {
-                            val offerAmount = offer.offer_amount ?: 0
-                            var amount = args.coursePrice.toInt()
-                            val totalDiscount = offerAmount + discount
-                            if (totalDiscount > 0) {
-                                viewDataBinding.linearTotalPayable.visibility = View.VISIBLE
-                                viewDataBinding.linearTotalDiscount.visibility = View.VISIBLE
-                                viewDataBinding.totalPayableAmount.text = "${amount}৳"
-                                viewDataBinding.totalDiscount.text = "${totalDiscount}৳"
-                            } else {
-                                viewDataBinding.linearTotalPayable.visibility = View.GONE
-                                viewDataBinding.linearTotalDiscount.visibility = View.GONE
-                            }
-                            amount -= totalDiscount
-                            viewModel.amount.postValue(amount.toString())
-                            return@Observer
-                        }
+            if (it.isNullOrEmpty()) {
+                viewModel.amount.postValue(packagePrice - discount)
+            } else {
+                it.forEach { offer ->
+                    val firstDate = offer.FromDate?.split("T")?.first()?.getMilliFromDate()
+                        ?: Long.MAX_VALUE
+                    val lastDate =
+                        offer.EndDate?.split("T")?.first()?.getMilliFromDate() ?: Long.MAX_VALUE
+                    val date = System.currentTimeMillis()
+
+                    if (offer.archived == false && date in firstDate..lastDate) {
+                        val offerAmount = offer.offer_amount ?: 0
+                        viewModel.offerAmount.postValue(offerAmount)
+                        discount += offerAmount
+                        viewModel.amount.postValue(packagePrice - discount)
+                        return@Observer
                     }
                 }
             }
-
-            val amount = args.coursePrice.toInt()
-            if (discount > 0) {
-                viewDataBinding.linearTotalPayable.visibility = View.VISIBLE
-                viewDataBinding.linearTotalDiscount.visibility = View.VISIBLE
-                viewDataBinding.totalPayableAmount.text = "${amount}৳"
-                viewDataBinding.totalDiscount.text = "${discount}৳"
-            } else {
-                viewDataBinding.linearTotalPayable.visibility = View.GONE
-                viewDataBinding.linearTotalDiscount.visibility = View.GONE
-            }
-            viewModel.amount.postValue((args.coursePrice.toInt() - discount).toString())
         })
 
         viewDataBinding.btnPayNow.setOnClickListener {
@@ -237,7 +248,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 0, "", userData.upazila ?: "", userData.city ?: "",
                 userData.UpazilaID ?: 0, userData.CityID ?: 0, invoiceNumber,
                 "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
-                "$firstName $lastName", args.bookName ?: "", response.amount ?: "N/A"
+                "$firstName $lastName", args.bookName ?: "", response.amount ?: "N/A",
+                "", ""
             ),
             CoursePaymentRequest(
                 userData.mobile, invoiceNumber,userData.id, args.courseId, args.coursePrice.toInt(), response.amount.toDouble().toInt()

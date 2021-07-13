@@ -23,7 +23,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:title="Pin Number"
+                app:title="পিন নাম্বার"
                 android:theme="@style/AppTheme.AppBarOverlay"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:titleTextColor="@color/white"/>
@@ -54,17 +54,28 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:layout_marginTop="64dp"
+                        android:layout_marginTop="20dp"
                         android:layout_marginEnd="20dp"
                         android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/ivLogo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:src="@drawable/engineers_logo"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Pin Number"
+                            android:text="নিচে পিন নাম্বারটি প্রবেশ করান"
                             android:textColor="@color/white"
                             android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="20dp"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -80,7 +91,7 @@
                                 android:maxLength="6"
                                 android:text="@={viewModel.pin}"
                                 android:inputType="numberPassword"
-                                android:hint="Enter your 6 digit pin number"
+                                android:hint="ছয় সংখ্যার পিন নাম্বার দিন"
                                 android:textColor="@color/white"
                                 android:background="@null"/>
                         </LinearLayout>
@@ -100,13 +111,12 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="20dp"
                         android:layout_below="@id/linear"
-                        android:layout_marginBottom="32dp"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Re-type Pin"
+                            android:text="পুনরায় পিন নাম্বারটি প্রবেশ করান"
                             android:textColor="@color/white"
                             android:textSize="16sp"
                             android:layout_marginBottom="8dp"/>
@@ -125,7 +135,7 @@
                                 android:maxLength="6"
                                 android:text="@={viewModel.rePin}"
                                 android:inputType="numberPassword"
-                                android:hint="Re-type Pin Number"
+                                android:hint="ছয় সংখ্যার পিন নাম্বার দিন"
                                 android:textColor="@color/white"
                                 android:background="@null"/>
                         </LinearLayout>
@@ -138,13 +148,26 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/resetPinLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="পিন নাম্বার ভুলে গেলে নিচের রিসেট পিন চাপুন"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:gravity="center"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_below="@id/linearReTypePin"
+                        android:layout_marginTop="32dp"/>
+
+                    <TextView
                         android:id="@+id/forgotPassword"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:clickable="true"
                         android:focusable="true"
-                        android:text="Forgot Password?"
-                        android:layout_below="@id/linearReTypePin"
+                        android:text="রিসেট পিন"
+                        android:layout_below="@id/resetPinLabel"
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="20dp"
                         android:layout_gravity="end"
@@ -158,7 +181,7 @@
                         android:layout_height="wrap_content"
                         android:clickable="true"
                         android:focusable="true"
-                        android:text="Invalid Pin Number!"
+                        android:text="ভুল পিন নাম্বার!"
                         android:visibility="gone"
                         android:layout_below="@id/forgotPassword"
                         android:layout_centerHorizontal="true"
@@ -177,7 +200,7 @@
                             android:id="@+id/btnSubmit"
                             android:layout_width="match_parent"
                             android:layout_height="54dp"
-                            android:text="Submit"
+                            android:text="পরবর্তী ধাপ"
                             android:enabled="false"
                             app:cornerRadius="0dp"
                             android:textSize="18sp"

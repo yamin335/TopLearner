@@ -65,9 +65,6 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
             preferencesHelper.isDeviceTimeChanged = true
             homeClassListAdapter?.setTimeChangeStatus(true)
         }
-
-        viewModel.getAllCourses()
-        viewModel.getAllFreeBooks()
     }
 
     override fun onAttach(context: Context) {
@@ -142,7 +139,8 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
 //
 
         courseCategoryListAdapter = CourseCategoryListAdapter(appExecutors) {
-            navigateTo(Home2FragmentDirections.actionHome2FragmentToCourseDetailsFragment(it))
+            CourseDetailsFragment.course = it
+            navigateTo(Home2FragmentDirections.actionHome2FragmentToCourseDetailsFragment())
         }
 
         viewDataBinding.courseRecycler.adapter = courseCategoryListAdapter
@@ -150,6 +148,10 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         viewModel.allCourseCategoryList.observe(viewLifecycleOwner, Observer { courseCategories ->
             viewModel.saveCourseCategoriesInDB(courseCategories ?: ArrayList())
         })
+
+        viewModel.getAllCourses()
+        viewModel.getAllFreeBooks()
+        viewModel.getAcademicClass()
 
         viewModel.allCourseCategoriesFromDB.observe(viewLifecycleOwner, Observer {
             if (!it.isNullOrEmpty()) {

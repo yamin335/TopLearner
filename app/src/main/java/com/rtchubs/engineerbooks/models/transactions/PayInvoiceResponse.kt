@@ -20,6 +20,7 @@ data class CreateOrderBody(var StudentID: Int = 0, var StudentMobile: String = "
                            var city: String = "", var UpazilaID: Int = 0,
                            var CityID: Int = 0, var InvoiceID: String = "",
                            var ReferenceID: String = "", var PayemtReferenceID: String = "",
-                           var BookID: Int = 0, var ClassID: Int = 0,
-                           var StudentName: String = "", var BookName: String = "",
-                           var TransactionID: String = "")
+                           var book_id: Int = 0, var ClassID: Int = 0,
+                           var StudentName: String = "", var bookname: String = "",
+                           var TransactionID: String = "", var coursename: String = "",
+                           var bookthumb: String = "")

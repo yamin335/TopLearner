@@ -42,9 +42,9 @@
         android:name="com.rtchubs.engineerbooks.ui.home.CourseDetailsFragment"
         android:label="CourseDetailsFragment"
         tools:layout="@layout/fragment_course_details">
-        <argument
-            android:name="course"
-            app:argType="com.rtchubs.engineerbooks.models.home.Course" />
+<!--        <argument-->
+<!--            android:name="course"-->
+<!--            app:argType="com.rtchubs.engineerbooks.models.home.Course" />-->
         <action
             android:id="@+id/action_courseDetailsFragment_to_payment_nav"
             app:destination="@id/payment_nav"
@@ -64,6 +64,12 @@
                 app:argType="integer" />
             <argument
                 android:name="coursePrice"
+                app:argType="string" />
+            <argument
+                android:name="courseName"
+                app:argType="string" />
+            <argument
+                android:name="bookThumb"
                 app:argType="string" />
         </action>
         <action

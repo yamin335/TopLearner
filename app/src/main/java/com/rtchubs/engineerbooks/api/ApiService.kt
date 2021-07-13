@@ -9,6 +9,7 @@ import com.rtchubs.engineerbooks.models.bkash.BKashPaymentUrlResponse
 import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
 import com.rtchubs.engineerbooks.models.common.MyAccountListResponse
 import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
+import com.rtchubs.engineerbooks.models.home.CourseCategoryResponse
 import com.rtchubs.engineerbooks.models.my_course.MyCourseListResponse
 import com.rtchubs.engineerbooks.models.my_course.SingleBookResponse
 import com.rtchubs.engineerbooks.models.notice_board.NoticeResponse
@@ -29,6 +30,9 @@ import retrofit2.http.*
  * REST API access points
  */
 interface ApiService {
+
+    @POST(ApiEndPoint.ALL_COURSE)
+    suspend fun getAllCourse(): Response<CourseCategoryResponse>
 
     @POST(ApiEndPoint.INQUIRE)
     suspend fun inquire(@Body jsonString: String): Response<InquiryResponse>

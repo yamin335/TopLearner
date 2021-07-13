@@ -457,6 +457,30 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
+                                android:text="No. of Students:"
+                                android:textColor="#404040"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/noOfStudents"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textColor="@color/grayColor"
+                                android:textSize="16sp"
+                                android:text="0"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="8dp">
+                            <TextView
+                                android:layout_width="135dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="10dp"
                                 android:text="Responsible Area:"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />

@@ -28,4 +28,4 @@ data class PartnerTransaction(val udid: String?, val createdAt: String?, val upd
 
 data class PaymentStatusResponse(val code: Int?, val data: PaymentStatusData?, val msg: String?)
 
-data class PaymentStatusData(val totalamountdue: Int?, val totalamountearns: Int?, val totalamountpaid: Int?)
+data class PaymentStatusData(val totalamountdue: Int?, val totalamountearns: Int?, val totalamountpaid: Int?, val student_numbers: Int? = 0)

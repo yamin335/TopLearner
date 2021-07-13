@@ -2,10 +2,7 @@ package com.rtchubs.engineerbooks.di
 
 import android.app.Application
 import android.content.Context
-import com.rtchubs.engineerbooks.local_db.dao.BookChapterDao
-import com.rtchubs.engineerbooks.local_db.dao.CourseDao
-import com.rtchubs.engineerbooks.local_db.dao.HistoryDao
-import com.rtchubs.engineerbooks.local_db.dao.MyCourseDao
+import com.rtchubs.engineerbooks.local_db.dao.*
 import com.rtchubs.engineerbooks.local_db.db.AppDatabase
 import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
@@ -50,6 +47,12 @@ class AppModule {
     @Provides
     fun provideMyCourseDao(db: AppDatabase): MyCourseDao {
         return db.myCourseDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideAcademicClassDao(db: AppDatabase): AcademicClassDao {
+        return db.academicClassDao()
     }
 
     //    @Singleton

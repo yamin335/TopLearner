@@ -9,8 +9,8 @@ import android.util.SparseArray
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.SimpleItemAnimator
 import at.huber.youtubeExtractor.VideoMeta
@@ -25,10 +25,20 @@ import com.google.android.material.chip.Chip
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.CourseDetailsFragmentBinding
+import com.rtchubs.engineerbooks.models.home.Course
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
+import com.rtchubs.engineerbooks.ui.payment.PaymentFragment
 import com.rtchubs.engineerbooks.util.showErrorToast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseDetailsViewModel>() {
+    
+    companion object {
+        var course: Course? = null
+    }
 
     override val bindingVariable: Int
         get() = BR.viewModel
@@ -44,19 +54,19 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
     private lateinit var contentsAdapter: CourseChapterListAdapter
     private lateinit var faqsAdapter: FaqListAdapter
 
-    private val args: CourseDetailsFragmentArgs by navArgs()
+    //private val args: CourseDetailsFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //registerToolbar(viewDataBinding.toolbar)
 
-        val course = args.course
+        //val course = args.course
         val price: String
 
-        val totalPrice = course.price ?: 0
-        val totalDiscount = course.discount_price ?: 0
+        val totalPrice = course?.price ?: 0
+        val totalDiscount = course?.discount_price ?: 0
 
-        viewDataBinding.title.text = course.title
+        viewDataBinding.title.text = course?.title
 
         viewDataBinding.backButton.setOnClickListener {
             findNavController().popBackStack()
@@ -81,10 +91,18 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         }
 
         viewDataBinding.btnBuyNow.setOnClickListener {
-            navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToPaymentNav(course.book_id ?: 0, course.title, course.id ?:0, price))
+            PaymentFragment.firstPackageTitle = course?.first_payment_title ?: ""
+            PaymentFragment.secondPackageTitle = course?.second_payment_title ?: ""
+            PaymentFragment.thirdPackageTitle = course?.third_payment_title ?: ""
+
+            PaymentFragment.firstPackagePrice = course?.first_payment_amount ?: 0
+            PaymentFragment.secondPackagePrice = course?.second_payment_amount ?: 0
+            PaymentFragment.thirdPackagePrice = course?.third_payment_amount ?: 0
+
+            navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToPaymentNav(course?.book_id ?: 0, course?.title, course?.id ?:0, price, "", ""))
         }
 
-        course.course_items?.let {
+        course?.course_items?.let {
             for (courseItem in it) {
                 val chip = layoutInflater.inflate(R.layout.chip_for_course_details, viewDataBinding.chipGroup, false) as Chip
                 chip.text = courseItem.description
@@ -105,8 +123,8 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
 
         }
         viewDataBinding.teachersRecycler.adapter = teachersAdapter
-        teachersAdapter.submitList(course.teachers)
-        viewDataBinding.tvLabelTeacher.visibility = if (course.teachers.isNullOrEmpty()) View.GONE else View.VISIBLE
+        teachersAdapter.submitList(course?.course_teachers)
+        viewDataBinding.tvLabelTeacher.visibility = if (course?.course_teachers.isNullOrEmpty()) View.GONE else View.VISIBLE
 
 //        val subjects = listOf(
 //            CourseSubject(1, "Subject - 1"),
@@ -121,10 +139,10 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
 
         }
         (viewDataBinding.courseDetailsRecycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        viewDataBinding.courseDetailsRecycler.setHasFixedSize(true)
+        //viewDataBinding.courseDetailsRecycler.setHasFixedSize(true)
         //viewDataBinding.courseDetailsRecycler.itemAnimator = DefaultItemAnimator()
         viewDataBinding.courseDetailsRecycler.adapter = contentsAdapter
-        contentsAdapter.submitList(course.course_chapter)
+//        contentsAdapter.submitList(course?.course_chapter)
 
         faqsAdapter = FaqListAdapter(appExecutors) {
 
@@ -137,7 +155,7 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         })
 
         viewDataBinding.btnBookDetails.setOnClickListener {
-            val bookId = course.demo_book_id
+            val bookId = course?.demo_book_id
             if (bookId == null) {
                 showErrorToast(requireContext(), "কোন বই পাওয়া যায় নি")
                 return@setOnClickListener
@@ -164,7 +182,8 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
 
     @SuppressLint("StaticFieldLeak")
     private fun initializePlayer() {
-        val videoUrl = args.course.vediolink
+//        val videoUrl = args.course?.vediolink
+        val videoUrl = course?.vediolink
         val trackSelector = DefaultTrackSelector(requireContext())
         trackSelector.setParameters(
             trackSelector.buildUponParameters().setMaxVideoSizeSd()
@@ -210,6 +229,12 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         super.onResume()
         if ((Build.VERSION.SDK_INT < 24 || player == null)) {
             initializePlayer()
+        }
+        lifecycleScope.launch {
+            delay(1500)
+            CoroutineScope(Dispatchers.Main.immediate).launch {
+                contentsAdapter.submitList(course?.course_chapters)
+            }
         }
     }
 

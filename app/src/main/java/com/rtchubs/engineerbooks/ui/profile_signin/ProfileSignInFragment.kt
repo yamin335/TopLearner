@@ -57,8 +57,8 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
 
 //    private var titleCityList = arrayOf("--Select City--")
 //    private var titleUpazillaList = arrayOf("--Select Upazilla--")
-    private var titleGenderList = arrayOf("--Select Gender--")
-    private var titleClassList = arrayOf("--Select Class--")
+    private var titleGenderList = arrayOf("--সিলেক্ট করুন--")
+    private var titleClassList = arrayOf("--সিলেক্ট করুন--")
 
 //    lateinit var cityAdapter: ArrayAdapter<String>
 //    lateinit var upazillaAdapter: ArrayAdapter<String>
@@ -223,7 +223,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
         }
 
         val tempGender = Array(viewModel.allGender.size + 1) {""}
-        tempGender[0] = "--Select Gender--"
+        tempGender[0] = "--সিলেক্ট করুন--"
         viewModel.allGender.forEachIndexed { index, gender ->
             tempGender[index + 1] = gender.name ?: "Unknown"
         }
@@ -261,8 +261,8 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
         viewDataBinding.spGender.setSelection(genderIndex, true)
 
 //        viewDataBinding.tvClass.text = "--Select Class--"
-        viewDataBinding.city.text = "--Select City--"
-        viewDataBinding.tvUpazilla.text = "--Select Upazilla--"
+        viewDataBinding.city.text = "--সিলেক্ট করুন--"
+        viewDataBinding.tvUpazilla.text = "--সিলেক্ট করুন--"
 
 //        ClassEditFragment.selectedClass?.let {
 //            viewModel.selectedClass = it
@@ -280,8 +280,8 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
         }
 
 //        viewDataBinding.tvClass.text = viewModel.selectedClass?.name ?: "--Select Class--"
-        viewDataBinding.city.text = viewModel.selectedCity?.name ?: "--Select City--"
-        viewDataBinding.tvUpazilla.text = viewModel.selectedUpazilla?.name ?: "--Select Upazilla--"
+        viewDataBinding.city.text = viewModel.selectedCity?.name ?: "--সিলেক্ট করুন--"
+        viewDataBinding.tvUpazilla.text = viewModel.selectedUpazilla?.name ?: "--সিলেক্ট করুন--"
 
         viewDataBinding.city.setOnClickListener {
             navigateTo(ProfileSignInFragmentDirections.actionProfileSignInFragmentToDistrictEditFragment1())
@@ -333,7 +333,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
 //        }
 
         val tempClass = Array(allClass.size + 1) {""}
-        tempClass[0] = "--Select Class--"
+        tempClass[0] = "--সিলেক্ট করুন--"
         allClass.forEachIndexed { index, academicClass ->
             tempClass[index + 1] = academicClass.name ?: "Unknown"
         }
@@ -488,7 +488,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
             if (allClass.isEmpty()) {
                 it?.let {
                     val temp = Array(it.size + 1) {""}
-                    temp[0] = "--Select Class--"
+                    temp[0] = "--সিলেক্ট করুন--"
                     it.forEachIndexed { index, academicClass ->
                         temp[index + 1] = academicClass.name ?: "Unknown"
                     }
@@ -536,14 +536,15 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
             }
             registrationHelper.first_name = viewDataBinding.firstName.text.toString()
 
-            if (viewDataBinding.lastName.text.toString().isEmpty()) {
-                viewDataBinding.lastName.requestFocus()
-                showErrorToast(requireContext(), "Please enter last name!")
-                return@setOnClickListener
-            }
-            registrationHelper.last_name = viewDataBinding.lastName.text.toString()
+//            if (viewDataBinding.lastName.text.toString().isEmpty()) {
+//                viewDataBinding.lastName.requestFocus()
+//                showErrorToast(requireContext(), "Please enter last name!")
+//                return@setOnClickListener
+//            }
+//            registrationHelper.last_name = viewDataBinding.lastName.text.toString()
 
-            if (viewDataBinding.fatherName.text.toString().isEmpty()) {
+            registrationHelper.last_name = viewDataBinding.firstName.text.toString()
+                if (viewDataBinding.fatherName.text.toString().isEmpty()) {
                 viewDataBinding.fatherName.requestFocus()
                 showErrorToast(requireContext(), "Please enter father's name!")
                 return@setOnClickListener

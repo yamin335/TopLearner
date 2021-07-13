@@ -40,7 +40,7 @@ class CourseCategoryListAdapter(
 
     override fun bind(binding: CourseCategoryListItemBinding, position: Int) {
         val item = getItem(position)
-        binding.categoryName = item.title
+        binding.categoryName = item.name
 
         val courseAdapter = AllCourseListAdapter(appExecutors) {
             itemCallback.invoke(it)

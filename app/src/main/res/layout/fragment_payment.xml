@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data class="PaymentFragmentBinding">
-
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.rtchubs.engineerbooks.ui.payment.PaymentViewModel" />
@@ -48,95 +48,217 @@
             android:layout_marginBottom="16dp"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/linearTotalPayable"
+            <RadioGroup
+                android:id="@+id/packageGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total Payable Amount:"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/totalPayableAmount"
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/firstPackage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
+                    tools:text="Monthly Package -- ৳300"
+                    android:textSize="16sp"
                     android:textColor="@color/white"
-                    android:textSize="18sp"
-                    tools:text="100৳"/>
-            </LinearLayout>
+                    android:buttonTint="@color/radio_button_state_colors"/>
 
-            <LinearLayout
-                android:id="@+id/linearTotalDiscount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total Discount Amount:"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/totalDiscount"
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/secondPackage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
+                    tools:text="2 Months Package -- ৳500"
+                    android:checked="true"
+                    android:textSize="16sp"
                     android:textColor="@color/white"
-                    android:textSize="18sp"
-                    tools:text="100৳"/>
-            </LinearLayout>
+                    android:buttonTint="@color/radio_button_state_colors"/>
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/thirdPackage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="3 Months Package -- ৳750"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/radio_button_state_colors"/>
+            </RadioGroup>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="16dp"
-                android:text="Payable Amount"
+                android:text="Promo Code (If you have any)"
+                android:layout_marginTop="24dp"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp">
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:inputType="text"
+                        android:text="@={viewModel.promoCode}"
+                        android:hint="Enter promo code"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:theme="@style/EditTextTheme"
+                        android:imeOptions="actionDone"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="4dp"
+                        android:background="@color/albumColorPrimary" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnApply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="46dp"
+                    android:backgroundTint="@color/button_enable_disable_colors"
+                    android:enabled="@{viewModel.promoCode.length() > 0 ? true : false, default=false}"
+                    android:text="Apply"
+                    android:textAllCaps="false"
+                    android:textColor="@color/button_text_enable_disable_colors"
+                    android:textSize="18sp"
+                    android:layout_marginStart="20dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="32dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="Promo Code Discount:"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="৳"
+                    android:layout_marginStart="8dp"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/et_mobile_no"
-                    android:layout_width="match_parent"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@{viewModel.promoDiscount.toString()}"
                     android:layout_marginStart="4dp"
-                    android:background="@null"
-                    android:inputType="numberDecimal"
-                    android:hint="amount"
-                    android:enabled="false"
-                    android:text="@={viewModel.amount}"
+                    tools:text="750"
                     android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:theme="@style/EditTextTheme" />
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="Personal Discount:"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="৳"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@{viewModel.personalDiscount.toString()}"
+                    android:layout_marginStart="4dp"
+                    tools:text="750"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="Partner Discount:"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="৳"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@{viewModel.offerAmount.toString()}"
+                    android:layout_marginStart="4dp"
+                    tools:text="750"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="4dp"
-                android:background="@color/albumColorPrimary" />
+                android:background="@color/white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="Total Payable Amount:"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="৳"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@{viewModel.amount.toString()}"
+                    android:layout_marginStart="4dp"
+                    tools:text="750"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -146,7 +268,7 @@
             android:layout_below="@id/linear"
             android:backgroundTint="@color/button_enable_disable_colors"
             android:layout_margin="20dp"
-            android:enabled="false"
+            android:enabled="@{viewModel.amount > 0 ? true : false, default=false}"
             android:text="Pay Now"
             android:textAllCaps="false"
             android:textColor="@color/button_text_enable_disable_colors"
