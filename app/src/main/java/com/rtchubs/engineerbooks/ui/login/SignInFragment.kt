@@ -1,6 +1,7 @@
 package com.rtchubs.engineerbooks.ui.login
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -13,10 +14,13 @@ import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.LayoutOperatorSelectionBinding
 import com.rtchubs.engineerbooks.databinding.SignInBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
+import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
 import com.rtchubs.engineerbooks.ui.OTPHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
+import com.rtchubs.engineerbooks.ui.otp_signin.OtpSignInFragment
 import com.rtchubs.engineerbooks.util.AppConstants.commonErrorMessage
 import com.rtchubs.engineerbooks.util.hideKeyboard
+import com.rtchubs.engineerbooks.util.isTimeAndZoneAutomatic
 import com.rtchubs.engineerbooks.util.showErrorToast
 
 class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
@@ -30,6 +34,37 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
     }
 
     private var startOTPListenerCallback: OTPHandlerCallback? = null
+
+    var timeChangeListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
+        when (key) {
+            AppPreferencesHelper.KEY_DEVICE_TIME_CHANGED -> {
+                OtpSignInFragment.isDeviceTimeChanged = preferencesHelper.isDeviceTimeChanged
+                OtpSignInFragment.isDeviceTimeChanged = preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())
+                if (!OtpSignInFragment.isDeviceTimeChanged) preferencesHelper.falseOTPCounter = 0
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        preferencesHelper.isDeviceTimeChanged = !isTimeAndZoneAutomatic(requireContext())
+        preferencesHelper.preference.registerOnSharedPreferenceChangeListener(timeChangeListener)
+        OtpSignInFragment.isDeviceTimeChanged = preferencesHelper.isDeviceTimeChanged
+
+        if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
+            preferencesHelper.isDeviceTimeChanged = true
+            OtpSignInFragment.isDeviceTimeChanged = true
+        } else {
+            preferencesHelper.isDeviceTimeChanged = false
+            OtpSignInFragment.isDeviceTimeChanged = false
+        }
+        if (!OtpSignInFragment.isDeviceTimeChanged) preferencesHelper.falseOTPCounter = 0
+    }
+
+    override fun onPause() {
+        super.onPause()
+        preferencesHelper.preference.unregisterOnSharedPreferenceChangeListener(timeChangeListener)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -65,6 +100,10 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
         })
 
         viewDataBinding.btnProceed.setOnClickListener {
+            if (OtpSignInFragment.isDeviceTimeChanged && preferencesHelper.falseOTPCounter > 0) {
+                showErrorToast(requireContext(), "Please make device time automatic and try again!")
+                return@setOnClickListener
+            }
             hideKeyboard()
             openOperatorSelectionDialog()
         }

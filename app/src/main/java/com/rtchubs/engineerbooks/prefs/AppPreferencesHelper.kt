@@ -34,6 +34,7 @@ class AppPreferencesHelper @Inject constructor(
 
     override var shouldClearBackStackOfHomeNav by BooleanPreference(prefs, KEY_CLEAR_HOME_BACK_STACK, defaultValue = false, commit = true)
     override var isDeviceTimeChanged by BooleanPreference(prefs, KEY_DEVICE_TIME_CHANGED, defaultValue = false, commit = true)
+    override var falseOTPCounter by IntPreference(prefs, KEY_FALSE_OTP_COUNTER, 0, true)
     override var isRegistered by BooleanPreference(prefs, KEY_REG, defaultValue = false, commit = true)
     override var isTermsAccepted by BooleanPreference(prefs, KEY_TERMS, defaultValue = false, commit = true)
     override var pinNumber by StringPreference(prefs, KEY_PIN, defaultValue = null, commit = true)
@@ -176,6 +177,7 @@ class AppPreferencesHelper @Inject constructor(
 
     companion object {
         const val KEY_DEVICE_TIME_CHANGED = "DoesUserChangedDeviceTime"
+        private const val KEY_FALSE_OTP_COUNTER = "Number_Of_False_OTP"
         private const val KEY_PAID_BOOK = "IsBookPaid"
         private const val KEY_USER = "UserData"
         private const val KEY_REG = "RegistrationStatus"

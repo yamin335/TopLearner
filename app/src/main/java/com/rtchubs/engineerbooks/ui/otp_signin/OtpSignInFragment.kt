@@ -1,6 +1,7 @@
 package com.rtchubs.engineerbooks.ui.otp_signin
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -12,12 +13,19 @@ import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.OtpSignInBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
+import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
 import com.rtchubs.engineerbooks.ui.OTPHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.AppConstants.START_TIME_IN_MILLI_SECONDS
+import com.rtchubs.engineerbooks.util.isTimeAndZoneAutomatic
+import com.rtchubs.engineerbooks.util.showErrorToast
 
 
 class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
+
+    companion object {
+        var isDeviceTimeChanged = false
+    }
 
     override val bindingVariable: Int
         get() = BR.viewModel
@@ -34,6 +42,38 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
     var repeater = 0
 
     private var startOTPListenerCallback: OTPHandlerCallback? = null
+
+    var timeChangeListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
+        when (key) {
+            AppPreferencesHelper.KEY_DEVICE_TIME_CHANGED -> {
+                isDeviceTimeChanged = preferencesHelper.isDeviceTimeChanged
+                isDeviceTimeChanged = preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())
+                if (!isDeviceTimeChanged) preferencesHelper.falseOTPCounter = 0
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        preferencesHelper.isDeviceTimeChanged = !isTimeAndZoneAutomatic(requireContext())
+        preferencesHelper.preference.registerOnSharedPreferenceChangeListener(timeChangeListener)
+        isDeviceTimeChanged = preferencesHelper.isDeviceTimeChanged
+
+        if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
+            preferencesHelper.isDeviceTimeChanged = true
+            isDeviceTimeChanged = true
+        } else {
+            preferencesHelper.isDeviceTimeChanged = false
+            isDeviceTimeChanged = false
+        }
+        if (!isDeviceTimeChanged) preferencesHelper.falseOTPCounter = 0
+    }
+
+    override fun onPause() {
+        super.onPause()
+        preferencesHelper.preference.unregisterOnSharedPreferenceChangeListener(timeChangeListener)
+        resetTimer()
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -55,11 +95,6 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
         mActivity.window?.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         )
-    }
-
-    override fun onPause() {
-        super.onPause()
-        resetTimer()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,6 +123,10 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
         })
 
         viewDataBinding.btnResend.setOnClickListener {
+            if (isDeviceTimeChanged && preferencesHelper.falseOTPCounter > 0) {
+                showErrorToast(requireContext(), "Please make device time automatic and try again!")
+                return@setOnClickListener
+            }
             startOTPListenerCallback?.onStartOTPListener()
             startTimer()
             viewModel.requestOTPCode(registrationRemoteHelper)
@@ -105,9 +144,13 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
         })
 
         viewModel.verifiedOTP.observe(viewLifecycleOwner, Observer { response ->
-            response?.data?.Account?.let {
-                if (!it.otp.isNullOrBlank() && it.otp == viewModel.otp.value) {
-                    registrationRemoteHelper = it
+            val account = response?.data?.Account
+            if (account == null || response.data.Token == null) {
+                preferencesHelper.falseOTPCounter++
+            } else {
+                preferencesHelper.accessToken = response.data.Token.AccessToken
+                if (!account.otp.isNullOrBlank() && account.otp == viewModel.otp.value) {
+                    registrationRemoteHelper = account
                     registrationRemoteHelper.mobile_operator = registrationLocalHelper.mobile_operator
                     navigateTo(
                         OtpSignInFragmentDirections.actionOtpSignInFragmentToPinNumberFragment(
@@ -116,15 +159,13 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
                     )
                     viewModel.verifiedOTP.postValue(null)
                 } else {
+                    preferencesHelper.falseOTPCounter++
 //                    viewDataBinding.tvOtpTextDescription.text =
 //                        "You entered an invalid OTP code! please request a new code"
                     viewDataBinding.etOtpCode.setText("")
 //                    viewDataBinding.etOtpCode.isEnabled = false
 //                    viewDataBinding.btnSubmit.isEnabled = false
                 }
-            }
-            response?.data?.Token?.let { token ->
-                preferencesHelper.accessToken = token.AccessToken
             }
         })
 

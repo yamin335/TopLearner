@@ -15,6 +15,8 @@ interface PreferencesHelper {
 
     var isDeviceTimeChanged: Boolean
 
+    var falseOTPCounter: Int
+
     var isRegistered: Boolean
 
     var isTermsAccepted: Boolean
