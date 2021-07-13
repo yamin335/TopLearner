@@ -117,7 +117,7 @@ class LoadWebViewFragment: BaseFragment<WebViewBinding, LoadWebViewViewModel>(),
 
 //    private lateinit var source: String
 //    private lateinit var destination: String
-    private val password = "Engg6587".toCharArray()
+    private val password = "123%@#srgnE8".toCharArray()
 
     private var bottomNavShowHideCallback: ShowHideBottomNavCallback? = null
 
