@@ -12,27 +12,20 @@
         android:name="com.rtchubs.engineerbooks.ui.splash.SplashFragment"
         tools:layout="@layout/fragment_splash">
         <action
-            android:id="@+id/action_splash_to_login"
-            app:destination="@id/viewPagerFragment"
+            android:id="@+id/action_splashFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/viewPagerFragment" />
+            app:popUpTo="@id/signInFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/viewPagerFragment"
         android:name="com.rtchubs.engineerbooks.ui.login.ViewPagerFragment"
         tools:layout="@layout/fragment_view_pager">
-        <action
-            android:id="@+id/action_viewPagerFragment_to_signInFragment"
-            app:destination="@id/signInFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -157,14 +150,6 @@
         android:id="@+id/permissionsFragment"
         android:name="com.rtchubs.engineerbooks.camerax.PermissionsFragment"
         android:label="PermissionsFragment">
-
-        <action
-            android:id="@+id/action_permissionsFragment_to_NIDScanCameraXFragment"
-            app:destination="@id/NIDScanCameraXFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="registrationHelper"
             app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />
@@ -175,21 +160,6 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
-    </fragment>
-    <fragment
-        android:id="@+id/NIDScanCameraXFragment"
-        android:name="com.rtchubs.engineerbooks.nid_scan.NIDScanCameraXFragment"
-        android:label="NIDScanCameraXFragment">
-        <action
-            android:id="@+id/action_NIDScanCameraXFragment_to_profileSignInFragment"
-            app:destination="@id/profileSignInFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-        <argument
-            android:name="registrationHelper"
-            app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />
     </fragment>
 
     <fragment

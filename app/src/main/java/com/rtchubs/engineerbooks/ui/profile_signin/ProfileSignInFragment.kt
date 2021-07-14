@@ -20,6 +20,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.gms.vision.Frame
@@ -27,6 +28,7 @@ import com.google.android.gms.vision.face.FaceDetector
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.BuildConfig
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.camerax.CameraXActivity
 import com.rtchubs.engineerbooks.databinding.ProfileSignInBinding
 import com.rtchubs.engineerbooks.models.registration.AcademicClass
@@ -120,6 +122,10 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
         super.onViewCreated(view, savedInstanceState)
         updateStatusBarBackgroundColor("#1E4356")
         registerToolbar(viewDataBinding.toolbar)
+
+        viewModel.apiCallStatus.observe(viewLifecycleOwner, Observer {
+            viewDataBinding.btnSubmit.isEnabled = it != ApiCallStatus.LOADING
+        })
 
         registrationHelper = args.registrationHelper
         if (registrationHelper.isRegistered == true) {
@@ -484,7 +490,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
 //            }
 //        })
 
-        viewModel.allAcademicClass.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.allAcademicClass.observe(viewLifecycleOwner, Observer {
             if (allClass.isEmpty()) {
                 it?.let {
                     val temp = Array(it.size + 1) {""}
@@ -501,7 +507,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
             }
         })
 
-        viewModel.registrationResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.registrationResponse.observe(viewLifecycleOwner, Observer {
             it?.let { data ->
                 data.Account?.let { account ->
                     if (account.isRegistered == true) {
@@ -516,7 +522,7 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
             }
         })
 
-        viewModel.allImageUrls.observe(viewLifecycleOwner, androidx.lifecycle.Observer { data ->
+        viewModel.allImageUrls.observe(viewLifecycleOwner, Observer { data ->
             if (data == null) {
                 viewModel.registerNewUser(registrationHelper)
                 return@Observer

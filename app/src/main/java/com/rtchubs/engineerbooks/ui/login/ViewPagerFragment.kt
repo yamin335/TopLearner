@@ -52,9 +52,9 @@ class ViewPagerFragment : BaseFragment<ViewPagerBinding, ViewPagerViewModel>() {
         //viewDataBinding.sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom)
 
 
-        viewDataBinding.btnLogin.setOnClickListener {
-            navController.navigate(ViewPagerFragmentDirections.actionViewPagerFragmentToSignInFragment())
-        }
+//        viewDataBinding.btnLogin.setOnClickListener {
+//            navController.navigate(ViewPagerFragmentDirections.actionViewPagerFragmentToSignInFragment())
+//        }
 
         updateStatusBarBackgroundColor("#1E4356")
 

@@ -5,12 +5,14 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.databinding.LayoutOperatorSelectionBinding
 import com.rtchubs.engineerbooks.databinding.SignInBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
@@ -86,17 +88,24 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
         mActivity.window?.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         )
+        // This callback will only be called when MyFragment is at least Started.
+        requireActivity().onBackPressedDispatcher.addCallback(this, true) {
+            requireActivity().finish()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateStatusBarBackgroundColor("#1E4356")
-        registerToolbar(viewDataBinding.toolbar)
 
         viewModel.mobileNo.observe(viewLifecycleOwner, Observer {  mobileNo ->
             mobileNo?.let {
-                viewDataBinding.btnProceed.isEnabled = (it.length == 11) && (it[0] == '0') && (it[1] == '1')
+                viewDataBinding.btnProceed.isEnabled = (it.length == 11) && (it[0] == '0') && (it[1] == '1') && viewModel.apiCallStatus.value != ApiCallStatus.LOADING
             }
+        })
+
+        viewModel.apiCallStatus.observe(viewLifecycleOwner, Observer {
+            viewDataBinding.btnProceed.isEnabled = it != ApiCallStatus.LOADING
         })
 
         viewDataBinding.btnProceed.setOnClickListener {

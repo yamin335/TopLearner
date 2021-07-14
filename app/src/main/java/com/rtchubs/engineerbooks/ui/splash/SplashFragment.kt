@@ -7,8 +7,8 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.BR
+import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.databinding.SplashBinding
 import com.rtchubs.engineerbooks.ui.LoginHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
@@ -48,7 +48,7 @@ class SplashFragment : BaseFragment<SplashBinding, SplashViewModel>() {
         super.onCreate(savedInstanceState)
 
         if (fromLogout) {
-            findNavController().navigate(SplashFragmentDirections.actionSplashToLogin())
+            findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToSignInFragment())
         }
     }
 
@@ -76,7 +76,7 @@ class SplashFragment : BaseFragment<SplashBinding, SplashViewModel>() {
                     if (preferencesHelper.isLoggedIn) {
                         listener?.onLoggedIn()
                     } else {
-                        navigateTo(SplashFragmentDirections.actionSplashToLogin())
+                        navigateTo(SplashFragmentDirections.actionSplashFragmentToSignInFragment())
                     }
                 }
             }

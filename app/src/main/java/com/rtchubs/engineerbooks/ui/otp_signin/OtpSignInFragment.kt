@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.databinding.OtpSignInBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
@@ -139,8 +140,12 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
 
         viewModel.otp.observe(viewLifecycleOwner, Observer { otp ->
             otp?.let {
-                viewDataBinding.btnSubmit.isEnabled = it.length == 4
+                viewDataBinding.btnSubmit.isEnabled = it.length == 4 && viewModel.apiCallStatus.value != ApiCallStatus.LOADING
             }
+        })
+
+        viewModel.apiCallStatus.observe(viewLifecycleOwner, Observer {
+            viewDataBinding.btnSubmit.isEnabled = it != ApiCallStatus.LOADING
         })
 
         viewModel.verifiedOTP.observe(viewLifecycleOwner, Observer { response ->

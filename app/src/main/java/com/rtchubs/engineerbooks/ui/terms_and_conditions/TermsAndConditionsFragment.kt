@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.databinding.TermsBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.OTPHandlerCallback
@@ -72,6 +73,10 @@ class TermsAndConditionsFragment : BaseFragment<TermsBinding, TermsViewModel>() 
             registrationRemoteHelper.isAcceptedTandC = true
             requestOTPCode(registrationRemoteHelper)
         }
+
+        viewModel.apiCallStatus.observe(viewLifecycleOwner, Observer {
+            viewDataBinding.btnAccept.isEnabled = it != ApiCallStatus.LOADING
+        })
 
         viewDataBinding.webView.settings.javaScriptEnabled = true
         viewDataBinding.webView.settings.loadWithOverviewMode = true

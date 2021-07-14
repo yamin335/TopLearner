@@ -748,27 +748,6 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="NIDScanCameraXFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="1476" />
-                            <option name="y" value="12" />
-                          </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_NIDScanCameraXFragment_to_profileSignInFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
                   <entry key="classEditFragment1">
                     <value>
                       <LayoutPositions>
@@ -819,17 +798,12 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="1248" />
-                            <option name="y" value="14" />
+                            <option name="x" value="1464" />
+                            <option name="y" value="130" />
                           </Point>
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_permissionsFragment_to_NIDScanCameraXFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
                             <entry key="action_permissionsFragment_to_profileSignInFragment">
                               <value>
                                 <LayoutPositions />
@@ -851,7 +825,7 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_pinNumberFragment_to_permissionsFragment">
+                            <entry key="action_pinNumberFragment_to_profileSignInFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -928,13 +902,13 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-514" />
-                            <option name="y" value="-322" />
+                            <option name="x" value="29" />
+                            <option name="y" value="32" />
                           </Point>
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_splash_to_login">
+                            <entry key="action_splashFragment_to_signInFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -982,18 +956,9 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="12" />
-                            <option name="y" value="32" />
+                            <option name="x" value="-47" />
+                            <option name="y" value="-780" />
                           </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_viewPagerFragment_to_signInFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

@@ -12,6 +12,7 @@ import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.rtchubs.engineerbooks.BR
 import com.rtchubs.engineerbooks.R
+import com.rtchubs.engineerbooks.api.ApiCallStatus
 import com.rtchubs.engineerbooks.databinding.PinNumberBinding
 import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.LoginHandlerCallback
@@ -135,20 +136,24 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
 //            }
 //        })
 
+        viewModel.apiCallStatus.observe(viewLifecycleOwner, Observer {
+            viewDataBinding.btnSubmit.isEnabled = it != ApiCallStatus.LOADING
+        })
+
         viewModel.pin.observe(viewLifecycleOwner, Observer { pin ->
             pin?.let {
                 viewDataBinding.invalidPin.visibility = View.GONE
                 if (registrationRemoteHelper.isRegistered == true) {
-                    viewDataBinding.btnSubmit.isEnabled = pin.length == 6
+                    viewDataBinding.btnSubmit.isEnabled = pin.length == 6 && viewModel.apiCallStatus.value != ApiCallStatus.LOADING
                 } else {
-                    viewDataBinding.btnSubmit.isEnabled = pin.length == 6 && viewModel.rePin.value?.length == 6 && viewModel.rePin.value == pin
+                    viewDataBinding.btnSubmit.isEnabled = pin.length == 6 && viewModel.rePin.value?.length == 6 && viewModel.rePin.value == pin && viewModel.apiCallStatus.value != ApiCallStatus.LOADING
                 }
             }
         })
 
         viewModel.rePin.observe(viewLifecycleOwner, Observer { rePin ->
             rePin?.let {
-                viewDataBinding.btnSubmit.isEnabled = viewModel.pin.value?.length == 6 && rePin.length == 6 && viewModel.pin.value == rePin
+                viewDataBinding.btnSubmit.isEnabled = viewModel.pin.value?.length == 6 && rePin.length == 6 && viewModel.pin.value == rePin && viewModel.apiCallStatus.value != ApiCallStatus.LOADING
             }
         })
 
