@@ -17,7 +17,7 @@ class FaqListAdapter(
 ) : DataBoundListAdapter<Faq, FaqListItemBinding>(
     appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<Faq>() {
         override fun areItemsTheSame(oldItem: Faq, newItem: Faq): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.question == newItem.question
         }
 
         @SuppressLint("DiffUtilEquals")

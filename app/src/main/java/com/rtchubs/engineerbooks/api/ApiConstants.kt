@@ -102,7 +102,7 @@ object ApiEndPoint {
     const val INQUIRE = "$API_VERSION/$AUTH_REPO/${DIRECTORY_INQUIRE}"
     const val REQUEST_OTP = "$API_VERSION/$AUTH_REPO/${DIRECTORY_REQUEST_OTP}"
     const val VERIFY_OTP = "$API_VERSION/$AUTH_REPO/${DIRECTORY_VERIFY_OTP}"
-    const val RESET_PIN = "$API_VERSION/$ACCOUNT_REPO/$DIRECTORY_RESET_PIN"
+    const val RESET_PIN = "$API_VERSION/$AUTH_REPO/$DIRECTORY_RESET_PIN"
     const val REGISTER = "$API_VERSION/$AUTH_REPO/${DIRECTORY_REGISTER}"
     const val DISTRICT = "$API_VERSION/$PUBLIC_REPO/${DIRECTORY_DISTRICT}"
     const val UPAZILLA = "$API_VERSION/$PUBLIC_REPO/${DIRECTORY_UPAZILLA}/{districtID}"
@@ -134,7 +134,7 @@ object ApiEndPoint {
 
     const val ALL_COURSE = "$API_VERSION/course/getall"
 //    const val ALL_COURSE = "$API_REPO/get/coursecatagories/all"
-    const val ALL_FAQS = "$API_REPO/get/course_faq/all"
+    const val ALL_FAQS = "$API_VERSION/course/faqs"
     const val PURCHASE_COURSE = "$API_VERSION/course/purchase"
     const val MY_COURSES = "$API_VERSION/course/mycourses"
 

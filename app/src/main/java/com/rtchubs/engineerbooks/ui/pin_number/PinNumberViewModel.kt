@@ -103,7 +103,7 @@ class PinNumberViewModel @Inject constructor(
         }
     }
 
-    fun resetPin(mobileNumber: String, pin: String) {
+    fun resetPin(mobileNumber: String, pin: String, otp: String) {
         if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -114,7 +114,7 @@ class PinNumberViewModel @Inject constructor(
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.resetPinRepo(mobileNumber, pin, pin))) {
+                when (val apiResponse = ApiResponse.create(repository.resetPinRepo(mobileNumber, pin, pin, otp))) {
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
                         resetPinResponse.postValue(apiResponse.body)

@@ -55,9 +55,6 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
     private lateinit var invoiceNumber: String
 
-    var discount = 0
-    var packagePrice = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         invoiceNumber = generateInvoiceID()
@@ -74,21 +71,31 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         viewDataBinding.secondPackage.text = "$secondPackageTitle -- ${getString(R.string.taka_sign)}$secondPackagePrice"
         viewDataBinding.thirdPackage.text = "$thirdPackageTitle -- ${getString(R.string.taka_sign)}$thirdPackagePrice"
 
-        viewModel.promoDiscount.postValue(0)
-        viewModel.personalDiscount.postValue(0)
-        viewModel.offerAmount.postValue(0)
+        viewModel.packagePrice.postValue(0)
+        viewModel.discount.postValue(0)
         viewModel.amount.postValue(0)
 
-        packagePrice = secondPackagePrice
+        viewModel.packagePrice.postValue(secondPackagePrice)
 
         viewDataBinding.packageGroup.setOnCheckedChangeListener { _, checkedId ->
             when(checkedId) {
-                R.id.firstPackage -> packagePrice = firstPackagePrice
-                R.id.secondPackage -> packagePrice = secondPackagePrice
-                R.id.thirdPackage -> packagePrice = thirdPackagePrice
+                R.id.firstPackage -> viewModel.packagePrice.postValue(firstPackagePrice)
+                R.id.secondPackage -> viewModel.packagePrice.postValue(secondPackagePrice)
+                R.id.thirdPackage -> viewModel.packagePrice.postValue(thirdPackagePrice)
             }
-            viewModel.amount.postValue(packagePrice - discount)
         }
+
+        viewModel.packagePrice.observe(viewLifecycleOwner, Observer {
+            val discount = viewModel.discount.value ?: 0
+            val packagePrice = it ?: 0
+            viewModel.amount.postValue(packagePrice - discount)
+        })
+
+        viewModel.discount.observe(viewLifecycleOwner, Observer {
+            val discount = it ?: 0
+            val packagePrice = viewModel.packagePrice.value ?: 0
+            viewModel.amount.postValue(packagePrice - discount)
+        })
 
         viewModel.salesInvoice.observe(viewLifecycleOwner, Observer { invoice ->
             invoice?.let {
@@ -117,10 +124,11 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 //        })
 
         viewModel.offers.observe(viewLifecycleOwner, Observer {
-            discount = (userData.discount_amount ?: 0.0).toInt()
-            viewModel.personalDiscount.postValue(discount)
+            viewModel.discount.postValue((userData.discount_amount ?: 0.0).toInt())
 
             if (it.isNullOrEmpty()) {
+                val discount = viewModel.discount.value ?: 0
+                val packagePrice = viewModel.packagePrice.value ?: 0
                 viewModel.amount.postValue(packagePrice - discount)
             } else {
                 it.forEach { offer ->
@@ -132,8 +140,10 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
                     if (offer.archived == false && date in firstDate..lastDate) {
                         val offerAmount = offer.offer_amount ?: 0
-                        viewModel.offerAmount.postValue(offerAmount)
+                        var discount = viewModel.discount.value ?: 0
                         discount += offerAmount
+                        viewModel.discount.postValue(discount)
+                        val packagePrice = viewModel.packagePrice.value ?: 0
                         viewModel.amount.postValue(packagePrice - discount)
                         return@Observer
                     }
@@ -217,6 +227,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         val lastName = userData.last_name ?: ""
 
         val amount = amount.toDouble()
+        val discount = viewModel.discount.value ?: 0
         viewModel.createOrder(
             CreateOrderBody(
                 userData.id ?: 0, userData.mobile ?: "",

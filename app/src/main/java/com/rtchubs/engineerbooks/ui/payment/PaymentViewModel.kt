@@ -25,15 +25,11 @@ class PaymentViewModel @Inject constructor(private val application: Application,
         MutableLiveData<String>()
     }
 
-    val personalDiscount: MutableLiveData<Int> by lazy {
+    val packagePrice: MutableLiveData<Int> by lazy {
         MutableLiveData<Int>()
     }
 
-    val offerAmount: MutableLiveData<Int> by lazy {
-        MutableLiveData<Int>()
-    }
-
-    val promoDiscount: MutableLiveData<Int> by lazy {
+    val discount: MutableLiveData<Int> by lazy {
         MutableLiveData<Int>()
     }
 

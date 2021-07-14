@@ -8,6 +8,7 @@ import com.rtchubs.engineerbooks.models.OfferResponse
 import com.rtchubs.engineerbooks.models.bkash.BKashPaymentUrlResponse
 import com.rtchubs.engineerbooks.models.chapter.ChapterResponse
 import com.rtchubs.engineerbooks.models.common.MyAccountListResponse
+import com.rtchubs.engineerbooks.models.faq.AllFaqResponse
 import com.rtchubs.engineerbooks.models.home.ClassWiseBookResponse
 import com.rtchubs.engineerbooks.models.home.CourseCategoryResponse
 import com.rtchubs.engineerbooks.models.my_course.MyCourseListResponse
@@ -87,6 +88,9 @@ interface ApiService {
 
     @POST(ApiEndPoint.MY_COURSES)
     suspend fun getAllMyCourses(@Body body: String?): Response<MyCourseListResponse>
+
+    @POST(ApiEndPoint.ALL_FAQS)
+    suspend fun getAllFaqs(): Response<AllFaqResponse>
 
     @POST(ApiEndPoint.TRANSACTION)
     suspend fun transactionHistory(@Body jsonString: String): Response<TransactionHistoryResponse>

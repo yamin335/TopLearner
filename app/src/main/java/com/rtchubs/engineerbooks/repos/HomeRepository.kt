@@ -75,7 +75,7 @@ class HomeRepository @Inject constructor(@Named("auth") private val authApiServi
 
     suspend fun allFaqRepo(): Response<AllFaqResponse> {
         return withContext(Dispatchers.IO) {
-            adminApiService.getAllFaqs()
+            apiService.getAllFaqs()
         }
     }
 

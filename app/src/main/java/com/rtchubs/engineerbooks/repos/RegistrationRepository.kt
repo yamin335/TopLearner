@@ -47,12 +47,13 @@ class RegistrationRepository @Inject constructor(private val apiService: ApiServ
         }
     }
 
-    suspend fun resetPinRepo(mobileNumber: String, pin: String, rePin: String): Response<InquiryResponse> {
+    suspend fun resetPinRepo(mobileNumber: String, pin: String, rePin: String, otp: String): Response<InquiryResponse> {
         return withContext(Dispatchers.IO) {
             val jsonObject = JsonObject()
-            jsonObject.addProperty("Mobile", mobileNumber)
-            jsonObject.addProperty("Pin", pin)
-            jsonObject.addProperty("RetypePin", rePin)
+            jsonObject.addProperty("mobile", mobileNumber)
+            jsonObject.addProperty("pin", pin)
+            jsonObject.addProperty("retype_pin", rePin)
+            jsonObject.addProperty("otp", otp)
             val body = jsonObject.toString()
             authApiService.resetPin(body)
         }

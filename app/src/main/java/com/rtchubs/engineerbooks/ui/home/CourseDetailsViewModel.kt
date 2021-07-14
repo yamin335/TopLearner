@@ -55,15 +55,11 @@ class CourseDetailsViewModel @Inject constructor(
                 when (val apiResponse = ApiResponse.create(homeRepository.allFaqRepo())) {
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                        if (apiResponse.body.code != ResponseCodes.CODE_SUCCESS) {
-                            toastError.postValue(apiResponse.body.message ?: AppConstants.serverConnectionErrorMessage)
+                        if (apiResponse.body.data?.coursefaqs.isNullOrEmpty()) {
+                            toastError.postValue(apiResponse.body.msg ?: AppConstants.noCourseFoundMessage)
                             return@launch
                         }
-                        if (apiResponse.body.data?.faqs.isNullOrEmpty()) {
-                            toastError.postValue(apiResponse.body.message ?: AppConstants.noCourseFoundMessage)
-                            return@launch
-                        }
-                        allFaqList.postValue(apiResponse.body.data?.faqs)
+                        allFaqList.postValue(apiResponse.body.data?.coursefaqs)
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)

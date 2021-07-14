@@ -58,7 +58,7 @@ class ResetPinDialogFragment internal constructor(
             }
         })
 
-        binding.etNewPin.addTextChangedListener(object : TextWatcher {
+        binding.etNewRepin.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 
             }

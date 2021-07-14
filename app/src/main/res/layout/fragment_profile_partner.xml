@@ -86,7 +86,7 @@
                             android:layout_marginEnd="10dp"
                             android:layout_marginBottom="20dp"
                             android:layout_marginTop="16dp"
-                            android:text="Personal Information"
+                            android:text="পার্টনারের ব্যক্তিগত তথ্য"
                             android:textColor="@color/grayColor"
                             android:gravity="center"
                             android:textSize="20sp"
@@ -103,7 +103,7 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="Name:"
+                                android:text="নামঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -126,7 +126,7 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="Father Name:"
+                                android:text="পিতার নামঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -149,7 +149,7 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="Mother Name:"
+                                android:text="মাতার নামঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -172,7 +172,7 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="Mobile No:"
+                                android:text="মোবাইলঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -195,7 +195,7 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="Home(contact):"
+                                android:text="বাড়ির নাঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -218,7 +218,7 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="Email:"
+                                android:text="ই-মেইলঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -241,7 +241,7 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="Date of Birth:"
+                                android:text="জন্ম তারিখঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -264,7 +264,7 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="Blood Group:"
+                                android:text="রক্তের গ্রুপঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -287,7 +287,7 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="NID No:"
+                                android:text="এনআইডি নাম্বারঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -311,7 +311,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="1dp"
-                                android:text="Present Address:"
+                                android:text="বর্তমান ঠিকানাঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp"
                                 app:layout_constraintBottom_toBottomOf="@+id/presentAddress"
@@ -327,24 +327,24 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:background="@drawable/rounded_bd_spinner"
-                                android:text="N/A"
-                                android:paddingTop="4dp"
-                                android:paddingBottom="4dp"
                                 android:paddingStart="8dp"
+                                android:paddingTop="4dp"
                                 android:paddingEnd="8dp"
+                                android:paddingBottom="4dp"
+                                android:text="N/A"
                                 android:textColor="@color/grayColor"
                                 android:textSize="16sp"
                                 app:layout_constraintBottom_toTopOf="@+id/textView4"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintHorizontal_bias="0.0"
-                                app:layout_constraintStart_toEndOf="@+id/textView4"
+                                app:layout_constraintStart_toEndOf="@+id/textView2"
                                 app:layout_constraintTop_toTopOf="parent" />
 
                             <TextView
                                 android:id="@+id/textView4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Permanent Address:"
+                                android:text="স্থায়ী ঠিকানাঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp"
                                 app:layout_constraintBottom_toBottomOf="@id/permanentAddress"
@@ -358,20 +358,19 @@
                                 android:id="@+id/permanentAddress"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
                                 android:layout_marginTop="8dp"
                                 android:background="@drawable/rounded_bd_spinner"
-                                android:paddingTop="4dp"
-                                android:paddingBottom="4dp"
                                 android:paddingStart="8dp"
+                                android:paddingTop="4dp"
                                 android:paddingEnd="8dp"
+                                android:paddingBottom="4dp"
                                 android:text="N/A"
                                 android:textColor="@color/grayColor"
                                 android:textSize="16sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintHorizontal_bias="0.0"
-                                app:layout_constraintStart_toEndOf="@+id/textView4"
+                                app:layout_constraintStart_toStartOf="@+id/presentAddress"
                                 app:layout_constraintTop_toBottomOf="@+id/presentAddress" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -394,7 +393,7 @@
                             android:layout_marginEnd="10dp"
                             android:layout_marginBottom="20dp"
                             android:layout_marginTop="16dp"
-                            android:text="Official Information"
+                            android:text="অফিসের তথ্য"
                             android:textColor="@color/grayColor"
                             android:gravity="center"
                             android:textSize="20sp"
@@ -411,7 +410,7 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="Official ID:"
+                                android:text="অফিসের আইডিঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -434,7 +433,7 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="Partner Type:"
+                                android:text="পার্টনার টাইপঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -457,7 +456,76 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="No. of Students:"
+                                android:text="দায়িত্বশীল এলাকাঃ"
+                                android:textColor="#404040"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/responsibleArea"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textColor="@color/grayColor"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="8dp">
+                            <TextView
+                                android:layout_width="135dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="10dp"
+                                android:text="পদবীঃ"
+                                android:textColor="#404040"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/designation"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textColor="@color/grayColor"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="8dp">
+                            <TextView
+                                android:layout_width="135dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="10dp"
+                                android:text="শেয়ারঃ"
+                                android:textColor="#404040"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/sharePercent"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textColor="@color/grayColor"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="8dp">
+                            <TextView
+                                android:layout_width="135dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="10dp"
+                                android:text="ব্যবহারকারীর সংখ্যাঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -481,76 +549,7 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="Responsible Area:"
-                                android:textColor="#404040"
-                                android:textSize="16sp" />
-
-                            <TextView
-                                android:id="@+id/responsibleArea"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:textColor="@color/grayColor"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginBottom="8dp">
-                            <TextView
-                                android:layout_width="135dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="10dp"
-                                android:text="Designation:"
-                                android:textColor="#404040"
-                                android:textSize="16sp" />
-
-                            <TextView
-                                android:id="@+id/designation"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:textColor="@color/grayColor"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginBottom="8dp">
-                            <TextView
-                                android:layout_width="135dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="10dp"
-                                android:text="% of Share:"
-                                android:textColor="#404040"
-                                android:textSize="16sp" />
-
-                            <TextView
-                                android:id="@+id/sharePercent"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:textColor="@color/grayColor"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginBottom="8dp">
-                            <TextView
-                                android:layout_width="135dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="10dp"
-                                android:text="Earned Money:"
+                                android:text="টোটাল উপার্জনঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -573,7 +572,7 @@
                                 android:layout_width="135dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="Sub Total:"
+                                android:text="টোটালঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -597,7 +596,7 @@
                                 android:layout_width="155dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="Payment Amount:"
+                                android:text="পরিশোধঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 
@@ -626,7 +625,7 @@
                                 android:layout_width="155dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
-                                android:text="Payable Amount:"
+                                android:text="বাকিঃ"
                                 android:textColor="#404040"
                                 android:textSize="16sp" />
 

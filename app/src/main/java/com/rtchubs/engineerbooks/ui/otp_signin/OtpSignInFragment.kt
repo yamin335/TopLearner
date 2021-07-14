@@ -150,10 +150,9 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
 
         viewModel.verifiedOTP.observe(viewLifecycleOwner, Observer { response ->
             val account = response?.data?.Account
-            if (account == null || response.data.Token == null) {
+            if (account == null) {
                 preferencesHelper.falseOTPCounter++
             } else {
-                preferencesHelper.accessToken = response.data.Token.AccessToken
                 if (!account.otp.isNullOrBlank() && account.otp == viewModel.otp.value) {
                     registrationRemoteHelper = account
                     registrationRemoteHelper.mobile_operator = registrationLocalHelper.mobile_operator
@@ -171,6 +170,9 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
 //                    viewDataBinding.etOtpCode.isEnabled = false
 //                    viewDataBinding.btnSubmit.isEnabled = false
                 }
+            }
+            response.data?.Token?.AccessToken?.let {
+                preferencesHelper.accessToken = it
             }
         })
 

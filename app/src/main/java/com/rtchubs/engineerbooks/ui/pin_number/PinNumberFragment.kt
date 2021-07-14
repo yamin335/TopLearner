@@ -74,7 +74,7 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
         resetPinDialogFragment = ResetPinDialogFragment(object : ResetPinDialogFragment.PinResetCallback {
             override fun onPinChanged(pin: String) {
                 resetPinDialogFragment.dismiss()
-                viewModel.resetPin(registrationRemoteHelper.mobile ?: "", pin)
+                viewModel.resetPin(registrationRemoteHelper.mobile ?: "", pin, registrationRemoteHelper.otp ?: "")
             }
 
         })
