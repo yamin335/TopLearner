@@ -370,7 +370,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:layout_gravity="center_horizontal"
-                    android:text="আপনার জন্য আমাদের স্পেশাল ডিস্কাউন্ট পেতে এখনই কোর্সটি কিনুন। কাস্টমার কেয়ারঃ ০১৭৫৫৬৬০৬৬৫
+                    android:text="আপনার জন্য আমাদের স্পেশাল ডিস্কাউন্ট পেতে এখনই কোর্সটি কিনুন। কাস্টমার কেয়ারঃ 09678271271
 "
                     android:gravity="center"
                     android:textColor="@color/secondary_blue_1"
