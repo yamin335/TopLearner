@@ -7,6 +7,7 @@ import com.rtchubs.engineerbooks.api.*
 import com.rtchubs.engineerbooks.models.Offer
 import com.rtchubs.engineerbooks.models.bkash.BKashCreateResponse
 import com.rtchubs.engineerbooks.models.payment.CoursePaymentRequest
+import com.rtchubs.engineerbooks.models.payment.PromoCode
 import com.rtchubs.engineerbooks.models.transactions.CreateOrderBody
 import com.rtchubs.engineerbooks.models.transactions.Salesinvoice
 import com.rtchubs.engineerbooks.repos.HomeRepository
@@ -23,6 +24,14 @@ class PaymentViewModel @Inject constructor(private val application: Application,
 
     val promoCode: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
+    }
+
+    val promoCodeDiscount: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
+
+    val promoCodeResponse: MutableLiveData<PromoCode> by lazy {
+        MutableLiveData<PromoCode>()
     }
 
     val packagePrice: MutableLiveData<Int> by lazy {
@@ -145,6 +154,37 @@ class PaymentViewModel @Inject constructor(private val application: Application,
                 when (val apiResponse = ApiResponse.create(repository.purchaseCourseRepo(coursePaymentRequest))) {
                     is ApiSuccessResponse -> {
                         createOrder(createOrderBody)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                    }
+                    is ApiErrorResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                    }
+                }
+            }
+        }
+    }
+
+    fun verifyPromoCode() {
+        if (checkNetworkStatus(true)) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(serverConnectionErrorMessage)
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(repository.promoCodeRepo(promoCode.value))) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        if (apiResponse.body.data?.isvalid == true) {
+                            promoCodeResponse.postValue(apiResponse.body.data.promocode)
+                            promoCodeDiscount.postValue(apiResponse.body.data.promocode?.discount ?: 0)
+                        } else {
+                            promoCodeResponse.postValue(null)
+                        }
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)

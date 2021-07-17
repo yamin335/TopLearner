@@ -13,6 +13,8 @@
     <color name="card2">#262196F3</color>
     <color name="card3">#268BC34A</color>
     <color name="chipBgColor">#410AB939</color>
+    <color name="colorPaymentRed">#EB3223</color>
+    <color name="colorPromoGray">#C8C8C8</color>
 
     <color name="colorFileAvailable">#8089FF00</color>
     <color name="colorFileUnAvailable">#80C2E1FF</color>

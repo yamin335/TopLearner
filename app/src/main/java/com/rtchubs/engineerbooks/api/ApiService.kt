@@ -15,6 +15,7 @@ import com.rtchubs.engineerbooks.models.my_course.MyCourseListResponse
 import com.rtchubs.engineerbooks.models.my_course.SingleBookResponse
 import com.rtchubs.engineerbooks.models.notice_board.NoticeResponse
 import com.rtchubs.engineerbooks.models.payment.CoursePaymentResponse
+import com.rtchubs.engineerbooks.models.payment.PromoCodeResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.AddCardOrBankResponse
 import com.rtchubs.engineerbooks.models.payment_account_models.BankOrCardListResponse
 import com.rtchubs.engineerbooks.models.registration.*
@@ -34,6 +35,9 @@ interface ApiService {
 
     @POST(ApiEndPoint.ALL_COURSE)
     suspend fun getAllCourse(): Response<CourseCategoryResponse>
+
+    @POST(ApiEndPoint.PROMO_CODE)
+    suspend fun verifyPromoCode(@Body jsonString: String): Response<PromoCodeResponse>
 
     @POST(ApiEndPoint.INQUIRE)
     suspend fun inquire(@Body jsonString: String): Response<InquiryResponse>

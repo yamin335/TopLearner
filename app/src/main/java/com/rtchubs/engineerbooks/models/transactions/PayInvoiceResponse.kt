@@ -23,4 +23,4 @@ data class CreateOrderBody(var StudentID: Int = 0, var StudentMobile: String = "
                            var book_id: Int = 0, var ClassID: Int = 0,
                            var StudentName: String = "", var bookname: String = "",
                            var TransactionID: String = "", var coursename: String = "",
-                           var bookthumb: String = "")
+                           var bookthumb: String = "", var promo_code: String = "", var PartnerID: Int = 0)

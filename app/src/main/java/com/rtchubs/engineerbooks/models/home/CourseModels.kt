@@ -20,7 +20,8 @@ data class Course(val id: Int?, val udid: String?, val name: String?, val catago
                   val third_payment_amount: Int?, val class_name: String?, val book_id: Int?,
                   val demo_book_id: Int?,val course_teachers: List<Teacher>?, val course_contents: List<Any>?,
                   val course_items: List<CourseItems>?, val course_chapters: List<CourseChapter>?,
-                  val book: ClassWiseBook?, val demo_book: ClassWiseBook?, val book_type_id: Int?): Serializable
+                  val book: ClassWiseBook?, val demo_book: ClassWiseBook?, val book_type_id: Int?,
+                  val first_duration: String?, val second_duration: String?, val third_duration: String?): Serializable
 
 data class Teacher(val image_url: String?, val name: String?, val institute: String?, val teacher_id: String?, val course_id: String?): Serializable
 

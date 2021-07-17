@@ -133,6 +133,7 @@ object ApiEndPoint {
     const val SLIDER_ADS = "$API_VERSION/$PUBLIC_REPO/getads"
 
     const val ALL_COURSE = "$API_VERSION/course/getall"
+    const val PROMO_CODE = "$API_VERSION/course/promo"
 //    const val ALL_COURSE = "$API_REPO/get/coursecatagories/all"
     const val ALL_FAQS = "$API_VERSION/course/faqs"
     const val PURCHASE_COURSE = "$API_VERSION/course/purchase"

@@ -6,6 +6,7 @@ import com.rtchubs.engineerbooks.api.ApiService
 import com.rtchubs.engineerbooks.models.bkash.BKashPaymentUrlResponse
 import com.rtchubs.engineerbooks.models.payment.CoursePaymentRequest
 import com.rtchubs.engineerbooks.models.payment.CoursePaymentResponse
+import com.rtchubs.engineerbooks.models.payment.PromoCodeResponse
 import com.rtchubs.engineerbooks.models.transactions.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -43,7 +44,15 @@ class TransactionRepository @Inject constructor(@Named("auth") private val authA
         }
     }
 
+    suspend fun promoCodeRepo(promoCode: String?): Response<PromoCodeResponse> {
+        val jsonObject = JsonObject().apply {
+            addProperty("code", promoCode)
+        }.toString()
 
+        return withContext(Dispatchers.IO) {
+            authApiService.verifyPromoCode(jsonObject)
+        }
+    }
 
     suspend fun partnerTransactionsRepo(mobileNumber: String): Response<PartnerTransactionResponse> {
         val jsonObject = JsonObject().apply {

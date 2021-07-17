@@ -11,237 +11,302 @@
     </data>
 
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/themeColor">
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5"
+                android:background="@color/themeColorRed" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="6"
+                android:background="@color/themeColor" />
+        </LinearLayout>
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_alignParentTop="true"
-            android:theme="@style/AppTheme.AppBarOverlay"
+            android:theme="@style/AppTheme.AppBarOverlayWhite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:title="Payment"
-            app:titleTextColor="@color/white" />
+            app:titleTextColor="@color/white"/>
 
         <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
             android:id="@+id/loader"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-6dp"
             android:layout_below="@id/toolbar"
             android:indeterminate="true"
             android:indeterminateTint="@color/colorWhite"
-            app:showLoader="@{viewModel.apiCallStatus}"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:showLoader="@{viewModel.apiCallStatus}" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:text="কোর্সের মেয়াদ সিলেক্টশন করে কোড থাকলে কোড দিয়ে ডিস্কাউন্ট বাটনে চাপুন। এরপর পরিশোধ করুন"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
         <LinearLayout
             android:id="@+id/linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="20dp"
             android:layout_below="@id/toolbar"
-            android:layout_marginBottom="16dp"
-            android:orientation="vertical">
-
-            <RadioGroup
-                android:id="@+id/packageGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.google.android.material.radiobutton.MaterialRadioButton
-                    android:id="@+id/firstPackage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="Monthly Package -- ৳300"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
-                    android:buttonTint="@color/radio_button_state_colors"/>
-
-                <com.google.android.material.radiobutton.MaterialRadioButton
-                    android:id="@+id/secondPackage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="2 Months Package -- ৳500"
-                    android:checked="true"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
-                    android:buttonTint="@color/radio_button_state_colors"/>
-
-                <com.google.android.material.radiobutton.MaterialRadioButton
-                    android:id="@+id/thirdPackage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="3 Months Package -- ৳750"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
-                    android:buttonTint="@color/radio_button_state_colors"/>
-            </RadioGroup>
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/rounded_background_white"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3"
+            app:layout_constraintVertical_bias="0.0">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ডিস্কাউন্ট পেতে কোড দিয়ে ডিস্কাউন্ট বাটনে চাপুন"
-                android:layout_marginTop="24dp"
-                android:textColor="@color/white"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center"
+                android:text="মেয়াদ সিলেক্ট করুন"
+                android:textColor="@color/themeTextColor"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_height="45dp"
+                android:background="@drawable/rounded_stroke_bg_spinner">
+                <Spinner
+                    android:id="@+id/spPackages"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:spinnerMode="dropdown"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center"
+                android:text="কোড না থাকলে দিতে হবে না"
+                android:textColor="@color/themeTextColor"
                 android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:gravity="center_vertical"
-                android:layout_marginTop="8dp">
+                android:orientation="horizontal"
+                android:background="@drawable/rounded_bg_promo_code">
 
-                <LinearLayout
+                <EditText
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:inputType="text"
-                        android:text="@={viewModel.promoCode}"
-                        android:hint="ডিস্কাউন্ট কোড "
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:theme="@style/EditTextTheme"
-                        android:imeOptions="actionDone"/>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="4dp"
-                        android:background="@color/albumColorPrimary" />
-                </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:layout_marginStart="20dp"
+                    android:hint="কোড"
+                    android:gravity="center"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
+                    android:textColorHint="@color/white"
+                    android:text="@={viewModel.promoCode}"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:theme="@style/EditTextTheme" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnApply"
                     android:layout_width="wrap_content"
-                    android:layout_height="46dp"
-                    android:backgroundTint="@color/button_enable_disable_colors"
-                    android:enabled="@{viewModel.promoCode.length() > 0 ? true : false, default=false}"
-                    android:text="ডিস্কাউন্ট নিন"
+                    android:layout_height="40dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:cornerRadius="20dp"
+                    android:layout_marginStart="8dp"
+                    android:backgroundTint="@color/promo_button_state_colors"
+                    android:enabled="false"
+                    android:text="ডিস্কাউন্ট"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
                     android:textAllCaps="false"
                     android:textColor="@color/button_text_enable_disable_colors"
-                    android:textSize="18sp"
-                    android:layout_marginStart="20dp"/>
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:orientation="horizontal"
-                android:layout_marginTop="32dp">
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
+
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="2"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
                     android:text="কোর্স ফিঃ"
-                    android:textColor="@color/white"
+                    android:textColor="@color/themeTextColor"
                     android:textSize="16sp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="৳"
                     android:layout_marginStart="8dp"
-                    android:textColor="@color/white"
+                    android:text="৳"
+                    android:textColor="@color/themeTextColor"
                     android:textSize="16sp" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:text="@{viewModel.packagePrice.toString()}"
-                    android:layout_marginStart="4dp"
-                    tools:text="750"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textColor="@color/themeTextColor"
+                    android:textSize="16sp"
+                    tools:text="750" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:orientation="horizontal"
-                android:layout_marginTop="8dp">
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
+
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="2"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
                     android:text="ডিস্কাউন্টঃ"
-                    android:textColor="@color/white"
+                    android:textColor="@color/themeTextColor"
                     android:textSize="16sp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="৳"
                     android:layout_marginStart="8dp"
-                    android:textColor="@color/white"
+                    android:text="৳"
+                    android:textColor="@color/themeTextColor"
                     android:textSize="16sp" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:text="@{viewModel.discount.toString()}"
-                    android:layout_marginStart="4dp"
-                    tools:text="750"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textColor="@color/themeTextColor"
+                    android:textSize="16sp"
+                    tools:text="750" />
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="0.5dp"
                 android:layout_marginTop="4dp"
-                android:background="@color/white" />
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/themeTextColor" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
-                android:layout_marginTop="16dp">
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
+
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="2"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
                     android:text="পরিশোধ করতে হবেঃ"
-                    android:textColor="@color/white"
+                    android:textColor="@color/themeTextColor"
                     android:textSize="16sp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="৳"
                     android:layout_marginStart="8dp"
-                    android:textColor="@color/white"
+                    android:text="৳"
+                    android:textColor="@color/themeTextColor"
                     android:textSize="16sp" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:text="@{viewModel.amount.toString()}"
-                    android:layout_marginStart="4dp"
-                    tools:text="750"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textColor="@color/themeTextColor"
+                    android:textSize="16sp"
+                    tools:text="750" />
             </LinearLayout>
-        </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnPayNow"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_below="@id/linear"
-            android:backgroundTint="@color/button_enable_disable_colors"
-            android:layout_margin="20dp"
-            android:enabled="@{viewModel.amount > 0 ? true : false, default=false}"
-            android:text="পরিশোধ করুন"
-            android:textAllCaps="false"
-            android:textColor="@color/button_text_enable_disable_colors"
-            android:textSize="18sp" />
-    </RelativeLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPayNow"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_margin="20dp"
+                android:backgroundTint="@color/button_enable_disable_colors"
+                android:enabled="@{viewModel.amount > 0 ? true : false, default=false}"
+                android:text="পরিশোধ করুন"
+                android:textAllCaps="false"
+                android:textColor="@color/button_text_enable_disable_colors"
+                android:textSize="18sp"
+                app:cornerRadius="23dp" />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

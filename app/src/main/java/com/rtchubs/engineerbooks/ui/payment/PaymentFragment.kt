@@ -2,6 +2,8 @@ package com.rtchubs.engineerbooks.ui.payment
 
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -55,6 +57,14 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
     private lateinit var invoiceNumber: String
 
+    private lateinit var packageAdapter: ArrayAdapter<String>
+    private var titlePackageList = arrayOf("--সিলেক্ট করুন--")
+
+    override fun onResume() {
+        super.onResume()
+        viewDataBinding.spPackages.setSelection(1, true)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         invoiceNumber = generateInvoiceID()
@@ -67,23 +77,37 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         userData = preferencesHelper.getUser()
 
-        viewDataBinding.firstPackage.text = "$firstPackageTitle -- ${getString(R.string.taka_sign)}$firstPackagePrice"
-        viewDataBinding.secondPackage.text = "$secondPackageTitle -- ${getString(R.string.taka_sign)}$secondPackagePrice"
-        viewDataBinding.thirdPackage.text = "$thirdPackageTitle -- ${getString(R.string.taka_sign)}$thirdPackagePrice"
-
         viewModel.packagePrice.postValue(0)
         viewModel.discount.postValue(0)
         viewModel.amount.postValue(0)
+        viewModel.promoCodeDiscount.postValue(0)
 
         viewModel.packagePrice.postValue(secondPackagePrice)
 
-        viewDataBinding.packageGroup.setOnCheckedChangeListener { _, checkedId ->
-            when(checkedId) {
-                R.id.firstPackage -> viewModel.packagePrice.postValue(firstPackagePrice)
-                R.id.secondPackage -> viewModel.packagePrice.postValue(secondPackagePrice)
-                R.id.thirdPackage -> viewModel.packagePrice.postValue(thirdPackagePrice)
+        titlePackageList = arrayOf(firstPackageTitle, secondPackageTitle, thirdPackageTitle)
+        packageAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titlePackageList)
+        packageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        viewDataBinding.spPackages.adapter = packageAdapter
+
+        viewDataBinding.spPackages.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                when(position) {
+                    0 -> viewModel.packagePrice.postValue(firstPackagePrice)
+                    1 -> viewModel.packagePrice.postValue(secondPackagePrice)
+                    2 -> viewModel.packagePrice.postValue(thirdPackagePrice)
+                }
             }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+        viewModel.packagePrice.postValue(secondPackagePrice)
+        viewModel.discount.postValue((userData.discount_amount ?: 0.0).toInt())
 
         viewModel.packagePrice.observe(viewLifecycleOwner, Observer {
             val discount = viewModel.discount.value ?: 0
@@ -117,20 +141,35 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             }
         })
 
-//        viewModel.amount.observe(viewLifecycleOwner, Observer {  amount ->
-//            amount?.let {
-//                viewDataBinding.btnPayNow.isEnabled = it.isNotEmpty() && it != "0"
-//            }
-//        })
+        viewModel.promoCodeResponse.observe(viewLifecycleOwner, Observer { codeResponse ->
+            if (codeResponse == null) {
+                showErrorToast(requireContext(), "Your code is not valid")
+            } else {
+                showSuccessToast(requireContext(), "Discount from code is applied")
+            }
+        })
+
+        viewModel.promoCode.observe(viewLifecycleOwner, Observer { code ->
+            code?.let {
+                val promoDiscount = viewModel.promoCodeDiscount.value
+                viewDataBinding.btnApply.isEnabled = it.isNotBlank() && promoDiscount != null && promoDiscount == 0
+            }
+        })
+
+        viewModel.promoCodeDiscount.observe(viewLifecycleOwner, Observer { codeDiscount ->
+            codeDiscount?.let {
+                var discount = viewModel.discount.value ?: 0
+                discount += it
+                viewModel.discount.postValue(discount)
+            }
+        })
+
+        viewDataBinding.btnApply.setOnClickListener {
+            viewModel.verifyPromoCode()
+        }
 
         viewModel.offers.observe(viewLifecycleOwner, Observer {
-            viewModel.discount.postValue((userData.discount_amount ?: 0.0).toInt())
-
-            if (it.isNullOrEmpty()) {
-                val discount = viewModel.discount.value ?: 0
-                val packagePrice = viewModel.packagePrice.value ?: 0
-                viewModel.amount.postValue(packagePrice - discount)
-            } else {
+            if (!it.isNullOrEmpty()) {
                 it.forEach { offer ->
                     val firstDate = offer.FromDate?.split("T")?.first()?.getMilliFromDate()
                         ?: Long.MAX_VALUE
@@ -143,8 +182,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                         var discount = viewModel.discount.value ?: 0
                         discount += offerAmount
                         viewModel.discount.postValue(discount)
-                        val packagePrice = viewModel.packagePrice.value ?: 0
-                        viewModel.amount.postValue(packagePrice - discount)
+//                        val packagePrice = viewModel.packagePrice.value ?: 0
+//                        viewModel.amount.postValue(packagePrice - discount)
                         return@Observer
                     }
                 }
@@ -260,7 +299,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 userData.UpazilaID ?: 0, userData.CityID ?: 0, invoiceNumber,
                 "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
                 "$firstName $lastName", args.bookName ?: "", response.amount ?: "N/A",
-                "", ""
+                "", "", viewModel.promoCodeResponse.value?.code ?: "",
+                viewModel.promoCodeResponse.value?.partner_id ?: 0
             ),
             CoursePaymentRequest(
                 userData.mobile, invoiceNumber,userData.id, args.courseId, args.coursePrice.toInt(), response.amount.toDouble().toInt()
