@@ -47,11 +47,11 @@ object Api {
     const val API_ROOT = "54.151.191.40:8081"
     const val ADMIN_API_ROOT = "adminbackend.engineersmath.com"
 
-//    const val PROTOCOL = "https"
+    const val SECURED_PROTOCOL = "https"
 //    const val API_ROOT = "backend.engineersmath.com"
 //    const val ADMIN_API_ROOT = "adminbackend.engineersmath.com"
     const val API_ROOT_URL = "$PROTOCOL://$API_ROOT/"
-    const val ADMIN_API_ROOT_URL = "$PROTOCOL://$ADMIN_API_ROOT/"
+    const val ADMIN_API_ROOT_URL = "$SECURED_PROTOCOL://$ADMIN_API_ROOT/"
     const val COURSE_IMAGE_ROOT_URL = "${ADMIN_API_ROOT_URL}images/courselogo/"
     const val API_REPO = "api"
     const val AUTH_REPO = "auth"

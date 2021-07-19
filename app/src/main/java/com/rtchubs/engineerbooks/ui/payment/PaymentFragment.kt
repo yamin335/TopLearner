@@ -80,7 +80,6 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         viewModel.packagePrice.postValue(0)
         viewModel.discount.postValue(0)
         viewModel.amount.postValue(0)
-        viewModel.promoCodeDiscount.postValue(0)
 
         viewModel.packagePrice.postValue(secondPackagePrice)
 
@@ -141,25 +140,30 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             }
         })
 
-        viewModel.promoCodeResponse.observe(viewLifecycleOwner, Observer { codeResponse ->
-            if (codeResponse == null) {
-                showErrorToast(requireContext(), "Your code is not valid")
-            } else {
-                showSuccessToast(requireContext(), "Discount from code is applied")
+        viewModel.isValidPromoCode.observe(viewLifecycleOwner, Observer {
+            it?.let { isValid ->
+                if (isValid) {
+                    showSuccessToast(requireContext(), "Discount from code is applied")
+                } else {
+                    showErrorToast(requireContext(), "Your code is not valid!")
+                }
+                viewModel.isValidPromoCode.postValue(null)
             }
         })
 
-        viewModel.promoCode.observe(viewLifecycleOwner, Observer { code ->
+        viewModel.promoCodeText.observe(viewLifecycleOwner, Observer { code ->
             code?.let {
-                val promoDiscount = viewModel.promoCodeDiscount.value
-                viewDataBinding.btnApply.isEnabled = it.isNotBlank() && promoDiscount != null && promoDiscount == 0
+                viewDataBinding.btnApply.isEnabled = it.isNotBlank()
             }
         })
 
-        viewModel.promoCodeDiscount.observe(viewLifecycleOwner, Observer { codeDiscount ->
-            codeDiscount?.let {
+        viewModel.promoCode.observe(viewLifecycleOwner, Observer { promoCode ->
+            promoCode?.let {
+                val promoDiscount = promoCode.discount ?: 0
                 var discount = viewModel.discount.value ?: 0
-                discount += it
+                discount -= viewModel.promoCodeDiscount
+                viewModel.promoCodeDiscount = promoDiscount
+                discount += viewModel.promoCodeDiscount
                 viewModel.discount.postValue(discount)
             }
         })
@@ -299,8 +303,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 userData.UpazilaID ?: 0, userData.CityID ?: 0, invoiceNumber,
                 "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
                 "$firstName $lastName", args.bookName ?: "", response.amount ?: "N/A",
-                "", "", viewModel.promoCodeResponse.value?.code ?: "",
-                viewModel.promoCodeResponse.value?.partner_id ?: 0
+                "", "", viewModel.promoCode.value?.code ?: "",
+                viewModel.promoCode.value?.partner_id ?: 0
             ),
             CoursePaymentRequest(
                 userData.mobile, invoiceNumber,userData.id, args.courseId, args.coursePrice.toInt(), response.amount.toDouble().toInt()

@@ -22,15 +22,17 @@ class PaymentViewModel @Inject constructor(private val application: Application,
                                            private val repository: TransactionRepository,
                                            private val homeRepository: HomeRepository) : BaseViewModel(application) {
 
-    val promoCode: MutableLiveData<String> by lazy {
+    val isValidPromoCode: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
+
+    val promoCodeText: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
 
-    val promoCodeDiscount: MutableLiveData<Int> by lazy {
-        MutableLiveData<Int>()
-    }
+    var promoCodeDiscount: Int = 0
 
-    val promoCodeResponse: MutableLiveData<PromoCode> by lazy {
+    val promoCode: MutableLiveData<PromoCode> by lazy {
         MutableLiveData<PromoCode>()
     }
 
@@ -176,14 +178,14 @@ class PaymentViewModel @Inject constructor(private val application: Application,
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.promoCodeRepo(promoCode.value))) {
+                when (val apiResponse = ApiResponse.create(repository.promoCodeRepo(promoCodeText.value))) {
                     is ApiSuccessResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
                         if (apiResponse.body.data?.isvalid == true) {
-                            promoCodeResponse.postValue(apiResponse.body.data.promocode)
-                            promoCodeDiscount.postValue(apiResponse.body.data.promocode?.discount ?: 0)
+                            isValidPromoCode.postValue(true)
+                            promoCode.postValue(apiResponse.body.data.promocode)
                         } else {
-                            promoCodeResponse.postValue(null)
+                            isValidPromoCode.postValue(false)
                         }
                     }
                     is ApiEmptyResponse -> {
