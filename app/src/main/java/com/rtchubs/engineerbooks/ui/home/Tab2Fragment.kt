@@ -118,6 +118,7 @@ class Tab2Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab2ViewMode
 
             if (data.isNullOrBlank() || data == "null") {
                 viewDataBinding.emptyView.visibility = View.VISIBLE
+                viewDataBinding.loader.visibility = View.GONE
             } else {
                 viewDataBinding.emptyView.visibility = View.GONE
                 if (data.contains(".pdf", true)) {

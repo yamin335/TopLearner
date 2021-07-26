@@ -171,7 +171,7 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
 //                    viewDataBinding.btnSubmit.isEnabled = false
                 }
             }
-            response.data?.Token?.AccessToken?.let {
+            response?.data?.Token?.AccessToken?.let {
                 preferencesHelper.accessToken = it
             }
         })

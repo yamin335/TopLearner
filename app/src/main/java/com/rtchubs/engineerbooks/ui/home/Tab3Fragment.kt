@@ -120,6 +120,7 @@ class Tab3Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab3ViewMode
 
             if (data.isNullOrBlank() || data == "null") {
                 viewDataBinding.emptyView.visibility = View.VISIBLE
+                viewDataBinding.loader.visibility = View.GONE
             } else {
                 viewDataBinding.emptyView.visibility = View.GONE
                 if (data.contains(".pdf", true)) {

@@ -75,8 +75,12 @@ class LiveClassActivity : DaggerAppCompatActivity() {
         binding.videoView.player = player
 
         object : YouTubeExtractor(this) {
-            override fun onExtractionComplete(ytFiles: SparseArray<YtFile>, vMeta: VideoMeta) {
-                val downloadUrl = ytFiles[18].url
+            override fun onExtractionComplete(
+                ytFiles: SparseArray<YtFile>?,
+                videoMeta: VideoMeta?
+            ) {
+                val ytFilesArray = ytFiles ?: return
+                val downloadUrl = ytFilesArray[18].url
                 try {
                     player?.addMediaSource(mediaSource(Uri.parse(downloadUrl)))
                     player?.playWhenReady = playWhenReady

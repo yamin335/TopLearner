@@ -80,13 +80,14 @@
                         android:background="@drawable/rounded_background_white">
 
                         <TextView
+                            android:id="@+id/titlePersonalInfo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginEnd="10dp"
                             android:layout_marginBottom="20dp"
                             android:layout_marginTop="16dp"
-                            android:text="পার্টনারের ব্যক্তিগত তথ্য"
+                            android:text="@string/titlePartnerPersonalInfo"
                             android:textColor="@color/grayColor"
                             android:gravity="center"
                             android:textSize="20sp"
@@ -416,6 +417,31 @@
 
                             <TextView
                                 android:id="@+id/officialId"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textColor="@color/grayColor"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llPromo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="8dp">
+                            <TextView
+                                android:layout_width="135dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="10dp"
+                                android:text="প্রোমো কোডঃ"
+                                android:textColor="#404040"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/promoCode"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:textColor="@color/grayColor"

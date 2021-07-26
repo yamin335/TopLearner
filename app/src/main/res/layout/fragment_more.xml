@@ -73,7 +73,7 @@
                         android:id="@+id/hotline"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Hotline# 01755660665"
+                        android:text="Hotline# 09678271271"
                         android:layout_alignParentTop="true"
                         android:textSize="20sp"
                         android:elevation="1dp"

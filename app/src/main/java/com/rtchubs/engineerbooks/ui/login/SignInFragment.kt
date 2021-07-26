@@ -174,6 +174,10 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
             goForRegistration(bottomSheetDialog, "Grameenphone")
         }
 
+        binding.btnAirtel.setOnClickListener {
+            goForRegistration(bottomSheetDialog, "Airtel")
+        }
+
         binding.btnRobi.setOnClickListener {
             goForRegistration(bottomSheetDialog, "Robi")
         }

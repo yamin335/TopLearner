@@ -24,7 +24,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#808080"
+            android:background="#959595"
             android:orientation="vertical">
 
             <LinearLayout
@@ -46,6 +46,17 @@
                 </ImageButton>
 
                 <ImageButton
+                    android:id="@+id/btn_airtel"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1.0"
+                    android:adjustViewBounds="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/airtel_logo"/>
+
+                <ImageButton
                     android:id="@+id/btn_robi"
                     android:layout_width="0dp"
                     android:layout_height="100dp"
@@ -54,16 +65,13 @@
                     android:adjustViewBounds="true"
                     android:background="?attr/selectableItemBackground"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/robi">
-
-                </ImageButton>
+                    android:src="@drawable/robi"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
                 <ImageButton
@@ -75,9 +83,7 @@
                     android:adjustViewBounds="true"
                     android:background="?attr/selectableItemBackground"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/banglalink">
-
-                </ImageButton>
+                    android:src="@drawable/banglalink"/>
 
                 <ImageButton
                     android:id="@+id/btn_teletalk"
@@ -88,9 +94,18 @@
                     android:adjustViewBounds="true"
                     android:background="?attr/selectableItemBackground"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/teletalk">
+                    android:src="@drawable/teletalk_logo"/>
 
-                </ImageButton>
+                <ImageButton
+                    android:id="@+id/btn_empty"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1.0"
+                    android:adjustViewBounds="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:scaleType="fitCenter"
+                    android:src="@null"/>
 
             </LinearLayout>
 

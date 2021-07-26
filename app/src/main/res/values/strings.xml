@@ -40,7 +40,7 @@
 
     <!-- Settings strings. -->
 
-    <string name="please_select_operator">Please Select Operator</string>
+    <string name="please_select_operator">আপনার সিমের অপারেটর সিলেক্ট করুন</string>
     <string name="terms_and_conditions">Terms And Conditions</string>
     <string name="if_you_reject_these_permission_the_app_wont_work_perfectly">If you reject these permission this app won\'t work perfectly.</string>
 
@@ -73,4 +73,6 @@
     <string name="animation_not_found_text">এই কন্টেন্টর কাজ চলছে। খুব শীঘ্রই দেওয়া হবে। আপনি অন্যান্য বিষয় চেক করতে পারেন। আপনি চাইলে আমাদের যে কোন কোর্স কিনতে বা চেক করতে পারেন, কোর্সগুলোতে সব দেওয়া হয়েছে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।</string>
     <string name="animation_list_empty_text">ভিডিও এবং অ্যানিমেশনের কাজ চলছে। খুব শীঘ্রই এখানে দেওয়া হবে। আপনি সৃজনশীল প্রশ্ন, নৈর্ব্যত্তিক অথবা কুইজ চেক করতে পারেন। আপনি চাইলে আমাদের যে কোন কোর্স কিনতে পারেন।\n\nআমরাই বাংলাদেশে প্রথম 3D ইন্টার‌্যাক্টিভ লাইভ ক্লাস শুরু করেছি যেখানে  প্রতিটি পড়ার বাস্তবিক বিষয় দেখানো হয়। এছাড়াও আমাদের ইন্টার‌্যাক্টিভ কোর্স রয়েছে যেখানে আপনি যে কোন লেখাকে টাস করতে পারবেন। যেখানে টাস করবেন সেখান থেকে অ্যানিমেশন চলবে ঠিক যেন গেমের মত অনুভূতি।\n\n<font color='#4CAF50'>চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।</font></string>
     <string name="empty_other_tab_data_text">এই কন্টেন্টর কাজ চলছে। খুব শীঘ্রই দেওয়া হবে। আপনি অন্যান্য বিষয় চেক করতে পারেন। আপনি চাইলে আমাদের যে কোন কোর্স কিনতে বা চেক করতে পারেন, কোর্সগুলোতে সব দেওয়া হয়েছে। চেক করার জন্য আপনাকে অসংখ্য ধন্যবাদ।</string>
+    <string name="titlePartnerPersonalInfo">পার্টনারের ব্যক্তিগত তথ্য</string>
+    <string name="titlePromoterPersonalInfo">প্রোমোটারের ব্যক্তিগত তথ্য</string>
 </resources>
