@@ -99,6 +99,13 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
             PaymentFragment.secondPackagePrice = course?.second_payment_amount ?: 0
             PaymentFragment.thirdPackagePrice = course?.third_payment_amount ?: 0
 
+            val firstDuration = course?.first_duration ?: "0"
+            val secondDuration = course?.second_duration ?: "0"
+            val thirdDuration = course?.third_duration ?: "0"
+            PaymentFragment.first_duration = firstDuration.toInt()
+            PaymentFragment.second_duration = secondDuration.toInt()
+            PaymentFragment.third_duration = thirdDuration.toInt()
+
             navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToPaymentNav(course?.book_id ?: 0, course?.title, course?.id ?:0, price, "", ""))
         }
 

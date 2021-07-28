@@ -64,249 +64,257 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:showLoader="@{viewModel.apiCallStatus}" />
 
-        <TextView
-            android:id="@+id/textView3"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
-            android:gravity="center"
-            android:text="কোর্সের মেয়াদ সিলেক্টশন করে কোড থাকলে কোড দিয়ে ডিস্কাউন্ট বাটনে চাপুন। এরপর পরিশোধ করুন"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-        <LinearLayout
-            android:id="@+id/linear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/toolbar"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/rounded_background_white"
-            android:orientation="vertical"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3"
-            app:layout_constraintVertical_bias="0.0">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="16dp"
-                android:gravity="center"
-                android:text="মেয়াদ সিলেক্ট করুন"
-                android:textColor="@color/themeTextColor"
-                android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_height="45dp"
-                android:background="@drawable/rounded_stroke_bg_spinner">
-                <Spinner
-                    android:id="@+id/spPackages"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/textView3"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:spinnerMode="dropdown"/>
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="16dp"
-                android:gravity="center"
-                android:text="কোড না থাকলে দিতে হবে না"
-                android:textColor="@color/themeTextColor"
-                android:textSize="18sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:background="@drawable/rounded_bg_promo_code">
-
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:background="@null"
-                    android:layout_marginStart="20dp"
-                    android:hint="কোড"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="16dp"
                     android:gravity="center"
-                    android:imeOptions="actionDone"
-                    android:inputType="text"
-                    android:textColorHint="@color/white"
-                    android:text="@={viewModel.promoCodeText}"
+                    android:text="কোর্সের মেয়াদ সিলেক্টশন করে কোড থাকলে কোড দিয়ে ডিস্কাউন্ট বাটনে চাপুন। এরপর পরিশোধ করুন"
                     android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:theme="@style/EditTextTheme" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnApply"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    app:cornerRadius="20dp"
-                    android:layout_marginStart="8dp"
-                    android:backgroundTint="@color/promo_button_state_colors"
-                    android:enabled="false"
-                    android:text="ডিস্কাউন্ট"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:textAllCaps="false"
-                    android:textColor="@color/button_text_enable_disable_colors"
                     android:textSize="18sp" />
+
+                <LinearLayout
+                    android:id="@+id/linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/toolbar"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/rounded_background_white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="16dp"
+                        android:gravity="center"
+                        android:text="মেয়াদ সিলেক্ট করুন"
+                        android:textColor="@color/themeTextColor"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/rounded_stroke_bg_spinner"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <Spinner
+                            android:id="@+id/spPackages"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="5dp"
+                            android:spinnerMode="dropdown" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="16dp"
+                        android:gravity="center"
+                        android:text="কোড না থাকলে দিতে হবে না"
+                        android:textColor="@color/themeTextColor"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/rounded_bg_promo_code"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="20dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="center"
+                            android:hint="কোড"
+                            android:imeOptions="actionDone"
+                            android:inputType="text"
+                            android:text="@={viewModel.promoCodeText}"
+                            android:textColor="@color/white"
+                            android:textColorHint="@color/white"
+                            android:textSize="18sp"
+                            android:theme="@style/EditTextTheme" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnApply"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="8dp"
+                            android:backgroundTint="@color/promo_button_state_colors"
+                            android:enabled="false"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"
+                            android:text="ডিস্কাউন্ট"
+                            android:textAllCaps="false"
+                            android:textColor="@color/button_text_enable_disable_colors"
+                            android:textSize="18sp"
+                            app:cornerRadius="20dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginEnd="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="কোর্স ফিঃ"
+                            android:textColor="@color/themeTextColor"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="৳"
+                            android:textColor="@color/themeTextColor"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:text="@{viewModel.packagePrice.toString()}"
+                            android:textColor="@color/themeTextColor"
+                            android:textSize="16sp"
+                            tools:text="750" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="ডিস্কাউন্টঃ"
+                            android:textColor="@color/themeTextColor"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="৳"
+                            android:textColor="@color/themeTextColor"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:text="@{viewModel.discount.toString()}"
+                            android:textColor="@color/themeTextColor"
+                            android:textSize="16sp"
+                            tools:text="750" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@color/themeTextColor" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="পরিশোধ করতে হবেঃ"
+                            android:textColor="@color/themeTextColor"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="৳"
+                            android:textColor="@color/themeTextColor"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:text="@{viewModel.amount.toString()}"
+                            android:textColor="@color/themeTextColor"
+                            android:textSize="16sp"
+                            tools:text="750" />
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPayNow"
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:layout_margin="20dp"
+                        android:backgroundTint="@color/button_enable_disable_colors"
+                        android:enabled="@{viewModel.amount > 0 ? true : false, default=false}"
+                        android:text="পরিশোধ করুন"
+                        android:textAllCaps="false"
+                        android:textColor="@color/button_text_enable_disable_colors"
+                        android:textSize="18sp"
+                        app:cornerRadius="23dp" />
+
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:orientation="horizontal"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="কোর্স ফিঃ"
-                    android:textColor="@color/themeTextColor"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="৳"
-                    android:textColor="@color/themeTextColor"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="1"
-                    android:text="@{viewModel.packagePrice.toString()}"
-                    android:textColor="@color/themeTextColor"
-                    android:textSize="16sp"
-                    tools:text="750" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="ডিস্কাউন্টঃ"
-                    android:textColor="@color/themeTextColor"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="৳"
-                    android:textColor="@color/themeTextColor"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="1"
-                    android:text="@{viewModel.discount.toString()}"
-                    android:textColor="@color/themeTextColor"
-                    android:textSize="16sp"
-                    tools:text="750" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@color/themeTextColor" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="পরিশোধ করতে হবেঃ"
-                    android:textColor="@color/themeTextColor"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="৳"
-                    android:textColor="@color/themeTextColor"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="1"
-                    android:text="@{viewModel.amount.toString()}"
-                    android:textColor="@color/themeTextColor"
-                    android:textSize="16sp"
-                    tools:text="750" />
-            </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnPayNow"
-                android:layout_width="match_parent"
-                android:layout_height="46dp"
-                android:layout_margin="20dp"
-                android:backgroundTint="@color/button_enable_disable_colors"
-                android:enabled="@{viewModel.amount > 0 ? true : false, default=false}"
-                android:text="পরিশোধ করুন"
-                android:textAllCaps="false"
-                android:textColor="@color/button_text_enable_disable_colors"
-                android:textSize="18sp"
-                app:cornerRadius="23dp" />
-
-        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -59,7 +59,7 @@ class MyCourseSliderAdapter(
             item.total_amount?.let { binding.totalAmount = "$it ${binding.root.context.getString(R.string.taka)}" }
             item.paid_amount?.let { binding.paidAmount = "$it ${binding.root.context.getString(R.string.taka)}" }
             item.due_amount?.let { binding.dueAmount = "$it ${binding.root.context.getString(R.string.taka)}" }
-            item.endtime?.let { binding.expirationDate = it }
+            item.expiredate?.let { binding.expirationDate = it }
             binding.url = "${Api.COURSE_IMAGE_ROOT_URL}${item.logo}"
 //            binding.url = "${ApiEndPoint.LOGO}/${item.logo}"
             binding.imageRequestListener = object: RequestListener<Drawable> {

@@ -39,6 +39,10 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         var firstPackageTitle = ""
         var secondPackageTitle = ""
         var thirdPackageTitle = ""
+
+        var first_duration = 0
+        var second_duration = 0
+        var third_duration = 0
     }
 
     override val bindingVariable: Int
@@ -59,6 +63,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
     private lateinit var packageAdapter: ArrayAdapter<String>
     private var titlePackageList = arrayOf("--সিলেক্ট করুন--")
+
+    private var courseDuration = 0
 
     override fun onResume() {
         super.onResume()
@@ -97,9 +103,18 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 id: Long
             ) {
                 when(position) {
-                    0 -> viewModel.packagePrice.postValue(firstPackagePrice)
-                    1 -> viewModel.packagePrice.postValue(secondPackagePrice)
-                    2 -> viewModel.packagePrice.postValue(thirdPackagePrice)
+                    0 -> {
+                        viewModel.packagePrice.postValue(firstPackagePrice)
+                        courseDuration = first_duration
+                    }
+                    1 -> {
+                        viewModel.packagePrice.postValue(secondPackagePrice)
+                        courseDuration = second_duration
+                    }
+                    2 -> {
+                        viewModel.packagePrice.postValue(thirdPackagePrice)
+                        courseDuration = third_duration
+                    }
                 }
             }
 
@@ -307,7 +322,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 viewModel.promoCode.value?.partner_id ?: 0
             ),
             CoursePaymentRequest(
-                userData.mobile, invoiceNumber,userData.id, args.courseId, args.coursePrice.toInt(), response.amount.toDouble().toInt()
+                userData.mobile, invoiceNumber,userData.id, args.courseId,
+                args.coursePrice.toInt(), response.amount.toDouble().toInt(), courseDuration
             )
         )
     }

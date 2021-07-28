@@ -21,6 +21,12 @@ import com.rtchubs.engineerbooks.prefs.AppPreferencesHelper
 import com.rtchubs.engineerbooks.ui.NavDrawerHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.isTimeAndZoneAutomatic
+import com.rtchubs.engineerbooks.util.showErrorToast
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel>() {
     override val bindingVariable: Int
@@ -124,13 +130,28 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
         }
 
         myCourseListAdapter = MyCourseSliderAdapter(userData.customer_type_id) { myCourse ->
-            val bookId = myCourse.book_id ?: return@MyCourseSliderAdapter
-            viewModel.getMyCourseBookFromDB(bookId).observe(viewLifecycleOwner, Observer {
-                val book = ClassWiseBook(it.id, it.udid,
-                    it.name, it.title, it.author, it.isPaid,
-                    it.book_type_id, it.price, it.status, it.logo)
-                navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book.id, book.title))
-            })
+            // First checks if the course is outdated or not
+            var expireDate: Date? = null
+            val dateFormat = SimpleDateFormat("dd-MM-yyyy")
+            try {
+                expireDate = dateFormat.parse(myCourse.expiredate ?: "") ?: return@MyCourseSliderAdapter
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+
+            val isCourseOutDated = Date().after(expireDate)
+
+            if (isCourseOutDated) {
+                showErrorToast(requireContext(), "কোর্সের মেয়াদ শেষ!, কোর্সটি পুনরায় চালু করতে পেমেন্ট করুন")
+            } else {
+                val bookId = myCourse.book_id ?: return@MyCourseSliderAdapter
+                viewModel.getMyCourseBookFromDB(bookId).observe(viewLifecycleOwner, Observer {
+                    val book = ClassWiseBook(it.id, it.udid,
+                        it.name, it.title, it.author, it.isPaid,
+                        it.book_type_id, it.price, it.status, it.logo)
+                    navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book.id, book.title))
+                })
+            }
 
 //            if (userData.customer_type_id == 2) {
 //                navController.navigate(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book))
@@ -289,7 +310,32 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
         })
 
         viewModel.myCourses.observe(viewLifecycleOwner, Observer {
-            viewModel.saveMyCoursesInDB(it ?: ArrayList())
+            val myCourses = it ?: ArrayList()
+            val myCourseList = ArrayList<MyCourse>()
+            for (course in myCourses) {
+                var purchaseDate = Date()
+                val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                try {
+                    purchaseDate = format.parse(course.date ?: "") ?: continue
+                } catch (e: ParseException) {
+                    e.printStackTrace()
+                }
+                val duration = course.duration ?: 0
+                val date = Calendar.getInstance()
+                date.time = purchaseDate
+                date[Calendar.DATE] = date[Calendar.DATE] + duration
+
+                var expireDate = ""
+                val dateFormat = SimpleDateFormat("dd-MM-yyyy")
+                try {
+                    expireDate = dateFormat.format(date.time) ?: continue
+                } catch (e: ParseException) {
+                    e.printStackTrace()
+                }
+                course.expiredate = expireDate
+                myCourseList.add(course)
+            }
+            viewModel.saveMyCoursesInDB(myCourseList)
         })
 
         viewModel.allMyCoursesFromDB.observe(viewLifecycleOwner, Observer {
