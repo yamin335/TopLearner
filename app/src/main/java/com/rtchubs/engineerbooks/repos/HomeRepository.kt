@@ -63,19 +63,19 @@ class HomeRepository @Inject constructor(@Named("auth") private val authApiServi
 
     suspend fun allCourseRepo(): Response<CourseCategoryResponse> {
         return withContext(Dispatchers.IO) {
-            apiService.getAllCourse()
+            authApiService.getAllCourse()
         }
     }
 
     suspend fun myCoursesRepo(request: MyCourseListRequest): Response<MyCourseListResponse> {
         return withContext(Dispatchers.IO) {
-            apiService.getAllMyCourses(Gson().toJson(request))
+            authApiService.getAllMyCourses(Gson().toJson(request))
         }
     }
 
     suspend fun allFaqRepo(): Response<AllFaqResponse> {
         return withContext(Dispatchers.IO) {
-            apiService.getAllFaqs()
+            authApiService.getAllFaqs()
         }
     }
 

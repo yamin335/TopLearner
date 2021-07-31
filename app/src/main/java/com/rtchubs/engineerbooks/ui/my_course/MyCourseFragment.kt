@@ -131,7 +131,7 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
 
         myCourseListAdapter = MyCourseSliderAdapter(userData.customer_type_id) { myCourse ->
             // First checks if the course is outdated or not
-            var expireDate: Date? = null
+            var expireDate = Date()
             val dateFormat = SimpleDateFormat("dd-MM-yyyy")
             try {
                 expireDate = dateFormat.parse(myCourse.expiredate ?: "") ?: return@MyCourseSliderAdapter
@@ -139,9 +139,14 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
                 e.printStackTrace()
             }
 
-            val isCourseOutDated = Date().after(expireDate)
+            val date = Calendar.getInstance()
+            date.time = expireDate
+            date[Calendar.DATE] = date[Calendar.DATE] + 1
+            expireDate = date.time
+            val isCourseOutDated = Date().before(expireDate)
+            //val isCourseOutDated = expireDate.before(Date())
 
-            if (isCourseOutDated) {
+            if (!isCourseOutDated) {
                 showErrorToast(requireContext(), "কোর্সের মেয়াদ শেষ!, কোর্সটি পুনরায় চালু করতে পেমেন্ট করুন")
             } else {
                 val bookId = myCourse.book_id ?: return@MyCourseSliderAdapter
