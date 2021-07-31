@@ -177,8 +177,7 @@ class HomeViewModel @Inject constructor(
                             courseCategories.add(CourseCategory(key, categoryName, courseList))
                         }
 
-
-                        allCourseCategoryList.postValue(courseCategories)
+                        saveCourseCategoriesInDB(courseCategories)
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)

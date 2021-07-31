@@ -4,8 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
@@ -17,7 +15,6 @@ import com.rtchubs.engineerbooks.models.registration.InquiryAccount
 import com.rtchubs.engineerbooks.ui.OTPHandlerCallback
 import com.rtchubs.engineerbooks.ui.common.BaseFragment
 import com.rtchubs.engineerbooks.util.AppConstants
-import com.rtchubs.engineerbooks.util.AppConstants.TERMS_AND_CONDITIONS_URL
 import com.rtchubs.engineerbooks.util.showErrorToast
 
 
@@ -78,15 +75,15 @@ class TermsAndConditionsFragment : BaseFragment<TermsBinding, TermsViewModel>() 
             viewDataBinding.btnAccept.isEnabled = it != ApiCallStatus.LOADING
         })
 
-        viewDataBinding.webView.settings.javaScriptEnabled = true
-        viewDataBinding.webView.settings.loadWithOverviewMode = true
-
-        viewDataBinding.webView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                return false
-            }
-        }
-        viewDataBinding.webView.loadUrl(TERMS_AND_CONDITIONS_URL)
+//        viewDataBinding.webView.settings.javaScriptEnabled = true
+//        viewDataBinding.webView.settings.loadWithOverviewMode = true
+//
+//        viewDataBinding.webView.webViewClient = object : WebViewClient() {
+//            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+//                return false
+//            }
+//        }
+//        viewDataBinding.webView.loadUrl(TERMS_AND_CONDITIONS_URL)
     }
 
     private fun requestOTPCode(registrationHelper: InquiryAccount) {

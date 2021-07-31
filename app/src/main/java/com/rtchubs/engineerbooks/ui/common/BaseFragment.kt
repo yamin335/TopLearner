@@ -16,8 +16,7 @@
 
 package com.rtchubs.engineerbooks.ui.common
 
-import android.content.Context
-import android.content.DialogInterface
+import android.content.*
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -33,6 +32,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -42,6 +42,7 @@ import com.rtchubs.engineerbooks.AppExecutors
 import com.rtchubs.engineerbooks.R
 import com.rtchubs.engineerbooks.prefs.PreferencesHelper
 import com.rtchubs.engineerbooks.ui.NavigationHost
+import com.rtchubs.engineerbooks.util.AppConstants
 import com.rtchubs.engineerbooks.util.NetworkUtils
 import com.rtchubs.engineerbooks.util.autoCleared
 import com.rtchubs.engineerbooks.util.showErrorToast
@@ -110,6 +111,20 @@ abstract class BaseFragment<T : ViewDataBinding, V : ViewModel> : DaggerFragment
     @Inject
     lateinit var preferencesHelper: PreferencesHelper
 
+    lateinit var logoutReceiver: BroadcastReceiver
+
+    override fun onResume() {
+        super.onResume()
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(logoutReceiver,
+            IntentFilter(AppConstants.TYPE_LOAD_PDF)
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(logoutReceiver)
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is NavigationHost) {
@@ -120,6 +135,17 @@ abstract class BaseFragment<T : ViewDataBinding, V : ViewModel> : DaggerFragment
     override fun onDetach() {
         super.onDetach()
         navHost = null
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        logoutReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action != null && intent.action == AppConstants.TYPE_LOG_OUT) {
+                    showErrorToast(requireContext(), "Error")
+                }
+            }
+        }
     }
 
     fun registerToolbar(toolbar: MaterialToolbar) {
@@ -144,6 +170,13 @@ abstract class BaseFragment<T : ViewDataBinding, V : ViewModel> : DaggerFragment
         viewDataBinding.setVariable(bindingVariable, viewModel)
         viewDataBinding.lifecycleOwner = viewLifecycleOwner
         viewDataBinding.executePendingBindings()
+        logoutReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action != null && intent.action == AppConstants.TYPE_LOG_OUT) {
+                    showErrorToast(requireContext(), "Error")
+                }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

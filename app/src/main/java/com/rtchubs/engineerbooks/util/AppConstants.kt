@@ -25,6 +25,7 @@ object AppConstants {
     const val typePdf = "pdf"
     const val typeVideo = "video"
     const val TYPE_LOAD_PDF = "loadPdf"
+    const val TYPE_LOG_OUT = "LogOut"
     const val PDF_FILE_PATH = "pdfFilePath"
     const val generalUserTypeID = 1
     const val adminUserTypeID = 2

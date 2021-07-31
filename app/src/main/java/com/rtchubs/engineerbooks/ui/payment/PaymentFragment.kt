@@ -89,7 +89,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewModel.packagePrice.postValue(secondPackagePrice)
 
-        titlePackageList = arrayOf(firstPackageTitle, secondPackageTitle, thirdPackageTitle)
+        titlePackageList = arrayOf("$firstPackageTitle, মেয়াদঃ $first_duration দিন", "$secondPackageTitle, মেয়াদঃ $second_duration দিন", "$thirdPackageTitle, মেয়াদঃ $third_duration দিন")
         packageAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, titlePackageList)
         packageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         viewDataBinding.spPackages.adapter = packageAdapter

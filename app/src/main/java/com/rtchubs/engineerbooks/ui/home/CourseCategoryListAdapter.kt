@@ -48,7 +48,7 @@ class CourseCategoryListAdapter(
 
         binding.courseRecycler.adapter = courseAdapter
         val courseList = item.courses?.filter {
-            val status = it.status ?: 1
+            val status = it.status ?: 0
             status == 1
         }
         //courseAdapter.submitList(item.courses)

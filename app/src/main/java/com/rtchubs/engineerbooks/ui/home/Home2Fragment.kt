@@ -113,6 +113,10 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
             preferencesHelper.isDeviceTimeChanged = true
         }
+
+        viewModel.getAllCourses()
+        viewModel.getAllFreeBooks()
+        viewModel.getAcademicClass()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -145,13 +149,9 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
 
         viewDataBinding.courseRecycler.adapter = courseCategoryListAdapter
 
-        viewModel.allCourseCategoryList.observe(viewLifecycleOwner, Observer { courseCategories ->
-            viewModel.saveCourseCategoriesInDB(courseCategories ?: ArrayList())
+        viewModel.apiCallStatus.observe(viewLifecycleOwner, Observer {
+            viewDataBinding.swipeRefresh.isRefreshing = it == ApiCallStatus.LOADING
         })
-
-        viewModel.getAllCourses()
-        viewModel.getAllFreeBooks()
-        viewModel.getAcademicClass()
 
         viewModel.allCourseCategoriesFromDB.observe(viewLifecycleOwner, Observer {
             if (!it.isNullOrEmpty()) {
@@ -159,6 +159,12 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
             }
             courseCategoryListAdapter.submitList(it)
         })
+
+        viewDataBinding.swipeRefresh.setOnRefreshListener {
+            viewModel.getAllCourses()
+            viewModel.getAllFreeBooks()
+            viewModel.getAcademicClass()
+        }
 
 
 //        courseCategoryListAdapter = CourseCategoryListAdapter(appExecutors) {
