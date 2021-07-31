@@ -43,10 +43,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    val allCourseCategoryList: MutableLiveData<List<CourseCategory>> by lazy {
-        MutableLiveData<List<CourseCategory>>()
-    }
-
     private fun updateClassesInDB(classes: List<AcademicClass>) {
         try {
             val handler = CoroutineExceptionHandler { _, exception ->
