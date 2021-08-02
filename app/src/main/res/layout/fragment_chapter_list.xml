@@ -6,7 +6,7 @@
     <data class="ChapterListFragmentBinding">
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.chapter_list.ChapterListViewModel" />
+            type="com.engineersapps.eapps.ui.chapter_list.ChapterListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

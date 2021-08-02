@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.otp_signin.OtpSignInViewModel" />
+            type="com.engineersapps.eapps.ui.otp_signin.OtpSignInViewModel" />
     </data>
 
     <RelativeLayout

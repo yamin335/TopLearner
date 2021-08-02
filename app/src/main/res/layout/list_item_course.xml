@@ -14,7 +14,7 @@
             type="String" />
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.home.Course" />
+            type="com.engineersapps.eapps.models.home.Course" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

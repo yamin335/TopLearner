@@ -7,7 +7,7 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.payment.PaymentViewModel" />
+            type="com.engineersapps.eapps.ui.payment.PaymentViewModel" />
     </data>
 
 
@@ -95,6 +95,7 @@
                     android:layout_below="@id/toolbar"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="24dp"
+                    android:layout_marginBottom="100dp"
                     android:layout_marginEnd="20dp"
                     android:background="@drawable/rounded_background_white"
                     android:orientation="vertical">
@@ -115,7 +116,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="45dp"
+                        android:layout_height="55dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
@@ -163,7 +164,7 @@
                             android:imeOptions="actionDone"
                             android:inputType="text"
                             android:text="@={viewModel.promoCodeText}"
-                            android:textColor="@color/white"
+                            android:textColor="@color/themeTextColor"
                             android:textColorHint="@color/white"
                             android:textSize="18sp"
                             android:theme="@style/EditTextTheme" />
@@ -179,6 +180,7 @@
                             android:insetBottom="0dp"
                             android:paddingStart="20dp"
                             android:paddingEnd="20dp"
+                            android:gravity="center"
                             android:text="ডিস্কাউন্ট"
                             android:textAllCaps="false"
                             android:textColor="@color/button_text_enable_disable_colors"

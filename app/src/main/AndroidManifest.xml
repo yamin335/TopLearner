@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.rtchubs.engineerbooks">
+    package="com.engineersapps.eapps">
     <!-- Enable instant app support -->
     <dist:module dist:instant="true" /> <!-- Declare features -->
     <uses-feature
@@ -17,7 +17,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
-        android:name=".App"
+        android:name="com.engineersapps.eapps.App"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -31,10 +31,10 @@
         android:versionName="1.0.0"
         tools:ignore="AllowBackup"
         tools:targetApi="m">
-        <activity android:name=".ui.LiveClassActivity"
+        <activity android:name="com.engineersapps.eapps.ui.LiveClassActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".camerax.CameraXActivity"
+            android:name="com.engineersapps.eapps.camerax.CameraXActivity"
             android:rotationAnimation="seamless"
             android:screenOrientation="fullUser"
             android:theme="@style/AppTheme.CameraXTheme"
@@ -69,7 +69,7 @@
         </activity>
 
         <receiver
-            android:name=".ui.receiver.TimeChangeBroadcastReceiver"
+            android:name="com.engineersapps.eapps.ui.receiver.TimeChangeBroadcastReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.TIME_SET" />
@@ -78,12 +78,12 @@
         </receiver>
 
         <service
-            android:name=".services.DownloadService"
+            android:name="com.engineersapps.eapps.services.DownloadService"
             android:enabled="true"
             android:exported="false" />
 
         <activity
-            android:name=".ui.LoginActivity"
+            android:name="com.engineersapps.eapps.ui.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|adjustPan">
             <intent-filter>
@@ -93,7 +93,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.engineersapps.eapps.ui.MainActivity"
             android:clearTaskOnLaunch="true"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:rotationAnimation="seamless"
@@ -120,7 +120,7 @@
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="barcode,face,ocr,ica" />
 
-        <receiver android:name=".SyncOnConnectivityReceiver" /> <!-- to disable default workmanager initiation -->
+        <receiver android:name="com.engineersapps.eapps.SyncOnConnectivityReceiver" /> <!-- to disable default workmanager initiation -->
         <provider
             android:name="androidx.work.impl.WorkManagerInitializer"
             android:authorities="${applicationId}.workmanager-init"

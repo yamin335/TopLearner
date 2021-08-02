@@ -8,7 +8,7 @@
     <fragment
         tools:layout="@layout/fragment_main2"
         android:id="@+id/home2Fragment"
-        android:name="com.rtchubs.engineerbooks.ui.home.Home2Fragment"
+        android:name="com.engineersapps.eapps.ui.home.Home2Fragment"
         android:label="QPay" >
         <action
             android:id="@+id/action_home2Fragment_to_chapter_nav"
@@ -39,12 +39,12 @@
 
     <fragment
         android:id="@+id/courseDetailsFragment"
-        android:name="com.rtchubs.engineerbooks.ui.home.CourseDetailsFragment"
+        android:name="com.engineersapps.eapps.ui.home.CourseDetailsFragment"
         android:label="CourseDetailsFragment"
         tools:layout="@layout/fragment_course_details">
 <!--        <argument-->
 <!--            android:name="course"-->
-<!--            app:argType="com.rtchubs.engineerbooks.models.home.Course" />-->
+<!--            app:argType="engineersappsrsapps.eapps.models.home.Course" />-->
         <action
             android:id="@+id/action_courseDetailsFragment_to_payment_nav"
             app:destination="@id/payment_nav"

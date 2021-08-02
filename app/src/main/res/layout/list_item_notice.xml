@@ -6,7 +6,7 @@
     <data class="NoticeListitemBinding">
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.notice_board.Notice" />
+            type="com.engineersapps.eapps.models.notice_board.Notice" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

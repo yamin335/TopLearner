@@ -6,7 +6,7 @@
     <data class="OfferFragmentBinding">
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.offer.OfferViewModel" />
+            type="com.engineersapps.eapps.ui.offer.OfferViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

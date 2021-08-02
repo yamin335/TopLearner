@@ -11,7 +11,7 @@
             type="String" />
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.home.Teacher" />
+            type="com.engineersapps.eapps.models.home.Teacher" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"

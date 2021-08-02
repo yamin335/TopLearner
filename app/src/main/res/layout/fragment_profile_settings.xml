@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.profiles.ProfileSettingsViewModel" />
+            type="com.engineersapps.eapps.ui.profiles.ProfileSettingsViewModel" />
     </data>
 
     <LinearLayout

@@ -6,7 +6,7 @@
     <data class="NoticeboardFragmentBinding">
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.notice_board.NoticeBoardViewModel" />
+            type="com.engineersapps.eapps.ui.notice_board.NoticeBoardViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -6,7 +6,7 @@
     <data class="HistoryFragmentBinding">
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.history.HistoryViewModel" />
+            type="com.engineersapps.eapps.ui.history.HistoryViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

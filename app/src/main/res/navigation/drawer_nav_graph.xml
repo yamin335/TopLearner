@@ -5,6 +5,6 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.rtchubs.engineerbooks.ui.settings.SettingsFragment"
+        android:name="com.engineersapps.eapps.ui.settings.SettingsFragment"
         android:label="SettingsFragment" />
 </navigation>

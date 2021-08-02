@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/chapterListFragment"
-        android:name="com.rtchubs.engineerbooks.ui.chapter_list.ChapterListFragment"
+        android:name="com.engineersapps.eapps.ui.chapter_list.ChapterListFragment"
         android:label="Chapters"
         tools:layout="@layout/fragment_chapter_list">
 
@@ -32,12 +32,12 @@
 
     <fragment
         android:id="@+id/loadWebViewFragment"
-        android:name="com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment"
+        android:name="com.engineersapps.eapps.ui.video_play.LoadWebViewFragment"
         android:label="Video"
         tools:layout="@layout/fragment_load_web_view">
         <argument
             android:name="chapter"
-            app:argType="com.rtchubs.engineerbooks.models.chapter.BookChapter" />
+            app:argType="com.engineersapps.eapps.models.chapter.BookChapter" />
     </fragment>
 
 </navigation>

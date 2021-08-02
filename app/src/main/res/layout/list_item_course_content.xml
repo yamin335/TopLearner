@@ -4,7 +4,7 @@
     <data class="CourseDetailsSubjectListItemBinding">
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.home.CourseChapter" />
+            type="com.engineersapps.eapps.models.home.CourseChapter" />
     </data>
     <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/cardSubject"

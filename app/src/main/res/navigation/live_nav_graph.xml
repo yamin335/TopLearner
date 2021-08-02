@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/liveFragment"
-        android:name="com.rtchubs.engineerbooks.ui.live_video.LiveVideoFragment"
+        android:name="com.engineersapps.eapps.ui.live_video.LiveVideoFragment"
         android:label="Live"
         tools:layout="@layout/fragment_live_video" >
         <action
@@ -18,7 +18,7 @@
     <include app:graph="@navigation/drawer_nav_graph" />
     <fragment
         android:id="@+id/liveClassScheduleFragment"
-        android:name="com.rtchubs.engineerbooks.ui.live_class_schedule.LiveClassScheduleFragment"
+        android:name="com.engineersapps.eapps.ui.live_class_schedule.LiveClassScheduleFragment"
         tools:layout="@layout/fragment_live_class_schedule">
         <argument
             android:name="liveClassTypeID"

@@ -9,7 +9,7 @@
     <!--Splash Screen-->
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.rtchubs.engineerbooks.ui.splash.SplashFragment"
+        android:name="com.engineersapps.eapps.ui.splash.SplashFragment"
         tools:layout="@layout/fragment_splash">
         <action
             android:id="@+id/action_splashFragment_to_signInFragment"
@@ -24,13 +24,13 @@
 
     <fragment
         android:id="@+id/viewPagerFragment"
-        android:name="com.rtchubs.engineerbooks.ui.login.ViewPagerFragment"
+        android:name="com.engineersapps.eapps.ui.login.ViewPagerFragment"
         tools:layout="@layout/fragment_view_pager">
     </fragment>
 
     <fragment
         android:id="@+id/termsAndConditions"
-        android:name="com.rtchubs.engineerbooks.ui.terms_and_conditions.TermsAndConditionsFragment"
+        android:name="com.engineersapps.eapps.ui.terms_and_conditions.TermsAndConditionsFragment"
         tools:layout="@layout/fragment_terms_and_condition">
 
         <action
@@ -43,12 +43,12 @@
 
         <argument
             android:name="registrationHelper"
-            app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />
+            app:argType="com.engineersapps.eapps.models.registration.InquiryAccount" />
     </fragment>
 
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.rtchubs.engineerbooks.ui.login.SignInFragment"
+        android:name="com.engineersapps.eapps.ui.login.SignInFragment"
         tools:layout="@layout/fragment_sign_in">
 
         <action
@@ -70,7 +70,7 @@
     </fragment>
     <fragment
         android:id="@+id/otpSignInFragment"
-        android:name="com.rtchubs.engineerbooks.ui.otp_signin.OtpSignInFragment"
+        android:name="com.engineersapps.eapps.ui.otp_signin.OtpSignInFragment"
         tools:layout="@layout/fragment_otp_sign_in">
         <!--        <action-->
 <!--            android:id="@+id/action_otpSignInFragment_to_pinNumberFragment"-->
@@ -83,7 +83,7 @@
 <!--            app:popUpToInclusive="false" />-->
         <argument
             android:name="registrationHelper"
-            app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />
+            app:argType="com.engineersapps.eapps.models.registration.InquiryAccount" />
         <action
             android:id="@+id/action_otpSignInFragment_to_pinNumberFragment"
             app:destination="@id/pinNumberFragment"
@@ -94,11 +94,11 @@
     </fragment>
     <fragment
         android:id="@+id/pinNumberFragment"
-        android:name="com.rtchubs.engineerbooks.ui.pin_number.PinNumberFragment"
+        android:name="com.engineersapps.eapps.ui.pin_number.PinNumberFragment"
         tools:layout="@layout/fragment_pin_number">
         <argument
             android:name="registrationHelper"
-            app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />
+            app:argType="com.engineersapps.eapps.models.registration.InquiryAccount" />
         <action
             android:id="@+id/action_pinNumberFragment_to_profileSignInFragment"
             app:destination="@id/profileSignInFragment"
@@ -109,7 +109,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileSignInFragment"
-        android:name="com.rtchubs.engineerbooks.ui.profile_signin.ProfileSignInFragment"
+        android:name="com.engineersapps.eapps.ui.profile_signin.ProfileSignInFragment"
         tools:layout="@layout/fragment_profile_sign_in">
         <action
             android:id="@+id/action_profileSignInFragment_to_signInFragment"
@@ -123,7 +123,7 @@
             app:popUpToInclusive="true" />
         <argument
             android:name="registrationHelper"
-            app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />
+            app:argType="com.engineersapps.eapps.models.registration.InquiryAccount" />
         <action
             android:id="@+id/action_profileSignInFragment_to_classEditFragment1"
             app:destination="@id/classEditFragment1"
@@ -148,11 +148,11 @@
     </fragment>
     <fragment
         android:id="@+id/permissionsFragment"
-        android:name="com.rtchubs.engineerbooks.camerax.PermissionsFragment"
+        android:name="com.engineersapps.eapps.camerax.PermissionsFragment"
         android:label="PermissionsFragment">
         <argument
             android:name="registrationHelper"
-            app:argType="com.rtchubs.engineerbooks.models.registration.InquiryAccount" />
+            app:argType="com.engineersapps.eapps.models.registration.InquiryAccount" />
         <action
             android:id="@+id/action_permissionsFragment_to_profileSignInFragment"
             app:destination="@id/profileSignInFragment"
@@ -164,12 +164,12 @@
 
     <fragment
         android:id="@+id/districtEditFragment1"
-        android:name="com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment"
+        android:name="com.engineersapps.eapps.ui.profile_signin.DistrictEditFragment"
         android:label="Select District"
         tools:layout="@layout/fragment_district_edit"/>
     <fragment
         android:id="@+id/upazillaEditFragment1"
-        android:name="com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment"
+        android:name="com.engineersapps.eapps.ui.profile_signin.UpazillaEditFragment"
         android:label="Select Upazilla"
         tools:layout="@layout/fragment_upazilla_edit">
         <argument
@@ -178,7 +178,7 @@
     </fragment>
     <fragment
         android:id="@+id/classEditFragment1"
-        android:name="com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment"
+        android:name="com.engineersapps.eapps.ui.profile_signin.ClassEditFragment"
         android:label="Select Class"
         tools:layout="@layout/fragment_class_edit"/>
 

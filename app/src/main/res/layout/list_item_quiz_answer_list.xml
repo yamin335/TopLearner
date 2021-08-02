@@ -6,7 +6,7 @@
         <import type="android.view.View"/>
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.QuizAnswerItem" />
+            type="com.engineersapps.eapps.models.QuizAnswerItem" />
 
         <variable
             name="isSelected"

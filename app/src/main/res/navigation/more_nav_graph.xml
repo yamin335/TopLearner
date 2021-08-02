@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/moreFragment"
-        android:name="com.rtchubs.engineerbooks.ui.more.MoreFragment"
+        android:name="com.engineersapps.eapps.ui.more.MoreFragment"
         android:label="More"
         tools:layout="@layout/fragment_more" >
         <action
@@ -68,14 +68,14 @@
             app:popExitAnim="@anim/slide_out_right">
             <argument
                 android:name="book"
-                app:argType="com.rtchubs.engineerbooks.models.home.PaidBook" />
+                app:argType="com.engineersapps.eapps.models.home.PaidBook" />
         </action>
 
     </fragment>
 
     <fragment
         android:id="@+id/profileSettingsFragment"
-        android:name="com.rtchubs.engineerbooks.ui.profiles.ProfileSettingsFragment"
+        android:name="com.engineersapps.eapps.ui.profiles.ProfileSettingsFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile_settings" >
         <action
@@ -103,12 +103,12 @@
     <include app:graph="@navigation/drawer_nav_graph" />
     <fragment
         android:id="@+id/districtEditFragment"
-        android:name="com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditFragment"
+        android:name="com.engineersapps.eapps.ui.profile_signin.DistrictEditFragment"
         android:label="Select District"
         tools:layout="@layout/fragment_district_edit"/>
     <fragment
         android:id="@+id/upazillaEditFragment"
-        android:name="com.rtchubs.engineerbooks.ui.profile_signin.UpazillaEditFragment"
+        android:name="com.engineersapps.eapps.ui.profile_signin.UpazillaEditFragment"
         android:label="Select Upazilla"
         tools:layout="@layout/fragment_upazilla_edit">
         <argument
@@ -117,37 +117,37 @@
     </fragment>
     <fragment
         android:id="@+id/classEditFragment"
-        android:name="com.rtchubs.engineerbooks.ui.profile_signin.ClassEditFragment"
+        android:name="com.engineersapps.eapps.ui.profile_signin.ClassEditFragment"
         android:label="Select Class"
         tools:layout="@layout/fragment_class_edit"/>
     <fragment
         android:id="@+id/noticeBoardFragment"
-        android:name="com.rtchubs.engineerbooks.ui.notice_board.NoticeBoardFragment"
+        android:name="com.engineersapps.eapps.ui.notice_board.NoticeBoardFragment"
         android:label="Notice Board"
         tools:layout="@layout/fragment_notice_board"/>
     <fragment
         android:id="@+id/offerFragment"
-        android:name="com.rtchubs.engineerbooks.ui.offer.OfferFragment"
+        android:name="com.engineersapps.eapps.ui.offer.OfferFragment"
         android:label="Offers"
         tools:layout="@layout/fragment_offer"/>
     <fragment
         android:id="@+id/ecodeFragment"
-        android:name="com.rtchubs.engineerbooks.ui.e_code.ECodeFragment"
+        android:name="com.engineersapps.eapps.ui.e_code.ECodeFragment"
         android:label="E-Code"
         tools:layout="@layout/fragment_e_code"/>
     <fragment
         android:id="@+id/aboutUsFragment"
-        android:name="com.rtchubs.engineerbooks.ui.about_us.AboutUsFragment"
+        android:name="com.engineersapps.eapps.ui.about_us.AboutUsFragment"
         android:label="About Us"
         tools:layout="@layout/fragment_about_us"/>
     <fragment
         android:id="@+id/partnerProfileFragment"
-        android:name="com.rtchubs.engineerbooks.ui.profiles.PartnerProfileFragment"
+        android:name="com.engineersapps.eapps.ui.profiles.PartnerProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile_partner"/>
     <fragment
         android:id="@+id/transactionFragment"
-        android:name="com.rtchubs.engineerbooks.ui.transaction.TransactionFragment"
+        android:name="com.engineersapps.eapps.ui.transaction.TransactionFragment"
         android:label="Transactions"
         tools:layout="@layout/fragment_transaction" />
     <include app:graph="@navigation/payment_nav_graph" />

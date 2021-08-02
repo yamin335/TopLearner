@@ -5,7 +5,7 @@
     <data class="CourseDetailsFragmentBinding">
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.home.CourseDetailsViewModel" />
+            type="com.engineersapps.eapps.ui.home.CourseDetailsViewModel" />
     </data>
     <RelativeLayout
         android:layout_width="match_parent"

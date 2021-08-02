@@ -5,7 +5,7 @@
     <data class="VideoListItemBinding">
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.chapter.ChapterField" />
+            type="com.engineersapps.eapps.models.chapter.ChapterField" />
         <import type="com.bumptech.glide.request.RequestListener"/>
         <import type="android.graphics.drawable.Drawable"/>
         <variable

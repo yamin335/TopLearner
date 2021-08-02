@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/paymentFragment"
-        android:name="com.rtchubs.engineerbooks.ui.payment.PaymentFragment"
+        android:name="com.engineersapps.eapps.ui.payment.PaymentFragment"
         android:label="Payment"
         tools:layout="@layout/fragment_payment">
         <argument

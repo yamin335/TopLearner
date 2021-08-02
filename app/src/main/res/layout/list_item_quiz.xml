@@ -5,7 +5,7 @@
     <data class="QuizListItemBinding">
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.QuizItem" />
+            type="com.engineersapps.eapps.models.QuizItem" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

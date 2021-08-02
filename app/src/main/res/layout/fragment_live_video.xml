@@ -7,7 +7,7 @@
     <data class="LiveVideoFragmentBinding">
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.live_video.LiveVideoViewModel" />
+            type="com.engineersapps.eapps.ui.live_video.LiveVideoViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

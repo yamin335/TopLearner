@@ -4,7 +4,7 @@
     <data class="FaqListItemBinding">
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.faq.Faq" />
+            type="com.engineersapps.eapps.models.faq.Faq" />
     </data>
     <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/cardSubject"

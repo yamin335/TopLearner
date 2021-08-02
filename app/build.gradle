@@ -12,7 +12,7 @@ android {
         config {
             storeFile file('../idc_keystore')
             storePassword 'Idc123$..'
-            keyAlias = 'rtchubs'
+            keyAlias = 'engineersapps'
             keyPassword 'Idc123$..'
         }
     }*/
@@ -20,7 +20,7 @@ android {
     compileSdkVersion build_versions.target_sdk
 
     defaultConfig {
-        applicationId "com.rtchubs.engineerbooks"
+        applicationId "com.engineersapps.eapps"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
         versionCode 1
@@ -166,8 +166,8 @@ dependencies {
     /*for fcm*/
 //    implementation deps.firebase.messaging
     /*for face detection*/
-    implementation deps.firebase.ml_vision
-    implementation deps.firebase.ml_vision_face_model
+    //implementation deps.firebase.ml_vision
+    //implementation deps.firebase.ml_vision_face_model
     /*picasso*/
     //implementation deps.picasso
     /*cropper*/

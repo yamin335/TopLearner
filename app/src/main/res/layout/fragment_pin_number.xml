@@ -7,7 +7,7 @@
     <data class="PinNumberBinding">
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.pin_number.PinNumberViewModel" />
+            type="com.engineersapps.eapps.ui.pin_number.PinNumberViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

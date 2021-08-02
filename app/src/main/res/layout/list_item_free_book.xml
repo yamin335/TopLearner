@@ -15,7 +15,7 @@
             type="String" />
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.home.ClassWiseBook" />
+            type="com.engineersapps.eapps.models.home.ClassWiseBook" />
     </data>
 
     <com.google.android.material.circularreveal.cardview.CircularRevealCardView

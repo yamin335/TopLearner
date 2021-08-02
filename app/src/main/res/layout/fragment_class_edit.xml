@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.profile_signin.ClassEditViewModel" />
+            type="com.engineersapps.eapps.ui.profile_signin.ClassEditViewModel" />
     </data>
 
     <RelativeLayout

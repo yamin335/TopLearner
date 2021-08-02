@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.profile_signin.DistrictEditViewModel" />
+            type="com.engineersapps.eapps.ui.profile_signin.DistrictEditViewModel" />
     </data>
 
     <RelativeLayout

@@ -5,7 +5,7 @@
     <data class="TermsBinding">
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.terms_and_conditions.TermsViewModel" />
+            type="com.engineersapps.eapps.ui.terms_and_conditions.TermsViewModel" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"

@@ -5,7 +5,7 @@
     <data class="HistoryListItemBinding">
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.local_db.dbo.HistoryItem" />
+            type="com.engineersapps.eapps.local_db.dbo.HistoryItem" />
         <import type="com.bumptech.glide.request.RequestListener"/>
         <import type="android.graphics.drawable.Drawable"/>
         <variable

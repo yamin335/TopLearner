@@ -6,7 +6,7 @@
     <data class="LiveClassScheduleItemBinding">
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.LiveClassSchedule" />
+            type="com.engineersapps.eapps.models.LiveClassSchedule" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

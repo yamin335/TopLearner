@@ -6,7 +6,7 @@
     <data class="TransactionFragmentBinding">
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.transaction.TransactionViewModel" />
+            type="com.engineersapps.eapps.ui.transaction.TransactionViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -3,7 +3,7 @@
     <data class="AnimationListItemBinding">
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.home.Animation" />
+            type="com.engineersapps.eapps.models.home.Animation" />
     </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

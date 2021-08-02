@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/myCourseFragment"
-        android:name="com.rtchubs.engineerbooks.ui.my_course.MyCourseFragment"
+        android:name="com.engineersapps.eapps.ui.my_course.MyCourseFragment"
         android:label="My Course"
         tools:layout="@layout/fragment_my_course" >
         <action

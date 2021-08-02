@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/freeBooksFragment"
-        android:name="com.rtchubs.engineerbooks.ui.free_book.FreeBooksFragment"
+        android:name="com.engineersapps.eapps.ui.free_book.FreeBooksFragment"
         android:label="Free Books"
         tools:layout="@layout/fragment_free_books" >
         <action
@@ -30,17 +30,17 @@
 
 <!--    <fragment-->
 <!--        android:id="@+id/chapterListFragment2"-->
-<!--        android:name="com.rtchubs.engineerbooks.ui.chapter_list.ChapterListFragment"-->
+<!--        android:name="engineersappsrsapps.eapps.ui.chapter_list.ChapterListFragment"-->
 <!--        android:label="Chapters"-->
 <!--        tools:layout="@layout/fragment_chapter_list">-->
 <!--        <argument-->
 <!--            android:name="book"-->
-<!--            app:argType="com.rtchubs.engineerbooks.models.home.ClassWiseBook" />-->
+<!--            app:argType="engineersappsrsapps.eapps.models.home.ClassWiseBook" />-->
 <!--    </fragment>-->
 
 <!--    <fragment-->
 <!--        android:id="@+id/payFragment"-->
-<!--        android:name="com.rtchubs.engineerbooks.ui.history.HistoryFragment"-->
+<!--        android:name="engineersappsrsapps.eapps.ui.history.HistoryFragment"-->
 <!--        android:label="Pay"-->
 <!--        tools:layout="@layout/fragment_history" >-->
 <!--        <action-->
@@ -56,11 +56,11 @@
     <include app:graph="@navigation/chapter_nav_graph" />
     <!--    <fragment-->
 <!--        android:id="@+id/loadWebViewFragment2"-->
-<!--        android:name="com.rtchubs.engineerbooks.ui.video_play.LoadWebViewFragment"-->
+<!--        android:name="engineersappsrsapps.eapps.ui.video_play.LoadWebViewFragment"-->
 <!--        android:label="LoadWebViewFragment"-->
 <!--        tools:layout="@layout/fragment_load_web_view">-->
 <!--        <argument-->
 <!--            android:name="chapter"-->
-<!--            app:argType="com.rtchubs.engineerbooks.models.chapter.BookChapter" />-->
+<!--            app:argType="engineersappsrsapps.eapps.models.chapter.BookChapter" />-->
 <!--    </fragment>-->
 </navigation>

@@ -3,7 +3,7 @@
 
     <data>
         <variable name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.MainActivityViewModel"/>
+            type="com.engineersapps.eapps.ui.MainActivityViewModel"/>
     </data>
 
     <FrameLayout

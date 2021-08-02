@@ -6,7 +6,7 @@
     <data class="LiveClassScheduleFragmentBinding">
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.live_class_schedule.LiveClassScheduleViewModel" />
+            type="com.engineersapps.eapps.ui.live_class_schedule.LiveClassScheduleViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

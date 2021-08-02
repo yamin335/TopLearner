@@ -8,7 +8,7 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.my_course.MyCourseViewModel" />
+            type="com.engineersapps.eapps.ui.my_course.MyCourseViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

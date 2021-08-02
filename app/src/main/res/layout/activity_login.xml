@@ -2,7 +2,7 @@
 <layout>
     <data class="LoginActivityBinding">
         <variable name="viewModel"
-            type="com.rtchubs.engineerbooks.ui.LoginActivityViewModel"/>
+            type="com.engineersapps.eapps.ui.LoginActivityViewModel"/>
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

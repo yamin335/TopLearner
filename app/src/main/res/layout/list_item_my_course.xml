@@ -27,7 +27,7 @@
             type="String" />
         <variable
             name="item"
-            type="com.rtchubs.engineerbooks.models.my_course.MyCourse" />
+            type="com.engineersapps.eapps.models.my_course.MyCourse" />
     </data>
 
     <RelativeLayout
