@@ -8,8 +8,6 @@ import android.view.WindowManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.TedPermission
 import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.api.ApiCallStatus
@@ -20,6 +18,8 @@ import com.engineersapps.eapps.ui.common.BaseFragment
 import com.engineersapps.eapps.util.hideKeyboard
 import com.engineersapps.eapps.util.showErrorToast
 import com.engineersapps.eapps.util.showSuccessToast
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.TedPermission
 
 class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), PermissionListener {
 
@@ -89,10 +89,7 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
             .setPermissions(
                 Manifest.permission.CAMERA,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_CONTACTS,
-                Manifest.permission.READ_SMS,
-                Manifest.permission.RECEIVE_SMS
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             ).check()
 
         registrationLocalHelper = args.registrationHelper
