@@ -1,7 +1,10 @@
 package com.engineersapps.eapps.ui.profiles
 
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -22,7 +25,6 @@ import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.BuildConfig
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.api.ApiEndPoint.PROFILE_IMAGES
-import com.engineersapps.eapps.camerax.CameraXActivity
 import com.engineersapps.eapps.databinding.ProfileSettingsFragmentBinding
 import com.engineersapps.eapps.models.registration.AcademicClass
 import com.engineersapps.eapps.models.registration.InquiryAccount
@@ -30,6 +32,9 @@ import com.engineersapps.eapps.ui.common.BaseFragment
 import com.engineersapps.eapps.ui.profile_signin.*
 import com.engineersapps.eapps.util.BitmapUtilss
 import com.engineersapps.eapps.util.BitmapUtilss.transformDrawable
+import com.engineersapps.eapps.util.PermissionUtils.isCameraAndGalleryPermissionGranted
+import com.engineersapps.eapps.util.PermissionUtils.isCameraPermission
+import com.engineersapps.eapps.util.PermissionUtils.isGalleryPermission
 import com.engineersapps.eapps.util.showErrorToast
 import com.engineersapps.eapps.util.showSuccessToast
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
@@ -40,7 +45,9 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+const val PERMISSION_REQUEST_CODE = 111
+const val FIL_ENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+const val PHOTO_EXTENSION = ".jpg"
 class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, ProfileSettingsViewModel>() {
 
     override val bindingVariable: Int
@@ -59,6 +66,9 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
     lateinit var profileCameraLauncher: ActivityResultLauncher<Intent>
     lateinit var nidFrontCameraLauncher: ActivityResultLauncher<Intent>
     lateinit var nidBackCameraLauncher: ActivityResultLauncher<Intent>
+
+    lateinit var picFromCameraLauncher: ActivityResultLauncher<Intent>
+    lateinit var picFromGalleryLauncher: ActivityResultLauncher<Intent>
 
     //lateinit var imageCropperListener: FaceDetectionListener
     lateinit var currentPhotoPath: String
@@ -221,6 +231,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 //                showErrorToast(requireContext(), message)
 //            }
 //        }
+
 
         profileCameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
 
@@ -599,7 +610,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         }
 
         viewDataBinding.rivProfileImage.setOnClickListener {
-            takeProfileImageFromCamera()
+            takeProfileImage()
         }
 
         if (allClass.isEmpty()) {
@@ -610,6 +621,42 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
             viewModel.getUserProfileInfo(userData.mobile ?: "")
         } else {
             prepareUserData(userData)
+        }
+
+        picFromCameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode != RESULT_OK) return@registerForActivityResult
+            val file = File(currentPhotoPath)
+            val imageBitmap = BitmapUtilss.getBitmapFromContentUri(
+                requireContext().contentResolver, Uri.fromFile(
+                    file
+                )
+            )
+            val bitmap = imageBitmap ?: return@registerForActivityResult
+
+            viewModel.profileBitmap = BitmapUtilss.getResizedBitmap(bitmap, 500)
+            Glide.with(requireContext())
+                .load(viewModel.profileBitmap)
+                .circleCrop()
+                .placeholder(placeholder)
+                .into(viewDataBinding.rivProfileImage)
+        }
+
+        picFromGalleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode != RESULT_OK) return@registerForActivityResult
+            val photoUri = result?.data?.data
+            photoUri?.let {
+                val imageBitmap = BitmapUtilss.getBitmapFromContentUri(
+                    requireContext().contentResolver, photoUri
+                )
+                val bitmap = imageBitmap ?: return@registerForActivityResult
+
+                viewModel.profileBitmap = BitmapUtilss.getResizedBitmap(bitmap, 500)
+                Glide.with(requireContext())
+                    .load(viewModel.profileBitmap)
+                    .circleCrop()
+                    .placeholder(placeholder)
+                    .into(viewDataBinding.rivProfileImage)
+            }
         }
     }
 
@@ -754,32 +801,107 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 //        }
 //    }
 
-    private fun takeProfileImageFromCamera() {
-        profileCameraLauncher.launch(Intent(requireContext(), CameraXActivity::class.java))
-//        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-//            // Ensure that there's a camera activity to handle the intent
-//            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-//                // Create the File where the photo should go
-//                val photoFile: File? = try {
-//                    createImageFile()
-//                } catch (ex: IOException) {
-//                    // Error occurred while creating the File
-//                    ex.printStackTrace()
-//                    null
-//                }
-//                // Continue only if the File was successfully created
-//                photoFile?.also {
-//                    val photoURI: Uri = FileProvider.getUriForFile(
-//                        requireContext(),
-//                        "${BuildConfig.APPLICATION_ID}.provider",
-//                        it
-//                    )
-//                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-//                    profileCameraLauncher.launch(takePictureIntent)
-//                }
-//            }
-//        }
+    private fun takeProfileImage() {
+        if (isCameraAndGalleryPermissionGranted(requireActivity())) {
+            selectImage()
+        }
     }
+
+    private fun selectImage() {
+        val items = arrayOf<CharSequence>(
+            getString(R.string.take_picture), getString(R.string.choose_from_gallery),
+            getString(R.string.cancel)
+        )
+        val builder = AlertDialog.Builder(mContext)
+        builder.setTitle(getString(R.string.choose_an_option))
+        builder.setItems(items) { dialog: DialogInterface, item: Int ->
+            if (items[item] == getString(R.string.take_picture)) {
+                if (isCameraPermission(requireActivity())) {
+                    captureImageFromCamera()
+                }
+            } else if (items[item] == getString(R.string.choose_from_gallery)) {
+                if (isGalleryPermission(requireActivity())) {
+                    chooseImageFromGallery()
+                }
+            } else if (items[item] == getString(R.string.cancel)) {
+                dialog.dismiss()
+            }
+        }
+        builder.show()
+    }
+
+    private fun captureImageFromCamera() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+                // Create the File where the photo should go
+                val photoFile: File? = try {
+                    createImageFile()
+                } catch (ex: IOException) {
+                    // Error occurred while creating the File
+                    ex.printStackTrace()
+                    null
+                }
+                // Continue only if the File was successfully created
+                photoFile?.also {
+                    val photoURI: Uri = FileProvider.getUriForFile(
+                        requireContext(),
+                        "${BuildConfig.APPLICATION_ID}.provider",
+                        it
+                    )
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    picFromCameraLauncher.launch(takePictureIntent)
+                }
+            }
+        }
+    }
+
+    private fun chooseImageFromGallery() {
+        val galleryIntent = Intent(
+            Intent.ACTION_PICK
+        )
+        galleryIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+        galleryIntent.resolveActivity(requireActivity().packageManager)?.let {
+            picFromGalleryLauncher.launch(galleryIntent)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE && grantResults.isNotEmpty()) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (isCameraAndGalleryPermissionGranted(requireActivity())) {
+                    selectImage()
+                }
+            }
+        }
+    }
+
+//    @Throws(IOException::class)
+//    private fun createImageFile(): File? {
+//        // Create an image file name
+//        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+//        val imageFileName = "JPEG_" + timeStamp + "_"
+//        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        val storageDir: File = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+//        val image = File.createTempFile(
+//            imageFileName,  /* prefix */
+//            ".jpg",  /* suffix */
+//            storageDir /* directory */
+//        )
+//
+//        // Save a file: path for use with ACTION_VIEW intents
+//        currentPhotoPath = image.absolutePath
+//        Log.d(
+//            com.hislbd.daktarbhai.activities.userProfile.UserProfileActivity.TAG,
+//            "createImageFile: currentPhotoPath - $currentPhotoPath"
+//        )
+//        return image
+//    }
 
     private fun takeNIDFrontImageFromCamera() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
