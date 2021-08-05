@@ -2,9 +2,7 @@ package com.engineersapps.eapps.ui.bkash
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
 import android.net.http.SslError
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -92,13 +90,13 @@ class BKashDialogFragment internal constructor(
                 view: WebView?,
                 request: WebResourceRequest?
             ): Boolean {
-                val url = request?.url?.toString()
-
-                if (url == "https://www.bkash.com/terms-and-conditions") {
-                    val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    startActivity(myIntent)
-                    return true
-                }
+//                val url = request?.url?.toString()
+//
+//                if (url == "https://www.bkash.com/terms-and-conditions") {
+//                    val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+//                    startActivity(myIntent)
+//                    return true
+//                }
                 return super.shouldOverrideUrlLoading(view, request)
             }
 

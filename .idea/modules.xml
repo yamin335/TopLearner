@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Engineer_Books.iml" filepath="$PROJECT_DIR$/.idea/modules/Engineer_Books.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Engineer_Books.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Engineer_Books.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ssl-payment-sdk-v4/Engineer_Books.ssl-payment-sdk-v4.iml" filepath="$PROJECT_DIR$/.idea/modules/ssl-payment-sdk-v4/Engineer_Books.ssl-payment-sdk-v4.iml" />
     </modules>
   </component>
 </project>

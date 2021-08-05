@@ -1,9 +1,7 @@
 package com.engineersapps.eapps.ui.more
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -137,9 +135,9 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
         }
 
         viewDataBinding.rtchubs.setOnClickListener {
-            val url = "https://rtchubs.com"
-            val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            startActivity(myIntent)
+//            val url = "https://rtchubs.com"
+//            val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+//            startActivity(myIntent)
         }
 
         viewDataBinding.logout.setOnClickListener {

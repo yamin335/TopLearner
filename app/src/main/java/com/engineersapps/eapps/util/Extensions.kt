@@ -6,7 +6,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -28,10 +27,10 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import com.engineersapps.eapps.R
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.engineersapps.eapps.R
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -233,42 +232,42 @@ fun Fragment.setWindowStatusColor(statusbarColor: Int) {
     }
 }
 
-fun Fragment.gotoGoogleMap(lat: String?, long: String?, label: String?) {
-    val gmmIntentUri = Uri.parse("geo:0,0?q=$lat,$long($label)")
-    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-    mapIntent.setPackage("com.google.android.apps.maps")
-    if (mapIntent.resolveActivity(requireContext().packageManager) != null) {
-        startActivity(mapIntent)
-    }
-}
+//fun Fragment.gotoGoogleMap(lat: String?, long: String?, label: String?) {
+//    val gmmIntentUri = Uri.parse("geo:0,0?q=$lat,$long($label)")
+//    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+//    mapIntent.setPackage("com.google.android.apps.maps")
+//    if (mapIntent.resolveActivity(requireContext().packageManager) != null) {
+//        startActivity(mapIntent)
+//    }
+//}
 
-fun Fragment.openYoutubeLink(link: String?) {
-    try {
-        link?.let {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(link)
-            intent.setPackage("com.google.android.youtube")
-            startActivity(intent)
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-        Toast.makeText(requireContext(), "Trailer is not available!", Toast.LENGTH_SHORT).show()
-    }
+//fun Fragment.openYoutubeLink(link: String?) {
+//    try {
+//        link?.let {
+//            val intent = Intent(Intent.ACTION_VIEW)
+//            intent.data = Uri.parse(link)
+//            intent.setPackage("com.google.android.youtube")
+//            startActivity(intent)
+//        }
+//    } catch (e: Exception) {
+//        e.printStackTrace()
+//        Toast.makeText(requireContext(), "Trailer is not available!", Toast.LENGTH_SHORT).show()
+//    }
+//
+//}
 
-}
-
-fun Fragment.shareTextIntent(text: String?) {
-    text?.let {
-        val sendIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, text)
-            type = "text/plain"
-        }
-
-        val shareIntent = Intent.createChooser(sendIntent, null)
-        startActivity(shareIntent)
-    }
-}
+//fun Fragment.shareTextIntent(text: String?) {
+//    text?.let {
+//        val sendIntent: Intent = Intent().apply {
+//            action = Intent.ACTION_SEND
+//            putExtra(Intent.EXTRA_TEXT, text)
+//            type = "text/plain"
+//        }
+//
+//        val shareIntent = Intent.createChooser(sendIntent, null)
+//        startActivity(shareIntent)
+//    }
+//}
 
 @SuppressLint("NewApi") // Lint does not understand isAtLeastQ currently
 fun DrawerLayout.shouldCloseDrawerFromBackPress(): Boolean {

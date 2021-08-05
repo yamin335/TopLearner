@@ -18,7 +18,6 @@ package com.engineersapps.eapps.util
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.*
@@ -130,12 +129,12 @@ object Utils {
         return dstBitmap
     }
 
-    internal fun openImagePicker(activity: Activity) {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        intent.type = "image/*"
-        activity.startActivityForResult(intent, REQUEST_CODE_PHOTO_LIBRARY)
-    }
+//    internal fun openImagePicker(activity: Activity) {
+//        val intent = Intent(Intent.ACTION_GET_CONTENT)
+//        intent.addCategory(Intent.CATEGORY_OPENABLE)
+//        intent.type = "image/*"
+//        activity.startActivityForResult(intent, REQUEST_CODE_PHOTO_LIBRARY)
+//    }
 
     @Throws(IOException::class)
     internal fun loadImage(context: Context, imageUri: Uri, maxImageDimension: Int): Bitmap? {

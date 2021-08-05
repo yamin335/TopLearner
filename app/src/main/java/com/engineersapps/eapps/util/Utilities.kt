@@ -3,26 +3,22 @@ package com.engineersapps.eapps.util
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.os.Environment
 import android.text.TextUtils
 import android.util.Base64
-import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import com.google.android.material.snackbar.Snackbar
 import com.engineersapps.eapps.R
-import java.io.*
+import com.google.android.material.snackbar.Snackbar
+import java.io.ByteArrayOutputStream
 import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -206,42 +202,42 @@ object Utilities {
         return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
 
-    fun saveAndShareQR(view: View) {
-        //create bitmap from view
-        view.isDrawingCacheEnabled = true
-        val bitmap = view.drawingCache
-
-        //save file from bitmap
-        val imagePath = File(
-            Environment.getExternalStorageDirectory()
-                .toString() + "/cashbaba_" + SimpleDateFormat("yyyyMMdd_HHmmss").format(Date()) + ".png"
-        ) ////File imagePath
-        val fos: FileOutputStream
-        try {
-            fos = FileOutputStream(imagePath)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
-            fos.flush()
-            fos.close()
-
-            //share file
-            val context = view.context
-            val uri = FileProvider.getUriForFile(
-                context,
-                context.packageName + "" + ".fileprovider",
-                imagePath
-            )
-            val sharingIntent = Intent(Intent.ACTION_SEND)
-            sharingIntent.type = "image/*"
-            sharingIntent.putExtra(Intent.EXTRA_STREAM, uri)
-
-            context.startActivity(Intent.createChooser(sharingIntent, "Share via"))
-        } catch (e: FileNotFoundException) {
-            Log.e("GREC", e.message, e)
-        } catch (e: IOException) {
-            Log.e("GREC", e.message, e)
-        }
-
-    }
+//    fun saveAndShareQR(view: View) {
+//        //create bitmap from view
+//        view.isDrawingCacheEnabled = true
+//        val bitmap = view.drawingCache
+//
+//        //save file from bitmap
+//        val imagePath = File(
+//            Environment.getExternalStorageDirectory()
+//                .toString() + "/cashbaba_" + SimpleDateFormat("yyyyMMdd_HHmmss").format(Date()) + ".png"
+//        ) ////File imagePath
+//        val fos: FileOutputStream
+//        try {
+//            fos = FileOutputStream(imagePath)
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+//            fos.flush()
+//            fos.close()
+//
+//            //share file
+//            val context = view.context
+//            val uri = FileProvider.getUriForFile(
+//                context,
+//                context.packageName + "" + ".fileprovider",
+//                imagePath
+//            )
+//            val sharingIntent = Intent(Intent.ACTION_SEND)
+//            sharingIntent.type = "image/*"
+//            sharingIntent.putExtra(Intent.EXTRA_STREAM, uri)
+//
+//            context.startActivity(Intent.createChooser(sharingIntent, "Share via"))
+//        } catch (e: FileNotFoundException) {
+//            Log.e("GREC", e.message, e)
+//        } catch (e: IOException) {
+//            Log.e("GREC", e.message, e)
+//        }
+//
+//    }
 
 
     /**

@@ -13,7 +13,6 @@ import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.PaymentFragmentBinding
 import com.engineersapps.eapps.models.bkash.BKashCreateResponse
-import com.engineersapps.eapps.models.payment.CoursePaymentRequest
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.transactions.CreateOrderBody
 import com.engineersapps.eapps.ui.MyCourseTabSelection
@@ -23,12 +22,6 @@ import com.engineersapps.eapps.util.getMilliFromDate
 import com.engineersapps.eapps.util.hideKeyboard
 import com.engineersapps.eapps.util.showErrorToast
 import com.engineersapps.eapps.util.showSuccessToast
-import com.sslwireless.sslcommerzlibrary.model.initializer.SSLCommerzInitialization
-import com.sslwireless.sslcommerzlibrary.model.response.SSLCTransactionInfoModel
-import com.sslwireless.sslcommerzlibrary.model.util.SSLCCurrencyType
-import com.sslwireless.sslcommerzlibrary.model.util.SSLCSdkType
-import com.sslwireless.sslcommerzlibrary.view.singleton.IntegrateSSLCommerz
-import com.sslwireless.sslcommerzlibrary.viewmodel.listener.SSLCTransactionResponseListener
 import java.security.SecureRandom
 
 class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>() {
@@ -230,10 +223,10 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewDataBinding.btnPayNow.setOnClickListener {
 
-            callPayment()
+            //callPayment()
 
 //            viewModel.getBkashPaymentUrl(userData.mobile ?: "",
-//                viewModel.amount.value ?: "0",
+//                viewModel.mount.value ?: "0",
 //                invoiceNumber ?: generateInvoiceID()).observe(viewLifecycleOwner, Observer { response ->
 //                    response?.let {
 //                        shoWBkashDialog(viewModel.amount.value ?: "0", it)
@@ -323,101 +316,101 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         return "${random1}${random2}"
     }
 
-    private fun saveSSLPayment(p0: SSLCTransactionInfoModel?) {
-        val response = p0 ?: return
-
-        val firstName = userData.first_name ?: ""
-        val lastName = userData.last_name ?: ""
-
-        viewModel.purchaseCourse(
-            CreateOrderBody(
-                userData.id ?: 0, userData.mobile ?: "",
-                response.amount.toDouble().toInt(), 0, 0,
-                0, "", userData.upazila ?: "", userData.city ?: "",
-                userData.UpazilaID ?: 0, userData.CityID ?: 0, invoiceNumber,
-                "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
-                "$firstName $lastName", args.bookName ?: "", response.amount ?: "N/A",
-                "", "", viewModel.promoCode.value?.code ?: "",
-                viewModel.promoCode.value?.partner_id ?: 0
-            ),
-            CoursePaymentRequest(
-                userData.mobile, invoiceNumber,userData.id, args.courseId,
-                args.coursePrice.toInt(), response.amount.toDouble().toInt(), courseDuration
-            )
-        )
-    }
-
-    private fun callPayment() {
-        val amount = viewModel.amount.value?.toDouble() ?: return
-        val sslCommerzInitialization = SSLCommerzInitialization ("testbox","qwerty",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.TESTBOX)
-        IntegrateSSLCommerz
-            .getInstance(requireContext())
-            .addSSLCommerzInitialization(sslCommerzInitialization)
-            .buildApiCall(object : SSLCTransactionResponseListener {
-                override fun transactionSuccess(p0: SSLCTransactionInfoModel?) {
-                    if (p0?.riskLevel == "0") {
-                        //Timber.d("Transaction Successfully completed")
-                        saveSSLPayment(p0)
-                    } else {
-                        //Timber.d("Transaction in risk.")
-                    }
-                }
-
-                override fun transactionFail(p0: String?) {
-                    //Timber.d("Transaction Fail")
-                }
-
-                override fun merchantValidationError(p0: String?) {
-                    when (p0) {
-//                        ErrorKeys.USER_INPUT_ERROR -> Timber.e("User Input Error")
-//                        ErrorKeys.INTERNET_CONNECTION_ERROR -> Timber.e("INTERNET_CONNECTION_ERROR")
-//                        ErrorKeys.DATA_PARSING_ERROR -> Timber.e("DATA_PARSING_ERROR")
-//                        ErrorKeys.CANCEL_TRANSACTION_ERROR -> Timber.e("CANCEL_TRANSACTION_ERROR")
-//                        ErrorKeys.SERVER_ERROR -> Timber.e("SERVER_ERROR")
-//                        ErrorKeys.NETWORK_ERROR -> Timber.e("NETWORK_ERROR")
-                    }
-                }
-            })
-
-
-        //final SSLCommerzInitialization sslCommerzInitialization = new SSLCommerzInitialization ("yourStoreID","yourPassword", amount, SSLCCurrencyType.BDT,"123456789098765", "yourProductType", SSLCSdkType.TESTBOX);
-
-//        Also, users can add optional field like below:
-//        final SSLCommerzInitialization sslCommerzInitialization = new SSLCommerzInitialization ("yourStoreID","yourPassword", amount, SSLCCurrencyType.BDT,"123456789098765", "yourProductType", SSLCSdkType.TESTBOX).addMultiCardName(“”).addIpnUrl(“”);
+//    private fun saveSSLPayment(p0: SSLCTransactionInfoModel?) {
+//        val response = p0 ?: return
 //
-//        Afterwards, user need to call below class to connect with SSLCommerz:
+//        val firstName = userData.first_name ?: ""
+//        val lastName = userData.last_name ?: ""
+//
+//        viewModel.purchaseCourse(
+//            CreateOrderBody(
+//                userData.id ?: 0, userData.mobile ?: "",
+//                response.amount.toDouble().toInt(), 0, 0,
+//                0, "", userData.upazila ?: "", userData.city ?: "",
+//                userData.UpazilaID ?: 0, userData.CityID ?: 0, invoiceNumber,
+//                "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
+//                "$firstName $lastName", args.bookName ?: "", response.amount ?: "N/A",
+//                "", "", viewModel.promoCode.value?.code ?: "",
+//                viewModel.promoCode.value?.partner_id ?: 0
+//            ),
+//            CoursePaymentRequest(
+//                userData.mobile, invoiceNumber,userData.id, args.courseId,
+//                args.coursePrice.toInt(), response.amount.toDouble().toInt(), courseDuration
+//            )
+//        )
+//    }
+
+//    private fun callPayment() {
+//        val amount = viewModel.amount.value?.toDouble() ?: return
+//        val sslCommerzInitialization = SSLCommerzInitialization ("testbox","qwerty",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.TESTBOX)
 //        IntegrateSSLCommerz
-//            .getInstance(context)
+//            .getInstance(requireContext())
 //            .addSSLCommerzInitialization(sslCommerzInitialization)
-//            .buildApiCall(this);
-
-//        val mandatoryFieldModel = MandatoryFieldModel("testbox", "qwerty", viewModel.amount.value ?: "0", invoiceNumber ?: generateInvoiceID(), CurrencyType.BDT, SdkType.TESTBOX, SdkCategory.BANK_LIST)
-//
-//        PayUsingSSLCommerz.getInstance().setData(requireActivity(), mandatoryFieldModel, null, null, null, object :
-//            OnPaymentResultListener {
-//            override fun transactionSuccess(transactionInfo: TransactionInfo) {
-//                if (transactionInfo.riskLevel == "0") {
-//                    Timber.d("Transaction Successfully completed")
-//                    saveSSLPayment(transactionInfo)
-//                } else {
-//                    Timber.d("Transaction in risk.")
+//            .buildApiCall(object : SSLCTransactionResponseListener {
+//                override fun transactionSuccess(p0: SSLCTransactionInfoModel?) {
+//                    if (p0?.riskLevel == "0") {
+//                        //Timber.d("Transaction Successfully completed")
+//                        saveSSLPayment(p0)
+//                    } else {
+//                        //Timber.d("Transaction in risk.")
+//                    }
 //                }
-//            }
 //
-//            override fun transactionFail(transactionInfo: TransactionInfo) {
-//                Timber.d("Transaction Fail")
-//            }
-//
-//            override fun error(i: Int) {
-//                when (i) {
-//                    ErrorKeys.USER_INPUT_ERROR -> Timber.e("User Input Error")
-//                    ErrorKeys.INTERNET_CONNECTION_ERROR -> Timber.e("INTERNET_CONNECTION_ERROR")
-//                    ErrorKeys.DATA_PARSING_ERROR -> Timber.e("DATA_PARSING_ERROR")
-//                    ErrorKeys.CANCEL_TRANSACTION_ERROR -> Timber.e("CANCEL_TRANSACTION_ERROR")
-//                    ErrorKeys.SERVER_ERROR -> Timber.e("SERVER_ERROR")
-//                    ErrorKeys.NETWORK_ERROR -> Timber.e("NETWORK_ERROR")
+//                override fun transactionFail(p0: String?) {
+//                    //Timber.d("Transaction Fail")
 //                }
-//            }
-//        })
-    }
+//
+//                override fun merchantValidationError(p0: String?) {
+//                    when (p0) {
+////                        ErrorKeys.USER_INPUT_ERROR -> Timber.e("User Input Error")
+////                        ErrorKeys.INTERNET_CONNECTION_ERROR -> Timber.e("INTERNET_CONNECTION_ERROR")
+////                        ErrorKeys.DATA_PARSING_ERROR -> Timber.e("DATA_PARSING_ERROR")
+////                        ErrorKeys.CANCEL_TRANSACTION_ERROR -> Timber.e("CANCEL_TRANSACTION_ERROR")
+////                        ErrorKeys.SERVER_ERROR -> Timber.e("SERVER_ERROR")
+////                        ErrorKeys.NETWORK_ERROR -> Timber.e("NETWORK_ERROR")
+//                    }
+//                }
+//            })
+//
+//
+//        //final SSLCommerzInitialization sslCommerzInitialization = new SSLCommerzInitialization ("yourStoreID","yourPassword", amount, SSLCCurrencyType.BDT,"123456789098765", "yourProductType", SSLCSdkType.TESTBOX);
+//
+////        Also, users can add optional field like below:
+////        final SSLCommerzInitialization sslCommerzInitialization = new SSLCommerzInitialization ("yourStoreID","yourPassword", amount, SSLCCurrencyType.BDT,"123456789098765", "yourProductType", SSLCSdkType.TESTBOX).addMultiCardName(“”).addIpnUrl(“”);
+////
+////        Afterwards, user need to call below class to connect with SSLCommerz:
+////        IntegrateSSLCommerz
+////            .getInstance(context)
+////            .addSSLCommerzInitialization(sslCommerzInitialization)
+////            .buildApiCall(this);
+//
+////        val mandatoryFieldModel = MandatoryFieldModel("testbox", "qwerty", viewModel.amount.value ?: "0", invoiceNumber ?: generateInvoiceID(), CurrencyType.BDT, SdkType.TESTBOX, SdkCategory.BANK_LIST)
+////
+////        PayUsingSSLCommerz.getInstance().setData(requireActivity(), mandatoryFieldModel, null, null, null, object :
+////            OnPaymentResultListener {
+////            override fun transactionSuccess(transactionInfo: TransactionInfo) {
+////                if (transactionInfo.riskLevel == "0") {
+////                    Timber.d("Transaction Successfully completed")
+////                    saveSSLPayment(transactionInfo)
+////                } else {
+////                    Timber.d("Transaction in risk.")
+////                }
+////            }
+////
+////            override fun transactionFail(transactionInfo: TransactionInfo) {
+////                Timber.d("Transaction Fail")
+////            }
+////
+////            override fun error(i: Int) {
+////                when (i) {
+////                    ErrorKeys.USER_INPUT_ERROR -> Timber.e("User Input Error")
+////                    ErrorKeys.INTERNET_CONNECTION_ERROR -> Timber.e("INTERNET_CONNECTION_ERROR")
+////                    ErrorKeys.DATA_PARSING_ERROR -> Timber.e("DATA_PARSING_ERROR")
+////                    ErrorKeys.CANCEL_TRANSACTION_ERROR -> Timber.e("CANCEL_TRANSACTION_ERROR")
+////                    ErrorKeys.SERVER_ERROR -> Timber.e("SERVER_ERROR")
+////                    ErrorKeys.NETWORK_ERROR -> Timber.e("NETWORK_ERROR")
+////                }
+////            }
+////        })
+//    }
 }
