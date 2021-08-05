@@ -8,7 +8,7 @@
 <!--    <files-path name="files" path="."/>-->
 <!--</paths>-->
 <paths>
-    <external-path
-        name="external_files"
-        path="." />
+<!--    <external-path-->
+<!--        name="external_files"-->
+<!--        path="." />-->
 </paths>
