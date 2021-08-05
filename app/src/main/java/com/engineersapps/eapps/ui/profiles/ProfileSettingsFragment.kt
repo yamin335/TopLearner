@@ -45,6 +45,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 const val PERMISSION_REQUEST_CODE = 111
 const val FIL_ENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
 const val PHOTO_EXTENSION = ".jpg"
@@ -63,9 +64,9 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
     lateinit var genderAdapter: ArrayAdapter<String>
     lateinit var classAdapter: ArrayAdapter<String>
 
-    lateinit var profileCameraLauncher: ActivityResultLauncher<Intent>
-    lateinit var nidFrontCameraLauncher: ActivityResultLauncher<Intent>
-    lateinit var nidBackCameraLauncher: ActivityResultLauncher<Intent>
+//    lateinit var profileCameraLauncher: ActivityResultLauncher<Intent>
+//    lateinit var nidFrontCameraLauncher: ActivityResultLauncher<Intent>
+//    lateinit var nidBackCameraLauncher: ActivityResultLauncher<Intent>
 
     lateinit var picFromCameraLauncher: ActivityResultLauncher<Intent>
     lateinit var picFromGalleryLauncher: ActivityResultLauncher<Intent>
@@ -233,62 +234,62 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 //        }
 
 
-        profileCameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+//        profileCameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+//
+//            if (result.resultCode != RESULT_OK) return@registerForActivityResult
+//            val photoUri = result?.data?.data
+//            //val file = File(currentPhotoPath)
+//            photoUri?.let {
+//                val imageBitmap = BitmapUtilss.getBitmapFromContentUri(
+//                    requireContext().contentResolver,
+//                    it
+//                )
+//
+//                imageBitmap?.let { bitmap ->
+//                    viewModel.profileBitmap = BitmapUtilss.getResizedBitmap(bitmap, 500)
+//
+//                    Glide.with(requireContext())
+//                        .load(viewModel.profileBitmap)
+//                        .circleCrop()
+//                        .placeholder(placeholder)
+//                        .into(viewDataBinding.rivProfileImage)
+//                }
+//
+////                val viola = Viola(imageCropperListener)
+////                val faceOption = FaceOptions.Builder().cropAlgorithm(CropAlgorithm.SQUARE)
+////                    .enableProminentFaceDetection()
+////                    .enableDebug()
+////                    .build()
+////                val bitmap = imageBitmap ?: return@registerForActivityResult
+////                viola.detectFace(bitmap, faceOption)
+//            }
+//        }
 
-            if (result.resultCode != RESULT_OK) return@registerForActivityResult
-            val photoUri = result?.data?.data
-            //val file = File(currentPhotoPath)
-            photoUri?.let {
-                val imageBitmap = BitmapUtilss.getBitmapFromContentUri(
-                    requireContext().contentResolver,
-                    it
-                )
-
-                imageBitmap?.let { bitmap ->
-                    viewModel.profileBitmap = BitmapUtilss.getResizedBitmap(bitmap, 500)
-
-                    Glide.with(requireContext())
-                        .load(viewModel.profileBitmap)
-                        .circleCrop()
-                        .placeholder(placeholder)
-                        .into(viewDataBinding.rivProfileImage)
-                }
-
-//                val viola = Viola(imageCropperListener)
-//                val faceOption = FaceOptions.Builder().cropAlgorithm(CropAlgorithm.SQUARE)
-//                    .enableProminentFaceDetection()
-//                    .enableDebug()
-//                    .build()
-//                val bitmap = imageBitmap ?: return@registerForActivityResult
-//                viola.detectFace(bitmap, faceOption)
-            }
-        }
-
-        nidFrontCameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            val file = File(currentPhotoPath)
-            val imageBitmap = BitmapUtilss.getBitmapFromContentUri(
-                requireContext().contentResolver, Uri.fromFile(
-                    file
-                )
-            )
-            val bitmap = imageBitmap ?: return@registerForActivityResult
-            //viewModel.nidFrontBitmap = file
-            viewModel.nidFrontBitmap = BitmapUtilss.getResizedBitmap(bitmap, 500)
-            viewDataBinding.rivNidFrontImage.setImageBitmap(bitmap)
-        }
-
-        nidBackCameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            val file = File(currentPhotoPath)
-            val imageBitmap = BitmapUtilss.getBitmapFromContentUri(
-                requireContext().contentResolver, Uri.fromFile(
-                    file
-                )
-            )
-            val bitmap = imageBitmap ?: return@registerForActivityResult
-            //viewModel.nidBackBitmap = file
-            viewModel.nidBackBitmap = BitmapUtilss.getResizedBitmap(bitmap, 500)
-            viewDataBinding.rivNidBackImage.setImageBitmap(bitmap)
-        }
+//        nidFrontCameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+//            val file = File(currentPhotoPath)
+//            val imageBitmap = BitmapUtilss.getBitmapFromContentUri(
+//                requireContext().contentResolver, Uri.fromFile(
+//                    file
+//                )
+//            )
+//            val bitmap = imageBitmap ?: return@registerForActivityResult
+//            //viewModel.nidFrontBitmap = file
+//            viewModel.nidFrontBitmap = BitmapUtilss.getResizedBitmap(bitmap, 500)
+//            viewDataBinding.rivNidFrontImage.setImageBitmap(bitmap)
+//        }
+//
+//        nidBackCameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+//            val file = File(currentPhotoPath)
+//            val imageBitmap = BitmapUtilss.getBitmapFromContentUri(
+//                requireContext().contentResolver, Uri.fromFile(
+//                    file
+//                )
+//            )
+//            val bitmap = imageBitmap ?: return@registerForActivityResult
+//            //viewModel.nidBackBitmap = file
+//            viewModel.nidBackBitmap = BitmapUtilss.getResizedBitmap(bitmap, 500)
+//            viewDataBinding.rivNidBackImage.setImageBitmap(bitmap)
+//        }
 
         val tempGender = Array(viewModel.allGender.size + 1) {""}
         tempGender[0] = "--সিলেক্ট করুন--"
@@ -601,13 +602,13 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 //            })
         }
 
-        viewDataBinding.rivNidFrontImage.setOnClickListener {
-            takeNIDFrontImageFromCamera()
-        }
-
-        viewDataBinding.rivNidBackImage.setOnClickListener {
-            takeNIDBackImageFromCamera()
-        }
+//        viewDataBinding.rivNidFrontImage.setOnClickListener {
+//            takeNIDFrontImageFromCamera()
+//        }
+//
+//        viewDataBinding.rivNidBackImage.setOnClickListener {
+//            takeNIDBackImageFromCamera()
+//        }
 
         viewDataBinding.rivProfileImage.setOnClickListener {
             takeProfileImage()
@@ -850,7 +851,14 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
                         it
                     )
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    picFromCameraLauncher.launch(takePictureIntent)
+                    val flags: Int = takePictureIntent.flags
+                    // check that the nested intent does not grant URI permissions
+                    if (flags and Intent.FLAG_GRANT_READ_URI_PERMISSION == 0 &&
+                        flags and Intent.FLAG_GRANT_WRITE_URI_PERMISSION == 0
+                    ) {
+                        // redirect the nested Intent
+                        picFromCameraLauncher.launch(takePictureIntent)
+                    }
                 }
             }
         }
@@ -862,7 +870,14 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
         )
         galleryIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
         galleryIntent.resolveActivity(requireActivity().packageManager)?.let {
-            picFromGalleryLauncher.launch(galleryIntent)
+            val flags: Int = galleryIntent.flags
+            // check that the nested intent does not grant URI permissions
+            if (flags and Intent.FLAG_GRANT_READ_URI_PERMISSION == 0 &&
+                flags and Intent.FLAG_GRANT_WRITE_URI_PERMISSION == 0
+            ) {
+                // redirect the nested Intent
+                picFromGalleryLauncher.launch(galleryIntent)
+            }
         }
     }
 
@@ -903,57 +918,57 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 //        return image
 //    }
 
-    private fun takeNIDFrontImageFromCamera() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
-            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-                // Create the File where the photo should go
-                val photoFile: File? = try {
-                    createImageFile()
-                } catch (ex: IOException) {
-                    // Error occurred while creating the File
-                    ex.printStackTrace()
-                    null
-                }
-                // Continue only if the File was successfully created
-                photoFile?.also {
-                    val photoURI: Uri = FileProvider.getUriForFile(
-                        requireContext(),
-                        "${BuildConfig.APPLICATION_ID}.provider",
-                        it
-                    )
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    nidFrontCameraLauncher.launch(takePictureIntent)
-                }
-            }
-        }
-    }
-
-    private fun takeNIDBackImageFromCamera() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
-            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-                // Create the File where the photo should go
-                val photoFile: File? = try {
-                    createImageFile()
-                } catch (ex: IOException) {
-                    // Error occurred while creating the File
-                    ex.printStackTrace()
-                    null
-                }
-                // Continue only if the File was successfully created
-                photoFile?.also {
-                    val photoURI: Uri = FileProvider.getUriForFile(
-                        requireContext(),
-                        "${BuildConfig.APPLICATION_ID}.provider",
-                        it
-                    )
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    nidBackCameraLauncher.launch(takePictureIntent)
-                }
-            }
-        }
-    }
+//    private fun takeNIDFrontImageFromCamera() {
+//        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+//            // Ensure that there's a camera activity to handle the intent
+//            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+//                // Create the File where the photo should go
+//                val photoFile: File? = try {
+//                    createImageFile()
+//                } catch (ex: IOException) {
+//                    // Error occurred while creating the File
+//                    ex.printStackTrace()
+//                    null
+//                }
+//                // Continue only if the File was successfully created
+//                photoFile?.also {
+//                    val photoURI: Uri = FileProvider.getUriForFile(
+//                        requireContext(),
+//                        "${BuildConfig.APPLICATION_ID}.provider",
+//                        it
+//                    )
+//                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+//                    nidFrontCameraLauncher.launch(takePictureIntent)
+//                }
+//            }
+//        }
+//    }
+//
+//    private fun takeNIDBackImageFromCamera() {
+//        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+//            // Ensure that there's a camera activity to handle the intent
+//            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+//                // Create the File where the photo should go
+//                val photoFile: File? = try {
+//                    createImageFile()
+//                } catch (ex: IOException) {
+//                    // Error occurred while creating the File
+//                    ex.printStackTrace()
+//                    null
+//                }
+//                // Continue only if the File was successfully created
+//                photoFile?.also {
+//                    val photoURI: Uri = FileProvider.getUriForFile(
+//                        requireContext(),
+//                        "${BuildConfig.APPLICATION_ID}.provider",
+//                        it
+//                    )
+//                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+//                    nidBackCameraLauncher.launch(takePictureIntent)
+//                }
+//            }
+//        }
+//    }
 
     @Throws(IOException::class)
     private fun createImageFile(): File {
