@@ -3,12 +3,14 @@ package com.engineersapps.eapps.ui.bkash
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
-import android.net.http.SslError
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.*
+import android.webkit.JavascriptInterface
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import com.engineersapps.eapps.R
@@ -78,18 +80,18 @@ class BKashDialogFragment internal constructor(
 
         binding.webView.webViewClient = object : WebViewClient() {
 
-            override fun onReceivedSslError(
-                view: WebView?,
-                handler: SslErrorHandler?,
-                error: SslError?
-            ) {
-                handler?.proceed()
-            }
-
-            override fun shouldOverrideUrlLoading(
-                view: WebView?,
-                request: WebResourceRequest?
-            ): Boolean {
+//            override fun onReceivedSslError(
+//                view: WebView?,
+//                handler: SslErrorHandler?,
+//                error: SslError?
+//            ) {
+//                handler?.proceed()
+//            }
+//
+//            override fun shouldOverrideUrlLoading(
+//                view: WebView?,
+//                request: WebResourceRequest?
+//            ): Boolean {
 //                val url = request?.url?.toString()
 //
 //                if (url == "https://www.bkash.com/terms-and-conditions") {
@@ -97,8 +99,8 @@ class BKashDialogFragment internal constructor(
 //                    startActivity(myIntent)
 //                    return true
 //                }
-                return super.shouldOverrideUrlLoading(view, request)
-            }
+//                return super.shouldOverrideUrlLoading(view, request)
+//            }
 
             override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
                 if (binding.loader != null) {

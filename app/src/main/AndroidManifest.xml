@@ -37,10 +37,10 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name="com.engineersapps.eapps.services.DownloadService"
-            android:enabled="true"
-            android:exported="false" />
+<!--        <service-->
+<!--            android:name="com.engineersapps.eapps.services.DownloadService"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="false" />-->
 
         <activity
             android:name="com.engineersapps.eapps.ui.LoginActivity"
@@ -68,18 +68,18 @@
                 android:resource="@xml/device_filter" />
         </activity>
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+<!--        <meta-data-->
+<!--            android:name="com.google.android.gms.version"-->
+<!--            android:value="@integer/google_play_services_version" />-->
         <!--
  Optional: Add it to automatically download ML model to device after
           your app is installed.
         -->
-        <meta-data
-            android:name="com.google.mlkit.vision.DEPENDENCIES"
-            android:value="barcode,face,ocr,ica" />
+<!--        <meta-data-->
+<!--            android:name="com.google.mlkit.vision.DEPENDENCIES"-->
+<!--            android:value="barcode,face,ocr,ica" />-->
 
-        <receiver android:name="com.engineersapps.eapps.SyncOnConnectivityReceiver" /> <!-- to disable default workmanager initiation -->
+<!--        <receiver android:name="com.engineersapps.eapps.SyncOnConnectivityReceiver" /> &lt;!&ndash; to disable default workmanager initiation &ndash;&gt;-->
         <provider
             android:name="androidx.work.impl.WorkManagerInitializer"
             android:authorities="${applicationId}.workmanager-init"
@@ -104,15 +104,15 @@
         <!-- android:name="android.support.FILE_PROVIDER_PATHS" -->
         <!-- android:resource="@xml/file_paths" /> -->
         <!-- </provider> -->
-<!--        <provider-->
-<!--            android:name="androidx.core.content.FileProvider"-->
-<!--            android:authorities="${applicationId}.provider"-->
-<!--            android:exported="false"-->
-<!--            android:grantUriPermissions="true">-->
-<!--            <meta-data-->
-<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
-<!--                android:resource="@xml/provider_paths" />-->
-<!--        </provider>-->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

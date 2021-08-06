@@ -4,14 +4,8 @@ import android.content.*
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.google.android.gms.auth.api.phone.SmsRetriever
-import com.google.android.gms.common.api.CommonStatusCodes
-import com.google.android.gms.common.api.Status
-import com.google.android.gms.tasks.Task
 import com.engineersapps.eapps.R
-import com.engineersapps.eapps.ui.otp_signin.OtpSignInFragment
 import dagger.android.support.DaggerAppCompatActivity
 
 interface OTPHandlerCallback {
@@ -22,70 +16,70 @@ class LoginActivity : DaggerAppCompatActivity(), LoginHandlerCallback, OTPHandle
     private val SMS_CONSENT_REQUEST = 2
 
     // Set to an unused request code
-    private val smsVerificationReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (SmsRetriever.SMS_RETRIEVED_ACTION == intent.action) {
-                val extras = intent.extras
-                val smsRetrieverStatus = extras!![SmsRetriever.EXTRA_STATUS] as Status?
-                when (smsRetrieverStatus!!.statusCode) {
-                    CommonStatusCodes.SUCCESS -> {
-                        // Get consent intent
-                        val consentIntent =
-                            extras.getParcelable<Intent>(SmsRetriever.EXTRA_CONSENT_INTENT)
-                        try {
-                            /*Start activity to show consent dialog to user within
-                             *5 minutes, otherwise you'll receive another TIMEOUT intent
-                             */
-                            startActivityForResult(consentIntent, SMS_CONSENT_REQUEST)
-                        } catch (e: ActivityNotFoundException) {
-                            // Handle the exception
-                        }
-                    }
-                    CommonStatusCodes.TIMEOUT -> {
-                    }
-                }
-            }
-        }
-    }
+//    private val smsVerificationReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+//        override fun onReceive(context: Context, intent: Intent) {
+//            if (SmsRetriever.SMS_RETRIEVED_ACTION == intent.action) {
+//                val extras = intent.extras
+//                val smsRetrieverStatus = extras!![SmsRetriever.EXTRA_STATUS] as Status?
+//                when (smsRetrieverStatus!!.statusCode) {
+//                    CommonStatusCodes.SUCCESS -> {
+//                        // Get consent intent
+//                        val consentIntent =
+//                            extras.getParcelable<Intent>(SmsRetriever.EXTRA_CONSENT_INTENT)
+//                        try {
+//                            /*Start activity to show consent dialog to user within
+//                             *5 minutes, otherwise you'll receive another TIMEOUT intent
+//                             */
+//                            startActivityForResult(consentIntent, SMS_CONSENT_REQUEST)
+//                        } catch (e: ActivityNotFoundException) {
+//                            // Handle the exception
+//                        }
+//                    }
+//                    CommonStatusCodes.TIMEOUT -> {
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            SMS_CONSENT_REQUEST -> if (resultCode == RESULT_OK) {
-                // Get SMS message content
-                val message = data?.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE)
-                // Extract one-time code from the message and complete verification
-                val oneTimeCode = parseOneTimeCode(message)
-                //for this demo we will display it instead
-                val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        when (requestCode) {
+//            SMS_CONSENT_REQUEST -> if (resultCode == RESULT_OK) {
+//                // Get SMS message content
+//                val message = data?.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE)
+//                // Extract one-time code from the message and complete verification
+//                val oneTimeCode = parseOneTimeCode(message)
+//                //for this demo we will display it instead
+//                val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+//
+//                val otpSignInFragment = navHostFragment?.childFragmentManager?.primaryNavigationFragment as? OtpSignInFragment
+//                otpSignInFragment?.updateOTP(oneTimeCode)
+//
+//
+//                //supportFragmentManager.setFragmentResult("requestOTP", bundleOf("otp" to oneTimeCode))
+//                //verificationCode.setText(oneTimeCode)
+//            } else {
+//                // Consent canceled, handle the error
+//            }
+//        }
+//    }
 
-                val otpSignInFragment = navHostFragment?.childFragmentManager?.primaryNavigationFragment as? OtpSignInFragment
-                otpSignInFragment?.updateOTP(oneTimeCode)
-
-
-                //supportFragmentManager.setFragmentResult("requestOTP", bundleOf("otp" to oneTimeCode))
-                //verificationCode.setText(oneTimeCode)
-            } else {
-                // Consent canceled, handle the error
-            }
-        }
-    }
-
-    private fun smsTask() {
-        //Start listening for SMS User Consent broadcasts from senderPhoneNumber
-        //The sender number being used was configured in my emulator, you can use your own number
-        val task = SmsRetriever.getClient(this).startSmsUserConsent(null)
-        task.addOnCompleteListener { listener: Task<Void?> ->
-            if (listener.isSuccessful) {
-                // Task completed successfully
-                val ss = ""
-            } else {
-                // Task failed with an exception
-                val exception = listener.exception
-                exception!!.printStackTrace()
-            }
-        }
-    }
+//    private fun smsTask() {
+//        //Start listening for SMS User Consent broadcasts from senderPhoneNumber
+//        //The sender number being used was configured in my emulator, you can use your own number
+//        val task = SmsRetriever.getClient(this).startSmsUserConsent(null)
+//        task.addOnCompleteListener { listener: Task<Void?> ->
+//            if (listener.isSuccessful) {
+//                // Task completed successfully
+//                val ss = ""
+//            } else {
+//                // Task failed with an exception
+//                val exception = listener.exception
+//                exception!!.printStackTrace()
+//            }
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,8 +97,8 @@ class LoginActivity : DaggerAppCompatActivity(), LoginHandlerCallback, OTPHandle
 //
 //        }
 
-        val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
-        registerReceiver(smsVerificationReceiver, intentFilter)
+//        val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
+//        registerReceiver(smsVerificationReceiver, intentFilter)
 
 //        // Start listening for SMS User Consent broadcasts from senderPhoneNumber
 //        // The Task<Void> will be successful if SmsRetriever was able to start
@@ -154,6 +148,6 @@ class LoginActivity : DaggerAppCompatActivity(), LoginHandlerCallback, OTPHandle
     }
 
     override fun onStartOTPListener() {
-        smsTask()
+        //smsTask()
     }
 }

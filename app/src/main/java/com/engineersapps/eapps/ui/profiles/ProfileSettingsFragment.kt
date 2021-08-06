@@ -1,10 +1,14 @@
 package com.engineersapps.eapps.ui.profiles
 
 import android.app.Activity.RESULT_OK
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -12,10 +16,13 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.engineersapps.eapps.BR
+import com.engineersapps.eapps.BuildConfig
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.api.ApiEndPoint.PROFILE_IMAGES
 import com.engineersapps.eapps.databinding.ProfileSettingsFragmentBinding
@@ -25,18 +32,23 @@ import com.engineersapps.eapps.ui.common.BaseFragment
 import com.engineersapps.eapps.ui.profile_signin.*
 import com.engineersapps.eapps.util.BitmapUtilss
 import com.engineersapps.eapps.util.BitmapUtilss.transformDrawable
+import com.engineersapps.eapps.util.PermissionUtils.isCameraAndGalleryPermissionGranted
+import com.engineersapps.eapps.util.PermissionUtils.isCameraPermission
+import com.engineersapps.eapps.util.PermissionUtils.isGalleryPermission
 import com.engineersapps.eapps.util.showErrorToast
 import com.engineersapps.eapps.util.showSuccessToast
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.fragment_profile_settings.*
 import kotlinx.coroutines.*
+import okio.IOException
 import java.io.File
+import java.text.SimpleDateFormat
 import java.util.*
 
 
 const val PERMISSION_REQUEST_CODE = 111
-//const val FIL_ENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-//const val PHOTO_EXTENSION = ".jpg"
+const val FIL_ENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+const val PHOTO_EXTENSION = ".jpg"
 class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, ProfileSettingsViewModel>() {
 
     override val bindingVariable: Int
@@ -599,7 +611,7 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 //        }
 
         viewDataBinding.rivProfileImage.setOnClickListener {
-            //takeProfileImage()
+            takeProfileImage()
         }
 
         if (allClass.isEmpty()) {
@@ -790,99 +802,99 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 //        }
 //    }
 
-//    private fun takeProfileImage() {
-//        if (isCameraAndGalleryPermissionGranted(requireActivity())) {
-//            selectImage()
-//        }
-//    }
-//
-//    private fun selectImage() {
-//        val items = arrayOf<CharSequence>(
-//            getString(R.string.take_picture), getString(R.string.choose_from_gallery),
-//            getString(R.string.cancel)
-//        )
-//        val builder = AlertDialog.Builder(mContext)
-//        builder.setTitle(getString(R.string.choose_an_option))
-//        builder.setItems(items) { dialog: DialogInterface, item: Int ->
-//            if (items[item] == getString(R.string.take_picture)) {
-//                if (isCameraPermission(requireActivity())) {
-//                    captureImageFromCamera()
-//                }
-//            } else if (items[item] == getString(R.string.choose_from_gallery)) {
-//                if (isGalleryPermission(requireActivity())) {
-//                    chooseImageFromGallery()
-//                }
-//            } else if (items[item] == getString(R.string.cancel)) {
-//                dialog.dismiss()
-//            }
-//        }
-//        builder.show()
-//    }
-//
-//    private fun captureImageFromCamera() {
-//        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-//            // Ensure that there's a camera activity to handle the intent
-//            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-//                // Create the File where the photo should go
-//                val photoFile: File? = try {
-//                    createImageFile()
-//                } catch (ex: IOException) {
-//                    // Error occurred while creating the File
-//                    ex.printStackTrace()
-//                    null
-//                }
-//                // Continue only if the File was successfully created
-//                photoFile?.also {
-//                    val photoURI: Uri = FileProvider.getUriForFile(
-//                        requireContext(),
-//                        "${BuildConfig.APPLICATION_ID}.provider",
-//                        it
-//                    )
-//                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-//                    val flags: Int = takePictureIntent.flags
-//                    // check that the nested intent does not grant URI permissions
-//                    if (flags and Intent.FLAG_GRANT_READ_URI_PERMISSION == 0 &&
-//                        flags and Intent.FLAG_GRANT_WRITE_URI_PERMISSION == 0
-//                    ) {
-//                        // redirect the nested Intent
-//                        picFromCameraLauncher.launch(takePictureIntent)
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    private fun chooseImageFromGallery() {
-//        val galleryIntent = Intent(
-//            Intent.ACTION_PICK
-//        )
-//        galleryIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
-//        galleryIntent.resolveActivity(requireActivity().packageManager)?.let {
-//            val flags: Int = galleryIntent.flags
-//            // check that the nested intent does not grant URI permissions
-//            if (flags and Intent.FLAG_GRANT_READ_URI_PERMISSION == 0 &&
-//                flags and Intent.FLAG_GRANT_WRITE_URI_PERMISSION == 0
-//            ) {
-//                // redirect the nested Intent
-//                picFromGalleryLauncher.launch(galleryIntent)
-//            }
-//        }
-//    }
-//
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<String?>,
-//        grantResults: IntArray
-//    ) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        if (requestCode == PERMISSION_REQUEST_CODE && grantResults.isNotEmpty()) {
-//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                if (isCameraAndGalleryPermissionGranted(requireActivity())) {
-//                    selectImage()
-//                }
-//            }
-//        }
-//    }
+    private fun takeProfileImage() {
+        if (isCameraAndGalleryPermissionGranted(requireActivity())) {
+            selectImage()
+        }
+    }
+
+    private fun selectImage() {
+        val items = arrayOf<CharSequence>(
+            getString(R.string.take_picture), getString(R.string.choose_from_gallery),
+            getString(R.string.cancel)
+        )
+        val builder = AlertDialog.Builder(mContext)
+        builder.setTitle(getString(R.string.choose_an_option))
+        builder.setItems(items) { dialog: DialogInterface, item: Int ->
+            if (items[item] == getString(R.string.take_picture)) {
+                if (isCameraPermission(requireActivity())) {
+                    captureImageFromCamera()
+                }
+            } else if (items[item] == getString(R.string.choose_from_gallery)) {
+                if (isGalleryPermission(requireActivity())) {
+                    chooseImageFromGallery()
+                }
+            } else if (items[item] == getString(R.string.cancel)) {
+                dialog.dismiss()
+            }
+        }
+        builder.show()
+    }
+
+    private fun captureImageFromCamera() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+                // Create the File where the photo should go
+                val photoFile: File? = try {
+                    createImageFile()
+                } catch (ex: Exception) {
+                    // Error occurred while creating the File
+                    ex.printStackTrace()
+                    null
+                }
+                // Continue only if the File was successfully created
+                photoFile?.also {
+                    val photoURI: Uri = FileProvider.getUriForFile(
+                        requireContext(),
+                        "${BuildConfig.APPLICATION_ID}.provider",
+                        it
+                    )
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    val flags: Int = takePictureIntent.flags
+                    // check that the nested intent does not grant URI permissions
+                    if (flags and Intent.FLAG_GRANT_READ_URI_PERMISSION == 0 &&
+                        flags and Intent.FLAG_GRANT_WRITE_URI_PERMISSION == 0
+                    ) {
+                        // redirect the nested Intent
+                        picFromCameraLauncher.launch(takePictureIntent)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun chooseImageFromGallery() {
+        val galleryIntent = Intent(
+            Intent.ACTION_PICK
+        )
+        galleryIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+        galleryIntent.resolveActivity(requireActivity().packageManager)?.let {
+            val flags: Int = galleryIntent.flags
+            // check that the nested intent does not grant URI permissions
+            if (flags and Intent.FLAG_GRANT_READ_URI_PERMISSION == 0 &&
+                flags and Intent.FLAG_GRANT_WRITE_URI_PERMISSION == 0
+            ) {
+                // redirect the nested Intent
+                picFromGalleryLauncher.launch(galleryIntent)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE && grantResults.isNotEmpty()) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (isCameraAndGalleryPermissionGranted(requireActivity())) {
+                    selectImage()
+                }
+            }
+        }
+    }
 
 //    @Throws(IOException::class)
 //    private fun createImageFile(): File? {
@@ -958,20 +970,20 @@ class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, Pro
 //        }
 //    }
 
-//    @Throws(IOException::class)
-//    private fun createImageFile(): File {
-//        // Create an image file name
-//        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(Date())
-//        val storageDir: File? = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-//        return File.createTempFile(
-//            "JPEG_${timeStamp}_", /* prefix */
-//            ".jpg", /* suffix */
-//            storageDir /* directory */
-//        ).apply {
-//            // Save a file: path for use with ACTION_VIEW intents
-//            currentPhotoPath = absolutePath
-//        }
-//    }
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(Date())
+        val storageDir: File? = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
+        }
+    }
 
 //    fun getFace(context: Context, data: Bitmap): Bitmap? {
 //        try {

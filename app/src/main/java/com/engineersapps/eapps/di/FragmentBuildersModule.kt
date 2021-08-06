@@ -17,7 +17,6 @@ import com.engineersapps.eapps.ui.notice_board.NoticeBoardFragment
 import com.engineersapps.eapps.ui.offer.OfferFragment
 import com.engineersapps.eapps.ui.otp_signin.OtpSignInFragment
 import com.engineersapps.eapps.ui.payment.PaymentFragment
-import com.engineersapps.eapps.ui.payment.PaymentFragmentMore
 import com.engineersapps.eapps.ui.pin_number.PinNumberFragment
 import com.engineersapps.eapps.ui.pin_number.ResetPinDialogFragment
 import com.engineersapps.eapps.ui.profile_signin.ClassEditFragment
@@ -100,9 +99,6 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributePaymentFragment(): PaymentFragment
-
-    @ContributesAndroidInjector
-    abstract fun contributePaymentFragmentMore(): PaymentFragmentMore
 
     @ContributesAndroidInjector
     abstract fun contributeTransactionFragment(): TransactionFragment
