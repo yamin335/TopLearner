@@ -235,6 +235,7 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
     }
 
     override fun onLoggedOut() {
+        viewModel.onLogOut(preferencesHelper)
         startActivity(Intent(this@MainActivity, LoginActivity::class.java))
         overridePendingTransition(R.anim.slide_in_left, R.anim.fade_out)
         finish()

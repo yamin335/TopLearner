@@ -40,6 +40,7 @@ class NoticeBoardViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }

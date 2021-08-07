@@ -71,7 +71,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun saveBooksInDB(books: List<ClassWiseBook>) {
+    private fun saveBooksInDB(books: List<ClassWiseBook>) {
         try {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -179,6 +179,7 @@ class HomeViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }
@@ -203,6 +204,7 @@ class HomeViewModel @Inject constructor(
                     is ApiEmptyResponse -> {
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                     }
                 }
             }
@@ -226,6 +228,7 @@ class HomeViewModel @Inject constructor(
                     is ApiEmptyResponse -> {
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                     }
                 }
             }

@@ -23,4 +23,5 @@ object AppConstants {
     const val PDF_FILE_PATH = "pdfFilePath"
     const val generalUserTypeID = 1
     const val adminUserTypeID = 2
+    const val INTENT_SESSION_EXPIRED = "Session_Expired_So_Do_LogOut"
 }

@@ -37,6 +37,7 @@ class DistrictEditViewModel @Inject constructor(private val application: Applica
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }

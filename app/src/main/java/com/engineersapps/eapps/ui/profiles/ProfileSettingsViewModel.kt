@@ -91,6 +91,7 @@ class ProfileSettingsViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }
@@ -117,6 +118,7 @@ class ProfileSettingsViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }
@@ -143,6 +145,7 @@ class ProfileSettingsViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }
@@ -205,6 +208,7 @@ class ProfileSettingsViewModel @Inject constructor(
                         allImageUrls.postValue(null)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                         allImageUrls.postValue(null)
                     }
@@ -232,6 +236,7 @@ class ProfileSettingsViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }
@@ -259,6 +264,7 @@ class ProfileSettingsViewModel @Inject constructor(
                         profileUpdateResponse.postValue(null)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                         profileUpdateResponse.postValue(null)
                     }
@@ -288,6 +294,7 @@ class ProfileSettingsViewModel @Inject constructor(
                         userProfileInfo.postValue(null)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                         userProfileInfo.postValue(null)
                     }
@@ -315,6 +322,7 @@ class ProfileSettingsViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }

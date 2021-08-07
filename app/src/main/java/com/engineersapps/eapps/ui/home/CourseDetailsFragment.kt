@@ -16,12 +16,6 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import at.huber.youtubeExtractor.VideoMeta
 import at.huber.youtubeExtractor.YouTubeExtractor
 import at.huber.youtubeExtractor.YtFile
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import com.google.android.material.chip.Chip
 import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.CourseDetailsFragmentBinding
@@ -29,6 +23,12 @@ import com.engineersapps.eapps.models.home.Course
 import com.engineersapps.eapps.ui.common.BaseFragment
 import com.engineersapps.eapps.ui.payment.PaymentFragment
 import com.engineersapps.eapps.util.showErrorToast
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.material.chip.Chip
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -182,7 +182,7 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
     }
 
     private fun mediaSource(uri: Uri): MediaSource {
-        return ExtractorMediaSource.Factory(
+        return ProgressiveMediaSource.Factory(
             DefaultHttpDataSourceFactory("exoplayer")
         ).createMediaSource(uri)
     }

@@ -25,6 +25,8 @@ class NoticeBoardFragment : BaseFragment<NoticeboardFragmentBinding, NoticeBoard
         super.onViewCreated(view, savedInstanceState)
         registerToolbar(viewDataBinding.toolbar)
 
+
+
         userData = preferencesHelper.getUser()
 
         noticeListAdapter = NoticeListAdapter(appExecutors) { notice ->

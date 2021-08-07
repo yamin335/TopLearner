@@ -51,6 +51,7 @@ class OtpSignInViewModel @Inject constructor(private val application: Applicatio
                         registeredOTP.postValue(null)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                         registeredOTP.postValue(null)
                     }
@@ -84,6 +85,7 @@ class OtpSignInViewModel @Inject constructor(private val application: Applicatio
                         verifiedOTP.postValue(null)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                         verifiedOTP.postValue(null)
                     }

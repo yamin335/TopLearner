@@ -12,14 +12,14 @@ import androidx.lifecycle.ViewModelProvider
 import at.huber.youtubeExtractor.VideoMeta
 import at.huber.youtubeExtractor.YouTubeExtractor
 import at.huber.youtubeExtractor.YtFile
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.LiveClassActivityBinding
 import com.engineersapps.eapps.prefs.PreferencesHelper
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -94,7 +94,7 @@ class LiveClassActivity : DaggerAppCompatActivity() {
     }
 
     private fun mediaSource(uri: Uri): MediaSource {
-        return ExtractorMediaSource.Factory(
+        return ProgressiveMediaSource.Factory(
             DefaultHttpDataSourceFactory("exoplayer")
         ).createMediaSource(uri)
     }

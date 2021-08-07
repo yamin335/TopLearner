@@ -99,6 +99,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         updateStatusBarBackgroundColor("#1E4356")
         registerToolbar(viewDataBinding.toolbar)
 
+
+
         userData = preferencesHelper.getUser()
 
         viewModel.packagePrice.postValue(0)

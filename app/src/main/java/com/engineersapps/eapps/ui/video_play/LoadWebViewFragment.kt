@@ -297,6 +297,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
     @SuppressLint("SetJavaScriptEnabled", "ObsoleteSdkInt")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         //activity?.title = title
         detectUSB()
         registerToolbar(viewDataBinding.toolbar)

@@ -16,8 +16,7 @@
 
 package com.engineersapps.eapps.ui.common
 
-import android.content.Context
-import android.content.DialogInterface
+import android.content.*
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -33,18 +32,18 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
-import com.google.android.material.appbar.MaterialToolbar
 import com.engineersapps.eapps.AppExecutors
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.prefs.PreferencesHelper
+import com.engineersapps.eapps.ui.LogoutHandlerCallback
 import com.engineersapps.eapps.ui.NavigationHost
-import com.engineersapps.eapps.util.NetworkUtils
-import com.engineersapps.eapps.util.autoCleared
-import com.engineersapps.eapps.util.showErrorToast
+import com.engineersapps.eapps.util.*
+import com.google.android.material.appbar.MaterialToolbar
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -55,6 +54,10 @@ abstract class BaseFragment<T : ViewDataBinding, V : ViewModel> : DaggerFragment
 
     @Inject
     lateinit var appExecutors: AppExecutors
+
+    lateinit var sessionExpireReceiver: BroadcastReceiver
+
+    var logoutListener: LogoutHandlerCallback? = null
 
     var dialog: AlertDialog? = null
 
@@ -115,11 +118,15 @@ abstract class BaseFragment<T : ViewDataBinding, V : ViewModel> : DaggerFragment
         if (context is NavigationHost) {
             navHost = context
         }
+        if (context is LogoutHandlerCallback) {
+            logoutListener = context
+        }
     }
 
     override fun onDetach() {
         super.onDetach()
         navHost = null
+        logoutListener = null
     }
 
     fun registerToolbar(toolbar: MaterialToolbar) {
@@ -127,6 +134,19 @@ abstract class BaseFragment<T : ViewDataBinding, V : ViewModel> : DaggerFragment
         toolbar.apply {
             host.registerToolbarWithNavigation(this)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
+            sessionExpireReceiver,
+            IntentFilter(AppConstants.INTENT_SESSION_EXPIRED)
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(sessionExpireReceiver)
     }
 
     override fun onCreateView(
@@ -144,6 +164,15 @@ abstract class BaseFragment<T : ViewDataBinding, V : ViewModel> : DaggerFragment
         viewDataBinding.setVariable(bindingVariable, viewModel)
         viewDataBinding.lifecycleOwner = viewLifecycleOwner
         viewDataBinding.executePendingBindings()
+
+        sessionExpireReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                intent?.let {
+                    showWarningToast(requireContext(), "Your Session is Expired! Please LogIn Again...")
+                    logoutListener?.onLoggedOut()
+                }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -50,6 +50,7 @@ class TransactionViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }
@@ -76,6 +77,7 @@ class TransactionViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }
@@ -102,6 +104,7 @@ class TransactionViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }

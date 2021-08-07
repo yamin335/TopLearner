@@ -125,6 +125,9 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         preferencesHelper.preference.registerOnSharedPreferenceChangeListener(timeChangeListener)
 
         userData = preferencesHelper.getUser()
+
+
+
         //registerToolbar(viewDataBinding.toolbar)
 
 //        viewDataBinding.cardTopUp.setOnClickListener {

@@ -85,6 +85,7 @@ class ChapterListViewModel @Inject constructor(
                         chapterList.postValue(null)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                         chapterList.postValue(null)
                     }

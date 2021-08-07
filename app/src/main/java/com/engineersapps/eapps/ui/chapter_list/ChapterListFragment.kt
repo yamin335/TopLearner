@@ -41,6 +41,8 @@ class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterList
         super.onViewCreated(view, savedInstanceState)
         registerToolbar(viewDataBinding.toolbar)
 
+
+
         bookID = args.id.toString()
 
         viewDataBinding.toolbar.title = args.title

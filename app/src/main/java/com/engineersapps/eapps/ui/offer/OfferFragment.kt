@@ -26,6 +26,8 @@ class OfferFragment : BaseFragment<OfferFragmentBinding, OfferViewModel>() {
 
         registerToolbar(viewDataBinding.toolbar)
 
+
+
         userData = preferencesHelper.getUser()
 
         offerListAdapter = OfferListAdapter(appExecutors) { notice ->

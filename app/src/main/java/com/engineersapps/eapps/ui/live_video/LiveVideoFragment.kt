@@ -50,6 +50,8 @@ class LiveVideoFragment : BaseFragment<LiveVideoFragmentBinding, LiveVideoViewMo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         viewModel.liveClassList.observe(viewLifecycleOwner, Observer {
             it?.let { classes ->
                 if (classes.isNotEmpty() && classes.first().link?.isNotBlank() == true) {

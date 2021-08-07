@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.BuildConfig
@@ -16,14 +17,12 @@ import com.engineersapps.eapps.api.ApiEndPoint
 import com.engineersapps.eapps.databinding.MoreFragmentBinding
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.social_media.SocialMedia
-import com.engineersapps.eapps.ui.LogoutHandlerCallback
 import com.engineersapps.eapps.ui.NavDrawerHandlerCallback
 import com.engineersapps.eapps.ui.common.BaseFragment
 import com.engineersapps.eapps.ui.profile_signin.ClassEditFragment
 import com.engineersapps.eapps.ui.profile_signin.DistrictEditFragment
 import com.engineersapps.eapps.ui.profile_signin.UpazillaEditFragment
 import com.engineersapps.eapps.ui.social_media.SocialMediaBottomSheetDialog
-import com.engineersapps.eapps.ui.splash.SplashFragment
 import com.engineersapps.eapps.util.BitmapUtilss
 import com.engineersapps.eapps.util.goToFacebook
 import com.engineersapps.eapps.util.goToYoutube
@@ -39,8 +38,6 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
     override val viewModel: MoreViewModel by viewModels { viewModelFactory }
 
-    private var listener: LogoutHandlerCallback? = null
-
     private var drawerListener: NavDrawerHandlerCallback? = null
 
     lateinit var userData: InquiryAccount
@@ -50,11 +47,6 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is LogoutHandlerCallback) {
-            listener = context
-        } else {
-            throw RuntimeException("$context must implement LoginHandlerCallback")
-        }
 
         if (context is NavDrawerHandlerCallback) {
             drawerListener = context
@@ -65,12 +57,13 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
         drawerListener = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
 
         userData = preferencesHelper.getUser()
 
@@ -143,9 +136,7 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
         }
 
         viewDataBinding.logout.setOnClickListener {
-            SplashFragment.fromLogout = true
-            preferencesHelper.isLoggedIn = false
-            listener?.onLoggedOut()
+            logoutListener?.onLoggedOut()
         }
 
         viewDataBinding.appLogo.setOnClickListener {

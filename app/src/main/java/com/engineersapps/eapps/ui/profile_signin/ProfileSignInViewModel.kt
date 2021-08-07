@@ -77,6 +77,7 @@ class ProfileSignInViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }
@@ -103,6 +104,7 @@ class ProfileSignInViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }
@@ -129,6 +131,7 @@ class ProfileSignInViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }
@@ -191,6 +194,7 @@ class ProfileSignInViewModel @Inject constructor(
                         allImageUrls.postValue(null)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                         allImageUrls.postValue(null)
                     }
@@ -218,6 +222,7 @@ class ProfileSignInViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }
@@ -244,6 +249,7 @@ class ProfileSignInViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }

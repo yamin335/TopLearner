@@ -60,6 +60,7 @@ class PinNumberViewModel @Inject constructor(
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                         if (apiResponse.errorMessage.contains("Incorrect Pin")) {
                             invalidPin.postValue(true)
@@ -95,6 +96,7 @@ class PinNumberViewModel @Inject constructor(
                         verifiedOTP.postValue(null)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                         verifiedOTP.postValue(null)
                     }
@@ -124,6 +126,7 @@ class PinNumberViewModel @Inject constructor(
                         resetPinResponse.postValue(null)
                     }
                     is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                         resetPinResponse.postValue(null)
                     }
