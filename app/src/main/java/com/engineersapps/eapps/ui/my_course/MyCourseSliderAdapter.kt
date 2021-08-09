@@ -17,7 +17,8 @@ import com.engineersapps.eapps.models.my_course.MyCourse
 
 class MyCourseSliderAdapter(
     private val customerTypeID: Int?,
-    private val itemCallback: ((MyCourse) -> Unit)
+    private val itemCallback: ((MyCourse) -> Unit),
+    private val paymentCallback: ((MyCourse) -> Unit)
 ): RecyclerView.Adapter<MyCourseSliderAdapter.ViewHolder>() {
 
     private var slides: ArrayList<MyCourse> = ArrayList()
@@ -71,6 +72,10 @@ class MyCourseSliderAdapter(
                 override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                     return false
                 }
+            }
+
+            binding.btnPayment.setOnClickListener {
+                paymentCallback.invoke(item)
             }
 
             binding.rootCard.setOnClickListener {

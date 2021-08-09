@@ -26,8 +26,36 @@
                 app:nullable="true"
                 android:defaultValue="Book Chapters" />
         </action>
+        <action
+            android:id="@+id/action_myCourseFragment_to_payment_nav"
+            app:destination="@id/payment_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="bookId"
+                app:argType="integer" />
+            <argument
+                android:name="bookName"
+                app:argType="string"
+                app:nullable="true" />
+            <argument
+                android:name="courseId"
+                app:argType="integer" />
+            <argument
+                android:name="coursePrice"
+                app:argType="string" />
+            <argument
+                android:name="courseName"
+                app:argType="string" />
+            <argument
+                android:name="bookThumb"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <include app:graph="@navigation/drawer_nav_graph" />
     <include app:graph="@navigation/chapter_nav_graph" />
+    <include app:graph="@navigation/payment_nav_graph" />
 </navigation>

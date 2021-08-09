@@ -9,6 +9,7 @@ import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
+import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.api.ApiCallStatus
 import com.engineersapps.eapps.databinding.MyCourseFragmentBinding
@@ -19,12 +20,12 @@ import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.prefs.AppPreferencesHelper
 import com.engineersapps.eapps.ui.NavDrawerHandlerCallback
 import com.engineersapps.eapps.ui.common.BaseFragment
+import com.engineersapps.eapps.ui.payment.PaymentFragment
 import com.engineersapps.eapps.util.isTimeAndZoneAutomatic
 import com.engineersapps.eapps.util.showErrorToast
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import com.engineersapps.eapps.BR
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -129,7 +130,7 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             drawerListener?.toggleNavDrawer()
         }
 
-        myCourseListAdapter = MyCourseSliderAdapter(userData.customer_type_id) { myCourse ->
+        myCourseListAdapter = MyCourseSliderAdapter(userData.customer_type_id, itemCallback = { myCourse ->
             // First checks if the course is outdated or not
             var expireDate = Date()
             val dateFormat = SimpleDateFormat("dd-MM-yyyy")
@@ -157,41 +158,37 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
                     navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book.id, book.title))
                 })
             }
+        }, paymentCallback = { myCourse ->
+            val course = allCourseList[myCourse.course_id]
+            PaymentFragment.firstPackageTitle = course?.first_payment_title ?: ""
+            PaymentFragment.secondPackageTitle = course?.second_payment_title ?: ""
+            PaymentFragment.thirdPackageTitle = course?.third_payment_title ?: ""
 
-//            if (userData.customer_type_id == 2) {
-//                navController.navigate(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book))
-//            } else {
-//                if (!preferencesHelper.isDeviceTimeChanged) {
-//                    navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book))
-////                    if (it.price ?: 0.0 > 0.0) {
-////                        val paidBook = preferencesHelper.getPaidBook()
-////                        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
-////                            navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
-////                        } else {
-//////                            val book = PaidBook(it.id, it.name, userData.class_id, userData.ClassName, false, it.price ?: 0.0)
-//////                            navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
-////                            showWarningToast(requireContext(), "Please pay first!")
-////                        }
-////                    } else {
-////                        navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(it))
-////                    }
-//                } else {
-//                    if (isTimeAndZoneAutomatic(context)) {
-//                        if (checkNetworkStatus(true)) {
-//                            preferencesHelper.isDeviceTimeChanged = false
-//                            myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
-//                            if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
-//                                preferencesHelper.isDeviceTimeChanged = true
-//                                myCourseListAdapter.setTimeChangeStatus(true)
-//                            }
-//                            viewModel.getMyCourses(userData.mobile)
-//                        }
-//                    } else {
-//                        showWarningToast(requireContext(), "Please auto adjust your device time!")
-//                    }
-//                }
-//            }
-        }
+            PaymentFragment.firstPackagePrice = course?.first_payment_amount ?: 0
+            PaymentFragment.secondPackagePrice = course?.second_payment_amount ?: 0
+            PaymentFragment.thirdPackagePrice = course?.third_payment_amount ?: 0
+
+            val firstDuration = course?.first_duration ?: "0"
+            val secondDuration = course?.second_duration ?: "0"
+            val thirdDuration = course?.third_duration ?: "0"
+            PaymentFragment.first_duration = firstDuration.toInt()
+            PaymentFragment.second_duration = secondDuration.toInt()
+            PaymentFragment.third_duration = thirdDuration.toInt()
+
+            val totalPrice = course?.price ?: 0
+            val totalDiscount = course?.discount_price ?: 0
+
+            val price = if (totalDiscount != 0) {
+                val discountedPrice = totalPrice - totalDiscount
+                discountedPrice.toString()
+            } else {
+                totalPrice.toString()
+            }
+
+            navigateTo(
+                MyCourseFragmentDirections.actionMyCourseFragmentToPaymentNav(
+                    course?.book_id ?: 0, course?.title, course?.id ?:0, price, course?.title ?: "", ""))
+        })
         myCourseSliderIndicatorAdapter = MyCourseSliderIndicatorAdapter(totalCourse)
 
         viewDataBinding.indicatorView.adapter = myCourseSliderIndicatorAdapter
@@ -219,55 +216,11 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             myCourseListAdapter.setTimeChangeStatus(true)
         }
 
-//        val paidBook = preferencesHelper.getPaidBook()
-//        if (paidBook.isPaid && paidBook.classID == userData.class_id) {
-//            myCourseListAdapter.setPaymentStatus(paidBook.isPaid)
-//        } else {
-//            myCourseListAdapter.setPaymentStatus(false)
-//        }
-
         viewDataBinding.sliderView.apply {
             adapter = myCourseListAdapter
             registerOnPageChangeCallback(sliderPageChangeCallback)
             isUserInputEnabled = true
         }
-
-//        viewModel.allBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
-//            books?.let {
-//
-//                myCourseListAdapter.setTimeChangeStatus(preferencesHelper.isDeviceTimeChanged)
-//
-//                if (preferencesHelper.isDeviceTimeChanged || !isTimeAndZoneAutomatic(requireContext())) {
-//                    preferencesHelper.isDeviceTimeChanged = true
-//                    myCourseListAdapter.setTimeChangeStatus(true)
-//                }
-//
-//                var isBookPaid = false
-//                val book = preferencesHelper.getPaidBook()
-////                if (book.isPaid && book.classID == userData.class_id) {
-////                    myCourseListAdapter.setPaymentStatus(book.isPaid)
-////                    isBookPaid = book.isPaid
-////                } else {
-////                    myCourseListAdapter.setPaymentStatus(false)
-////                }
-//
-//                if (book.isPaid) {
-//                    myCourseListAdapter.setPaymentStatus(book.isPaid)
-//                    isBookPaid = book.isPaid
-//                } else {
-//                    myCourseListAdapter.setPaymentStatus(false)
-//                }
-//
-//                val temp = it.filter { item -> item.price ?: 0.0 > 0.0 && isBookPaid }
-//                allBookList = temp as ArrayList<ClassWiseBook>
-//                totalCourse = allBookList.size
-//                myCourseSliderIndicatorAdapter = MyCourseSliderIndicatorAdapter(totalCourse)
-//                viewDataBinding.indicatorView.adapter = myCourseSliderIndicatorAdapter
-//                myCourseListAdapter.submitList(allBookList)
-//            }
-//            viewDataBinding.emptyView.visibility = if (allBookList.isEmpty()) View.VISIBLE else View.GONE
-//            viewDataBinding.footer.visibility = if (allBookList.isNotEmpty()) View.VISIBLE else View.GONE
-//        })
 
         viewDataBinding.btnNext.setOnClickListener {
             viewDataBinding.btnPrevious.visibility = View.VISIBLE

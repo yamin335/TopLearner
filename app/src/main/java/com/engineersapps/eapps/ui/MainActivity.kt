@@ -31,7 +31,6 @@ import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
-
 interface LoginHandlerCallback {
     fun onLoggedIn()
 }

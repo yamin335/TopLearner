@@ -93,9 +93,13 @@ class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, Profi
             viewDataBinding.llPromo.visibility = View.VISIBLE
             viewDataBinding.promoCode.text = if (user.promo_code.isNullOrBlank()) "N/A" else user.promo_code
             viewDataBinding.titlePersonalInfo.text = getString(R.string.titlePromoterPersonalInfo)
+            viewDataBinding.llDesignation.visibility = View.GONE
+            viewDataBinding.responsibleArea.text = if (user.designation.isNullOrBlank()) "N/A" else user.designation
         } else {
             viewDataBinding.llPromo.visibility = View.GONE
             viewDataBinding.titlePersonalInfo.text = getString(R.string.titlePartnerPersonalInfo)
+            viewDataBinding.responsibleArea.text = if (user.upazila.isNullOrBlank()) "N/A" else user.upazila
+            viewDataBinding.designation.text = if (user.designation.isNullOrBlank()) "N/A" else user.designation
         }
 
         viewDataBinding.name.text = "${user.first_name}"
@@ -111,8 +115,6 @@ class PartnerProfileFragment : BaseFragment<PartnerProfileFragmentBinding, Profi
         viewDataBinding.officialId.text = if (user.official_id.isNullOrBlank()) "N/A" else user.official_id
         viewDataBinding.partnerType.text = if (user.designation_type.isNullOrBlank()) "N/A" else user.designation_type
         viewDataBinding.noOfStudents.text = "${user.no_of_students ?: 0}"
-        viewDataBinding.responsibleArea.text = if (user.upazila.isNullOrBlank()) "N/A" else user.upazila
-        viewDataBinding.designation.text = if (user.designation.isNullOrBlank()) "N/A" else user.designation
         viewDataBinding.sharePercent.text = "${user.discount_amount ?: 0}%"
         try {
             viewDataBinding.birthDate.text = if (user.BirthDate.isNullOrBlank()) "N/A" else user.BirthDate?.split("T")?.get(0)
