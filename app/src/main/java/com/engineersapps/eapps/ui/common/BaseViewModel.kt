@@ -7,11 +7,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.engineersapps.eapps.R
+import com.engineersapps.eapps.api.ResponseCodes.CODE_EXPIRED_TOKEN
 import com.engineersapps.eapps.api.ResponseCodes.CODE_INVALID_TOKEN
 import com.engineersapps.eapps.models.home.SessionError
 import com.engineersapps.eapps.prefs.PreferencesHelper
 import com.engineersapps.eapps.ui.splash.SplashFragment
 import com.engineersapps.eapps.util.AppConstants.INTENT_SESSION_EXPIRED
+import com.engineersapps.eapps.util.AppConstants.INTENT_TOKEN_EXPIRED
 import com.engineersapps.eapps.util.NetworkUtils
 import com.engineersapps.eapps.util.showErrorToast
 import com.google.gson.Gson
@@ -44,8 +46,11 @@ abstract class BaseViewModel constructor(val context: Application) : ViewModel()
         try {
             val sessionError = Gson().fromJson(error, SessionError::class.java)
             sessionError?.let {
-                if (it.code == CODE_INVALID_TOKEN) {
+                val code = it.code ?: return@let
+                if (code == CODE_INVALID_TOKEN) {
                     LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(INTENT_SESSION_EXPIRED))
+                } else if (code == CODE_EXPIRED_TOKEN) {
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(INTENT_TOKEN_EXPIRED))
                 }
             }
         } catch (e: Exception) {

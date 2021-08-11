@@ -2,7 +2,9 @@ package com.engineersapps.eapps.ui
 
 import android.app.Activity
 import android.content.*
+import android.os.Build
 import android.os.Bundle
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -101,6 +103,7 @@ class LoginActivity : DaggerAppCompatActivity(), LoginHandlerCallback, OTPHandle
         unregisterReceiver(smsVerificationReceiver)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)

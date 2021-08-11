@@ -13,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -20,8 +21,10 @@ import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.MainActivityBinding
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.prefs.PreferencesHelper
+import com.engineersapps.eapps.util.AppConstants
 import com.engineersapps.eapps.util.hideKeyboard
 import com.engineersapps.eapps.util.shouldCloseDrawerFromBackPress
+import com.engineersapps.eapps.util.showWarningToast
 import com.google.android.material.navigation.NavigationView
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.CoroutineScope
@@ -90,8 +93,45 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
 
     lateinit var userData: InquiryAccount
 
+    private lateinit var tokenExpireReceiver: BroadcastReceiver
+
+    override fun onResume() {
+        super.onResume()
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            tokenExpireReceiver,
+            IntentFilter(AppConstants.INTENT_TOKEN_EXPIRED)
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(tokenExpireReceiver)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        tokenExpireReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                intent?.let {
+                    viewModel.loginUser(preferencesHelper.getUser())
+                }
+            }
+        }
+
+        viewModel.loginResponse.observe(this, androidx.lifecycle.Observer {
+            it?.let { data ->
+                data.Account?.let { account ->
+                    if (account.isRegistered == true) {
+                        preferencesHelper.accessToken = data.Token?.AccessToken
+                        preferencesHelper.accessTokenExpiresIn = data.Token?.AtExpires ?: 0
+                        preferencesHelper.isLoggedIn = true
+                        preferencesHelper.saveUser(account)
+                        showWarningToast(this, "Your session refreshed, please try again!")
+                    }
+                }
+            }
+        })
 
         window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE,

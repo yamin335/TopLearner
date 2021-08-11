@@ -24,4 +24,5 @@ object AppConstants {
     const val generalUserTypeID = 1
     const val adminUserTypeID = 2
     const val INTENT_SESSION_EXPIRED = "Session_Expired_So_Do_LogOut"
+    const val INTENT_TOKEN_EXPIRED = "Token_Expired_So_Refresh_Token"
 }

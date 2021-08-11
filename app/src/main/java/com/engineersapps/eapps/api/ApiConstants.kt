@@ -158,6 +158,7 @@ object ResponseCodes {
     const val CODE_DEVICE_CHANGE = 451
     const val CODE_FIRST_LOGIN = 426
     const val CODE_INVALID_TOKEN = 4010003
+    const val CODE_EXPIRED_TOKEN = 4010004
 }
 
 object ApiCallStatus {
