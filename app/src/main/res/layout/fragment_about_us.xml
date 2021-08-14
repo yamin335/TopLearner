@@ -54,7 +54,6 @@
                     android:layout_marginTop="0dp"/>
 
                 <TextView
-                    android:id="@+id/emptyView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -63,6 +62,251 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="32dp"
                     android:layout_marginTop="8dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/title_e_tin"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/e_tin_value"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="2dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/dhaka_office"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/value_dhaka_office"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="2dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/munshiganj_office"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/value_munsiganj_office"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="2dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/payment_options"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="16dp">
+
+                    <ImageView
+                        android:id="@+id/ic_1"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintDimensionRatio="1:1"
+                        android:src="@drawable/ic_about_visa"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/ic_2"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/ic_2"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintDimensionRatio="1:1"
+                        android:src="@drawable/ic_about_m_cash"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ic_1"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/ic_3"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/ic_3"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintDimensionRatio="1:1"
+                        android:src="@drawable/ic_about_sure_cash"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ic_2"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/ic_4"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/ic_4"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintDimensionRatio="1:1"
+                        android:src="@drawable/ic_about_rocket"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ic_3"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/ic_6"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/ic_5"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintDimensionRatio="1:1"
+                        android:src="@drawable/ic_about_bkash"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ic_6"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/ic_6"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintDimensionRatio="1:1"
+                        android:src="@drawable/ic_about_nagad"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ic_4"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/ic_5"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="32dp">
+
+                    <ImageView
+                        android:id="@+id/ic_11"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintDimensionRatio="1:1"
+                        android:src="@drawable/ic_about_american_express"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/ic_22"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/ic_22"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintDimensionRatio="1:1"
+                        android:src="@drawable/ic_about_master_card"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ic_11"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/ic_33"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/ic_33"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintDimensionRatio="1:1"
+                        android:src="@drawable/ic_about_bank_asia"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ic_22"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/ic_44"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/ic_44"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintDimensionRatio="1:1"
+                        android:src="@drawable/ic_about_islami_bank"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ic_33"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/ic_66"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/ic_55"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintDimensionRatio="1:1"
+                        android:src="@drawable/ic_about_brac_bank"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ic_66"
+                        app:layout_constraintHorizontal_bias="0.55"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/ic_66"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintDimensionRatio="1:1"
+                        android:src="@drawable/ic_about_city_bank"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ic_44"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/ic_55"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 

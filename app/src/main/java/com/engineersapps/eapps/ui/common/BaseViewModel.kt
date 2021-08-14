@@ -44,6 +44,10 @@ abstract class BaseViewModel constructor(val context: Application) : ViewModel()
 
     fun checkForValidSession(error: String) {
         try {
+            if (error == "Internal Server Error") {
+                LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(INTENT_SESSION_EXPIRED))
+                return
+            }
             val sessionError = Gson().fromJson(error, SessionError::class.java)
             sessionError?.let {
                 val code = it.code ?: return@let

@@ -351,7 +351,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
     private fun callPayment() {
         val amount = viewModel.amount.value?.toDouble() ?: return
-        val sslCommerzInitialization = SSLCommerzInitialization ("testbox","qwerty",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.TESTBOX)
+        val sslCommerzInitialization = SSLCommerzInitialization ("engineersappslive","61149E9C3398383671",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.LIVE)
         IntegrateSSLCommerz
             .getInstance(requireContext())
             .addSSLCommerzInitialization(sslCommerzInitialization)
@@ -366,10 +366,12 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 }
 
                 override fun transactionFail(p0: String?) {
+                    val ss = ""
                     //Timber.d("Transaction Fail")
                 }
 
                 override fun merchantValidationError(p0: String?) {
+                    val ss = ""
                     when (p0) {
 //                        ErrorKeys.USER_INPUT_ERROR -> Timber.e("User Input Error")
 //                        ErrorKeys.INTERNET_CONNECTION_ERROR -> Timber.e("INTERNET_CONNECTION_ERROR")
