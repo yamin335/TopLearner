@@ -14,7 +14,6 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.github.barteksc.pdfviewer.util.FitPolicy
 import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.ChapterDetailsTabFragmentBinding
@@ -22,6 +21,7 @@ import com.engineersapps.eapps.ui.common.BaseFragment
 import com.engineersapps.eapps.ui.video_play.LoadWebViewFragment
 import com.engineersapps.eapps.util.AppConstants
 import com.engineersapps.eapps.util.FileUtils
+import com.github.barteksc.pdfviewer.util.FitPolicy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
@@ -43,7 +43,7 @@ class Tab2Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab2ViewMode
         super.onResume()
         if (pdfFilePath2.isNotBlank()) loadPDF(File(pdfFilePath2))
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(pdfFileReceiver,
-            IntentFilter(AppConstants.TYPE_LOAD_PDF)
+            IntentFilter(TAG)
         )
     }
 
@@ -58,14 +58,15 @@ class Tab2Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab2ViewMode
 
         pdfFileReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                if (intent?.action != null && intent.action == AppConstants.TYPE_LOAD_PDF) {
+                if (intent?.action != null && intent.action == TAG) {
                     if (pdfFilePath2.isNotBlank()) loadPDF(File(pdfFilePath2))
                 }
             }
         }
 
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(pdfFileReceiver,
-            IntentFilter(AppConstants.TYPE_LOAD_PDF))
+            IntentFilter(TAG)
+        )
 
         val webSettings = viewDataBinding.webView.settings
         webSettings.javaScriptEnabled = true
@@ -153,21 +154,24 @@ class Tab2Fragment : BaseFragment<ChapterDetailsTabFragmentBinding, Tab2ViewMode
 
     private fun loadPDF(file: File) {
         if (file.exists()) {
-            try {
-                lifecycleScope.launch(Dispatchers.Main.immediate) {
+            lifecycleScope.launch(Dispatchers.Main.immediate) {
+                try {
                     viewDataBinding.pdfView.fromFile(file)
                         .pageFitPolicy(FitPolicy.WIDTH)
                         .enableSwipe(true)
                         .swipeHorizontal(false)
+                        .onPageError { page, t ->
+                            val tt = t
+                        }
                         .onError {
                             setFragmentResult("downloadPDF", bundleOf("fragment" to TAG, "url" to pdfUrl))
                         }
                         .load()
                     viewDataBinding.loader.visibility = View.GONE
                     viewDataBinding.emptyView.visibility = View.GONE
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }

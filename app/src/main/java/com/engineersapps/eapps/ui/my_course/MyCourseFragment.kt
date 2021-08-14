@@ -11,15 +11,14 @@ import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.R
-import com.engineersapps.eapps.api.ApiCallStatus
 import com.engineersapps.eapps.databinding.MyCourseFragmentBinding
 import com.engineersapps.eapps.models.home.ClassWiseBook
-import com.engineersapps.eapps.models.home.Course
 import com.engineersapps.eapps.models.my_course.MyCourse
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.prefs.AppPreferencesHelper
 import com.engineersapps.eapps.ui.NavDrawerHandlerCallback
 import com.engineersapps.eapps.ui.common.BaseFragment
+import com.engineersapps.eapps.ui.home.Home2Fragment.Companion.allCourseList
 import com.engineersapps.eapps.ui.payment.PaymentFragment
 import com.engineersapps.eapps.util.isTimeAndZoneAutomatic
 import com.engineersapps.eapps.util.showErrorToast
@@ -27,7 +26,6 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel>() {
     override val bindingVariable: Int
@@ -48,7 +46,7 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
 
     private var totalCourse = 0
     private var currentCourse = 0
-    var allCourseList = HashMap<Int?, Course?>()
+
     var allMyCourseBookIds = ArrayList<Int>()
 
     var timeChangeListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
@@ -241,20 +239,6 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
                 }
             }
         }
-
-        viewModel.allCourseCategoriesFromDB.observe(viewLifecycleOwner, Observer {
-            if (!it.isNullOrEmpty()) {
-                viewModel.apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-            }
-            val courses = HashMap<Int?, Course?>()
-            CourseFilteringForLoop@ for (courseCategory in it) {
-                val courseList = courseCategory.courses ?: continue@CourseFilteringForLoop
-                for (course in courseList) {
-                    courses[course.id] = course
-                }
-            }
-            allCourseList = courses
-        })
 
         viewModel.allMyCourseBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
             books?.let {

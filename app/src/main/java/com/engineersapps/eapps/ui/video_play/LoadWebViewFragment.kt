@@ -53,7 +53,6 @@ import com.engineersapps.eapps.ui.common.DownloadOrEraseMessageBottomSheetDialog
 import com.engineersapps.eapps.ui.home.*
 import com.engineersapps.eapps.util.AppConstants
 import com.engineersapps.eapps.util.AppConstants.PDF_FILE_PATH
-import com.engineersapps.eapps.util.AppConstants.TYPE_LOAD_PDF
 import com.engineersapps.eapps.util.AppConstants.downloadFolder
 import com.engineersapps.eapps.util.AppConstants.unzippedFolder
 import com.engineersapps.eapps.util.FLAGS_FULLSCREEN
@@ -649,20 +648,29 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
                 when(it.requestedFragment) {
                     Tab1Fragment.TAG -> {
                         Tab1Fragment.pdfFilePath1 = "${it.filePath}/${it.fileName}"
+                        val pdfFileIntent = Intent(Tab1Fragment.TAG)
+                        pdfFileIntent.putExtra(PDF_FILE_PATH, "${it.filePath}/${it.fileName}")
+                        LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(pdfFileIntent)
                     }
                     Tab2Fragment.TAG -> {
                         Tab2Fragment.pdfFilePath2 = "${it.filePath}/${it.fileName}"
+                        val pdfFileIntent = Intent(Tab2Fragment.TAG)
+                        pdfFileIntent.putExtra(PDF_FILE_PATH, "${it.filePath}/${it.fileName}")
+                        LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(pdfFileIntent)
                     }
                     Tab3Fragment.TAG -> {
                         Tab3Fragment.pdfFilePath3 = "${it.filePath}/${it.fileName}"
+                        val pdfFileIntent = Intent(Tab3Fragment.TAG)
+                        pdfFileIntent.putExtra(PDF_FILE_PATH, "${it.filePath}/${it.fileName}")
+                        LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(pdfFileIntent)
                     }
                     Tab4Fragment.TAG -> {
                         Tab4Fragment.pdfFilePath4 = "${it.filePath}/${it.fileName}"
+                        val pdfFileIntent = Intent(Tab4Fragment.TAG)
+                        pdfFileIntent.putExtra(PDF_FILE_PATH, "${it.filePath}/${it.fileName}")
+                        LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(pdfFileIntent)
                     }
                 }
-                val pdfFileIntent = Intent(TYPE_LOAD_PDF)
-                pdfFileIntent.putExtra(PDF_FILE_PATH, "${it.filePath}/${it.fileName}")
-                LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(pdfFileIntent)
                 filesInDownloadPool.remove(it.fileName)
             }
         })

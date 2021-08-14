@@ -13,6 +13,7 @@ import com.engineersapps.eapps.R
 import com.engineersapps.eapps.api.ApiCallStatus
 import com.engineersapps.eapps.databinding.HomeFragment2Binding
 import com.engineersapps.eapps.models.home.ClassWiseBook
+import com.engineersapps.eapps.models.home.Course
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.prefs.AppPreferencesHelper
 import com.engineersapps.eapps.ui.LogoutHandlerCallback
@@ -23,6 +24,7 @@ import com.engineersapps.eapps.util.isTimeAndZoneAutomatic
 class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
     companion object {
         var allBookList = ArrayList<ClassWiseBook>()
+        var allCourseList = HashMap<Int?, Course?>()
     }
     override val bindingVariable: Int
         get() = BR.viewModel
@@ -161,6 +163,14 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
                 viewModel.apiCallStatus.postValue(ApiCallStatus.SUCCESS)
             }
             courseCategoryListAdapter.submitList(it)
+            val courses = HashMap<Int?, Course?>()
+            CourseFilteringForLoop@ for (courseCategory in it) {
+                val courseList = courseCategory.courses ?: continue@CourseFilteringForLoop
+                for (course in courseList) {
+                    courses[course.id] = course
+                }
+            }
+            allCourseList = courses
         })
 
         viewDataBinding.swipeRefresh.setOnRefreshListener {
