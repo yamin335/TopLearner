@@ -335,28 +335,28 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
                     }
                 }
 
-                val downloadFilePath = FileUtils.getLocalStorageFilePath(
-                    requireContext(),
-                    downloadFolder
-                )
+//                val downloadFilePath = FileUtils.getLocalStorageFilePath(
+//                    requireContext(),
+//                    downloadFolder
+//                )
 
-                var oldestFileName = ""
-                var oldestDate = Long.MAX_VALUE
-                val downloadFolder = File(downloadFilePath)
-                if (!downloadFolder.isDirectory) return@let
-                val filesInDownloadFolder = downloadFolder.listFiles() ?: return@let
-
-                if (filesInDownloadFolder.size <= 5) return@let
-                for (zipFile in filesInDownloadFolder) {
-                    if (!zipFile.isDirectory) {
-                        if (zipFile.lastModified() < oldestDate) {
-                            oldestDate = zipFile.lastModified()
-                            oldestFileName = zipFile.name
-                        }
-                    }
-                }
-                val deleteFile = File(downloadFilePath, oldestFileName)
-                if (deleteFile.exists()) FileUtils.deleteFileFromExternalStorage(deleteFile)
+//                var oldestFileName = ""
+//                var oldestDate = Long.MAX_VALUE
+//                val downloadFolder = File(downloadFilePath)
+//                if (!downloadFolder.isDirectory) return@let
+//                val filesInDownloadFolder = downloadFolder.listFiles() ?: return@let
+//
+//                if (filesInDownloadFolder.size <= 5) return@let
+//                for (zipFile in filesInDownloadFolder) {
+//                    if (!zipFile.isDirectory) {
+//                        if (zipFile.lastModified() < oldestDate) {
+//                            oldestDate = zipFile.lastModified()
+//                            oldestFileName = zipFile.name
+//                        }
+//                    }
+//                }
+//                val deleteFile = File(downloadFilePath, oldestFileName)
+//                if (deleteFile.exists()) FileUtils.deleteFileFromExternalStorage(deleteFile)
             }
 
             if (value == null && downloadingFile != null) {
