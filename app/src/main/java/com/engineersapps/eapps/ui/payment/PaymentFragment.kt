@@ -19,10 +19,7 @@ import com.engineersapps.eapps.models.transactions.CreateOrderBody
 import com.engineersapps.eapps.ui.MyCourseTabSelection
 import com.engineersapps.eapps.ui.bkash.BKashDialogFragment
 import com.engineersapps.eapps.ui.common.BaseFragment
-import com.engineersapps.eapps.util.getMilliFromDate
-import com.engineersapps.eapps.util.hideKeyboard
-import com.engineersapps.eapps.util.showErrorToast
-import com.engineersapps.eapps.util.showSuccessToast
+import com.engineersapps.eapps.util.*
 import com.sslwireless.sslcommerzlibrary.model.initializer.SSLCommerzInitialization
 import com.sslwireless.sslcommerzlibrary.model.response.SSLCTransactionInfoModel
 import com.sslwireless.sslcommerzlibrary.model.util.SSLCCurrencyType
@@ -366,11 +363,15 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 }
 
                 override fun transactionFail(p0: String?) {
-                    val ss = ""
-                    //Timber.d("Transaction Fail")
+                    p0?.let {
+                        showWarningToast(requireContext(), it)
+                    }
                 }
 
                 override fun merchantValidationError(p0: String?) {
+                    p0?.let {
+                        showWarningToast(requireContext(), it)
+                    }
                     val ss = ""
                     when (p0) {
 //                        ErrorKeys.USER_INPUT_ERROR -> Timber.e("User Input Error")
