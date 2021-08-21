@@ -7,14 +7,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import com.engineersapps.eapps.AppExecutors
 import com.engineersapps.eapps.R
-import com.engineersapps.eapps.databinding.CourseDetailsSubjectListItemBinding
+import com.engineersapps.eapps.databinding.CourseContentListItemBinding
 import com.engineersapps.eapps.models.home.CourseChapter
 import com.engineersapps.eapps.util.DataBoundListAdapter
 
 class CourseChapterListAdapter(
     private val appExecutors: AppExecutors,
     private val itemCallback: ((CourseChapter) -> Unit)
-) : DataBoundListAdapter<CourseChapter, CourseDetailsSubjectListItemBinding>(
+) : DataBoundListAdapter<CourseChapter, CourseContentListItemBinding>(
     appExecutors = appExecutors, diffCallback = object : DiffUtil.ItemCallback<CourseChapter>() {
         override fun areItemsTheSame(oldItem: CourseChapter, newItem: CourseChapter): Boolean {
             return oldItem.id == newItem.id
@@ -30,14 +30,14 @@ class CourseChapterListAdapter(
 
     }) {
     
-    override fun createBinding(parent: ViewGroup): CourseDetailsSubjectListItemBinding {
+    override fun createBinding(parent: ViewGroup): CourseContentListItemBinding {
         return DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.list_item_course_content, parent, false
         )
     }
 
-    override fun bind(binding: CourseDetailsSubjectListItemBinding, position: Int) {
+    override fun bind(binding: CourseContentListItemBinding, position: Int) {
         val item = getItem(position)
         binding.item = item
 
@@ -52,13 +52,15 @@ class CourseChapterListAdapter(
 
         }
 
+        binding.details.setHasFixedSize(true)
+
         binding.details.adapter = animationListAdapter
         animationListAdapter.submitList(item.chapter_contents)
 
 
     }
 
-    fun toggleExpanded(item: CourseChapter, binding: CourseDetailsSubjectListItemBinding) {
+    fun toggleExpanded(item: CourseChapter, binding: CourseContentListItemBinding) {
         //val toggle: Transition = TransitionInflater.from(binding.root.context).inflateTransition(R.transition.search_bar_toogle)
         item.isExpanded = !item.isExpanded
         //toggle.duration = if (item.isExpanded) 200L else 150L

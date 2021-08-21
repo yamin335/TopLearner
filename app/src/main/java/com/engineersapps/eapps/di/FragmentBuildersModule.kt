@@ -28,6 +28,7 @@ import com.engineersapps.eapps.ui.profiles.ProfileSettingsFragment
 import com.engineersapps.eapps.ui.settings.SettingsFragment
 import com.engineersapps.eapps.ui.splash.SplashFragment
 import com.engineersapps.eapps.ui.terms_and_conditions.TermsAndConditionsFragment
+import com.engineersapps.eapps.ui.terms_and_conditions.TermsFragment
 import com.engineersapps.eapps.ui.transaction.TransactionFragment
 import com.engineersapps.eapps.ui.video_play.LoadWebViewFragment
 import dagger.Module
@@ -42,6 +43,9 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeTermsAndConditionsFragment(): TermsAndConditionsFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeTermsFragment(): TermsFragment
 
     @ContributesAndroidInjector
     abstract fun contributeSignInFragment(): SignInFragment
