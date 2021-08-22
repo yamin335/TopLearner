@@ -51,7 +51,7 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
     private var currentWindow = 0
     private var playbackPosition: Long = 0
     private lateinit var teachersAdapter: TeachersListAdapter
-    private lateinit var contentsAdapter: CourseChapterListAdapter
+    private lateinit var contentsAdapter: CourseContentListAdapter
     private lateinit var faqsAdapter: FaqListAdapter
 
     //private val args: CourseDetailsFragmentArgs by navArgs()
@@ -142,9 +142,7 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
 //            CourseSubject(6, "Subject - 6")
 //        )
 
-        contentsAdapter = CourseChapterListAdapter(appExecutors) {
-
-        }
+        contentsAdapter = CourseContentListAdapter()
         (viewDataBinding.courseDetailsRecycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         //viewDataBinding.courseDetailsRecycler.setHasFixedSize(true)
         //viewDataBinding.courseDetailsRecycler.itemAnimator = DefaultItemAnimator()
@@ -238,9 +236,16 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
             initializePlayer()
         }
         lifecycleScope.launch {
-            delay(1500)
+            delay(300)
             CoroutineScope(Dispatchers.Main.immediate).launch {
-                contentsAdapter.submitList(course?.course_chapters)
+                course?.course_chapters?.let {
+                    var i = 0
+                    while (i < it.size) {
+                        contentsAdapter.addItemToList(it[i], i)
+                        if (i % 3 == 0) delay(150)
+                        i++
+                    }
+                }
             }
         }
     }

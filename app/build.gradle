@@ -163,7 +163,7 @@ dependencies {
     implementation 'net.lingala.zip4j:zip4j:2.6.3'
 
     // PDF File Viewer
-    implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
+    implementation 'com.github.barteksc:android-pdf-viewer:3.1.0-beta.1'
     implementation 'com.android.support:support-v4:28.0.0'
 
     implementation 'jp.wasabeef:glide-transformations:4.3.0'

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data class="CourseDetailsSubjectListItemBinding">
+    <data class="CourseContentListItemBinding">
         <variable
             name="item"
             type="com.engineersapps.eapps.models.home.CourseChapter" />

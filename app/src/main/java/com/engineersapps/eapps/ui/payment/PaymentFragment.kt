@@ -227,6 +227,21 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             }
         })
 
+        viewDataBinding.termsAndConditions.setOnClickListener {
+            navigateTo(PaymentFragmentDirections.actionPaymentFragmentToTermsNavGraph())
+        }
+
+        viewModel.amount.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                viewDataBinding.btnPayNow.isEnabled = it > 0 && viewDataBinding.cbTerms.isChecked
+            }
+        })
+
+        viewDataBinding.cbTerms.setOnCheckedChangeListener { _, isChecked ->
+            val amount = viewModel.amount.value ?: return@setOnCheckedChangeListener
+            viewDataBinding.btnPayNow.isEnabled = amount > 0 && isChecked
+        }
+
         viewDataBinding.btnPayNow.setOnClickListener {
 
             callPayment()
@@ -363,11 +378,9 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 }
 
                 override fun transactionFail(p0: String?) {
-                    val ss = ""
                     p0?.let {
                         showWarningToast(requireContext(), it)
                     }
-                    //Timber.d("Transaction Fail")
                 }
 
                 override fun merchantValidationError(p0: String?) {
