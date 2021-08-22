@@ -4,6 +4,7 @@ import android.content.*
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
