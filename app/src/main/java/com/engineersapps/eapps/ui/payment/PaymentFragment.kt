@@ -152,6 +152,18 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             viewModel.amount.postValue(packagePrice - discount)
         })
 
+        viewModel.coursePurchaseSuccess.observe(viewLifecycleOwner, Observer { isSuccess ->
+            isSuccess?.let {
+                if (it) {
+                    hideKeyboard()
+                    findNavController().popBackStack()
+                    showSuccessToast(requireContext(), "Payment Successful")
+                    myCourseTabSelectionListener?.selectMyCourseTab()
+                    viewModel.coursePurchaseSuccess.postValue(null)
+                }
+            }
+        })
+
         viewModel.salesInvoice.observe(viewLifecycleOwner, Observer { invoice ->
             invoice?.let {
 //                Home2Fragment.allBookList.map { classWiseBook ->
@@ -244,7 +256,11 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewDataBinding.btnPayNow.setOnClickListener {
 
-            callPayment()
+            if (userData.customer_type_id == 2) {
+                callPartnerPayment()
+            } else {
+                callPayment()
+            }
 
 //            viewModel.getBkashPaymentUrl(userData.mobile ?: "",
 //                viewModel.mount.value ?: "0",
@@ -359,6 +375,15 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 args.coursePrice.toInt(), response.amount.toDouble().toInt(), courseDuration
             )
         )
+    }
+
+    private fun callPartnerPayment() {
+        val payLoad = CoursePaymentRequest(
+            userData.mobile, invoiceNumber, userData.id, args.courseId,
+            args.coursePrice.toInt(), 0, courseDuration
+        )
+
+        viewModel.purchaseCourse(null, payLoad)
     }
 
     private fun callPayment() {

@@ -33,7 +33,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.engineersapps.eapps.AppGlobalValues
 import com.engineersapps.eapps.BR
@@ -93,7 +92,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 //    private val viewPagerPageTitles = arrayOf(if (tab4Title.isEmpty()) "অ্যানিমেশন" else tab4Title, tab1Title, tab2Title, tab3Title)
 //    private val viewPagerPageTitles = arrayOf("Video List", "Questions")
 
-    private val viewPagerPageTitles = arrayOf("অ্যানিমেশন", tab1Title, tab2Title, tab3Title)
+    private val viewPagerPageTitles = if (isAnimationListEmpty) arrayOf(tab1Title, tab2Title, tab3Title) else arrayOf("অ্যানিমেশন", tab1Title, tab2Title, tab3Title)
 
     private lateinit var pagerAdapter: VideoTabViewPagerAdapter
 
@@ -103,9 +102,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
     private var isVideoStartedPlaying = false
 
-    private val args: LoadWebViewFragmentArgs by navArgs()
-
-    private var expanded = true
+    private var expanded = false
     private lateinit var toggle: Transition
 
     private val primaryExternalStorageAbsolutePath: String get() {
@@ -194,8 +191,6 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
         super.onAttach(context)
 
         detectUSB()
-
-        chapter = args.chapter
 
         if (context is ShowHideBottomNavCallback) {
             bottomNavShowHideCallback = context
@@ -296,6 +291,8 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
     @SuppressLint("SetJavaScriptEnabled", "ObsoleteSdkInt")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewDataBinding.webView.visibility = if (isAnimationListEmpty) View.GONE else View.VISIBLE
 
         //activity?.title = title
         detectUSB()
@@ -496,7 +493,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
         }
 
         pagerAdapter = VideoTabViewPagerAdapter(
-            4,
+            totalTabs,
             this,
             tab4Title.isNotEmpty()
         )
@@ -509,7 +506,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
         viewPager2PageChangeCallback = ViewPager2PageChangeCallback {
             setCurrentPageItemPosition(it)
             when(it) {
-                0 -> requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+                0 -> requireActivity().requestedOrientation = if (isAnimationListEmpty) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
                 1 -> requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                 2 -> requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                 3 -> requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -999,15 +996,9 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
         }
     }
 
-    override fun onDestroyView() {
-        //viewDataBinding.webView.webViewClient = null
-        super.onDestroyView()
-
-    }
-
     private fun setCurrentPageItemPosition(position: Int) {
         viewPagerCurrentItem = position
-        if (viewPagerCurrentItem == 0) expand() else collapse()
+        if (viewPagerCurrentItem == 0 && !isAnimationListEmpty) expand() else collapse()
     }
 
     override fun onNewConfiguration(newConfig: Configuration) {
@@ -1088,6 +1079,8 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
     companion object {
         lateinit var chapter: BookChapter
+        var isAnimationListEmpty = false
+        var totalTabs = 0
         var tab1Title = ""
         var tab2Title = ""
         var tab3Title = ""

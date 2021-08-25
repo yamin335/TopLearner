@@ -49,6 +49,11 @@ class ChapterListFragment : BaseFragment<ChapterListFragmentBinding, ChapterList
 
         chapterListAdapter = ChapterListAdapter(appExecutors) { chapter ->
             try {
+                LoadWebViewFragment.chapter = chapter
+                val animationList = chapter.fields?.filter { it.type == "video" }
+                LoadWebViewFragment.isAnimationListEmpty = animationList.isNullOrEmpty()
+                LoadWebViewFragment.totalTabs = if (LoadWebViewFragment.isAnimationListEmpty) 3 else 4
+
                 LoadWebViewFragment.tab1Title = chapter.fields?.first { it.type == "Tab1" }?.name ?: ""
                 LoadWebViewFragment.tab2Title = chapter.fields?.first { it.type == "Tab2" }?.name ?: ""
                 LoadWebViewFragment.tab3Title = chapter.fields?.first { it.type == "Tab3" }?.name ?: ""

@@ -60,6 +60,10 @@ class PaymentViewModel @Inject constructor(private val application: Application,
         MutableLiveData<BKashCreateResponse>()
     }
 
+    val coursePurchaseSuccess: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
+
     fun getBkashPaymentUrl(mobile: String?, amount: String?, invoiceNumber: String?): MutableLiveData<BKashCreateResponse> {
         if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
@@ -146,7 +150,7 @@ class PaymentViewModel @Inject constructor(private val application: Application,
         }
     }
 
-    fun purchaseCourse(createOrderBody: CreateOrderBody, coursePaymentRequest: CoursePaymentRequest) {
+    fun purchaseCourse(createOrderBody: CreateOrderBody?, coursePaymentRequest: CoursePaymentRequest) {
         if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -158,7 +162,13 @@ class PaymentViewModel @Inject constructor(private val application: Application,
             viewModelScope.launch(handler) {
                 when (val apiResponse = ApiResponse.create(repository.purchaseCourseRepo(coursePaymentRequest))) {
                     is ApiSuccessResponse -> {
-                        createOrder(createOrderBody)
+                        if (createOrderBody == null) {
+                            apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                            coursePurchaseSuccess.postValue(true)
+                        }
+                        createOrderBody?.let {
+                            createOrder(it)
+                        }
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
