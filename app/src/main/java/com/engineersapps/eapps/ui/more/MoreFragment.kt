@@ -20,6 +20,7 @@ import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.social_media.SocialMedia
 import com.engineersapps.eapps.ui.NavDrawerHandlerCallback
 import com.engineersapps.eapps.ui.common.BaseFragment
+import com.engineersapps.eapps.ui.common.CommonMessageBottomSheetDialog
 import com.engineersapps.eapps.ui.profile_signin.ClassEditFragment
 import com.engineersapps.eapps.ui.profile_signin.DistrictEditFragment
 import com.engineersapps.eapps.ui.profile_signin.UpazillaEditFragment
@@ -48,6 +49,7 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
     var placeholder: BitmapDrawable? = null
 
     lateinit var socialMediaBottomSheetDialog: SocialMediaBottomSheetDialog
+    lateinit var commonMessageBottomSheetDialog: CommonMessageBottomSheetDialog
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -67,7 +69,7 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        commonMessageBottomSheetDialog = CommonMessageBottomSheetDialog(null)
 
         userData = preferencesHelper.getUser()
 
@@ -185,6 +187,11 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
         viewDataBinding.mAboutUs.setOnClickListener {
             navigateTo(MoreFragmentDirections.actionMoreFragmentToAboutUsFragment())
+        }
+
+        viewDataBinding.mSubscription.setOnClickListener {
+            commonMessageBottomSheetDialog.message = "${userData.promo_code} কোড ব্যাবহার করলে ডিস্কাউন্ট পাবেন।"
+            commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
         }
     }
 

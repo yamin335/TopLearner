@@ -177,6 +177,13 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
 
+        viewModel.allMyCoursesFromDB.observe(this, Observer {
+            it?.let { myCourses ->
+                if (myCourses.isNotEmpty()) {
+                    binding.mainContainer.bottomNav.selectedItemId = R.id.my_course_nav
+                }
+            }
+        })
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
