@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.BuildConfig
@@ -50,6 +51,10 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
     lateinit var socialMediaBottomSheetDialog: SocialMediaBottomSheetDialog
     lateinit var commonMessageBottomSheetDialog: CommonMessageBottomSheetDialog
+
+    companion object {
+        var promoDiscountValue: Int = 0
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -110,8 +115,10 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
             } else {
                 viewDataBinding.tvUserType.text = "Partner"
             }
+            viewDataBinding.mSubscription.visibility = View.VISIBLE
         } else {
             viewDataBinding.tvUserType.text = "Student"
+            viewDataBinding.mSubscription.visibility = View.GONE
         }
 
         viewDataBinding.mProfile.setOnClickListener {
@@ -140,6 +147,22 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
             val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(myIntent)
         }
+
+        viewModel.promoCode.observe(viewLifecycleOwner, Observer { promoPair ->
+            promoPair?.let {
+                if (promoPair.first) {
+                    if (promoPair.second?.discount == null) {
+                        showWarningToast(requireContext(), "No valid promo found!")
+                    } else {
+                        promoDiscountValue = promoPair.second?.discount ?: 0
+                        sharePromoCode()
+                    }
+                } else {
+                    showWarningToast(requireContext(), "No valid promo found!")
+                }
+                viewModel.promoCode.postValue(null)
+            }
+        })
 
         viewDataBinding.logout.setOnClickListener {
             logoutListener?.onLoggedOut()
@@ -190,8 +213,30 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
         }
 
         viewDataBinding.mSubscription.setOnClickListener {
-            commonMessageBottomSheetDialog.message = "${userData.promo_code} কোড ব্যাবহার করলে ডিস্কাউন্ট পাবেন।"
-            commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
+            if (promoDiscountValue == 0) {
+                viewModel.verifyPromoCode(userData.promo_code ?: "")
+            } else {
+                sharePromoCode()
+            }
+        }
+    }
+
+    private fun sharePromoCode() {
+        try {
+            val value = "${userData.promo_code} কোড ব্যাবহার করলে $promoDiscountValue% ডিস্কাউন্ট পাবেন।"
+            val title = "${userData.promo_code} কোড ব্যাবহারে $promoDiscountValue% ডিস্কাউন্ট পাবেন।"
+
+            val share = Intent(Intent.ACTION_SEND)
+            share.type = "text/plain"
+            share.putExtra(Intent.EXTRA_TEXT, value)
+            mContext.startActivity(
+                Intent.createChooser(
+                    share,
+                    title
+                )
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

@@ -37,8 +37,14 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
+
+fun Double.toRounded(digit: Int): Double {
+    return BigDecimal(this).setScale(digit, RoundingMode.HALF_UP).toDouble()
+}
 
 fun String.getMilliFromDate(): Long {
     var date: Date? = null

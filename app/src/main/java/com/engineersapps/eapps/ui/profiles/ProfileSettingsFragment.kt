@@ -47,8 +47,6 @@ import java.util.*
 
 
 const val PERMISSION_REQUEST_CODE = 111
-const val FIL_ENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-const val PHOTO_EXTENSION = ".jpg"
 class ProfileSettingsFragment : BaseFragment<ProfileSettingsFragmentBinding, ProfileSettingsViewModel>() {
 
     override val bindingVariable: Int

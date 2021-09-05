@@ -404,6 +404,7 @@
                     android:focusable="true"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
+                    android:visibility="gone"
                     app:contentPaddingLeft="16dp"
                     app:contentPaddingRight="10dp"
                     app:contentPaddingTop="8dp"
