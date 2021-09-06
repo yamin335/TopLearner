@@ -340,7 +340,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         viewModel.createOrder(
             CreateOrderBody(
                 userData.id ?: 0, userData.mobile ?: "",
-                amount.toInt(), 0, 0,
+                amount, amount, 0.0,
                 discount, "", userData.upazila ?: "", userData.city ?: "",
                 userData.UpazilaID ?: 0, userData.CityID ?: 0, bkashData.invoicenumber ?: "N/A",
                 "", bkashData.paymentID ?: "N/A", args.bookId, userData.class_id ?: 0,
@@ -362,21 +362,22 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         val lastName = userData.last_name ?: ""
 
         val promoter = viewModel.promoPartner.value
+        val discount = viewModel.discount.value ?: 0.0
 
         viewModel.purchaseCourse(
             CreateOrderBody(
                 userData.id ?: 0, userData.mobile ?: "",
-                response.amount.toDouble().toInt(), 0, 0,
-                0.0, "", promoter?.upazila ?: "", promoter?.city ?: "",
+                response.amount.toDouble(), response.amount.toDouble(), 0.0,
+                discount, "", promoter?.upazila ?: "", promoter?.city ?: "",
                 promoter?.UpazilaID ?: 0, promoter?.CityID ?: 0, invoiceNumber,
                 "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
-                "$firstName $lastName", args.bookName ?: "", response.amount ?: "N/A",
+                "$firstName $lastName", args.bookName ?: "", response.tranId ?: "N/A",
                 "", "", viewModel.promoCode.value?.code ?: "",
                 viewModel.promoCode.value?.partner_id ?: 0
             ),
             CoursePaymentRequest(
                 userData.mobile, invoiceNumber,userData.id, args.courseId,
-                args.coursePrice.toInt(), response.amount.toDouble().toInt(), courseDuration
+                args.coursePrice.toInt(), response.amount.toDouble(), courseDuration
             )
         )
     }
@@ -384,7 +385,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
     private fun callPartnerPayment() {
         val payLoad = CoursePaymentRequest(
             userData.mobile, invoiceNumber, userData.id, args.courseId,
-            args.coursePrice.toInt(), 0, courseDuration
+            args.coursePrice.toInt(), 0.0, courseDuration
         )
 
         viewModel.purchaseCourse(null, payLoad)
