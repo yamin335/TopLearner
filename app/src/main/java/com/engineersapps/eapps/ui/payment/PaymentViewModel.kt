@@ -8,6 +8,7 @@ import com.engineersapps.eapps.models.Offer
 import com.engineersapps.eapps.models.bkash.BKashCreateResponse
 import com.engineersapps.eapps.models.payment.CoursePaymentRequest
 import com.engineersapps.eapps.models.payment.PromoCode
+import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.transactions.CreateOrderBody
 import com.engineersapps.eapps.models.transactions.Salesinvoice
 import com.engineersapps.eapps.repos.HomeRepository
@@ -30,7 +31,11 @@ class PaymentViewModel @Inject constructor(private val application: Application,
         MutableLiveData<String>()
     }
 
-    var promoCodeDiscount: Int = 0
+    var promoCodeDiscount: Double = 0.0
+
+    val promoPartner: MutableLiveData<InquiryAccount> by lazy {
+        MutableLiveData<InquiryAccount>()
+    }
 
     val promoCode: MutableLiveData<PromoCode> by lazy {
         MutableLiveData<PromoCode>()
@@ -40,12 +45,12 @@ class PaymentViewModel @Inject constructor(private val application: Application,
         MutableLiveData<Int>()
     }
 
-    val discount: MutableLiveData<Int> by lazy {
-        MutableLiveData<Int>()
+    val discount: MutableLiveData<Double> by lazy {
+        MutableLiveData<Double>()
     }
 
-    val amount: MutableLiveData<Int> by lazy {
-        MutableLiveData<Int>()
+    val amount: MutableLiveData<Double> by lazy {
+        MutableLiveData<Double>()
     }
 
     val salesInvoice: MutableLiveData<Salesinvoice> by lazy {
@@ -58,6 +63,10 @@ class PaymentViewModel @Inject constructor(private val application: Application,
 
     val bkashUrl: MutableLiveData<BKashCreateResponse> by lazy {
         MutableLiveData<BKashCreateResponse>()
+    }
+
+    val coursePurchaseSuccess: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
     }
 
     fun getBkashPaymentUrl(mobile: String?, amount: String?, invoiceNumber: String?): MutableLiveData<BKashCreateResponse> {
@@ -146,7 +155,7 @@ class PaymentViewModel @Inject constructor(private val application: Application,
         }
     }
 
-    fun purchaseCourse(createOrderBody: CreateOrderBody, coursePaymentRequest: CoursePaymentRequest) {
+    fun purchaseCourse(createOrderBody: CreateOrderBody?, coursePaymentRequest: CoursePaymentRequest) {
         if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -158,7 +167,13 @@ class PaymentViewModel @Inject constructor(private val application: Application,
             viewModelScope.launch(handler) {
                 when (val apiResponse = ApiResponse.create(repository.purchaseCourseRepo(coursePaymentRequest))) {
                     is ApiSuccessResponse -> {
-                        createOrder(createOrderBody)
+                        if (createOrderBody == null) {
+                            apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                            coursePurchaseSuccess.postValue(true)
+                        }
+                        createOrderBody?.let {
+                            createOrder(it)
+                        }
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
@@ -187,6 +202,7 @@ class PaymentViewModel @Inject constructor(private val application: Application,
                         apiCallStatus.postValue(ApiCallStatus.SUCCESS)
                         if (apiResponse.body.data?.isvalid == true) {
                             isValidPromoCode.postValue(true)
+                            promoPartner.postValue(apiResponse.body.data.partner)
                             promoCode.postValue(apiResponse.body.data.promocode)
                         } else {
                             isValidPromoCode.postValue(false)

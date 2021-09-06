@@ -1,7 +1,9 @@
 package com.engineersapps.eapps.ui.more
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -19,6 +21,7 @@ import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.social_media.SocialMedia
 import com.engineersapps.eapps.ui.NavDrawerHandlerCallback
 import com.engineersapps.eapps.ui.common.BaseFragment
+import com.engineersapps.eapps.ui.common.CommonMessageBottomSheetDialog
 import com.engineersapps.eapps.ui.profile_signin.ClassEditFragment
 import com.engineersapps.eapps.ui.profile_signin.DistrictEditFragment
 import com.engineersapps.eapps.ui.profile_signin.UpazillaEditFragment
@@ -29,6 +32,9 @@ import com.engineersapps.eapps.util.goToYoutube
 import com.engineersapps.eapps.util.showWarningToast
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
+private const val REQUEST_PHONE_CALL = 101
+private const val HELPLINE = "09678271271"
+private const val APP_LINK = "https://play.google.com/store/apps/details?id=com.engineersapps.eapps"
 class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 
     override val bindingVariable: Int
@@ -44,6 +50,11 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
     var placeholder: BitmapDrawable? = null
 
     lateinit var socialMediaBottomSheetDialog: SocialMediaBottomSheetDialog
+    lateinit var commonMessageBottomSheetDialog: CommonMessageBottomSheetDialog
+
+    companion object {
+        var promoDiscountValue: Int = 0
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -63,7 +74,7 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        commonMessageBottomSheetDialog = CommonMessageBottomSheetDialog(null)
 
         userData = preferencesHelper.getUser()
 
@@ -104,8 +115,10 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
             } else {
                 viewDataBinding.tvUserType.text = "Partner"
             }
+            viewDataBinding.mSubscription.visibility = View.VISIBLE
         } else {
             viewDataBinding.tvUserType.text = "Student"
+            viewDataBinding.mSubscription.visibility = View.GONE
         }
 
         viewDataBinding.mProfile.setOnClickListener {
@@ -134,6 +147,22 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
             val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(myIntent)
         }
+
+        viewModel.promoCode.observe(viewLifecycleOwner, Observer { promoPair ->
+            promoPair?.let {
+                if (promoPair.first) {
+                    if (promoPair.second?.discount == null) {
+                        showWarningToast(requireContext(), "No valid promo found!")
+                    } else {
+                        promoDiscountValue = promoPair.second?.discount ?: 0
+                        sharePromoCode()
+                    }
+                } else {
+                    showWarningToast(requireContext(), "No valid promo found!")
+                }
+                viewModel.promoCode.postValue(null)
+            }
+        })
 
         viewDataBinding.logout.setOnClickListener {
             logoutListener?.onLoggedOut()
@@ -172,11 +201,83 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
         }
 
         viewDataBinding.mShare.setOnClickListener {
+            shareApp()
+        }
 
+        viewDataBinding.mHelpline.setOnClickListener {
+            callHelpLine()
         }
 
         viewDataBinding.mAboutUs.setOnClickListener {
             navigateTo(MoreFragmentDirections.actionMoreFragmentToAboutUsFragment())
+        }
+
+        viewDataBinding.mSubscription.setOnClickListener {
+            if (promoDiscountValue == 0) {
+                viewModel.verifyPromoCode(userData.promo_code ?: "")
+            } else {
+                sharePromoCode()
+            }
+        }
+    }
+
+    private fun sharePromoCode() {
+        try {
+            val value = "${userData.promo_code} কোড ব্যাবহার করলে $promoDiscountValue% ডিস্কাউন্ট পাবেন।"
+            val title = "${userData.promo_code} কোড ব্যাবহারে $promoDiscountValue% ডিস্কাউন্ট পাবেন।"
+
+            val share = Intent(Intent.ACTION_SEND)
+            share.type = "text/plain"
+            share.putExtra(Intent.EXTRA_TEXT, value)
+            mContext.startActivity(
+                Intent.createChooser(
+                    share,
+                    title
+                )
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun shareApp() {
+        try {
+            val share = Intent(Intent.ACTION_SEND)
+            share.type = "text/plain"
+            share.putExtra(Intent.EXTRA_TEXT, APP_LINK)
+            mContext.startActivity(
+                Intent.createChooser(
+                    share,
+                    "Share Via"
+                )
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun callHelpLine() {
+        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:$HELPLINE"))
+        if (isCallPermissionGranted) {
+            if (intent.resolveActivity(requireContext().packageManager) != null) {
+                startActivity(intent)
+            } else {
+                showWarningToast(requireContext(), "No Application found")
+            }
+        } else {
+            requestPermissions(arrayOf(Manifest.permission.CALL_PHONE), REQUEST_PHONE_CALL)
+        }
+    }
+
+    private val isCallPermissionGranted: Boolean
+        get() = ContextCompat.checkSelfPermission(requireContext(),
+            Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == REQUEST_PHONE_CALL) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                callHelpLine()
+            }
         }
     }
 

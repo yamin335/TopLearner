@@ -101,8 +101,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         userData = preferencesHelper.getUser()
 
         viewModel.packagePrice.postValue(0)
-        viewModel.discount.postValue(0)
-        viewModel.amount.postValue(0)
+        viewModel.discount.postValue(0.0)
+        viewModel.amount.postValue(0.0)
 
         viewModel.packagePrice.postValue(secondPackagePrice)
 
@@ -138,18 +138,30 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         viewModel.packagePrice.postValue(secondPackagePrice)
-        viewModel.discount.postValue((userData.discount_amount ?: 0.0).toInt())
+        viewModel.discount.postValue((userData.discount_amount ?: 0.0).toDouble())
 
         viewModel.packagePrice.observe(viewLifecycleOwner, Observer {
-            val discount = viewModel.discount.value ?: 0
-            val packagePrice = it ?: 0
+            val discount = viewModel.discount.value ?: 0.0
+            val packagePrice = it?.toDouble() ?: 0.0
             viewModel.amount.postValue(packagePrice - discount)
         })
 
         viewModel.discount.observe(viewLifecycleOwner, Observer {
-            val discount = it ?: 0
+            val discount = it ?: 0.0
             val packagePrice = viewModel.packagePrice.value ?: 0
             viewModel.amount.postValue(packagePrice - discount)
+        })
+
+        viewModel.coursePurchaseSuccess.observe(viewLifecycleOwner, Observer { isSuccess ->
+            isSuccess?.let {
+                if (it) {
+                    hideKeyboard()
+                    findNavController().popBackStack()
+                    showSuccessToast(requireContext(), "Payment Successful")
+                    myCourseTabSelectionListener?.selectMyCourseTab()
+                    viewModel.coursePurchaseSuccess.postValue(null)
+                }
+            }
         })
 
         viewModel.salesInvoice.observe(viewLifecycleOwner, Observer { invoice ->
@@ -192,8 +204,10 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewModel.promoCode.observe(viewLifecycleOwner, Observer { promoCode ->
             promoCode?.let {
-                val promoDiscount = promoCode.discount ?: 0
-                var discount = viewModel.discount.value ?: 0
+                val promoDiscountPercentage = promoCode.discount ?: 0
+                val packagePrice = viewModel.packagePrice.value ?: 0
+                val promoDiscount = ((packagePrice * promoDiscountPercentage)/100.0).toRounded(2)
+                var discount = viewModel.discount.value ?: 0.0
                 discount -= viewModel.promoCodeDiscount
                 viewModel.promoCodeDiscount = promoDiscount
                 discount += viewModel.promoCodeDiscount
@@ -216,8 +230,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
                     if (offer.archived == false && date in firstDate..lastDate) {
                         val offerAmount = offer.offer_amount ?: 0
-                        var discount = viewModel.discount.value ?: 0
-                        discount += offerAmount
+                        var discount = viewModel.discount.value ?: 0.0
+                        discount += offerAmount.toDouble()
                         viewModel.discount.postValue(discount)
 //                        val packagePrice = viewModel.packagePrice.value ?: 0
 //                        viewModel.amount.postValue(packagePrice - discount)
@@ -244,7 +258,11 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewDataBinding.btnPayNow.setOnClickListener {
 
-            callPayment()
+            if (userData.customer_type_id == 2) {
+                callPartnerPayment()
+            } else {
+                callPayment()
+            }
 
 //            viewModel.getBkashPaymentUrl(userData.mobile ?: "",
 //                viewModel.mount.value ?: "0",
@@ -318,11 +336,11 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         val lastName = userData.last_name ?: ""
 
         val amount = amount.toDouble()
-        val discount = viewModel.discount.value ?: 0
+        val discount = viewModel.discount.value ?: 0.0
         viewModel.createOrder(
             CreateOrderBody(
                 userData.id ?: 0, userData.mobile ?: "",
-                amount.toInt(), 0, 0,
+                amount, amount, 0.0,
                 discount, "", userData.upazila ?: "", userData.city ?: "",
                 userData.UpazilaID ?: 0, userData.CityID ?: 0, bkashData.invoicenumber ?: "N/A",
                 "", bkashData.paymentID ?: "N/A", args.bookId, userData.class_id ?: 0,
@@ -343,22 +361,34 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         val firstName = userData.first_name ?: ""
         val lastName = userData.last_name ?: ""
 
+        val promoter = viewModel.promoPartner.value
+        val discount = viewModel.discount.value ?: 0.0
+
         viewModel.purchaseCourse(
             CreateOrderBody(
                 userData.id ?: 0, userData.mobile ?: "",
-                response.amount.toDouble().toInt(), 0, 0,
-                0, "", userData.upazila ?: "", userData.city ?: "",
-                userData.UpazilaID ?: 0, userData.CityID ?: 0, invoiceNumber,
+                response.amount.toDouble(), response.amount.toDouble(), 0.0,
+                discount, "", promoter?.upazila ?: "", promoter?.city ?: "",
+                promoter?.UpazilaID ?: 0, promoter?.CityID ?: 0, invoiceNumber,
                 "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
-                "$firstName $lastName", args.bookName ?: "", response.amount ?: "N/A",
+                "$firstName $lastName", args.bookName ?: "", response.tranId ?: "N/A",
                 "", "", viewModel.promoCode.value?.code ?: "",
                 viewModel.promoCode.value?.partner_id ?: 0
             ),
             CoursePaymentRequest(
                 userData.mobile, invoiceNumber,userData.id, args.courseId,
-                args.coursePrice.toInt(), response.amount.toDouble().toInt(), courseDuration
+                args.coursePrice.toInt(), response.amount.toDouble(), courseDuration
             )
         )
+    }
+
+    private fun callPartnerPayment() {
+        val payLoad = CoursePaymentRequest(
+            userData.mobile, invoiceNumber, userData.id, args.courseId,
+            args.coursePrice.toInt(), 0.0, courseDuration
+        )
+
+        viewModel.purchaseCourse(null, payLoad)
     }
 
     private fun callPayment() {

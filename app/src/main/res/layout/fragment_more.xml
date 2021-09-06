@@ -404,6 +404,7 @@
                     android:focusable="true"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
+                    android:visibility="gone"
                     app:contentPaddingLeft="16dp"
                     app:contentPaddingRight="10dp"
                     app:contentPaddingTop="8dp"
@@ -422,7 +423,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="মাই সাবস্ক্রিপশন"
+                            android:text="কোড শেয়ার"
                             android:textSize="18sp"
                             android:gravity="center_vertical"
                             android:layout_centerVertical="true"
