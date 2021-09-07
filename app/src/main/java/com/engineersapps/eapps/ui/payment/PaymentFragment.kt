@@ -42,6 +42,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         var first_duration = 0
         var second_duration = 0
         var third_duration = 0
+
+        var remainingDays = 0
     }
 
     override val bindingVariable: Int
@@ -101,8 +103,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         userData = preferencesHelper.getUser()
 
         viewModel.packagePrice.postValue(0)
-        viewModel.discount.postValue(0.0)
-        viewModel.amount.postValue(0.0)
+        viewModel.discount.postValue(0)
+        viewModel.amount.postValue(0)
 
         viewModel.packagePrice.postValue(secondPackagePrice)
 
@@ -138,16 +140,16 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         viewModel.packagePrice.postValue(secondPackagePrice)
-        viewModel.discount.postValue((userData.discount_amount ?: 0.0).toDouble())
+        viewModel.discount.postValue(userData.discount_amount ?: 0)
 
         viewModel.packagePrice.observe(viewLifecycleOwner, Observer {
-            val discount = viewModel.discount.value ?: 0.0
-            val packagePrice = it?.toDouble() ?: 0.0
+            val discount = viewModel.discount.value ?: 0
+            val packagePrice = it ?: 0
             viewModel.amount.postValue(packagePrice - discount)
         })
 
         viewModel.discount.observe(viewLifecycleOwner, Observer {
-            val discount = it ?: 0.0
+            val discount = it ?: 0
             val packagePrice = viewModel.packagePrice.value ?: 0
             viewModel.amount.postValue(packagePrice - discount)
         })
@@ -206,8 +208,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             promoCode?.let {
                 val promoDiscountPercentage = promoCode.discount ?: 0
                 val packagePrice = viewModel.packagePrice.value ?: 0
-                val promoDiscount = ((packagePrice * promoDiscountPercentage)/100.0).toRounded(2)
-                var discount = viewModel.discount.value ?: 0.0
+                val promoDiscount = (packagePrice * promoDiscountPercentage)/100
+                var discount = viewModel.discount.value ?: 0
                 discount -= viewModel.promoCodeDiscount
                 viewModel.promoCodeDiscount = promoDiscount
                 discount += viewModel.promoCodeDiscount
@@ -230,8 +232,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
                     if (offer.archived == false && date in firstDate..lastDate) {
                         val offerAmount = offer.offer_amount ?: 0
-                        var discount = viewModel.discount.value ?: 0.0
-                        discount += offerAmount.toDouble()
+                        var discount = viewModel.discount.value ?: 0
+                        discount += offerAmount
                         viewModel.discount.postValue(discount)
 //                        val packagePrice = viewModel.packagePrice.value ?: 0
 //                        viewModel.amount.postValue(packagePrice - discount)
@@ -335,12 +337,11 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         val firstName = userData.first_name ?: ""
         val lastName = userData.last_name ?: ""
 
-        val amount = amount.toDouble()
-        val discount = viewModel.discount.value ?: 0.0
+        val discount = viewModel.discount.value ?: 0
         viewModel.createOrder(
             CreateOrderBody(
                 userData.id ?: 0, userData.mobile ?: "",
-                amount, amount, 0.0,
+                amount.toInt(), amount.toInt(), 0,
                 discount, "", userData.upazila ?: "", userData.city ?: "",
                 userData.UpazilaID ?: 0, userData.CityID ?: 0, bkashData.invoicenumber ?: "N/A",
                 "", bkashData.paymentID ?: "N/A", args.bookId, userData.class_id ?: 0,
@@ -362,12 +363,12 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         val lastName = userData.last_name ?: ""
 
         val promoter = viewModel.promoPartner.value
-        val discount = viewModel.discount.value ?: 0.0
+        val discount = viewModel.discount.value ?: 0
 
         viewModel.purchaseCourse(
             CreateOrderBody(
                 userData.id ?: 0, userData.mobile ?: "",
-                response.amount.toDouble(), response.amount.toDouble(), 0.0,
+                response.amount.toInt(), response.amount.toInt(), 0,
                 discount, "", promoter?.upazila ?: "", promoter?.city ?: "",
                 promoter?.UpazilaID ?: 0, promoter?.CityID ?: 0, invoiceNumber,
                 "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
@@ -377,7 +378,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             ),
             CoursePaymentRequest(
                 userData.mobile, invoiceNumber,userData.id, args.courseId,
-                args.coursePrice.toInt(), response.amount.toDouble(), courseDuration
+                args.coursePrice.toInt(), response.amount.toInt(), courseDuration, remainingDays
             )
         )
     }
@@ -385,7 +386,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
     private fun callPartnerPayment() {
         val payLoad = CoursePaymentRequest(
             userData.mobile, invoiceNumber, userData.id, args.courseId,
-            args.coursePrice.toInt(), 0.0, courseDuration
+            args.coursePrice.toInt(), 0, courseDuration, remainingDays
         )
 
         viewModel.purchaseCourse(null, payLoad)

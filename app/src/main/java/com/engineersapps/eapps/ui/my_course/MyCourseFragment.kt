@@ -183,6 +183,32 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
                 totalPrice.toString()
             }
 
+            // Calculate remaining day
+            var expireDate = Date()
+            val dateFormat = SimpleDateFormat("dd-MM-yyyy")
+            try {
+                expireDate = dateFormat.parse(myCourse.expiredate ?: "") ?: return@MyCourseSliderAdapter
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+
+            val date = Calendar.getInstance()
+            date.time = expireDate
+            val exp = date[Calendar.DATE]
+
+            val calendar = Calendar.getInstance()
+            calendar.time = Date()
+
+            val today = calendar[Calendar.DATE]
+
+            val remainingDays = exp - today
+
+            if (remainingDays >= 0) {
+                PaymentFragment.remainingDays = remainingDays
+            } else {
+                PaymentFragment.remainingDays = 0
+            }
+
             navigateTo(
                 MyCourseFragmentDirections.actionMyCourseFragmentToPaymentNav(
                     course?.book_id ?: 0, course?.title, course?.id ?:0, price, course?.title ?: "", ""))
