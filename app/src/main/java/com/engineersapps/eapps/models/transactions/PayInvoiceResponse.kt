@@ -6,16 +6,16 @@ data class PayInvoiceData(val salesinvoice: Salesinvoice?)
 
 data class Salesinvoice(val udid: String?, val createdAt: String?, val updatedAt: String?,
                         val StudentID: Int?, val PartnerID: Int?, val StudentMobile: String?,
-                        val PaidAmount: Double?, val DueAmount: Double?, val discount: Double?,
-                        val GrandTotal: Double?, val institute: String?, val upazila: String?,
+                        val PaidAmount: Int?, val DueAmount: Int?, val discount: Int?,
+                        val GrandTotal: Int?, val institute: String?, val upazila: String?,
                         val UpazilaID: Int?, val CityID: Int?, val city: String?,
                         val InvoiceID: String?, val ReferenceID: String?,
                         val PayemtReferenceID: String?, val ClassID: Int?, val BookID: Int?,
                         val StudentName: String?, val BookName: String?, val Date: String?, val Table: String?)
 
 data class CreateOrderBody(var StudentID: Int = 0, var StudentMobile: String = "",
-                           var GrandTotal: Double = 0.0, var PaidAmount: Double = 0.0,
-                           var DueAmount: Double = 0.0, var discount: Double = 0.0,
+                           var GrandTotal: Int = 0, var PaidAmount: Int = 0,
+                           var DueAmount: Int = 0, var discount: Int = 0,
                            var institute: String = "", var upazila: String = "",
                            var city: String = "", var UpazilaID: Int = 0,
                            var CityID: Int = 0, var InvoiceID: String = "",
