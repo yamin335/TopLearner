@@ -25,6 +25,7 @@ import com.engineersapps.eapps.util.showErrorToast
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel>() {
@@ -192,19 +193,14 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
                 e.printStackTrace()
             }
 
-            val date = Calendar.getInstance()
-            date.time = expireDate
-            val exp = date[Calendar.DATE]
+            val today = Date()
 
-            val calendar = Calendar.getInstance()
-            calendar.time = Date()
+            val difference = expireDate.time - today.time
 
-            val today = calendar[Calendar.DATE]
-
-            val remainingDays = exp - today
+            val remainingDays = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS)
 
             if (remainingDays >= 0) {
-                PaymentFragment.remainingDays = remainingDays
+                PaymentFragment.remainingDays = remainingDays.toInt()
             } else {
                 PaymentFragment.remainingDays = 0
             }

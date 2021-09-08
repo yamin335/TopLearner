@@ -157,6 +157,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         viewModel.coursePurchaseSuccess.observe(viewLifecycleOwner, Observer { isSuccess ->
             isSuccess?.let {
                 if (it) {
+                    remainingDays = 0
                     hideKeyboard()
                     findNavController().popBackStack()
                     showSuccessToast(requireContext(), "Payment Successful")
@@ -174,6 +175,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 //                val paidBook = args.book
 //                paidBook.isPaid = true
 //                preferencesHelper.savePaidBook(paidBook)
+                remainingDays = 0
                 hideKeyboard()
                 findNavController().popBackStack()
                 showSuccessToast(requireContext(), "Payment Successful")
@@ -368,7 +370,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         viewModel.purchaseCourse(
             CreateOrderBody(
                 userData.id ?: 0, userData.mobile ?: "",
-                response.amount.toInt(), response.amount.toInt(), 0,
+                response.amount.toDouble().toInt(), response.amount.toDouble().toInt(), 0,
                 discount, "", promoter?.upazila ?: "", promoter?.city ?: "",
                 promoter?.UpazilaID ?: 0, promoter?.CityID ?: 0, invoiceNumber,
                 "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
@@ -378,7 +380,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             ),
             CoursePaymentRequest(
                 userData.mobile, invoiceNumber,userData.id, args.courseId,
-                args.coursePrice.toInt(), response.amount.toInt(), courseDuration, remainingDays
+                args.coursePrice.toInt(), response.amount.toDouble().toInt(), courseDuration, remainingDays
             )
         )
     }
@@ -394,6 +396,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
     private fun callPayment() {
         val amount = viewModel.amount.value?.toDouble() ?: return
+        //val sslCommerzInitialization = SSLCommerzInitialization ("testbox","qwerty",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.TESTBOX)
         val sslCommerzInitialization = SSLCommerzInitialization ("engineersappslive","61149E9C3398383671",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.LIVE)
         IntegrateSSLCommerz
             .getInstance(requireContext())
