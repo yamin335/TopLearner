@@ -133,10 +133,10 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
             }
         })
 
-//        window.setFlags(
-//            WindowManager.LayoutParams.FLAG_SECURE,
-//            WindowManager.LayoutParams.FLAG_SECURE
-//        )
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
 
         userData = preferencesHelper.getUser()
 
