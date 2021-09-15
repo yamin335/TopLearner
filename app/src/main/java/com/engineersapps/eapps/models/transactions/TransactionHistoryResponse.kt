@@ -12,7 +12,7 @@ data class Transaction(val udid: String?, val createdAt: String?, val updatedAt:
                        val InvoiceID: String?, val ReferenceID: String?,
                        val PayemtReferenceID: String?, val ClassID: Int?,
                        val BookID: Int?, val StudentName: String?, val BookName: String?,
-                       val Date: String?, val Table: String?)
+                       val Date: String?, val Table: String?, val duration: Int?)
 
 data class PartnerTransactionResponse(val code: Int?, val data: PartnerTransactionData?, val msg: String?)
 

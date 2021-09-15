@@ -106,7 +106,7 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
             PaymentFragment.second_duration = secondDuration.toInt()
             PaymentFragment.third_duration = thirdDuration.toInt()
 
-            navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToPaymentNav(course?.book_id ?: 0, course?.title, course?.id ?:0, price, "", ""))
+            navigateTo(CourseDetailsFragmentDirections.actionCourseDetailsFragmentToPaymentNav(course?.book_id ?: 0, course?.title, course?.id ?:0, price, "", "", 0))
         }
 
         course?.course_items?.let {

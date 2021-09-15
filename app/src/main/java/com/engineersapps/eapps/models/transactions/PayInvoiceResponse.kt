@@ -11,7 +11,8 @@ data class Salesinvoice(val udid: String?, val createdAt: String?, val updatedAt
                         val UpazilaID: Int?, val CityID: Int?, val city: String?,
                         val InvoiceID: String?, val ReferenceID: String?,
                         val PayemtReferenceID: String?, val ClassID: Int?, val BookID: Int?,
-                        val StudentName: String?, val BookName: String?, val Date: String?, val Table: String?)
+                        val StudentName: String?, val BookName: String?, val Date: String?,
+                        val Table: String?)
 
 data class CreateOrderBody(var StudentID: Int = 0, var StudentMobile: String = "",
                            var GrandTotal: Int = 0, var PaidAmount: Int = 0,
@@ -23,4 +24,5 @@ data class CreateOrderBody(var StudentID: Int = 0, var StudentMobile: String = "
                            var book_id: Int = 0, var ClassID: Int = 0,
                            var StudentName: String = "", var bookname: String = "",
                            var TransactionID: String = "", var coursename: String = "",
-                           var bookthumb: String = "", var promo_code: String = "", var PartnerID: Int = 0)
+                           var bookthumb: String = "", var promo_code: String = "",
+                           var PartnerID: Int = 0, val duration: Int? = 0)

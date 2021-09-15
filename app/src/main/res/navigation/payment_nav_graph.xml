@@ -30,6 +30,9 @@
         <argument
             android:name="bookThumb"
             app:argType="string" />
+        <argument
+            android:name="remainDays"
+            app:argType="integer" />
         <action
             android:id="@+id/action_paymentFragment_to_terms_nav_graph"
             app:destination="@id/terms_nav_graph"
