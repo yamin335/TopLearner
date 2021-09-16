@@ -12,6 +12,7 @@ import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.TransactionItemBinding
 import com.engineersapps.eapps.models.transactions.Transaction
 import com.engineersapps.eapps.util.DataBoundListAdapter
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -51,33 +52,53 @@ class TransactionListAdapter(
         binding.serial = (position + 1).toString()
         binding.packageName = if (item.BookName.isNullOrBlank()) "Unknown Package" else item.BookName
         binding.paymentAmount = "${item.GrandTotal} ৳"
-        binding.paymentDate = item.Date
-        binding.validDate = item.updatedAt
-
         binding.root.setOnClickListener {
             itemCallback?.invoke(item)
         }
-    }
 
-    private fun formatISODate(inputDate: String?): String {
-        if (inputDate == null) return ""
-        try {
-            val simpleDateFormatter = SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss", Locale.getDefault()
-            )
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        val paymentDate = format.parse(item.Date ?: "")
 
-            // 'T' is a literal. 'X' is ISO Zone Offset[like +01, -08]; For UTC, it is interpreted as 'Z'(Zero) literal.
-            val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
+        val dateFormat = SimpleDateFormat("dd MMM yyyy")
 
-            // since no built-in format, we provides pattern directly.
-            val dateTimeFormatter = SimpleDateFormat(pattern, Locale.getDefault())
+        paymentDate?.let {
+            try {
+                binding.paymentDate = dateFormat.format(it)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
 
-            val myDate: Date = dateTimeFormatter.parse(inputDate)!!
-
-            return simpleDateFormatter.format(myDate)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return inputDate
+            try {
+                val duration = item.duration ?: 0
+                val date = Calendar.getInstance()
+                date.time = paymentDate
+                date[Calendar.DATE] = date[Calendar.DATE] + duration
+                binding.validDate = dateFormat.format(date.time)
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
         }
     }
+
+//    private fun formatISODate(inputDate: String?): String {
+//        if (inputDate == null) return ""
+//        try {
+//            val simpleDateFormatter = SimpleDateFormat(
+//                "yyyy-MM-dd HH:mm:ss", Locale.getDefault()
+//            )
+//
+//            // 'T' is a literal. 'X' is ISO Zone Offset[like +01, -08]; For UTC, it is interpreted as 'Z'(Zero) literal.
+//            val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
+//
+//            // since no built-in format, we provides pattern directly.
+//            val dateTimeFormatter = SimpleDateFormat(pattern, Locale.getDefault())
+//
+//            val myDate: Date = dateTimeFormatter.parse(inputDate)!!
+//
+//            return simpleDateFormatter.format(myDate)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            return inputDate
+//        }
+//    }
 }

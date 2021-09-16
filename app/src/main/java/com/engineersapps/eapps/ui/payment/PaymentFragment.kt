@@ -42,8 +42,6 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         var first_duration = 0
         var second_duration = 0
         var third_duration = 0
-
-        var remainingDays = 0
     }
 
     override val bindingVariable: Int
@@ -157,7 +155,6 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         viewModel.coursePurchaseSuccess.observe(viewLifecycleOwner, Observer { isSuccess ->
             isSuccess?.let {
                 if (it) {
-                    remainingDays = 0
                     hideKeyboard()
                     findNavController().popBackStack()
                     showSuccessToast(requireContext(), "Payment Successful")
@@ -175,7 +172,6 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 //                val paidBook = args.book
 //                paidBook.isPaid = true
 //                preferencesHelper.savePaidBook(paidBook)
-                remainingDays = 0
                 hideKeyboard()
                 findNavController().popBackStack()
                 showSuccessToast(requireContext(), "Payment Successful")
@@ -376,11 +372,11 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
                 "$firstName $lastName", args.bookName ?: "", response.tranId ?: "N/A",
                 "", "", viewModel.promoCode.value?.code ?: "",
-                viewModel.promoCode.value?.partner_id ?: 0
+                viewModel.promoCode.value?.partner_id ?: 0, courseDuration + args.remainDays
             ),
             CoursePaymentRequest(
                 userData.mobile, invoiceNumber,userData.id, args.courseId,
-                args.coursePrice.toInt(), response.amount.toDouble().toInt(), courseDuration, remainingDays
+                viewModel.packagePrice.value, response.amount.toDouble().toInt(), courseDuration, args.remainDays
             )
         )
     }
@@ -388,7 +384,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
     private fun callPartnerPayment() {
         val payLoad = CoursePaymentRequest(
             userData.mobile, invoiceNumber, userData.id, args.courseId,
-            args.coursePrice.toInt(), 0, courseDuration, remainingDays
+            args.coursePrice.toInt(), 0, courseDuration, args.remainDays
         )
 
         viewModel.purchaseCourse(null, payLoad)

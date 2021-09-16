@@ -52,6 +52,9 @@
             <argument
                 android:name="bookThumb"
                 app:argType="string" />
+            <argument
+                android:name="remainDays"
+                app:argType="integer" />
         </action>
     </fragment>
 

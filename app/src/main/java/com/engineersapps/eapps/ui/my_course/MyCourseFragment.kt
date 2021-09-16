@@ -199,15 +199,15 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
 
             val remainingDays = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS)
 
-            if (remainingDays >= 0) {
-                PaymentFragment.remainingDays = remainingDays.toInt()
+            val remainDays = if (remainingDays >= 0) {
+                remainingDays.toInt()
             } else {
-                PaymentFragment.remainingDays = 0
+                0
             }
 
             navigateTo(
                 MyCourseFragmentDirections.actionMyCourseFragmentToPaymentNav(
-                    course?.book_id ?: 0, course?.title, course?.id ?:0, price, course?.title ?: "", ""))
+                    course?.book_id ?: 0, course?.title, course?.id ?:0, price, course?.title ?: "", "", remainDays))
         })
         myCourseSliderIndicatorAdapter = MyCourseSliderIndicatorAdapter(totalCourse)
 

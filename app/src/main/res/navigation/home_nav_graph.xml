@@ -71,6 +71,9 @@
             <argument
                 android:name="bookThumb"
                 app:argType="string" />
+            <argument
+                android:name="remainDays"
+                app:argType="integer" />
         </action>
         <action
             android:id="@+id/action_courseDetailsFragment_to_chapter_nav"
