@@ -101,10 +101,11 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         userData = preferencesHelper.getUser()
 
         viewModel.packagePrice.postValue(0)
-        viewModel.discount.postValue(0)
+        viewModel.profileDiscount.postValue(0)
+        viewModel.cityDiscount.postValue(0)
+        viewModel.promoDiscount.postValue(0)
+        viewModel.totalDiscount.postValue(0)
         viewModel.amount.postValue(0)
-
-        viewModel.packagePrice.postValue(secondPackagePrice)
 
         titlePackageList = arrayOf(firstPackageTitle, secondPackageTitle, thirdPackageTitle)
         packageAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_large, titlePackageList)
@@ -137,19 +138,38 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        viewModel.packagePrice.postValue(secondPackagePrice)
-        viewModel.discount.postValue(userData.discount_amount ?: 0)
 
         viewModel.packagePrice.observe(viewLifecycleOwner, Observer {
-            val discount = viewModel.discount.value ?: 0
-            val packagePrice = it ?: 0
-            viewModel.amount.postValue(packagePrice - discount)
+            val totalDiscount = viewModel.totalDiscount.value ?: 0
+            val selectedPackagePrice = it ?: 0
+            viewModel.amount.postValue(selectedPackagePrice - totalDiscount)
         })
 
-        viewModel.discount.observe(viewLifecycleOwner, Observer {
-            val discount = it ?: 0
-            val packagePrice = viewModel.packagePrice.value ?: 0
-            viewModel.amount.postValue(packagePrice - discount)
+        viewModel.profileDiscount.observe(viewLifecycleOwner, Observer {
+            val cityDiscount = viewModel.cityDiscount.value ?: 0
+            val promoDiscount = viewModel.promoDiscount.value ?: 0
+            val totalDiscount = promoDiscount + it + cityDiscount
+            viewModel.totalDiscount.postValue(totalDiscount)
+        })
+
+        viewModel.cityDiscount.observe(viewLifecycleOwner, Observer {
+            val profileDiscount = viewModel.profileDiscount.value ?: 0
+            val promoDiscount = viewModel.promoDiscount.value ?: 0
+            val totalDiscount = promoDiscount + profileDiscount + it
+            viewModel.totalDiscount.postValue(totalDiscount)
+        })
+
+        viewModel.promoDiscount.observe(viewLifecycleOwner, Observer {
+            val profileDiscount = viewModel.profileDiscount.value ?: 0
+            val cityDiscount = viewModel.cityDiscount.value ?: 0
+            val totalDiscount = profileDiscount + it + cityDiscount
+            viewModel.totalDiscount.postValue(totalDiscount)
+        })
+
+        viewModel.totalDiscount.observe(viewLifecycleOwner, Observer {
+            val totalDiscount = it ?: 0
+            val selectedPackagePrice = viewModel.packagePrice.value ?: 0
+            viewModel.amount.postValue(selectedPackagePrice - totalDiscount)
         })
 
         viewModel.coursePurchaseSuccess.observe(viewLifecycleOwner, Observer { isSuccess ->
@@ -207,11 +227,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 val promoDiscountPercentage = promoCode.discount ?: 0
                 val packagePrice = viewModel.packagePrice.value ?: 0
                 val promoDiscount = (packagePrice * promoDiscountPercentage)/100
-                var discount = viewModel.discount.value ?: 0
-                discount -= viewModel.promoCodeDiscount
-                viewModel.promoCodeDiscount = promoDiscount
-                discount += viewModel.promoCodeDiscount
-                viewModel.discount.postValue(discount)
+                viewModel.promoDiscount.postValue(promoDiscount)
             }
         })
 
@@ -230,9 +246,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
                     if (offer.archived == false && date in firstDate..lastDate) {
                         val offerAmount = offer.offer_amount ?: 0
-                        var discount = viewModel.discount.value ?: 0
-                        discount += offerAmount
-                        viewModel.discount.postValue(discount)
+                        viewModel.cityDiscount.postValue(offerAmount)
 //                        val packagePrice = viewModel.packagePrice.value ?: 0
 //                        viewModel.amount.postValue(packagePrice - discount)
                         return@Observer
@@ -300,6 +314,11 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 //                )
 //            )
         }
+        viewModel.packagePrice.postValue(secondPackagePrice)
+        val profileDiscountPercentage = userData.discount_amount ?: 0
+        val packagePrice = viewModel.packagePrice.value ?: 0
+        val profileDiscount = (packagePrice * profileDiscountPercentage)/100
+        viewModel.profileDiscount.postValue(profileDiscount)
         viewModel.getAllOffers(userData.CityID, userData.UpazilaID)
     }
 
@@ -335,7 +354,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         val firstName = userData.first_name ?: ""
         val lastName = userData.last_name ?: ""
 
-        val discount = viewModel.discount.value ?: 0
+        val discount = viewModel.totalDiscount.value ?: 0
         viewModel.createOrder(
             CreateOrderBody(
                 userData.id ?: 0, userData.mobile ?: "",
@@ -361,7 +380,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         val lastName = userData.last_name ?: ""
 
         val promoter = viewModel.promoPartner.value
-        val discount = viewModel.discount.value ?: 0
+        val discount = viewModel.totalDiscount.value ?: 0
 
         viewModel.purchaseCourse(
             CreateOrderBody(

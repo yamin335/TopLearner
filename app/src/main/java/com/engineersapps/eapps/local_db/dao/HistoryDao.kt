@@ -24,6 +24,9 @@ interface HistoryDao {
     @Query("SELECT * FROM history WHERE book_id = :bookId AND chapter_id=:chapterId")
     suspend fun doesItemExistsInHistory(bookId: Int, chapterId: Int): List<HistoryItem>
 
+    @Query("DELETE FROM history")
+    suspend fun deleteAllHistory()
+
 //    @Query("SELECT EXISTS (SELECT 1 FROM favorite WHERE id = :id)")
 //    fun doesItemExistsInHistory(bookId: Int, chapterId: Int): Flow<Boolean>
 }

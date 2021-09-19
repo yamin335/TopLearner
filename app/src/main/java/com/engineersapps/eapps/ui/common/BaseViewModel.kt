@@ -74,5 +74,9 @@ abstract class BaseViewModel constructor(val context: Application) : ViewModel()
     fun onLogOut(preferencesHelper: PreferencesHelper) {
         SplashFragment.fromLogout = true
         preferencesHelper.isLoggedIn = false
+        preferencesHelper.accessToken = ""
+        preferencesHelper.accessTokenExpiresIn = 0
+        preferencesHelper.isLoggedIn = false
+        preferencesHelper.saveUser(null)
     }
 }

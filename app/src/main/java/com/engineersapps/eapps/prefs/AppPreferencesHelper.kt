@@ -6,14 +6,14 @@ import android.content.SharedPreferences
 import androidx.annotation.WorkerThread
 import androidx.core.content.edit
 import androidx.work.*
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.engineersapps.eapps.api.ProfileInfo
 import com.engineersapps.eapps.api.TokenInformation
 import com.engineersapps.eapps.di.PreferenceInfo
 import com.engineersapps.eapps.models.home.PaidBook
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.worker.TokenRefreshWorker
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.properties.ReadWriteProperty
@@ -69,10 +69,16 @@ class AppPreferencesHelper @Inject constructor(
         return Gson().fromJson(bookString, PaidBook::class.java)
     }
 
-    override fun saveUser(user: InquiryAccount) {
-        val userString = Gson().toJson(user)
-        prefs.value.edit {
-            putString(KEY_USER, userString)
+    override fun saveUser(user: InquiryAccount?) {
+        if (user == null) {
+            prefs.value.edit {
+                putString(KEY_USER, null)
+            }
+        } else {
+            val userString = Gson().toJson(user)
+            prefs.value.edit {
+                putString(KEY_USER, userString)
+            }
         }
     }
 

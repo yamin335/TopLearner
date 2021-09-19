@@ -9,7 +9,6 @@ import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.api.ApiCallStatus
@@ -24,6 +23,7 @@ import com.engineersapps.eapps.util.AppConstants.commonErrorMessage
 import com.engineersapps.eapps.util.hideKeyboard
 import com.engineersapps.eapps.util.isTimeAndZoneAutomatic
 import com.engineersapps.eapps.util.showErrorToast
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
 
@@ -61,6 +61,9 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
             OtpSignInFragment.isDeviceTimeChanged = false
         }
         if (!OtpSignInFragment.isDeviceTimeChanged) preferencesHelper.falseOTPCounter = 0
+        mActivity.window?.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        )
     }
 
     override fun onPause() {
@@ -85,9 +88,6 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mActivity.window?.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-        )
         // This callback will only be called when MyFragment is at least Started.
         requireActivity().onBackPressedDispatcher.addCallback(this, true) {
             requireActivity().finish()

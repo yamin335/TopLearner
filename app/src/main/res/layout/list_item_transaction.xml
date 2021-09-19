@@ -104,14 +104,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:text="Date:"
-                    android:textSize="12sp" />
+                    
+                    android:textColor="#404040"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{paymentDate}"
+                    android:textStyle="bold"
                     android:textColor="#404040"
-                    android:textSize="12sp"
+                    
                     tools:text="500" />
 
             </LinearLayout>
@@ -136,14 +138,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:text="Valid Date:"
-                    android:textSize="12sp" />
+                    android:textColor="#404040"
+                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{validDate}"
                     android:textColor="#404040"
-                    android:textSize="12sp"
+                    
+                    android:textStyle="bold"
                     tools:text="12" />
 
             </LinearLayout>

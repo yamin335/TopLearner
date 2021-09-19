@@ -101,15 +101,11 @@ class ProfileSignInFragment : BaseFragment<ProfileSignInBinding, ProfileSignInVi
         listener = null
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onResume() {
+        super.onResume()
         mActivity.window?.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         )
-
-//        requireActivity().onBackPressedDispatcher.addCallback(this, true) {
-//            val tt = 0
-//        }
     }
 
 //    override fun onDestroy() {

@@ -68,6 +68,9 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
             isDeviceTimeChanged = false
         }
         if (!isDeviceTimeChanged) preferencesHelper.falseOTPCounter = 0
+        mActivity.window?.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        )
     }
 
     override fun onPause() {
@@ -89,13 +92,6 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
     override fun onDetach() {
         super.onDetach()
         startOTPListenerCallback = null
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mActivity.window?.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -37,6 +37,9 @@ interface MyCourseDao {
     @Query("SELECT * FROM my_course_paid_books WHERE id = :bookId")
     suspend fun getMyCourseBook(bookId: Int): MyCourseBook
 
+    @Query("DELETE FROM my_course_paid_books")
+    suspend fun deleteAllMyCoursePaidBooks()
+
 //    @Query("SELECT COUNT(id) FROM history")
 //    fun getHistoryItemsCount(): Flow<Int>
 
