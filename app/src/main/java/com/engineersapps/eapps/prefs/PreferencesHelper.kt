@@ -61,7 +61,7 @@ interface PreferencesHelper {
 
     fun getToken(): TokenInformation
 
-    fun saveUser(user: InquiryAccount)
+    fun saveUser(user: InquiryAccount?)
 
     fun getUser(): InquiryAccount
 

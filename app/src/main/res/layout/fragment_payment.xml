@@ -234,7 +234,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:layout_weight="1"
-                        android:text="@{viewModel.discount.toString()}"
+                        android:text="@{viewModel.totalDiscount.toString()}"
                         android:textColor="@color/themeTextColor"
                         android:textSize="16sp"
                         tools:text="750" />

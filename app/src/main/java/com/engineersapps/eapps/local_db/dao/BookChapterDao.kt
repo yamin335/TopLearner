@@ -28,8 +28,8 @@ interface BookChapterDao {
         addBooks(books)
     }
 
-//    @Query("DELETE FROM chapters")
-//    suspend fun deleteAllChapters()
+    @Query("DELETE FROM chapters")
+    suspend fun deleteAllChapters()
 
     @Query("DELETE FROM chapters WHERE bookId = :bookId")
     suspend fun deleteAChapter(bookId: String)
