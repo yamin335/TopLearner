@@ -14,7 +14,6 @@ import com.engineersapps.eapps.models.transactions.PartnerTransaction
 import com.engineersapps.eapps.models.transactions.Transaction
 import com.engineersapps.eapps.util.DataBoundListAdapter
 import java.text.SimpleDateFormat
-import java.util.*
 
 class AdminTransactionListAdapter(
     private val appExecutors: AppExecutors,
@@ -51,33 +50,23 @@ class AdminTransactionListAdapter(
         binding.paymentMethod = if (item.payment_method.isNullOrBlank()) "Unknown Payment Method" else item.payment_method
         val amount = item.payamount?.toString()
         binding.paidAmount = if (amount.isNullOrBlank()) "" else "$amount ৳"
-        binding.paymentDate = item.PaymentDate
+
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        val paymentDate = format.parse(item.PaymentDate ?: "")
+
+        val dateFormat = SimpleDateFormat("dd MMM yyyy")
+
+        paymentDate?.let {
+            try {
+                binding.paymentDate = dateFormat.format(it)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
         binding.remarks = item.remarks
 
         binding.root.setOnClickListener {
             itemCallback?.invoke(item)
-        }
-    }
-
-    private fun formatISODate(inputDate: String?): String {
-        if (inputDate == null) return ""
-        try {
-            val simpleDateFormatter = SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss", Locale.getDefault()
-            )
-
-            // 'T' is a literal. 'X' is ISO Zone Offset[like +01, -08]; For UTC, it is interpreted as 'Z'(Zero) literal.
-            val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
-
-            // since no built-in format, we provides pattern directly.
-            val dateTimeFormatter = SimpleDateFormat(pattern, Locale.getDefault())
-
-            val myDate: Date = dateTimeFormatter.parse(inputDate)!!
-
-            return simpleDateFormatter.format(myDate)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return inputDate
         }
     }
 }
