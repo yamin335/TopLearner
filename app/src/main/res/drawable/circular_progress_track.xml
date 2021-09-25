@@ -18,7 +18,7 @@
                 android:useLevel="true">
                 <gradient
                     android:endColor="@color/toast_success"
-                    android:startColor="@color/toast_warning"
+                    android:startColor="@color/toast_success"
                     android:type="sweep" />
             </shape>
         </rotate>

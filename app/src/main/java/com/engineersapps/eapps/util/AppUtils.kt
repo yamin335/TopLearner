@@ -62,6 +62,31 @@ fun showSuccessToast(context: Context, message: String) {
     }
 }
 
+fun openFacebookPage(context: Context, pageId: String, pageName: String) {
+    try {
+        val applicationInfo = context.packageManager.getApplicationInfo("com.facebook.katana", 0)
+        if (applicationInfo.enabled) {
+            val intent = try {
+                Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/$pageId"))
+            } catch (e: Exception) {
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/$pageId"))
+            }
+            if (intent.resolveActivity(context.packageManager) != null) {
+                context.startActivity(intent)
+            }
+        } else {
+            val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/n/?$pageName"))
+            val chooser = Intent.createChooser(webIntent, "View Facebook Page Using")
+            // Verify the intent will resolve to at least one activity
+            if (webIntent.resolveActivity(context.packageManager) != null) {
+                context.startActivity(chooser)
+            }
+        }
+    } catch (exception: PackageManager.NameNotFoundException) {
+        exception.printStackTrace()
+    }
+}
+
 fun goToFacebook(context: Context, pageName: String) {
     try {
         val applicationInfo = context.packageManager.getApplicationInfo("com.facebook.katana", 0)

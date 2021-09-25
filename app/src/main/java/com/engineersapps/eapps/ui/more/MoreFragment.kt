@@ -26,10 +26,7 @@ import com.engineersapps.eapps.ui.profile_signin.ClassEditFragment
 import com.engineersapps.eapps.ui.profile_signin.DistrictEditFragment
 import com.engineersapps.eapps.ui.profile_signin.UpazillaEditFragment
 import com.engineersapps.eapps.ui.social_media.SocialMediaBottomSheetDialog
-import com.engineersapps.eapps.util.BitmapUtilss
-import com.engineersapps.eapps.util.goToFacebook
-import com.engineersapps.eapps.util.goToYoutube
-import com.engineersapps.eapps.util.showWarningToast
+import com.engineersapps.eapps.util.*
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
 private const val REQUEST_PHONE_CALL = 101
@@ -193,7 +190,8 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
 //        }
 
         viewDataBinding.mFacebook.setOnClickListener {
-            goToFacebook(requireContext(), "engineersapps")
+            //goToFacebook(requireContext(), "engineersapps")
+            openFacebookPage(requireContext(), "706083059534815", "engineersapps")
         }
 
         viewDataBinding.mYoutube.setOnClickListener {
