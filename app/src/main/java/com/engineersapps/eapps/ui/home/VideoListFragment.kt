@@ -30,9 +30,12 @@ class VideoListFragment : BaseFragment<VideoListFragmentBinding, VideoListViewMo
             "showHideProgress",
             viewLifecycleOwner, FragmentResultListener { key, bundle ->
                 val shouldShowProgress = bundle.getBoolean("progressStatus")
+                val progress = bundle.getInt("value", 0)
                 try {
                     if (shouldShowProgress) {
                         viewDataBinding.progressView.visibility = View.VISIBLE
+                        viewDataBinding.loader.progress = progress
+                        viewDataBinding.progress.text = "$progress%"
                     } else {
                         viewDataBinding.progressView.visibility = View.GONE
                         videoListAdapter.notifyDataSetChanged()

@@ -23,7 +23,10 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import javax.inject.Inject
+import kotlin.math.abs
 
+private const val ANIMATION = "animation"
+private const val PDF = "pdf"
 class LoadWebViewViewModel @Inject constructor(private val application: Application, private val historyDao: HistoryDao) : BaseViewModel(application) {
 
     val historyItems: LiveData<List<HistoryItem>> = liveData {
@@ -44,8 +47,8 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
         MutableLiveData<Pair<String, String>>()
     }
 
-    val showHideProgress: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
+    val showHideProgress: MutableLiveData<Pair<Boolean, Int>> by lazy {
+        MutableLiveData<Pair<Boolean, Int>>()
     }
 
     fun doesItemExists(bookId: Int, chapterId: Int): LiveData<List<HistoryItem>> {
@@ -95,17 +98,17 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
 
     fun downloadVideoFile(downloadUrl: String, filePath: String, fileName: String) {
         if (checkNetworkStatus(true)) {
-            showHideProgress.postValue(true)
+            showHideProgress.postValue(Pair(true, 0))
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
                 toastError.postValue(AppConstants.serverConnectionErrorMessage)
-                showHideProgress.postValue(false)
+                showHideProgress.postValue(Pair(false, 100))
             }
 
             //apiCallStatus.postValue(ApiCallStatus.LOADING)
             viewModelScope.launch(handler) {
-                videoFileDownloadResponse.postValue(downloadFile(downloadUrl, filePath, fileName))
+                videoFileDownloadResponse.postValue(downloadFile(downloadUrl, filePath, fileName, ANIMATION))
             }
         }
     }
@@ -117,7 +120,7 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
             }
 
             viewModelScope.launch(handler) {
-                val response = downloadFile(downloadUrl, filePath, fileName) ?: return@launch
+                val response = downloadFile(downloadUrl, filePath, fileName, PDF) ?: return@launch
                 pdfFileDownloadResponse.postValue(PdfDownloadResponse(response.first, response.second, pdfForFragment))
             }
         } else {
@@ -132,17 +135,20 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
             }
 
             viewModelScope.launch(handler) {
-                solutionPdfFileDownloadResponse.postValue(downloadFile(downloadUrl, filePath, fileName))
+                solutionPdfFileDownloadResponse.postValue(downloadFile(downloadUrl, filePath, fileName, PDF))
             }
         } else {
             apiCallStatus.postValue(ApiCallStatus.ERROR)
         }
     }
 
-    private suspend fun downloadFile(downloadUrl: String, filePath: String, fileName: String): Pair<String, String>? {
+    private suspend fun downloadFile(downloadUrl: String, filePath: String, fileName: String, type: String): Pair<String, String>? {
         return withContext(Dispatchers.IO) {
             // Normally we would do some work here, like download a file.
             try {
+                val maxProgress = 100
+                var currentProgress = 0
+                var downloadedSize = 0
                 val urlConnection: HttpURLConnection
                 val url = URL(downloadUrl)
                 urlConnection = url.openConnection() as HttpURLConnection
@@ -159,12 +165,18 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
                 }
                 val inputStream: InputStream = urlConnection.inputStream
                 val fileOutputStream = FileOutputStream(downloadedFile)
+                val totalSize = urlConnection.contentLength
                 val buffer = ByteArray(2024)
                 var bufferLength: Int
                 fileOutputStream.use { outputStream ->
                     inputStream.use { inStream ->
                         while (inStream.read(buffer).also { bufferLength = it } > 0) {
                             outputStream.write(buffer, 0, bufferLength)
+                            if (type == ANIMATION) {
+                                downloadedSize += bufferLength
+                                currentProgress = abs(downloadedSize * 100 / totalSize)
+                                showHideProgress.postValue(Pair(true, currentProgress))
+                            }
                         }
                     }
                 }

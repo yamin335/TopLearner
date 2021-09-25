@@ -312,7 +312,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
             value?.let {
                 childFragmentManager.setFragmentResult(
                     "showHideProgress",
-                    bundleOf("progressStatus" to it)
+                    bundleOf("progressStatus" to it.first, "value" to it.second)
                 )
             }
         })
@@ -363,7 +363,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
                 //showErrorToast(requireContext(), "This video is not available now")
             }
 
-            viewModel.showHideProgress.postValue(false)
+            viewModel.showHideProgress.postValue(Pair(false, 100))
         })
 
         //viewDataBinding.webView.setInitialScale(1)
@@ -601,7 +601,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
                         val videoFile = File(filepath, fileName)
                         if (videoFile.exists()) {
                             val downloadOrEraseMessageBottomSheetDialog = DownloadOrEraseMessageBottomSheetDialog({
-                                viewModel.showHideProgress.postValue(true)
+                                viewModel.showHideProgress.postValue(Pair(true, 0))
                                 FileUtils.deleteFileFromExternalStorage(videoFile)
                                 val videoFolderName = fileName.substring(0, fileName.lastIndexOf("."))
 
@@ -609,7 +609,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
                                 if (videoFolder.exists() && videoFolder.isDirectory) {
                                     FileUtils.deleteFileFromExternalStorage(videoFolder)
                                 }
-                                viewModel.showHideProgress.postValue(false)
+                                viewModel.showHideProgress.postValue(Pair(false, 100))
                             })
                             downloadOrEraseMessageBottomSheetDialog.isCancelable = true
                             downloadOrEraseMessageBottomSheetDialog.showNow(parentFragmentManager, "#AnimationDeleteDialog")
@@ -862,7 +862,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
                     }
                     ProgressMonitor.Result.ERROR -> {
                         FileUtils.deleteFileFromExternalStorage(inputFile)
-                        viewModel.showHideProgress.postValue(false)
+                        viewModel.showHideProgress.postValue(Pair(false, 100))
                         viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
                         commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
                         commonMessageBottomSheetDialog.show(
@@ -874,7 +874,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
                     }
                     ProgressMonitor.Result.CANCELLED -> {
                         FileUtils.deleteFileFromExternalStorage(inputFile)
-                        viewModel.showHideProgress.postValue(false)
+                        viewModel.showHideProgress.postValue(Pair(false, 100))
                         viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
                         commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
                         commonMessageBottomSheetDialog.show(
@@ -886,7 +886,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
                     }
                     else -> {
                         FileUtils.deleteFileFromExternalStorage(inputFile)
-                        viewModel.showHideProgress.postValue(false)
+                        viewModel.showHideProgress.postValue(Pair(false, 100))
                         viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
                         commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
                         commonMessageBottomSheetDialog.show(
@@ -900,7 +900,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
             } catch (e: ZipException) {
                 e.printStackTrace()
                 FileUtils.deleteFileFromExternalStorage(inputFile)
-                viewModel.showHideProgress.postValue(false)
+                viewModel.showHideProgress.postValue(Pair(false, 100))
                 viewModel.apiCallStatus.postValue(ApiCallStatus.ERROR)
                 commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
                 commonMessageBottomSheetDialog.show(childFragmentManager, "#Common_Message_Dialog")
