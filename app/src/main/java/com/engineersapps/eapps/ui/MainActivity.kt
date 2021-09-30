@@ -1,11 +1,13 @@
 package com.engineersapps.eapps.ui
 
+import android.app.Activity
 import android.content.*
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.WindowManager
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
@@ -17,15 +19,23 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.engineersapps.eapps.BuildConfig
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.MainActivityBinding
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.prefs.PreferencesHelper
-import com.engineersapps.eapps.util.AppConstants
-import com.engineersapps.eapps.util.hideKeyboard
-import com.engineersapps.eapps.util.shouldCloseDrawerFromBackPress
-import com.engineersapps.eapps.util.showWarningToast
+import com.engineersapps.eapps.util.*
 import com.google.android.material.navigation.NavigationView
+import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.ActivityResult
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.android.play.core.tasks.Task
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +68,8 @@ interface ConfigurationChangeCallback {
     fun onNewConfiguration(newConfig: Configuration)
 }
 
+private const val APP_UPDATE_REQUEST_CODE = 1669
+private const val APP_UPDATE_TYPE_SUPPORTED = AppUpdateType.IMMEDIATE
 class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
     NavDrawerHandlerCallback, ShowHideBottomNavCallback, NavigationHost,
     MyCourseTabSelection, NavigationView.OnNavigationItemSelectedListener {
@@ -78,6 +90,8 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
     private var currentNavController: LiveData<NavController>? = null
 
     private var currentNavHostFragment: LiveData<NavHostFragment>? = null
+
+    private lateinit var updateListener: InstallStateUpdatedListener
 
     private val fragmentWithoutBottomNav = setOf(
         R.id.splashFragment,
@@ -101,6 +115,8 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
             tokenExpireReceiver,
             IntentFilter(AppConstants.INTENT_TOKEN_EXPIRED)
         )
+
+        checkForAppUpdate()
     }
 
     override fun onPause() {
@@ -110,6 +126,8 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        checkForAppUpdate()
 
         tokenExpireReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
@@ -185,6 +203,126 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
                 }
             }
         })
+    }
+
+    private fun checkForAppUpdate() {
+        val appUpdateManager : AppUpdateManager
+        if (BuildConfig.DEBUG) {
+            appUpdateManager = FakeAppUpdateManager(baseContext)
+            appUpdateManager.setUpdateAvailable(16)
+        } else {
+            appUpdateManager = AppUpdateManagerFactory.create(baseContext)
+        }
+
+        val appUpdateInfo = appUpdateManager.appUpdateInfo
+
+        appUpdateInfo.addOnSuccessListener {
+            handleUpdate(appUpdateManager, appUpdateInfo)
+        }
+    }
+
+    private fun handleUpdate(manager: AppUpdateManager, info: Task<AppUpdateInfo>) {
+        if (APP_UPDATE_TYPE_SUPPORTED == AppUpdateType.IMMEDIATE) {
+            handleImmediateUpdate(manager, info)
+        } else if (APP_UPDATE_TYPE_SUPPORTED == AppUpdateType.FLEXIBLE) {
+            handleFlexibleUpdate(manager, info)
+        }
+    }
+
+    private fun handleImmediateUpdate(manager: AppUpdateManager, info: Task<AppUpdateInfo>) {
+        if ((info.result.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE ||
+                    info.result.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS)
+            && info.result.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+
+            manager.startUpdateFlowForResult(info.result,
+                AppUpdateType.IMMEDIATE, this, APP_UPDATE_REQUEST_CODE)
+        }
+
+        // Simulates an immediate update
+        if (BuildConfig.DEBUG) {
+            val fakeAppUpdate = manager as FakeAppUpdateManager
+            if (fakeAppUpdate.isImmediateFlowVisible) {
+                fakeAppUpdate.userAcceptsUpdate()
+                fakeAppUpdate.downloadStarts()
+                fakeAppUpdate.downloadCompletes()
+                //launchRestartDialog(manager)
+            }
+        }
+    }
+
+    private fun handleFlexibleUpdate(manager: AppUpdateManager, info: Task<AppUpdateInfo>) {
+        if (info.result.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+            && info.result.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+            handleImmediateUpdate(manager, info)
+            return
+        }
+
+        if ((info.result.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE ||
+                    info.result.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS)
+            && info.result.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+
+            //btn_update.visibility = View.VISIBLE
+            setUpdateAction(manager, info)
+        }
+    }
+
+    private fun setUpdateAction(manager: AppUpdateManager, info: Task<AppUpdateInfo>) {
+        updateListener = InstallStateUpdatedListener {
+            when (it.installStatus()) {
+                InstallStatus.FAILED, InstallStatus.UNKNOWN -> {
+                    checkForAppUpdate()
+                }
+                InstallStatus.PENDING -> {
+                    //tv_status.text = getString(R.string.info_pending)
+                }
+                InstallStatus.CANCELED -> {
+                    //tv_status.text = getString(R.string.info_canceled)
+                }
+                InstallStatus.DOWNLOADING -> {
+                    //tv_status.text = getString(R.string.info_downloading)
+                }
+                InstallStatus.DOWNLOADED -> {
+                    //tv_status.text = getString(R.string.info_installing)
+                    launchRestartDialog(manager)
+                }
+                InstallStatus.INSTALLING -> {
+                    //tv_status.text = getString(R.string.info_installing)
+                }
+                InstallStatus.INSTALLED -> {
+                    //tv_status.text = getString(R.string.info_installed)
+                    manager.unregisterListener(updateListener)
+                }
+                else -> {
+                    //tv_status.text = getString(R.string.info_restart)
+                }
+            }
+        }
+
+        manager.registerListener(updateListener)
+        manager.startUpdateFlowForResult(info.result, AppUpdateType.FLEXIBLE, this,
+            APP_UPDATE_REQUEST_CODE)
+
+        // Simulates a flexible update
+        if (BuildConfig.DEBUG) {
+            val fakeAppUpdate = manager as FakeAppUpdateManager
+            if (fakeAppUpdate.isConfirmationDialogVisible) {
+                fakeAppUpdate.userAcceptsUpdate()
+                fakeAppUpdate.downloadStarts()
+                fakeAppUpdate.downloadCompletes()
+                fakeAppUpdate.completeUpdate()
+                fakeAppUpdate.installCompletes()
+            }
+        }
+    }
+
+    private fun launchRestartDialog(manager: AppUpdateManager) {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.update_title))
+            .setMessage(getString(R.string.update_message))
+            .setPositiveButton(getString(R.string.action_restart)) { _, _ ->
+                manager.completeUpdate()
+            }
+            .create().show()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -345,5 +483,31 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
 
     override fun selectMyCourseTab() {
         binding.mainContainer.bottomNav.selectedItemId = R.id.my_course_nav
+    }
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            APP_UPDATE_REQUEST_CODE -> {
+                when (resultCode) {
+                    Activity.RESULT_OK -> {
+                        if (APP_UPDATE_TYPE_SUPPORTED == AppUpdateType.IMMEDIATE) {
+                            showSuccessToast(baseContext, getString(R.string.toast_updated))
+                        } else {
+                            showSuccessToast(baseContext, getString(R.string.toast_started))
+                        }
+                    }
+                    Activity.RESULT_CANCELED -> {
+                        showWarningToast(baseContext, getString(R.string.toast_cancelled))
+                    }
+                    ActivityResult.RESULT_IN_APP_UPDATE_FAILED -> {
+                        showErrorToast(baseContext, getString(R.string.toast_failed))
+                        // If the update is cancelled or fails,
+                        // you can request to start the update again.
+                        checkForAppUpdate()
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

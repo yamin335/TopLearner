@@ -15,20 +15,14 @@ import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.tasks.Task
-import com.google.android.play.core.appupdate.AppUpdateManager
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.google.android.play.core.install.model.AppUpdateType
-import com.google.android.play.core.install.model.UpdateAvailability
 import dagger.android.support.DaggerAppCompatActivity
 
 interface OTPHandlerCallback {
     fun onStartOTPListener()
 }
 
-const val APP_UPDATE_REQUEST_CODE = 1669
 class LoginActivity : DaggerAppCompatActivity(), LoginHandlerCallback, OTPHandlerCallback, NavigationHost {
     private val SMS_CONSENT_REQUEST = 2
-    private lateinit var appUpdateManager: AppUpdateManager
 
     // Set to an unused request code
     private val smsVerificationReceiver = object : BroadcastReceiver() {
@@ -79,14 +73,6 @@ class LoginActivity : DaggerAppCompatActivity(), LoginHandlerCallback, OTPHandle
                 } else {
                     // Consent denied. User can type OTC manually.
                 }
-
-            APP_UPDATE_REQUEST_CODE -> {
-                if (resultCode != RESULT_OK) {
-                    // If the update is cancelled or fails,
-                    // you can request to start the update again.
-                    checkForAppUpdate()
-                }
-            }
         }
     }
 
@@ -109,21 +95,6 @@ class LoginActivity : DaggerAppCompatActivity(), LoginHandlerCallback, OTPHandle
         super.onResume()
         val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
         registerReceiver(smsVerificationReceiver, intentFilter, SmsRetriever.SEND_PERMISSION, null)
-
-        appUpdateManager
-            .appUpdateInfo
-            .addOnSuccessListener { appUpdateInfo ->
-                if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-                ) {
-                    // If an in-app update is already running, resume the update.
-                    appUpdateManager.startUpdateFlowForResult(
-                        appUpdateInfo,
-                        AppUpdateType.IMMEDIATE,
-                        this,
-                        APP_UPDATE_REQUEST_CODE
-                    )
-                }
-            }
     }
 
     override fun onPause() {
@@ -136,9 +107,6 @@ class LoginActivity : DaggerAppCompatActivity(), LoginHandlerCallback, OTPHandle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        appUpdateManager = AppUpdateManagerFactory.create(this)
-        checkForAppUpdate()
 
         val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
         registerReceiver(smsVerificationReceiver, intentFilter, SmsRetriever.SEND_PERMISSION, null)
@@ -170,33 +138,6 @@ class LoginActivity : DaggerAppCompatActivity(), LoginHandlerCallback, OTPHandle
 //            // ...
 //            val ss = ""
 //        }
-    }
-
-    private fun checkForAppUpdate() {
-        // Returns an intent object that you use to check for an update.
-        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
-
-        // Checks that the platform will allow the specified type of update.
-        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                // This example applies an immediate update. To apply a flexible update
-                // instead, pass in AppUpdateType.FLEXIBLE
-                //Priority ranges from 0 to 5 in the ascending order
-                && appUpdateInfo.updatePriority() >= 4 /* high priority */
-                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
-            ) {
-                // Request the update.
-                appUpdateManager.startUpdateFlowForResult(
-                    // Pass the intent that is returned by 'getAppUpdateInfo()'.
-                    appUpdateInfo,
-                    // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
-                    AppUpdateType.IMMEDIATE,
-                    // The current activity making the update request.
-                    this,
-                    // Include a request code to later monitor this update request.
-                    APP_UPDATE_REQUEST_CODE)
-            }
-        }
     }
 
     override fun onBackPressed() {
