@@ -31,35 +31,13 @@
     <fragment
         android:id="@+id/termsAndConditions"
         android:name="com.engineersapps.eapps.ui.terms_and_conditions.TermsAndConditionsFragment"
-        tools:layout="@layout/fragment_terms_and_condition">
-
-        <action
-            android:id="@+id/action_termsAndConditions_to_otpSignInFragment3"
-            app:destination="@id/otpSignInFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-
-        <argument
-            android:name="registrationHelper"
-            app:argType="com.engineersapps.eapps.models.registration.InquiryAccount" />
-    </fragment>
+        tools:layout="@layout/fragment_terms_and_condition"/>
 
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.engineersapps.eapps.ui.login.SignInFragment"
         tools:layout="@layout/fragment_sign_in">
 
-        <action
-            android:id="@+id/action_signInFragment_to_termsFragment"
-            app:destination="@id/termsAndConditions"
-            app:launchSingleTop="false"
-            app:popUpToInclusive="false"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_signInFragment_to_otpSignInFragment"
             app:destination="@id/otpSignInFragment"
@@ -106,6 +84,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_pinNumberFragment_to_termsAndConditions"
+            app:destination="@id/termsAndConditions"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/profileSignInFragment"
@@ -141,21 +126,6 @@
         <action
             android:id="@+id/action_profileSignInFragment_to_upazillaEditFragment1"
             app:destination="@id/upazillaEditFragment1"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-    </fragment>
-    <fragment
-        android:id="@+id/permissionsFragment"
-        android:name="com.engineersapps.eapps.camerax.PermissionsFragment"
-        android:label="PermissionsFragment">
-        <argument
-            android:name="registrationHelper"
-            app:argType="com.engineersapps.eapps.models.registration.InquiryAccount" />
-        <action
-            android:id="@+id/action_permissionsFragment_to_profileSignInFragment"
-            app:destination="@id/profileSignInFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"

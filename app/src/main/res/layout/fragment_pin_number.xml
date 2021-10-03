@@ -145,6 +145,30 @@
                             android:layout_height="2dp"
                             android:layout_marginTop="4dp"
                             android:background="@color/albumColorPrimary"/>
+
+                        <LinearLayout
+                            android:id="@+id/termsLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="28dp"
+                            android:orientation="horizontal">
+
+                            <CheckBox
+                                android:id="@+id/cbTerms"
+                                android:layout_width="35dp"
+                                android:layout_height="30dp"/>
+
+                            <TextView
+                                android:id="@+id/termsAndConditions"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:text="@string/accept_terms_and_conditions"
+                                android:textColor="@color/white"
+                                android:layout_marginBottom="12dp"/>
+                        </LinearLayout>
                     </LinearLayout>
 
                     <TextView

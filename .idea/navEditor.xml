@@ -753,8 +753,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="2051" />
-                            <option name="y" value="-760" />
+                            <option name="x" value="1415" />
+                            <option name="y" value="-316" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -765,8 +765,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="2066" />
-                            <option name="y" value="-346" />
+                            <option name="x" value="1422" />
+                            <option name="y" value="20" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -777,8 +777,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="755" />
-                            <option name="y" value="18" />
+                            <option name="x" value="407" />
+                            <option name="y" value="32" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -793,34 +793,13 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="permissionsFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="1464" />
-                            <option name="y" value="130" />
-                          </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_permissionsFragment_to_profileSignInFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
                   <entry key="pinNumberFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="1015" />
-                            <option name="y" value="14" />
+                            <option name="x" value="611" />
+                            <option name="y" value="31" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -840,8 +819,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="1760" />
-                            <option name="y" value="-323" />
+                            <option name="x" value="1107" />
+                            <option name="y" value="28" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -876,18 +855,13 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="256" />
-                            <option name="y" value="32" />
+                            <option name="x" value="218" />
+                            <option name="y" value="31" />
                           </Point>
                         </option>
                         <option name="myPositions">
                           <map>
                             <entry key="action_signInFragment_to_otpSignInFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_signInFragment_to_termsFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -923,18 +897,9 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="500" />
-                            <option name="y" value="191" />
+                            <option name="x" value="856" />
+                            <option name="y" value="227" />
                           </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_termsAndConditions_to_otpSignInFragment3">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -944,8 +909,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="2075" />
-                            <option name="y" value="46" />
+                            <option name="x" value="1419" />
+                            <option name="y" value="353" />
                           </Point>
                         </option>
                       </LayoutPositions>
