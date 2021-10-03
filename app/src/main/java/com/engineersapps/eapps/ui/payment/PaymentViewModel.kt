@@ -4,8 +4,6 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.engineersapps.eapps.api.*
-import com.engineersapps.eapps.models.Offer
-import com.engineersapps.eapps.models.bkash.BKashCreateResponse
 import com.engineersapps.eapps.models.payment.CoursePaymentRequest
 import com.engineersapps.eapps.models.payment.PromoCode
 import com.engineersapps.eapps.models.registration.InquiryAccount
@@ -22,6 +20,9 @@ import javax.inject.Inject
 class PaymentViewModel @Inject constructor(private val application: Application,
                                            private val repository: TransactionRepository,
                                            private val homeRepository: HomeRepository) : BaseViewModel(application) {
+
+    var promoDiscountPercentage = 0
+    var profileDiscountPercentage = 0
 
     val isValidPromoCode: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
@@ -49,9 +50,9 @@ class PaymentViewModel @Inject constructor(private val application: Application,
         MutableLiveData<Int>()
     }
 
-    val cityDiscount: MutableLiveData<Int> by lazy {
-        MutableLiveData<Int>()
-    }
+//    val cityDiscount: MutableLiveData<Int> by lazy {
+//        MutableLiveData<Int>()
+//    }
 
     val promoDiscount: MutableLiveData<Int> by lazy {
         MutableLiveData<Int>()
@@ -69,76 +70,76 @@ class PaymentViewModel @Inject constructor(private val application: Application,
         MutableLiveData<Salesinvoice>()
     }
 
-    val offers: MutableLiveData<List<Offer>> by lazy {
-        MutableLiveData<List<Offer>>()
-    }
+//    val offers: MutableLiveData<List<Offer>> by lazy {
+//        MutableLiveData<List<Offer>>()
+//    }
 
-    val bkashUrl: MutableLiveData<BKashCreateResponse> by lazy {
-        MutableLiveData<BKashCreateResponse>()
-    }
+//    val bkashUrl: MutableLiveData<BKashCreateResponse> by lazy {
+//        MutableLiveData<BKashCreateResponse>()
+//    }
 
     val coursePurchaseSuccess: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
     }
 
-    fun getBkashPaymentUrl(mobile: String?, amount: String?, invoiceNumber: String?): MutableLiveData<BKashCreateResponse> {
-        if (checkNetworkStatus(true)) {
-            val handler = CoroutineExceptionHandler { _, exception ->
-                exception.printStackTrace()
-                apiCallStatus.postValue(ApiCallStatus.ERROR)
-                offers.postValue(null)
-            }
+//    fun getBkashPaymentUrl(mobile: String?, amount: String?, invoiceNumber: String?): MutableLiveData<BKashCreateResponse> {
+//        if (checkNetworkStatus(true)) {
+//            val handler = CoroutineExceptionHandler { _, exception ->
+//                exception.printStackTrace()
+//                apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                offers.postValue(null)
+//            }
+//
+//            apiCallStatus.postValue(ApiCallStatus.LOADING)
+//            viewModelScope.launch(handler) {
+//                when (val apiResponse = ApiResponse.create(repository.bkashPaymentUrlRepo(mobile, amount, invoiceNumber))) {
+//                    is ApiSuccessResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+//                        bkashUrl.postValue(apiResponse.body.data?.createresponse)
+//                    }
+//                    is ApiEmptyResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+//                        offers.postValue(null)
+//                    }
+//                    is ApiErrorResponse -> {
+//                        checkForValidSession(apiResponse.errorMessage)
+//                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                        offers.postValue(null)
+//                    }
+//                }
+//            }
+//        }
+//        return bkashUrl
+//    }
 
-            apiCallStatus.postValue(ApiCallStatus.LOADING)
-            viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.bkashPaymentUrlRepo(mobile, amount, invoiceNumber))) {
-                    is ApiSuccessResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                        bkashUrl.postValue(apiResponse.body.data?.createresponse)
-                    }
-                    is ApiEmptyResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
-                        offers.postValue(null)
-                    }
-                    is ApiErrorResponse -> {
-                        checkForValidSession(apiResponse.errorMessage)
-                        apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        offers.postValue(null)
-                    }
-                }
-            }
-        }
-        return bkashUrl
-    }
-
-    fun getAllOffers(cityId: Int?, upazillaId: Int?) {
-        if (checkNetworkStatus(true)) {
-            val handler = CoroutineExceptionHandler { _, exception ->
-                exception.printStackTrace()
-                apiCallStatus.postValue(ApiCallStatus.ERROR)
-                offers.postValue(null)
-            }
-
-            apiCallStatus.postValue(ApiCallStatus.LOADING)
-            viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(homeRepository.offerRepo(cityId, upazillaId))) {
-                    is ApiSuccessResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                        offers.postValue(apiResponse.body.data?.offers)
-                    }
-                    is ApiEmptyResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
-                        offers.postValue(null)
-                    }
-                    is ApiErrorResponse -> {
-                        checkForValidSession(apiResponse.errorMessage)
-                        apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        offers.postValue(null)
-                    }
-                }
-            }
-        }
-    }
+//    fun getAllOffers(cityId: Int?, upazillaId: Int?) {
+//        if (checkNetworkStatus(true)) {
+//            val handler = CoroutineExceptionHandler { _, exception ->
+//                exception.printStackTrace()
+//                apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                offers.postValue(null)
+//            }
+//
+//            apiCallStatus.postValue(ApiCallStatus.LOADING)
+//            viewModelScope.launch(handler) {
+//                when (val apiResponse = ApiResponse.create(homeRepository.offerRepo(cityId, upazillaId))) {
+//                    is ApiSuccessResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+//                        offers.postValue(apiResponse.body.data?.offers)
+//                    }
+//                    is ApiEmptyResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+//                        offers.postValue(null)
+//                    }
+//                    is ApiErrorResponse -> {
+//                        checkForValidSession(apiResponse.errorMessage)
+//                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                        offers.postValue(null)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     fun createOrder(createOrderBody: CreateOrderBody) {
         if (checkNetworkStatus(true)) {

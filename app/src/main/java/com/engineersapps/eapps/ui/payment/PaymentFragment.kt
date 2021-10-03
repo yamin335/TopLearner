@@ -12,7 +12,6 @@ import androidx.navigation.fragment.navArgs
 import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.PaymentFragmentBinding
-import com.engineersapps.eapps.models.bkash.BKashCreateResponse
 import com.engineersapps.eapps.models.payment.CoursePaymentRequest
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.transactions.CreateOrderBody
@@ -102,7 +101,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewModel.packagePrice.postValue(0)
         viewModel.profileDiscount.postValue(0)
-        viewModel.cityDiscount.postValue(0)
+        //viewModel.cityDiscount.postValue(0)
         viewModel.promoDiscount.postValue(0)
         viewModel.totalDiscount.postValue(0)
         viewModel.amount.postValue(0)
@@ -146,23 +145,23 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         })
 
         viewModel.profileDiscount.observe(viewLifecycleOwner, Observer {
-            val cityDiscount = viewModel.cityDiscount.value ?: 0
+            //val cityDiscount = viewModel.cityDiscount.value ?: 0
             val promoDiscount = viewModel.promoDiscount.value ?: 0
-            val totalDiscount = promoDiscount + it + cityDiscount
+            val totalDiscount = promoDiscount + it //+ cityDiscount
             viewModel.totalDiscount.postValue(totalDiscount)
         })
 
-        viewModel.cityDiscount.observe(viewLifecycleOwner, Observer {
-            val profileDiscount = viewModel.profileDiscount.value ?: 0
-            val promoDiscount = viewModel.promoDiscount.value ?: 0
-            val totalDiscount = promoDiscount + profileDiscount + it
-            viewModel.totalDiscount.postValue(totalDiscount)
-        })
+//        viewModel.cityDiscount.observe(viewLifecycleOwner, Observer {
+//            val profileDiscount = viewModel.profileDiscount.value ?: 0
+//            val promoDiscount = viewModel.promoDiscount.value ?: 0
+//            val totalDiscount = promoDiscount + profileDiscount + it
+//            viewModel.totalDiscount.postValue(totalDiscount)
+//        })
 
         viewModel.promoDiscount.observe(viewLifecycleOwner, Observer {
             val profileDiscount = viewModel.profileDiscount.value ?: 0
-            val cityDiscount = viewModel.cityDiscount.value ?: 0
-            val totalDiscount = profileDiscount + it + cityDiscount
+            //val cityDiscount = viewModel.cityDiscount.value ?: 0
+            val totalDiscount = profileDiscount + it //+ cityDiscount
             viewModel.totalDiscount.postValue(totalDiscount)
         })
 
@@ -224,9 +223,9 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewModel.promoCode.observe(viewLifecycleOwner, Observer { promoCode ->
             promoCode?.let {
-                val promoDiscountPercentage = promoCode.discount ?: 0
+                viewModel.promoDiscountPercentage = promoCode.discount ?: 0
                 val packagePrice = viewModel.packagePrice.value ?: 0
-                val promoDiscount = (packagePrice * promoDiscountPercentage)/100
+                val promoDiscount = (packagePrice * viewModel.promoDiscountPercentage)/100
                 viewModel.promoDiscount.postValue(promoDiscount)
             }
         })
@@ -235,25 +234,25 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             viewModel.verifyPromoCode()
         }
 
-        viewModel.offers.observe(viewLifecycleOwner, Observer {
-            if (!it.isNullOrEmpty()) {
-                it.forEach { offer ->
-                    val firstDate = offer.FromDate?.split("T")?.first()?.getMilliFromDate()
-                        ?: Long.MAX_VALUE
-                    val lastDate =
-                        offer.EndDate?.split("T")?.first()?.getMilliFromDate() ?: Long.MAX_VALUE
-                    val date = System.currentTimeMillis()
-
-                    if (offer.archived == false && date in firstDate..lastDate) {
-                        val offerAmount = offer.offer_amount ?: 0
-                        viewModel.cityDiscount.postValue(offerAmount)
-//                        val packagePrice = viewModel.packagePrice.value ?: 0
-//                        viewModel.amount.postValue(packagePrice - discount)
-                        return@Observer
-                    }
-                }
-            }
-        })
+//        viewModel.offers.observe(viewLifecycleOwner, Observer {
+//            if (!it.isNullOrEmpty()) {
+//                it.forEach { offer ->
+//                    val firstDate = offer.FromDate?.split("T")?.first()?.getMilliFromDate()
+//                        ?: Long.MAX_VALUE
+//                    val lastDate =
+//                        offer.EndDate?.split("T")?.first()?.getMilliFromDate() ?: Long.MAX_VALUE
+//                    val date = System.currentTimeMillis()
+//
+//                    if (offer.archived == false && date in firstDate..lastDate) {
+//                        val offerAmount = offer.offer_amount ?: 0
+//                        viewModel.cityDiscount.postValue(offerAmount)
+////                        val packagePrice = viewModel.packagePrice.value ?: 0
+////                        viewModel.amount.postValue(packagePrice - discount)
+//                        return@Observer
+//                    }
+//                }
+//            }
+//        })
 
         viewDataBinding.termsAndConditions.setOnClickListener {
             navigateTo(PaymentFragmentDirections.actionPaymentFragmentToTermsNavGraph())
@@ -275,7 +274,11 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             if (userData.customer_type_id == 2) {
                 callPartnerPayment()
             } else {
-                callPayment()
+                if ((viewModel.profileDiscountPercentage + viewModel.promoDiscountPercentage) >= 100) {
+                    callPartnerPayment()
+                } else {
+                    callPayment()
+                }
             }
 
 //            viewModel.getBkashPaymentUrl(userData.mobile ?: "",
@@ -315,57 +318,57 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 //            )
         }
         viewModel.packagePrice.postValue(secondPackagePrice)
-        val profileDiscountPercentage = userData.discount_amount ?: 0
+        viewModel.profileDiscountPercentage = userData.discount_amount ?: 0
         val packagePrice = viewModel.packagePrice.value ?: 0
-        val profileDiscount = (packagePrice * profileDiscountPercentage)/100
+        val profileDiscount = (packagePrice * viewModel.profileDiscountPercentage)/100
         viewModel.profileDiscount.postValue(profileDiscount)
-        viewModel.getAllOffers(userData.CityID, userData.UpazilaID)
+        //viewModel.getAllOffers(userData.CityID, userData.UpazilaID)
     }
 
-    private fun shoWBkashDialog(amount: String, bkashData: BKashCreateResponse) {
-        // --------bKash start--------
+//    private fun shoWBkashDialog(amount: String, bkashData: BKashCreateResponse) {
+//        // --------bKash start--------
+//
+//        //val checkout = BKashCheckout(viewModel.amount.value ?: "0", "authorization", "two")
+//
+//        bkashPgwDialog = BKashDialogFragment(object : BKashDialogFragment.BkashPaymentCallback {
+//            override fun onPaymentSuccess() {
+//                saveBKaskPayment(amount, bkashData)
+//                bkashPgwDialog.dismiss()
+//            }
+//
+//            override fun onPaymentFailed() {
+//                showErrorToast(requireContext(), "Payment failed!")
+//                bkashPgwDialog.dismiss()
+//            }
+//
+//            override fun onPaymentCancelled() {
+//                showErrorToast(requireContext(), "Payment cancelled!")
+//                bkashPgwDialog.dismiss()
+//            }
+//
+//        }, bkashData)
+//        bkashPgwDialog.isCancelable = true
+//        bkashPgwDialog.show(childFragmentManager, "#bkash_payment_dialog")
+//
+//        // --------bKash End--------
+//    }
 
-        //val checkout = BKashCheckout(viewModel.amount.value ?: "0", "authorization", "two")
-
-        bkashPgwDialog = BKashDialogFragment(object : BKashDialogFragment.BkashPaymentCallback {
-            override fun onPaymentSuccess() {
-                saveBKaskPayment(amount, bkashData)
-                bkashPgwDialog.dismiss()
-            }
-
-            override fun onPaymentFailed() {
-                showErrorToast(requireContext(), "Payment failed!")
-                bkashPgwDialog.dismiss()
-            }
-
-            override fun onPaymentCancelled() {
-                showErrorToast(requireContext(), "Payment cancelled!")
-                bkashPgwDialog.dismiss()
-            }
-
-        }, bkashData)
-        bkashPgwDialog.isCancelable = true
-        bkashPgwDialog.show(childFragmentManager, "#bkash_payment_dialog")
-
-        // --------bKash End--------
-    }
-
-    private fun saveBKaskPayment(amount: String, bkashData: BKashCreateResponse) {
-        val firstName = userData.first_name ?: ""
-        val lastName = userData.last_name ?: ""
-
-        val discount = viewModel.totalDiscount.value ?: 0
-        viewModel.createOrder(
-            CreateOrderBody(
-                userData.id ?: 0, userData.mobile ?: "",
-                amount.toInt(), amount.toInt(), 0,
-                discount, "", userData.upazila ?: "", userData.city ?: "",
-                userData.UpazilaID ?: 0, userData.CityID ?: 0, bkashData.invoicenumber ?: "N/A",
-                "", bkashData.paymentID ?: "N/A", args.bookId, userData.class_id ?: 0,
-                "$firstName $lastName", args.bookName ?: "", bkashData.paymentID ?: "N/A"
-            )
-        )
-    }
+//    private fun saveBKaskPayment(amount: String, bkashData: BKashCreateResponse) {
+//        val firstName = userData.first_name ?: ""
+//        val lastName = userData.last_name ?: ""
+//
+//        val discount = viewModel.totalDiscount.value ?: 0
+//        viewModel.createOrder(
+//            CreateOrderBody(
+//                userData.id ?: 0, userData.mobile ?: "",
+//                amount.toInt(), amount.toInt(), 0,
+//                discount, "", userData.upazila ?: "", userData.city ?: "",
+//                userData.UpazilaID ?: 0, userData.CityID ?: 0, bkashData.invoicenumber ?: "N/A",
+//                "", bkashData.paymentID ?: "N/A", args.bookId, userData.class_id ?: 0,
+//                "$firstName $lastName", args.bookName ?: "", bkashData.paymentID ?: "N/A"
+//            )
+//        )
+//    }
 
     private fun generateInvoiceID(): String {
         val random1 = "${1 + SecureRandom().nextInt(99999)}"
