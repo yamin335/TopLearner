@@ -9,7 +9,7 @@ import com.engineersapps.eapps.models.payment.PromoCode
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.transactions.CreateOrderBody
 import com.engineersapps.eapps.models.transactions.Salesinvoice
-import com.engineersapps.eapps.repos.HomeRepository
+import com.engineersapps.eapps.repos.RegistrationRepository
 import com.engineersapps.eapps.repos.TransactionRepository
 import com.engineersapps.eapps.ui.common.BaseViewModel
 import com.engineersapps.eapps.util.AppConstants.serverConnectionErrorMessage
@@ -19,7 +19,8 @@ import javax.inject.Inject
 
 class PaymentViewModel @Inject constructor(private val application: Application,
                                            private val repository: TransactionRepository,
-                                           private val homeRepository: HomeRepository) : BaseViewModel(application) {
+                                           private val regRepository: RegistrationRepository
+) : BaseViewModel(application) {
 
     var promoDiscountPercentage = 0
     var profileDiscountPercentage = 0
@@ -68,6 +69,10 @@ class PaymentViewModel @Inject constructor(private val application: Application,
 
     val salesInvoice: MutableLiveData<Salesinvoice> by lazy {
         MutableLiveData<Salesinvoice>()
+    }
+
+    val userProfileInfo: MutableLiveData<InquiryAccount> by lazy {
+        MutableLiveData<InquiryAccount>()
     }
 
 //    val offers: MutableLiveData<List<Offer>> by lazy {
@@ -227,6 +232,36 @@ class PaymentViewModel @Inject constructor(private val application: Application,
                     is ApiErrorResponse -> {
                         checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
+                    }
+                }
+            }
+        }
+    }
+
+    fun getUserProfileInfo(mobileNumber: String) {
+        if (checkNetworkStatus(true)) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(serverConnectionErrorMessage)
+                userProfileInfo.postValue(null)
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(regRepository.getUserInfo(mobileNumber))) {
+                    is ApiSuccessResponse -> {
+                        userProfileInfo.postValue(apiResponse.body.data?.Account)
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                        userProfileInfo.postValue(null)
+                    }
+                    is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                        userProfileInfo.postValue(null)
                     }
                 }
             }

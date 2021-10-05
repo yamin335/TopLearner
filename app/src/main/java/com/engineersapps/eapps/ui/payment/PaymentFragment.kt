@@ -83,6 +83,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
     override fun onResume() {
         super.onResume()
         viewDataBinding.spPackages.setSelection(1, true)
+        viewModel.getUserProfileInfo(userData.mobile ?: "")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,9 +140,11 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         }
 
         viewModel.packagePrice.observe(viewLifecycleOwner, Observer {
-            val totalDiscount = viewModel.totalDiscount.value ?: 0
-            val selectedPackagePrice = it ?: 0
-            viewModel.amount.postValue(selectedPackagePrice - totalDiscount)
+            val promoDiscount = (it * viewModel.promoDiscountPercentage)/100
+            viewModel.promoDiscount.postValue(promoDiscount)
+
+            val profileDiscount = (it * viewModel.profileDiscountPercentage)/100
+            viewModel.profileDiscount.postValue(profileDiscount)
         })
 
         viewModel.profileDiscount.observe(viewLifecycleOwner, Observer {
@@ -234,6 +237,19 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             viewModel.verifyPromoCode()
         }
 
+        viewModel.userProfileInfo.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer { userInfo ->
+                userInfo?.let {
+                    userData = it
+                    preferencesHelper.saveUser(it)
+                    viewModel.profileDiscountPercentage = userData.discount_amount ?: 0
+                    val packagePrice = viewModel.packagePrice.value ?: 0
+                    val profileDiscount = (packagePrice * viewModel.profileDiscountPercentage)/100
+                    viewModel.profileDiscount.postValue(profileDiscount)
+                }
+            })
+
 //        viewModel.offers.observe(viewLifecycleOwner, Observer {
 //            if (!it.isNullOrEmpty()) {
 //                it.forEach { offer ->
@@ -260,13 +276,22 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewModel.amount.observe(viewLifecycleOwner, Observer {
             it?.let {
-                viewDataBinding.btnPayNow.isEnabled = it > 0 && viewDataBinding.cbTerms.isChecked
+                if ((viewModel.profileDiscountPercentage + viewModel.promoDiscountPercentage) >= 100) {
+                    if (it < 0) viewModel.amount.postValue(0)
+                    viewDataBinding.btnPayNow.isEnabled = viewDataBinding.cbTerms.isChecked
+                } else {
+                    viewDataBinding.btnPayNow.isEnabled = it > 0 && viewDataBinding.cbTerms.isChecked
+                }
             }
         })
 
         viewDataBinding.cbTerms.setOnCheckedChangeListener { _, isChecked ->
-            val amount = viewModel.amount.value ?: return@setOnCheckedChangeListener
-            viewDataBinding.btnPayNow.isEnabled = amount > 0 && isChecked
+            if ((viewModel.profileDiscountPercentage + viewModel.promoDiscountPercentage) >= 100) {
+                viewDataBinding.btnPayNow.isEnabled = isChecked
+            } else {
+                val amount = viewModel.amount.value ?: return@setOnCheckedChangeListener
+                viewDataBinding.btnPayNow.isEnabled = amount > 0 && isChecked
+            }
         }
 
         viewDataBinding.btnPayNow.setOnClickListener {
@@ -318,10 +343,6 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 //            )
         }
         viewModel.packagePrice.postValue(secondPackagePrice)
-        viewModel.profileDiscountPercentage = userData.discount_amount ?: 0
-        val packagePrice = viewModel.packagePrice.value ?: 0
-        val profileDiscount = (packagePrice * viewModel.profileDiscountPercentage)/100
-        viewModel.profileDiscount.postValue(profileDiscount)
         //viewModel.getAllOffers(userData.CityID, userData.UpazilaID)
     }
 
