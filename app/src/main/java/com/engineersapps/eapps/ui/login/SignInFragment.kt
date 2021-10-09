@@ -19,7 +19,6 @@ import com.engineersapps.eapps.prefs.AppPreferencesHelper
 import com.engineersapps.eapps.ui.OTPHandlerCallback
 import com.engineersapps.eapps.ui.common.BaseFragment
 import com.engineersapps.eapps.ui.otp_signin.OtpSignInFragment
-import com.engineersapps.eapps.util.AppConstants.commonErrorMessage
 import com.engineersapps.eapps.util.hideKeyboard
 import com.engineersapps.eapps.util.isTimeAndZoneAutomatic
 import com.engineersapps.eapps.util.showErrorToast
@@ -194,21 +193,22 @@ class SignInFragment : BaseFragment<SignInBinding, SignInViewModel>() {
     }
 
     private fun inquireAccount(operator: String) {
-        startOTPListenerCallback?.onStartOTPListener()
         viewModel.inquireAccount().observe(viewLifecycleOwner, Observer { response ->
             response?.data?.Account?.let {
                 it.mobile_operator = operator
-                if (it.isRegistered == false) {
-                    if (it.isAcceptedTandC == true) {
-                        requestOTPCode(it, operator)
-                    } else {
-                        navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
-                    }
-                } else if (it.isRegistered == true && it.isMobileVerified == true) {
-                    navigateTo(SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(it))
-                } else {
-                    showErrorToast(mContext, response.msg ?: commonErrorMessage)
-                }
+                startOTPListenerCallback?.onStartOTPListener()
+                navigateTo(SignInFragmentDirections.actionSignInFragmentToOtpSignInFragment(it))
+//                if (it.isRegistered == false) {
+//                    if (it.isAcceptedTandC == true) {
+//                        requestOTPCode(it, operator)
+//                    } else {
+//                        navigateTo(SignInFragmentDirections.actionSignInFragmentToTermsFragment(it))
+//                    }
+//                } else if (it.isRegistered == true && it.isMobileVerified == true) {
+//
+//                } else {
+//                    showErrorToast(mContext, response.msg ?: commonErrorMessage)
+//                }
             }
         })
     }

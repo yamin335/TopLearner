@@ -88,7 +88,7 @@
     <string name="munshiganj_office">Munshiganj Office</string>
     <string name="value_munsiganj_office">897, 4th floor, Anwar Hossain, Mathpara, Munshiganj Sadar, Munshigang, Dhaka.</string>
     <string name="payment_options">PAYMENT OPTIONS</string>
-    <string name="payment_terms_and_conditions">আমি কোর্সটি ক্রয় করার জন্য <font color="#23BCBA">টার্মস অ্যান্ড কন্ডিশন, রিফান্ড পলিসি এবং প্রাইভেসি পলিসি</font> মেনে নিলাম।</string>
+    <string name="accept_terms_and_conditions">আমি <font color="#70DB44">টার্মস অ্যান্ড কন্ডিশন, রিফান্ড পলিসি এবং প্রাইভেসি পলিসি</font> মেনে নিলাম।</string>
     <string name="action_restart">Restart</string>
     <string name="update_title">App update</string>
     <string name="update_message">Application successfully updated! You need to restart the app in
@@ -98,4 +98,6 @@
     <string name="toast_updated">App successfully updated</string>
     <string name="toast_failed">App update failed!</string>
     <string name="toast_cancelled">App update cancelled!</string>
+
+    <string name="payment_terms_and_conditions">আমি কোর্সটি ক্রয় করার জন্য <font color="#23BCBA">টার্মস অ্যান্ড কন্ডিশন, রিফান্ড পলিসি এবং প্রাইভেসি পলিসি</font> মেনে নিলাম।</string>
 </resources>

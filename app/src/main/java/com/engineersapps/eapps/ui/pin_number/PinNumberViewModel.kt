@@ -41,6 +41,10 @@ class PinNumberViewModel @Inject constructor(
         MutableLiveData<Boolean>()
     }
 
+    val registrationResponse: MutableLiveData<UserRegistrationData> by lazy {
+        MutableLiveData<UserRegistrationData>()
+    }
+
     fun loginUser(inquiryAccount: InquiryAccount) {
         if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
@@ -129,6 +133,33 @@ class PinNumberViewModel @Inject constructor(
                         checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                         resetPinResponse.postValue(null)
+                    }
+                }
+            }
+        }
+    }
+
+    fun registerNewUser(inquiryAccount: InquiryAccount) {
+        if (checkNetworkStatus(true)) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(repository.registerUserRepo(inquiryAccount))) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        registrationResponse.postValue(apiResponse.body.data)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                    }
+                    is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
                     }
                 }
             }

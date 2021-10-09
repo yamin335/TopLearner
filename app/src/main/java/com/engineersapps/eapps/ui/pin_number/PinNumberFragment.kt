@@ -15,6 +15,7 @@ import com.engineersapps.eapps.databinding.PinNumberBinding
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.ui.LoginHandlerCallback
 import com.engineersapps.eapps.ui.common.BaseFragment
+import com.engineersapps.eapps.ui.terms_and_conditions.TermsAndConditionsFragment
 import com.engineersapps.eapps.util.hideKeyboard
 import com.engineersapps.eapps.util.showErrorToast
 import com.engineersapps.eapps.util.showSuccessToast
@@ -101,14 +102,41 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
 //        registrationRemoteHelper.pin = "123456"
 //        registrationRemoteHelper.retypePin = "123456"
 
+        if (TermsAndConditionsFragment.isTermsAccepted == null) {
+            TermsAndConditionsFragment.isTermsAccepted = registrationRemoteHelper.isAcceptedTandC ?: false
+        }
+
+        viewDataBinding.cbTerms.isChecked = TermsAndConditionsFragment.isTermsAccepted ?: false
+
         if (registrationRemoteHelper.isRegistered == true) {
             viewDataBinding.linearReTypePin.visibility = View.GONE
             viewDataBinding.forgotPassword.visibility = View.VISIBLE
             viewDataBinding.resetPinLabel.visibility = View.VISIBLE
+            viewDataBinding.termsLayout.visibility = View.GONE
         } else {
+            viewDataBinding.termsLayout.visibility = View.VISIBLE
             viewDataBinding.forgotPassword.visibility = View.GONE
             viewDataBinding.resetPinLabel.visibility = View.GONE
         }
+
+        viewDataBinding.termsAndConditions.setOnClickListener {
+            navigateTo(PinNumberFragmentDirections.actionPinNumberFragmentToTermsAndConditions())
+        }
+
+        viewModel.registrationResponse.observe(viewLifecycleOwner, Observer {
+            it?.let { data ->
+                data.Account?.let { account ->
+                    if (account.isRegistered == true) {
+                        preferencesHelper.accessToken = data.Token?.AccessToken
+                        preferencesHelper.accessTokenExpiresIn = data.Token?.AtExpires ?: 0
+                        preferencesHelper.isLoggedIn = true
+                        preferencesHelper.saveUser(account)
+                        showSuccessToast(requireContext(), "Registration successful!")
+                        listener?.onLoggedIn()
+                    }
+                }
+            }
+        })
 
 //        viewModel.defaultResponse.observe(viewLifecycleOwner, Observer { response ->
 //            response?.let {
@@ -143,14 +171,14 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
                 if (registrationRemoteHelper.isRegistered == true) {
                     viewDataBinding.btnSubmit.isEnabled = pin.length == 6 && viewModel.apiCallStatus.value != ApiCallStatus.LOADING
                 } else {
-                    viewDataBinding.btnSubmit.isEnabled = pin.length == 6 && viewModel.rePin.value?.length == 6 && viewModel.rePin.value == pin && viewModel.apiCallStatus.value != ApiCallStatus.LOADING
+                    viewDataBinding.btnSubmit.isEnabled = pin.length == 6 && viewModel.rePin.value?.length == 6 && viewModel.rePin.value == pin && viewModel.apiCallStatus.value != ApiCallStatus.LOADING && TermsAndConditionsFragment.isTermsAccepted == true
                 }
             }
         })
 
         viewModel.rePin.observe(viewLifecycleOwner, Observer { rePin ->
             rePin?.let {
-                viewDataBinding.btnSubmit.isEnabled = viewModel.pin.value?.length == 6 && rePin.length == 6 && viewModel.pin.value == rePin && viewModel.apiCallStatus.value != ApiCallStatus.LOADING
+                viewDataBinding.btnSubmit.isEnabled = viewModel.pin.value?.length == 6 && rePin.length == 6 && viewModel.pin.value == rePin && viewModel.apiCallStatus.value != ApiCallStatus.LOADING && TermsAndConditionsFragment.isTermsAccepted == true
             }
         })
 
@@ -204,14 +232,21 @@ class PinNumberFragment : BaseFragment<PinNumberBinding, PinNumberViewModel>(), 
             }
         })
 
+        viewDataBinding.cbTerms.setOnCheckedChangeListener { _, isChecked ->
+            TermsAndConditionsFragment.isTermsAccepted = isChecked
+            viewDataBinding.btnSubmit.isEnabled = viewModel.pin.value?.length == 6 && viewModel.rePin.value?.length == 6 && viewModel.pin.value == viewModel.rePin.value && viewModel.apiCallStatus.value != ApiCallStatus.LOADING && TermsAndConditionsFragment.isTermsAccepted == true
+        }
+
         viewDataBinding.btnSubmit.setOnClickListener {
             hideKeyboard()
             registrationRemoteHelper.pin = viewModel.pin.value
             registrationRemoteHelper.retype_pin = viewModel.rePin.value
+            registrationRemoteHelper.isAcceptedTandC = TermsAndConditionsFragment.isTermsAccepted
             if (registrationRemoteHelper.isRegistered == false) {
-                navigateTo(PinNumberFragmentDirections.actionPinNumberFragmentToProfileSignInFragment(
-                    registrationRemoteHelper
-                ))
+//                navigateTo(PinNumberFragmentDirections.actionPinNumberFragmentToProfileSignInFragment(
+//                    registrationRemoteHelper
+//                ))
+                viewModel.registerNewUser(registrationRemoteHelper)
             } else {
                 viewModel.loginUser(registrationRemoteHelper)
             }
