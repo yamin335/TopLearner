@@ -74,6 +74,16 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             myCourseListAdapter.setTimeChangeStatus(true)
         }
         viewModel.getMyCourses(userData.mobile)
+
+        preferencesHelper.pendingCoursePurchase?.let {
+            if (it.coursePaymentRequest == null) {
+                it.createOrderBody?.let { createOrderBody ->
+                    viewModel.createOrder(createOrderBody)
+                }
+            } else {
+                viewModel.purchaseCourse(it.createOrderBody, it.coursePaymentRequest)
+            }
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -154,7 +164,10 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
                     val book = ClassWiseBook(it.id, it.udid,
                         it.name, it.title, it.author, it.isPaid,
                         it.book_type_id, it.price, it.status, it.logo)
-                    navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToChapterNav(book.id, book.title))
+                    val bookList = ArrayList<ClassWiseBook>()
+                    bookList.add(book)
+                    BooksFragment.books = bookList
+                    navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToBooksFragment(book.id, myCourse.title))
                 })
             }
         }, paymentCallback = { myCourse ->
@@ -331,6 +344,14 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
 
                 viewDataBinding.emptyView.visibility = if (courses.isEmpty()) View.VISIBLE else View.GONE
                 viewDataBinding.footer.visibility = if (courses.isNotEmpty()) View.VISIBLE else View.GONE
+            }
+        })
+
+        viewModel.isPendingCoursePurchaseSuccess.observe(viewLifecycleOwner, Observer {
+            if (it == true) {
+                viewModel.getMyCourses(userData.mobile)
+                preferencesHelper.pendingCoursePurchase = null
+                viewModel.isPendingCoursePurchaseSuccess.postValue(null)
             }
         })
     }

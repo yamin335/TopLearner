@@ -5,6 +5,7 @@ import com.engineersapps.eapps.api.ProfileInfo
 import com.engineersapps.eapps.api.TokenInformation
 import com.engineersapps.eapps.models.home.PaidBook
 import com.engineersapps.eapps.models.registration.InquiryAccount
+import com.engineersapps.eapps.models.transactions.MyCoursePurchasePayload
 
 
 interface PreferencesHelper {
@@ -48,6 +49,8 @@ interface PreferencesHelper {
     var accessTokenExpiresIn: Long
 
     val isAccessTokenExpired: Boolean
+
+    var pendingCoursePurchase: MyCoursePurchasePayload?
 
     fun getAccessTokenHeader(): String
 

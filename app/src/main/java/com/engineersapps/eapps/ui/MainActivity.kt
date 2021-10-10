@@ -5,7 +5,6 @@ import android.content.*
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
@@ -151,10 +150,10 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
             }
         })
 
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_SECURE,
-            WindowManager.LayoutParams.FLAG_SECURE
-        )
+//        window.setFlags(
+//            WindowManager.LayoutParams.FLAG_SECURE,
+//            WindowManager.LayoutParams.FLAG_SECURE
+//        )
 
         userData = preferencesHelper.getUser()
 
@@ -196,9 +195,9 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
 
-        viewModel.allMyCoursesFromDB.observe(this, Observer {
-            it?.let { myCourses ->
-                if (myCourses.isNotEmpty()) {
+        viewModel.getMyCourseItemCount().observe(this, Observer {
+            it?.let { count ->
+                if (count > 0) {
                     binding.mainContainer.bottomNav.selectedItemId = R.id.my_course_nav
                 }
             }

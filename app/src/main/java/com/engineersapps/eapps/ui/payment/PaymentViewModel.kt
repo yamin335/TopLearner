@@ -8,7 +8,7 @@ import com.engineersapps.eapps.models.payment.CoursePaymentRequest
 import com.engineersapps.eapps.models.payment.PromoCode
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.transactions.CreateOrderBody
-import com.engineersapps.eapps.models.transactions.Salesinvoice
+import com.engineersapps.eapps.models.transactions.SalesInvoice
 import com.engineersapps.eapps.repos.RegistrationRepository
 import com.engineersapps.eapps.repos.TransactionRepository
 import com.engineersapps.eapps.ui.common.BaseViewModel
@@ -67,8 +67,8 @@ class PaymentViewModel @Inject constructor(private val application: Application,
         MutableLiveData<Int>()
     }
 
-    val salesInvoice: MutableLiveData<Salesinvoice> by lazy {
-        MutableLiveData<Salesinvoice>()
+    val salesInvoice: MutableLiveData<SalesInvoice> by lazy {
+        MutableLiveData<SalesInvoice>()
     }
 
     val userProfileInfo: MutableLiveData<InquiryAccount> by lazy {

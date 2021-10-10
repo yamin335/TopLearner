@@ -15,6 +15,7 @@ import com.engineersapps.eapps.databinding.PaymentFragmentBinding
 import com.engineersapps.eapps.models.payment.CoursePaymentRequest
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.transactions.CreateOrderBody
+import com.engineersapps.eapps.models.transactions.MyCoursePurchasePayload
 import com.engineersapps.eapps.ui.MyCourseTabSelection
 import com.engineersapps.eapps.ui.bkash.BKashDialogFragment
 import com.engineersapps.eapps.ui.common.BaseFragment
@@ -177,6 +178,9 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         viewModel.coursePurchaseSuccess.observe(viewLifecycleOwner, Observer { isSuccess ->
             isSuccess?.let {
                 if (it) {
+                    var pendingPurchase = preferencesHelper.pendingCoursePurchase
+                    pendingPurchase = MyCoursePurchasePayload(pendingPurchase?.createOrderBody, null)
+                    preferencesHelper.pendingCoursePurchase = pendingPurchase
                     hideKeyboard()
                     findNavController().popBackStack()
                     showSuccessToast(requireContext(), "Payment Successful")
@@ -188,22 +192,11 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewModel.salesInvoice.observe(viewLifecycleOwner, Observer { invoice ->
             invoice?.let {
-//                Home2Fragment.allBookList.map { classWiseBook ->
-//                    classWiseBook.isPaid = true
-//                }
-//                val paidBook = args.book
-//                paidBook.isPaid = true
-//                preferencesHelper.savePaidBook(paidBook)
+                preferencesHelper.pendingCoursePurchase = null
                 hideKeyboard()
                 findNavController().popBackStack()
                 showSuccessToast(requireContext(), "Payment Successful")
                 myCourseTabSelectionListener?.selectMyCourseTab()
-//                if (args.book.bookID == it.BookID) {
-//                    findNavController().popBackStack()
-//                    showSuccessToast(requireContext(), "Payment Successful")
-//                } else {
-//                    showErrorToast(requireContext(), "Payment is not successful!")
-//                }
             }
         })
 
@@ -406,22 +399,25 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         val promoter = viewModel.promoPartner.value
         val discount = viewModel.totalDiscount.value ?: 0
 
-        viewModel.purchaseCourse(
-            CreateOrderBody(
-                userData.id ?: 0, userData.mobile ?: "",
-                response.amount.toDouble().toInt(), response.amount.toDouble().toInt(), 0,
-                discount, "", promoter?.upazila ?: "", promoter?.city ?: "",
-                promoter?.UpazilaID ?: 0, promoter?.CityID ?: 0, invoiceNumber,
-                "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
-                "$firstName $lastName", args.bookName ?: "", response.tranId ?: "N/A",
-                "", "", viewModel.promoCode.value?.code ?: "",
-                viewModel.promoCode.value?.partner_id ?: 0, courseDuration + args.remainDays
-            ),
-            CoursePaymentRequest(
-                userData.mobile, invoiceNumber,userData.id, args.courseId,
-                viewModel.packagePrice.value, response.amount.toDouble().toInt(), courseDuration, args.remainDays
-            )
+        val createOrderBody = CreateOrderBody(
+            userData.id ?: 0, userData.mobile ?: "",
+            response.amount.toDouble().toInt(), response.amount.toDouble().toInt(), 0,
+            discount, "", promoter?.upazila ?: "", promoter?.city ?: "",
+            promoter?.UpazilaID ?: 0, promoter?.CityID ?: 0, invoiceNumber,
+            "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
+            "$firstName $lastName", args.bookName ?: "", response.tranId ?: "N/A",
+            "", "", viewModel.promoCode.value?.code ?: "",
+            viewModel.promoCode.value?.partner_id ?: 0, courseDuration + args.remainDays
         )
+
+        val coursePaymentRequest = CoursePaymentRequest(
+            userData.mobile, invoiceNumber,userData.id, args.courseId,
+            viewModel.packagePrice.value, response.amount.toDouble().toInt(), courseDuration, args.remainDays
+        )
+
+        preferencesHelper.pendingCoursePurchase = MyCoursePurchasePayload(createOrderBody, coursePaymentRequest)
+
+        viewModel.purchaseCourse(createOrderBody, coursePaymentRequest)
     }
 
     private fun callPartnerPayment() {
@@ -435,8 +431,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
     private fun callPayment() {
         val amount = viewModel.amount.value?.toDouble() ?: return
-        //val sslCommerzInitialization = SSLCommerzInitialization ("testbox","qwerty",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.TESTBOX)
-        val sslCommerzInitialization = SSLCommerzInitialization ("engineersappslive","61149E9C3398383671",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.LIVE)
+        val sslCommerzInitialization = SSLCommerzInitialization ("testbox","qwerty",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.TESTBOX)
+        //val sslCommerzInitialization = SSLCommerzInitialization ("engineersappslive","61149E9C3398383671",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.LIVE)
         IntegrateSSLCommerz
             .getInstance(requireContext())
             .addSSLCommerzInitialization(sslCommerzInitialization)

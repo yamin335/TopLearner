@@ -14,7 +14,10 @@ import com.engineersapps.eapps.models.home.CourseCategory
 import com.engineersapps.eapps.models.my_course.MyCourse
 import com.engineersapps.eapps.models.my_course.MyCourseBook
 import com.engineersapps.eapps.models.my_course.MyCourseListRequest
+import com.engineersapps.eapps.models.payment.CoursePaymentRequest
+import com.engineersapps.eapps.models.transactions.CreateOrderBody
 import com.engineersapps.eapps.repos.HomeRepository
+import com.engineersapps.eapps.repos.TransactionRepository
 import com.engineersapps.eapps.ui.common.BaseViewModel
 import com.engineersapps.eapps.util.AppConstants
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -29,10 +32,15 @@ import kotlin.collections.ArrayList
 class MyCourseViewModel @Inject constructor(
     private val application: Application,
     private val repository: HomeRepository,
+    private val transactionRepository: TransactionRepository,
     private val bookChapterDao: BookChapterDao,
     private val myCourseDao: MyCourseDao,
     private val courseDao: CourseDao
 ) : BaseViewModel(application) {
+
+    val isPendingCoursePurchaseSuccess: MutableLiveData<Boolean?> by lazy {
+        MutableLiveData<Boolean?>()
+    }
 
     val allMyCourseBooksFromDB: LiveData<List<MyCourseBook>> = liveData {
         myCourseDao.getAllMyCourseBooks().collect { list ->
@@ -181,6 +189,64 @@ class MyCourseViewModel @Inject constructor(
             }
         } else {
             apiCallStatus.postValue(ApiCallStatus.ERROR)
+        }
+    }
+
+    fun createOrder(createOrderBody: CreateOrderBody) {
+        if (checkNetworkStatus(true)) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(transactionRepository.createOrderRepo(createOrderBody))) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        isPendingCoursePurchaseSuccess.postValue(true)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                    }
+                    is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                    }
+                }
+            }
+        }
+    }
+
+    fun purchaseCourse(createOrderBody: CreateOrderBody?, coursePaymentRequest: CoursePaymentRequest) {
+        if (checkNetworkStatus(true)) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(transactionRepository.purchaseCourseRepo(coursePaymentRequest))) {
+                    is ApiSuccessResponse -> {
+                        if (createOrderBody == null) {
+                            apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        }
+                        createOrderBody?.let {
+                            createOrder(it)
+                        }
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                    }
+                    is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                    }
+                }
+            }
         }
     }
 }

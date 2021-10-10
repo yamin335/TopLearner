@@ -1283,13 +1283,34 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="booksFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="193" />
+                            <option name="y" value="191" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_booksFragment_to_chapter_nav">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="chapter_nav_graph">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="308" />
-                            <option name="y" value="116" />
+                            <option name="x" value="417" />
+                            <option name="y" value="285" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -1318,7 +1339,7 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_myCourseFragment_to_chapter_nav">
+                            <entry key="action_myCourseFragment_to_booksFragment">
                               <value>
                                 <LayoutPositions />
                               </value>

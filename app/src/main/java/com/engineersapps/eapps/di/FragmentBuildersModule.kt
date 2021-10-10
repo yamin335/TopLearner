@@ -12,6 +12,7 @@ import com.engineersapps.eapps.ui.live_video.LiveVideoFragment
 import com.engineersapps.eapps.ui.login.SignInFragment
 import com.engineersapps.eapps.ui.login.ViewPagerFragment
 import com.engineersapps.eapps.ui.more.MoreFragment
+import com.engineersapps.eapps.ui.my_course.BooksFragment
 import com.engineersapps.eapps.ui.my_course.MyCourseFragment
 import com.engineersapps.eapps.ui.notice_board.NoticeBoardFragment
 import com.engineersapps.eapps.ui.offer.OfferFragment
@@ -148,4 +149,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeTab4Fragment(): Tab4Fragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeBooksFragment(): BooksFragment
 }

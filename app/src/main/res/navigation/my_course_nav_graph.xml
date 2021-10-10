@@ -11,22 +11,6 @@
         android:label="My Course"
         tools:layout="@layout/fragment_my_course" >
         <action
-            android:id="@+id/action_myCourseFragment_to_chapter_nav"
-            app:destination="@id/chapter_nav"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right">
-            <argument
-                android:name="id"
-                app:argType="integer" />
-            <argument
-                android:name="title"
-                app:argType="string"
-                app:nullable="true"
-                android:defaultValue="Book Chapters" />
-        </action>
-        <action
             android:id="@+id/action_myCourseFragment_to_payment_nav"
             app:destination="@id/payment_nav"
             app:enterAnim="@anim/slide_in_right"
@@ -56,9 +40,47 @@
                 android:name="remainDays"
                 app:argType="integer" />
         </action>
+        <action
+            android:id="@+id/action_myCourseFragment_to_booksFragment"
+            app:destination="@id/booksFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <include app:graph="@navigation/drawer_nav_graph" />
     <include app:graph="@navigation/chapter_nav_graph" />
     <include app:graph="@navigation/payment_nav_graph" />
+    <fragment
+        android:id="@+id/booksFragment"
+        android:name="com.engineersapps.eapps.ui.my_course.BooksFragment"
+        android:label="Book List"
+        tools:layout="@layout/fragment_books">
+        <action
+            android:id="@+id/action_booksFragment_to_chapter_nav"
+            app:destination="@id/chapter_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="id"
+                app:argType="integer" />
+            <argument
+                android:name="title"
+                app:argType="string"
+                app:nullable="true"
+                android:defaultValue="Book Chapters" />
+
+        </action>
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="Book Chapters" />
+    </fragment>
 </navigation>

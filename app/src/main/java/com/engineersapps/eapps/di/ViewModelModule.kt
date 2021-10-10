@@ -17,6 +17,7 @@ import com.engineersapps.eapps.ui.live_video.LiveVideoViewModel
 import com.engineersapps.eapps.ui.login.SignInViewModel
 import com.engineersapps.eapps.ui.login.ViewPagerViewModel
 import com.engineersapps.eapps.ui.more.MoreViewModel
+import com.engineersapps.eapps.ui.my_course.BooksViewModel
 import com.engineersapps.eapps.ui.my_course.MyCourseViewModel
 import com.engineersapps.eapps.ui.notice_board.NoticeBoardViewModel
 import com.engineersapps.eapps.ui.offer.OfferViewModel
@@ -224,4 +225,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(Tab4ViewModel::class)
     abstract fun bindTab4ViewModel(viewModel: Tab4ViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BooksViewModel::class)
+    abstract fun bindBooksViewModel(viewModel: BooksViewModel): ViewModel
 }

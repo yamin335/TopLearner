@@ -11,6 +11,7 @@ import com.engineersapps.eapps.api.TokenInformation
 import com.engineersapps.eapps.di.PreferenceInfo
 import com.engineersapps.eapps.models.home.PaidBook
 import com.engineersapps.eapps.models.registration.InquiryAccount
+import com.engineersapps.eapps.models.transactions.MyCoursePurchasePayload
 import com.engineersapps.eapps.worker.TokenRefreshWorker
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -56,6 +57,18 @@ class AppPreferencesHelper @Inject constructor(
     override var phoneNumber by StringPreference(prefs, KEY_PHONE_NUMBER, null, true)
 
     override var accessTokenExpiresIn by LongPreference(prefs, PREF_KEY_ACCESS_TOKEN_EXPIRES_IN, 0)
+
+    override var pendingCoursePurchase: MyCoursePurchasePayload?
+        get() {
+            val pendingPurchase = prefs.value.getString(KEY_PENDING_COURSE_PURCHASE, null)
+            return pendingPurchase?.let {
+                Gson().fromJson(pendingPurchase, MyCoursePurchasePayload::class.java)
+            }
+        }
+        set(value) {
+            val pendingPurchase = Gson().toJson(value)
+            prefs.value.edit { putString(KEY_PENDING_COURSE_PURCHASE, pendingPurchase) }
+        }
 
     override fun savePaidBook(book: PaidBook) {
         val bookString = Gson().toJson(book)
@@ -196,6 +209,7 @@ class AppPreferencesHelper @Inject constructor(
         private const val KEY_DEVICE_MODEL = "DeviceModel"
         private const val KEY_IS_LOGGED_IN = "LoginStatus"
         private const val KEY_CLEAR_HOME_BACK_STACK = "ClearHomeNavBackStack"
+        private const val KEY_PENDING_COURSE_PURCHASE = "PENDING_COURSE_PURCHASE"
 
         private const val PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN"
 

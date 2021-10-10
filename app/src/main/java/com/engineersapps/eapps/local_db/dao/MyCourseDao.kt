@@ -13,6 +13,9 @@ interface MyCourseDao {
     @Query("SELECT * FROM my_course")
     fun getAllMyCourses(): Flow<List<MyCourse>>
 
+    @Query("SELECT COUNT(invoiceid) FROM my_course")
+    suspend fun getMyCourseItemsCount(): Int
+
     @Query("DELETE FROM my_course")
     suspend fun deleteAllMyCourses()
 

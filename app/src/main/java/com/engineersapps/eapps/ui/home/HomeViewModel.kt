@@ -10,10 +10,8 @@ import com.engineersapps.eapps.api.*
 import com.engineersapps.eapps.local_db.dao.AcademicClassDao
 import com.engineersapps.eapps.local_db.dao.BookChapterDao
 import com.engineersapps.eapps.local_db.dao.CourseDao
-import com.engineersapps.eapps.local_db.dao.MyCourseDao
 import com.engineersapps.eapps.models.home.ClassWiseBook
 import com.engineersapps.eapps.models.home.CourseCategory
-import com.engineersapps.eapps.models.my_course.MyCourse
 import com.engineersapps.eapps.models.registration.AcademicClass
 import com.engineersapps.eapps.models.registration.DefaultResponse
 import com.engineersapps.eapps.prefs.PreferencesHelper
@@ -44,8 +42,6 @@ class HomeViewModel @Inject constructor(
             emit(list)
         }
     }
-
-
 
     private fun updateClassesInDB(classes: List<AcademicClass>) {
         try {

@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data class="ChapterListFragmentBinding">
+    <data class="BooksFragmentBinding">
         <variable
             name="viewModel"
-            type="com.engineersapps.eapps.ui.chapter_list.ChapterListViewModel" />
+            type="com.engineersapps.eapps.ui.my_course.BooksViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,25 +37,27 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvChapterList"
+            android:id="@+id/rvBooksList"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:paddingBottom="32dp"
             android:clipToPadding="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appbar"
-            tools:listitem="@layout/item_chapter_list" />
+            android:paddingTop="4dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="3"
+            tools:listitem="@layout/list_item_home_class_list" />
 
         <TextView
             android:id="@+id/emptyView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/empty_chapter_text"
-            android:visibility="gone"
-            android:textSize="15sp"
+            android:text="No Book Found"
+            android:visibility="visible"
+            android:textSize="20sp"
             android:gravity="center"
             android:layout_margin="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
