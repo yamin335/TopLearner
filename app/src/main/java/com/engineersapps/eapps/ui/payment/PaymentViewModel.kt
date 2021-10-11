@@ -8,7 +8,9 @@ import com.engineersapps.eapps.models.payment.CoursePaymentRequest
 import com.engineersapps.eapps.models.payment.PromoCode
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.transactions.CreateOrderBody
+import com.engineersapps.eapps.models.transactions.MyCoursePurchasePayload
 import com.engineersapps.eapps.models.transactions.SalesInvoice
+import com.engineersapps.eapps.prefs.PreferencesHelper
 import com.engineersapps.eapps.repos.RegistrationRepository
 import com.engineersapps.eapps.repos.TransactionRepository
 import com.engineersapps.eapps.ui.common.BaseViewModel
@@ -173,7 +175,7 @@ class PaymentViewModel @Inject constructor(private val application: Application,
         }
     }
 
-    fun purchaseCourse(createOrderBody: CreateOrderBody?, coursePaymentRequest: CoursePaymentRequest) {
+    fun purchaseCourse(preferencesHelper: PreferencesHelper, createOrderBody: CreateOrderBody?, coursePaymentRequest: CoursePaymentRequest) {
         if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
@@ -190,6 +192,9 @@ class PaymentViewModel @Inject constructor(private val application: Application,
                             coursePurchaseSuccess.postValue(true)
                         }
                         createOrderBody?.let {
+                            preferencesHelper.pendingCoursePurchase?.let { pendingPurchase ->
+                                preferencesHelper.pendingCoursePurchase = MyCoursePurchasePayload(pendingPurchase.createOrderBody, null)
+                            }
                             createOrder(it)
                         }
                     }

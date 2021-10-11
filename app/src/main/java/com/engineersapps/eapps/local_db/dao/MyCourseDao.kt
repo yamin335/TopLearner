@@ -40,6 +40,9 @@ interface MyCourseDao {
     @Query("SELECT * FROM my_course_paid_books WHERE id = :bookId")
     suspend fun getMyCourseBook(bookId: Int): MyCourseBook
 
+    @Query("SELECT * FROM my_course_paid_books WHERE id IN (:bookIds)")
+    suspend fun getMyCourseBookList(bookIds: List<Int>): List<MyCourseBook>
+
     @Query("DELETE FROM my_course_paid_books")
     suspend fun deleteAllMyCoursePaidBooks()
 

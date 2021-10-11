@@ -74,16 +74,6 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             myCourseListAdapter.setTimeChangeStatus(true)
         }
         viewModel.getMyCourses(userData.mobile)
-
-        preferencesHelper.pendingCoursePurchase?.let {
-            if (it.coursePaymentRequest == null) {
-                it.createOrderBody?.let { createOrderBody ->
-                    viewModel.createOrder(createOrderBody)
-                }
-            } else {
-                viewModel.purchaseCourse(it.createOrderBody, it.coursePaymentRequest)
-            }
-        }
     }
 
     override fun onAttach(context: Context) {
@@ -159,16 +149,31 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             if (!isCourseOutDated) {
                 showErrorToast(requireContext(), "কোর্সের মেয়াদ শেষ!, কোর্সটি পুনরায় চালু করতে পেমেন্ট করুন")
             } else {
-                val bookId = myCourse.book_id ?: return@MyCourseSliderAdapter
-                viewModel.getMyCourseBookFromDB(bookId).observe(viewLifecycleOwner, Observer {
-                    val book = ClassWiseBook(it.id, it.udid,
-                        it.name, it.title, it.author, it.isPaid,
-                        it.book_type_id, it.price, it.status, it.logo)
-                    val bookList = ArrayList<ClassWiseBook>()
-                    bookList.add(book)
-                    BooksFragment.books = bookList
-                    navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToBooksFragment(book.id, myCourse.title))
-                })
+                val bookList = ArrayList<ClassWiseBook>()
+                val books = myCourse.books
+                if (books.isNullOrBlank()) {
+                    val bookId = myCourse.book_id ?: return@MyCourseSliderAdapter
+                    viewModel.getMyCourseBookFromDB(bookId).observe(viewLifecycleOwner, Observer {
+                        val book = ClassWiseBook(it.id, it.udid,
+                            it.name, it.title, it.author, it.isPaid,
+                            it.book_type_id, it.price, it.status, it.logo)
+                        bookList.add(book)
+                        BooksFragment.books = bookList
+                        navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToBooksFragment(myCourse.title))
+                    })
+                } else {
+                    val ids = books.trim().removeSuffix(",").trim().split(",")
+                    val bookIds = ids.map { it.toInt() }
+                    viewModel.getMyCourseBookListFromDB(bookIds).observe(viewLifecycleOwner, Observer {
+                        for (item in it) {
+                            bookList.add(ClassWiseBook(item.id, item.udid,
+                                item.name, item.title, item.author, item.isPaid,
+                                item.book_type_id, item.price, item.status, item.logo))
+                        }
+                        BooksFragment.books = bookList
+                        navigateTo(MyCourseFragmentDirections.actionMyCourseFragmentToBooksFragment(myCourse.title))
+                    })
+                }
             }
         }, paymentCallback = { myCourse ->
             val course = allCourseList[myCourse.course_id]
@@ -286,8 +291,8 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             }
         })
 
-        viewModel.allMyCoursesFromDB.observe(viewLifecycleOwner, Observer {
-            it?.let { myCourses ->
+        viewModel.allMyCoursesFromDB.observe(viewLifecycleOwner, Observer { myCourseList ->
+            myCourseList?.let { myCourses ->
                 val courses = ArrayList<MyCourse>()
                 for (course in myCourses) {
                     if (allCourseList.containsKey(course.course_id)) {
@@ -329,7 +334,14 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
                 val allPaidBooksIds = ArrayList<Int?>()
                 for (paidCourse in courses) {
                     if (allCourseList.containsKey(paidCourse.course_id)) {
-                        allPaidBooksIds.add(allCourseList[paidCourse.course_id]?.book_id)
+                        val books = paidCourse.books
+                        if (books.isNullOrBlank()) {
+                            allPaidBooksIds.add(allCourseList[paidCourse.course_id]?.book_id)
+                        } else {
+                            val ids = books.trim().removeSuffix(",").trim().split(",")
+                            val bookIds = ids.map { it.toInt() }
+                            allPaidBooksIds.addAll(bookIds)
+                        }
                     }
                 }
 
@@ -344,14 +356,6 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
 
                 viewDataBinding.emptyView.visibility = if (courses.isEmpty()) View.VISIBLE else View.GONE
                 viewDataBinding.footer.visibility = if (courses.isNotEmpty()) View.VISIBLE else View.GONE
-            }
-        })
-
-        viewModel.isPendingCoursePurchaseSuccess.observe(viewLifecycleOwner, Observer {
-            if (it == true) {
-                viewModel.getMyCourses(userData.mobile)
-                preferencesHelper.pendingCoursePurchase = null
-                viewModel.isPendingCoursePurchaseSuccess.postValue(null)
             }
         })
     }

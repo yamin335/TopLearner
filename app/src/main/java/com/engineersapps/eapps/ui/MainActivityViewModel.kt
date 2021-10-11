@@ -7,11 +7,17 @@ import androidx.lifecycle.viewModelScope
 import androidx.room.Transaction
 import com.engineersapps.eapps.api.*
 import com.engineersapps.eapps.local_db.dao.*
+import com.engineersapps.eapps.models.payment.CoursePaymentRequest
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.registration.UserRegistrationData
+import com.engineersapps.eapps.models.transactions.CreateOrderBody
+import com.engineersapps.eapps.models.transactions.MyCoursePurchasePayload
+import com.engineersapps.eapps.prefs.PreferencesHelper
 import com.engineersapps.eapps.repos.RegistrationRepository
+import com.engineersapps.eapps.repos.TransactionRepository
 import com.engineersapps.eapps.ui.common.BaseViewModel
 import com.engineersapps.eapps.util.AppConstants
+import com.engineersapps.eapps.util.NetworkUtils.ConnectivityLiveData
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,12 +25,22 @@ import javax.inject.Inject
 class MainActivityViewModel @Inject constructor(
     private val application: Application,
     private val repository: RegistrationRepository,
+    private val transactionRepository: TransactionRepository,
     private val myCourseDao: MyCourseDao,
     private val bookChapterDao: BookChapterDao,
     private val courseDao: CourseDao,
     private val academicClassDao: AcademicClassDao,
     private val historyDao: HistoryDao
 ) : BaseViewModel(application) {
+
+    val isPendingCoursePurchaseSuccess: MutableLiveData<Boolean?> by lazy {
+        MutableLiveData<Boolean?>()
+    }
+
+    val internetStatus: ConnectivityLiveData by lazy {
+        ConnectivityLiveData(application)
+    }
+
 
     val loginResponse: MutableLiveData<UserRegistrationData> by lazy {
         MutableLiveData<UserRegistrationData>()
@@ -84,5 +100,65 @@ class MainActivityViewModel @Inject constructor(
             task.postValue(true)
         }
         return task
+    }
+
+    fun createOrder(createOrderBody: CreateOrderBody) {
+        if (checkNetworkStatus(true)) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(transactionRepository.createOrderRepo(createOrderBody))) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        isPendingCoursePurchaseSuccess.postValue(true)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                    }
+                    is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                    }
+                }
+            }
+        }
+    }
+
+    fun purchaseCourse(preferencesHelper: PreferencesHelper, createOrderBody: CreateOrderBody?,
+                       coursePaymentRequest: CoursePaymentRequest) {
+        if (checkNetworkStatus(true)) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(transactionRepository.purchaseCourseRepo(coursePaymentRequest))) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        createOrderBody?.let {
+                            preferencesHelper.pendingCoursePurchase?.let { pendingPurchase ->
+                                preferencesHelper.pendingCoursePurchase = MyCoursePurchasePayload(pendingPurchase.createOrderBody, null)
+                            }
+                            createOrder(it)
+                        }
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                    }
+                    is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                    }
+                }
+            }
+        }
     }
 }

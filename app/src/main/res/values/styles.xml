@@ -155,6 +155,14 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <style name="AppUpdateActivityTheme" parent="AppTheme">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowBackground">@color/themeColor</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
 <!--    <style name="AppTheme.SplashActivity">-->
 <!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
 <!--        <item name="windowActionBar">false</item>-->

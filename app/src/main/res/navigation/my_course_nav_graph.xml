@@ -75,9 +75,6 @@
 
         </action>
         <argument
-            android:name="id"
-            app:argType="integer" />
-        <argument
             android:name="title"
             app:argType="string"
             app:nullable="true"

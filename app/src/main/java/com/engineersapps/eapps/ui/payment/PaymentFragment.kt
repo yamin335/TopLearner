@@ -178,9 +178,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         viewModel.coursePurchaseSuccess.observe(viewLifecycleOwner, Observer { isSuccess ->
             isSuccess?.let {
                 if (it) {
-                    var pendingPurchase = preferencesHelper.pendingCoursePurchase
-                    pendingPurchase = MyCoursePurchasePayload(pendingPurchase?.createOrderBody, null)
-                    preferencesHelper.pendingCoursePurchase = pendingPurchase
+                    preferencesHelper.pendingCoursePurchase = null
                     hideKeyboard()
                     findNavController().popBackStack()
                     showSuccessToast(requireContext(), "Payment Successful")
@@ -417,7 +415,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         preferencesHelper.pendingCoursePurchase = MyCoursePurchasePayload(createOrderBody, coursePaymentRequest)
 
-        viewModel.purchaseCourse(createOrderBody, coursePaymentRequest)
+        viewModel.purchaseCourse(preferencesHelper, createOrderBody, coursePaymentRequest)
     }
 
     private fun callPartnerPayment() {
@@ -426,7 +424,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             args.coursePrice.toInt(), 0, courseDuration, args.remainDays
         )
 
-        viewModel.purchaseCourse(null, payLoad)
+        viewModel.purchaseCourse(preferencesHelper, null, payLoad)
     }
 
     private fun callPayment() {
