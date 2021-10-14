@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/video_play_nav_graph"
+    app:startDestination="@id/videoPlayFragment">
+
+    <fragment
+        android:id="@+id/videoPlayFragment"
+        android:name="com.engineersapps.eapps.ui.video_play.VideoPlayFragment"
+        android:label="Video Tutorial"
+        tools:layout="@layout/fragment_video_play">
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="url"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+</navigation>

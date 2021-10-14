@@ -34,6 +34,7 @@ import com.engineersapps.eapps.ui.splash.SplashViewModel
 import com.engineersapps.eapps.ui.terms_and_conditions.TermsViewModel
 import com.engineersapps.eapps.ui.transaction.TransactionViewModel
 import com.engineersapps.eapps.ui.video_play.LoadWebViewViewModel
+import com.engineersapps.eapps.ui.video_play.VideoPlayViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -230,4 +231,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BooksViewModel::class)
     abstract fun bindBooksViewModel(viewModel: BooksViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(VideoPlayViewModel::class)
+    abstract fun bindVideoPlayViewModel(viewModel: VideoPlayViewModel): ViewModel
 }

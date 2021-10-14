@@ -70,6 +70,22 @@
                 android:name="book"
                 app:argType="com.engineersapps.eapps.models.home.PaidBook" />
         </action>
+        <action
+            android:id="@+id/action_moreFragment_to_video_play_nav_graph"
+            app:destination="@id/video_play_nav_graph"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="title"
+                app:argType="string"
+                app:nullable="true" />
+            <argument
+                android:name="url"
+                app:argType="string"
+                app:nullable="true" />
+        </action>
 
     </fragment>
 
@@ -151,4 +167,5 @@
         android:label="Transactions"
         tools:layout="@layout/fragment_transaction" />
     <include app:graph="@navigation/payment_nav_graph" />
+    <include app:graph="@navigation/video_play_nav_graph" />
 </navigation>

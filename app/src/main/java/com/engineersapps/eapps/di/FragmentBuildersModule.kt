@@ -32,6 +32,7 @@ import com.engineersapps.eapps.ui.terms_and_conditions.TermsAndConditionsFragmen
 import com.engineersapps.eapps.ui.terms_and_conditions.TermsFragment
 import com.engineersapps.eapps.ui.transaction.TransactionFragment
 import com.engineersapps.eapps.ui.video_play.LoadWebViewFragment
+import com.engineersapps.eapps.ui.video_play.VideoPlayFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -152,4 +153,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeBooksFragment(): BooksFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeVideoPlayFragment(): VideoPlayFragment
 }

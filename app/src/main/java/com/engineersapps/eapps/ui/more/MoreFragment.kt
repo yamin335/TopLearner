@@ -130,12 +130,14 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
         }
 
         viewDataBinding.mPayment.setOnClickListener {
-            val paidBook = preferencesHelper.getPaidBook()
-            if (paidBook.isPaid) {
-                navigateTo(MoreFragmentDirections.actionMoreFragmentToPaymentNav(paidBook))
-            } else {
-                showWarningToast(requireContext(), "Please go to book list and choose your desired book!")
-            }
+//            val paidBook = preferencesHelper.getPaidBook()
+//            if (paidBook.isPaid) {
+//                navigateTo(MoreFragmentDirections.actionMoreFragmentToPaymentNav(paidBook))
+//            } else {
+//                showWarningToast(requireContext(), "Please go to book list and choose your desired book!")
+//            }
+
+            navigateTo(MoreFragmentDirections.actionMoreFragmentToVideoPlayNavGraph("Video Tutorial", "https://www.youtube.com/watch?v=_w2SQlx6Z3Q"))
 
         }
 

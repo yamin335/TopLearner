@@ -14,6 +14,10 @@ import com.engineersapps.eapps.models.my_course.MyCourse
 import com.engineersapps.eapps.models.my_course.MyCourseBook
 import com.engineersapps.eapps.models.registration.AcademicClass
 
+
+private const val DATABASE = "app_db"
+private const val DATABASE_VERSION = 1
+
 /**
  * Main database.
  */
@@ -27,7 +31,7 @@ import com.engineersapps.eapps.models.registration.AcademicClass
         HistoryItem::class,
         AcademicClass::class
     ],
-    version = 1,
+    version = DATABASE_VERSION,
     exportSchema = false
 )
 
@@ -54,7 +58,7 @@ abstract class AppDatabase : RoomDatabase() {
             }
 
         private fun buildDatabase(app: Application) =
-            Room.databaseBuilder(app, AppDatabase::class.java, "app_db")
+            Room.databaseBuilder(app, AppDatabase::class.java, DATABASE)
                 // prepopulate the database after onCreate was called
 //                .addCallback(object : Callback() {
 //                    override fun onCreate(db: SupportSQLiteDatabase) {
