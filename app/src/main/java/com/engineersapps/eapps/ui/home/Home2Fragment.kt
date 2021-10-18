@@ -19,7 +19,9 @@ import com.engineersapps.eapps.prefs.AppPreferencesHelper
 import com.engineersapps.eapps.ui.LogoutHandlerCallback
 import com.engineersapps.eapps.ui.NavDrawerHandlerCallback
 import com.engineersapps.eapps.ui.common.BaseFragment
+import com.engineersapps.eapps.ui.common.ClassSelectionDialogFragment
 import com.engineersapps.eapps.util.isTimeAndZoneAutomatic
+import com.engineersapps.eapps.util.showSuccessToast
 
 class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
     companion object {
@@ -43,6 +45,8 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
     private var homeClassListAdapter: HomeClassListAdapter? = null
 
     private lateinit var courseCategoryListAdapter: CourseCategoryListAdapter
+
+    private lateinit var classSelectionDialogFragment: ClassSelectionDialogFragment
 
     var timeChangeListener: SharedPreferences.OnSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
         when (key) {
@@ -119,6 +123,12 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
         viewModel.getAllCourses()
         viewModel.getAllFreeBooks()
         viewModel.getAcademicClass()
+
+        classSelectionDialogFragment = ClassSelectionDialogFragment { selectedClass ->
+            userData.class_id = selectedClass.id.toInt()
+            userData.ClassName = selectedClass.name
+            viewModel.updateUserProfile(userData)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -128,7 +138,17 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
 
         userData = preferencesHelper.getUser()
 
-
+        viewModel.profileUpdateResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            it?.let { data ->
+                data.Account?.let { account ->
+                    classSelectionDialogFragment.dismiss()
+                    userData = account
+                    preferencesHelper.saveUser(account)
+                    showSuccessToast(requireContext(), "Successfully class updated.")
+                    viewModel.profileUpdateResponse.postValue(null)
+                }
+            }
+        })
 
         //registerToolbar(viewDataBinding.toolbar)
 
@@ -179,54 +199,18 @@ class Home2Fragment : BaseFragment<HomeFragment2Binding, HomeViewModel>() {
             viewModel.getAcademicClass()
         }
 
-
-//        courseCategoryListAdapter = CourseCategoryListAdapter(appExecutors) {
-//            navigateTo(Home2FragmentDirections.actionHome2FragmentToCourseDetailsFragment())
-//        }
-//
-//        viewModel.slideDataList.observe(viewLifecycleOwner, Observer {
-//            it?.let { ads ->
-//                ads.forEach { slideData ->
-//                    val slide = SliderView(slideData, requireContext())
-//                    viewDataBinding.sliderLayout.addSlider(slide)
-//                }
-//            }
-//        })
-//
-//        // set Slider Transition Animation
-//        viewDataBinding.sliderLayout.setPresetTransformer(SliderLayout.Transformer.Default)
-//        viewDataBinding.sliderLayout.startAutoCycle()
-
-//        val chapterList = listOf(
-//            Chapter(1, "Chapter One", null, null),
-//            Chapter(2, "Chapter Two", null, null),
-//            Chapter(3, "Chapter Three", null, null),
-//            Chapter(4, "Chapter Four", null, null),
-//            Chapter(5, "Chapter Five", null, null),
-//            Chapter(6, "Chapter Six", null, null),
-//            Chapter(7, "Chapter Seven", null, null),
-//            Chapter(8, "Chapter Eight", null, null),
-//            Chapter(9, "Chapter Nine", null, null),
-//            Chapter(10, "Chapter Ten", null, null)
-//        )
-//
-//        val bookList = listOf(
-//            Book(1, "Class One", "", chapterList),
-//            Book(1, "Class Two", "", chapterList),
-//            Book(1, "Class Three", "", chapterList),
-//            Book(1, "Class Four", "", chapterList),
-//            Book(1, "Class Five", "", chapterList),
-//            Book(1, "Class Six", "", chapterList),
-//            Book(1, "Class Seven", "", chapterList),
-//            Book(1, "Class Eight", "", chapterList),
-//            Book(1, "Class Nine", "", chapterList),
-//            Book(1, "Class Ten", "", chapterList),
-//            Book(1, "HSC 1st Year", "", chapterList),
-//            Book(1, "HSC 2nd Year", "", chapterList)
-//        )
-
         viewDataBinding.appLogo.setOnClickListener {
             drawerListener?.toggleNavDrawer()
+        }
+
+        if (userData.class_id == null || userData.class_id ?: 0 <= 0) {
+            viewModel.getAllAcademicClassesFromDB().observe(viewLifecycleOwner, Observer {
+                if (it.isNotEmpty() && !classSelectionDialogFragment.isVisible) {
+                    classSelectionDialogFragment.submitClassData(it)
+                    classSelectionDialogFragment.isCancelable = false
+                    classSelectionDialogFragment.show(childFragmentManager, "#ClassSelectionDialogFragment")
+                }
+            })
         }
 
 //        homeClassListAdapter = HomeClassListAdapter(appExecutors, userData.customer_type_id) {

@@ -3,14 +3,24 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.27760416666666665" />
         <entry key="app/src/main/res/drawable/circle_bg_trans_black.xml" value="0.22447916666666667" />
         <entry key="app/src/main/res/drawable/circle_bg_trans_grey.xml" value="0.22447916666666667" />
         <entry key="app/src/main/res/layout-land/fragment_video_play.xml" value="0.3234375" />
+        <entry key="app/src/main/res/layout/camera_ui_container.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/layout/dialog_fragment_bkash.xml" value="0.18385416666666668" />
+        <entry key="app/src/main/res/layout/dialog_fragment_class_selection.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_chapter_list.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/layout/fragment_class_edit.xml" value="0.3171875" />
         <entry key="app/src/main/res/layout/fragment_course_details.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/layout/fragment_district_edit.xml" value="0.3171875" />
         <entry key="app/src/main/res/layout/fragment_load_web_view.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/layout/fragment_my_course.xml" value="0.25416666666666665" />
+        <entry key="app/src/main/res/layout/fragment_otp_sign_in.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/layout/fragment_profile_settings.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/fragment_video_list.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_video_play.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/layout/list_item_common.xml" value="0.2625" />
       </map>
     </option>
   </component>

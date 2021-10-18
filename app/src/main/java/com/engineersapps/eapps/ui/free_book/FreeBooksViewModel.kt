@@ -74,6 +74,22 @@ class FreeBooksViewModel @Inject constructor(
             getFreeBookFromDB()
         }
 
+    fun getAllAcademicClassesFromDB(): LiveData<List<AcademicClass>> {
+        val classList = MutableLiveData<List<AcademicClass>>()
+        try {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+            }
+
+            viewModelScope.launch(handler) {
+                classList.postValue(academicClassDao.getAllAcademicClasses())
+            }
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+        }
+        return classList
+    }
+
     private fun updateClassesInDB(classes: List<AcademicClass>) {
         try {
             val handler = CoroutineExceptionHandler { _, exception ->

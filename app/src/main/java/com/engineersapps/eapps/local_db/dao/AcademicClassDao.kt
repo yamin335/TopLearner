@@ -15,6 +15,9 @@ interface AcademicClassDao {
     @Query("SELECT * FROM all_classes")
     fun getAllClasses(): Flow<List<AcademicClass>>
 
+    @Query("SELECT * FROM all_classes")
+    suspend fun getAllAcademicClasses(): List<AcademicClass>
+
     @Transaction
     suspend fun updateAllAcademicClasses(classes: List<AcademicClass>) {
         deleteAllClasses()

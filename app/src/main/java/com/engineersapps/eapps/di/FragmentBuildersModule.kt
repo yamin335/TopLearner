@@ -3,6 +3,7 @@ package com.engineersapps.eapps.di
 import com.engineersapps.eapps.ui.about_us.AboutUsFragment
 import com.engineersapps.eapps.ui.bkash.BKashDialogFragment
 import com.engineersapps.eapps.ui.chapter_list.ChapterListFragment
+import com.engineersapps.eapps.ui.common.ClassSelectionDialogFragment
 import com.engineersapps.eapps.ui.e_code.ECodeFragment
 import com.engineersapps.eapps.ui.free_book.FreeBooksFragment
 import com.engineersapps.eapps.ui.history.HistoryFragment
@@ -156,4 +157,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeVideoPlayFragment(): VideoPlayFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeClassSelectionDialogFragment(): ClassSelectionDialogFragment
 }
