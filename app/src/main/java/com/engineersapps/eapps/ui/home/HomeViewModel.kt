@@ -3,7 +3,6 @@ package com.engineersapps.eapps.ui.home
 import android.app.Application
 import android.database.sqlite.SQLiteException
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.engineersapps.eapps.api.*
@@ -13,11 +12,8 @@ import com.engineersapps.eapps.local_db.dao.CourseDao
 import com.engineersapps.eapps.models.home.ClassWiseBook
 import com.engineersapps.eapps.models.home.CourseCategory
 import com.engineersapps.eapps.models.registration.AcademicClass
-import com.engineersapps.eapps.models.registration.InquiryAccount
-import com.engineersapps.eapps.models.registration.UserRegistrationData
 import com.engineersapps.eapps.prefs.PreferencesHelper
 import com.engineersapps.eapps.repos.HomeRepository
-import com.engineersapps.eapps.repos.MediaRepository
 import com.engineersapps.eapps.repos.RegistrationRepository
 import com.engineersapps.eapps.ui.common.BaseViewModel
 import com.engineersapps.eapps.util.AppConstants
@@ -30,15 +26,11 @@ class HomeViewModel @Inject constructor(
     private val preferencesHelper: PreferencesHelper,
     private val application: Application,
     private val repository: HomeRepository,
-    private val mediaRepository: MediaRepository,
     private val registrationRepository: RegistrationRepository,
     private val courseDao: CourseDao,
     private val bookChapterDao: BookChapterDao,
     private val academicClassDao: AcademicClassDao
 ) : BaseViewModel(application) {
-    val profileUpdateResponse: MutableLiveData<UserRegistrationData> by lazy {
-        MutableLiveData<UserRegistrationData>()
-    }
 
     val allCourseCategoriesFromDB: LiveData<List<CourseCategory>> = liveData {
         courseDao.getAllCourseCategories().collect { list ->
@@ -58,22 +50,6 @@ class HomeViewModel @Inject constructor(
         } catch (e: SQLiteException) {
             e.printStackTrace()
         }
-    }
-
-    fun getAllAcademicClassesFromDB(): LiveData<List<AcademicClass>> {
-        val classList = MutableLiveData<List<AcademicClass>>()
-        try {
-            val handler = CoroutineExceptionHandler { _, exception ->
-                exception.printStackTrace()
-            }
-
-            viewModelScope.launch(handler) {
-                classList.postValue(academicClassDao.getAllAcademicClasses())
-            }
-        } catch (e: SQLiteException) {
-            e.printStackTrace()
-        }
-        return classList
     }
 
     private fun saveCourseCategoriesInDB(courseCategories: List<CourseCategory>) {
@@ -248,35 +224,6 @@ class HomeViewModel @Inject constructor(
                     }
                     is ApiErrorResponse -> {
                         checkForValidSession(apiResponse.errorMessage)
-                    }
-                }
-            }
-        }
-    }
-
-    fun updateUserProfile(inquiryAccount: InquiryAccount) {
-        if (checkNetworkStatus(true)) {
-            val handler = CoroutineExceptionHandler { _, exception ->
-                exception.printStackTrace()
-                apiCallStatus.postValue(ApiCallStatus.ERROR)
-                profileUpdateResponse.postValue(null)
-            }
-
-            apiCallStatus.postValue(ApiCallStatus.LOADING)
-            viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(registrationRepository.updateUserProfileRepo(inquiryAccount))) {
-                    is ApiSuccessResponse -> {
-                        profileUpdateResponse.postValue(apiResponse.body.data)
-                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                    }
-                    is ApiEmptyResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
-                        profileUpdateResponse.postValue(null)
-                    }
-                    is ApiErrorResponse -> {
-                        checkForValidSession(apiResponse.errorMessage)
-                        apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        profileUpdateResponse.postValue(null)
                     }
                 }
             }

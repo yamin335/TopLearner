@@ -4,6 +4,7 @@ import android.content.*
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -20,6 +21,7 @@ import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.MainActivityBinding
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.prefs.PreferencesHelper
+import com.engineersapps.eapps.ui.common.ClassSelectionDialogFragment
 import com.engineersapps.eapps.util.*
 import com.google.android.material.navigation.NavigationView
 import dagger.android.support.DaggerAppCompatActivity
@@ -92,12 +94,16 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
 
     private lateinit var tokenExpireReceiver: BroadcastReceiver
 
+    private lateinit var classSelectionDialogFragment: ClassSelectionDialogFragment
+
     override fun onResume() {
         super.onResume()
         LocalBroadcastManager.getInstance(this).registerReceiver(
             tokenExpireReceiver,
             IntentFilter(AppConstants.INTENT_TOKEN_EXPIRED)
         )
+
+        checkForUserClass()
     }
 
     override fun onPause() {
@@ -107,6 +113,30 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel.allAcademicClass.observe(this, Observer {
+            checkForUserClass()
+        })
+
+        viewModel.getAcademicClass()
+
+        classSelectionDialogFragment = ClassSelectionDialogFragment { selectedClass ->
+            userData.class_id = selectedClass.id.toInt()
+            userData.ClassName = selectedClass.name
+            viewModel.updateUserProfile(userData)
+        }
+
+        viewModel.profileUpdateResponse.observe(this, androidx.lifecycle.Observer {
+            it?.let { data ->
+                data.Account?.let { account ->
+                    classSelectionDialogFragment.dismiss()
+                    userData = account
+                    preferencesHelper.saveUser(account)
+                    showSuccessToast(this, "Successfully class updated.")
+                    viewModel.profileUpdateResponse.postValue(null)
+                }
+            }
+        })
 
         tokenExpireReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
@@ -130,10 +160,10 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
             }
         })
 
-//        window.setFlags(
-//            WindowManager.LayoutParams.FLAG_SECURE,
-//            WindowManager.LayoutParams.FLAG_SECURE
-//        )
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
 
         userData = preferencesHelper.getUser()
 
@@ -203,6 +233,18 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
                 viewModel.isPendingCoursePurchaseSuccess.postValue(null)
             }
         })
+    }
+
+    private fun checkForUserClass() {
+        if (userData.class_id == null || userData.class_id ?: 0 <= 0) {
+            viewModel.getAllAcademicClassesFromDB().observe(this, Observer {
+                if (it.isNotEmpty() && !classSelectionDialogFragment.isVisible && !classSelectionDialogFragment.isAdded) {
+                    classSelectionDialogFragment.submitClassData(it)
+                    classSelectionDialogFragment.isCancelable = false
+                    classSelectionDialogFragment.show(supportFragmentManager, "#ClassSelectionDialogFragment")
+                }
+            })
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

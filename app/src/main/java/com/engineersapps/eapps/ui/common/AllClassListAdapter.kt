@@ -47,9 +47,11 @@ class AllClassListAdapter internal constructor(
             }
 
             itemView.setOnClickListener {
+                val oldPosition = selected
                 selected = absoluteAdapterPosition
                 callback.invoke(item)
-                notifyDataSetChanged()
+                notifyItemChanged(selected)
+                notifyItemChanged(oldPosition)
             }
         }
     }

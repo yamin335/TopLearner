@@ -4,7 +4,6 @@ import android.app.Application
 import android.database.sqlite.SQLiteException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.engineersapps.eapps.api.*
 import com.engineersapps.eapps.local_db.dao.AcademicClassDao
@@ -12,7 +11,6 @@ import com.engineersapps.eapps.local_db.dao.BookChapterDao
 import com.engineersapps.eapps.models.AdSlider
 import com.engineersapps.eapps.models.home.ClassWiseBook
 import com.engineersapps.eapps.models.registration.AcademicClass
-import com.engineersapps.eapps.models.registration.DefaultResponse
 import com.engineersapps.eapps.prefs.PreferencesHelper
 import com.engineersapps.eapps.repos.HomeRepository
 import com.engineersapps.eapps.repos.MediaRepository
@@ -20,7 +18,6 @@ import com.engineersapps.eapps.repos.RegistrationRepository
 import com.engineersapps.eapps.ui.common.BaseViewModel
 import com.engineersapps.eapps.util.AppConstants
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,7 +31,7 @@ class FreeBooksViewModel @Inject constructor(
     private val academicClassDao: AcademicClassDao
 ) : BaseViewModel(application) {
 
-    val defaultResponse: MutableLiveData<DefaultResponse> = MutableLiveData()
+    //val defaultResponse: MutableLiveData<DefaultResponse> = MutableLiveData()
 
     val allBooks: MutableLiveData<List<ClassWiseBook>> by lazy {
         MutableLiveData<List<ClassWiseBook>>()
@@ -56,17 +53,17 @@ class FreeBooksViewModel @Inject constructor(
         }
     }
 
-    val allBooksFromDB: LiveData<List<ClassWiseBook>> = liveData {
-        bookChapterDao.getAllBooks().collect { list ->
-            emit(list)
-        }
-    }
+//    val allBooksFromDB: LiveData<List<ClassWiseBook>> = liveData {
+//        bookChapterDao.getAllBooks().collect { list ->
+//            emit(list)
+//        }
+//    }
 
-    val allAcademicClass: LiveData<List<AcademicClass>> = liveData {
-        academicClassDao.getAllClasses().collect { list ->
-            emit(list)
-        }
-    }
+//    val allAcademicClass: LiveData<List<AcademicClass>> = liveData {
+//        academicClassDao.getAllClasses().collect { list ->
+//            emit(list)
+//        }
+//    }
 
     var selectedClassId: Int = 0
         set(value) {
@@ -90,33 +87,33 @@ class FreeBooksViewModel @Inject constructor(
         return classList
     }
 
-    private fun updateClassesInDB(classes: List<AcademicClass>) {
-        try {
-            val handler = CoroutineExceptionHandler { _, exception ->
-                exception.printStackTrace()
-            }
-
-            viewModelScope.launch(handler) {
-                academicClassDao.updateAllAcademicClasses(classes)
-            }
-        } catch (e: SQLiteException) {
-            e.printStackTrace()
-        }
-    }
-
-    fun updateBooksInDB(books: List<ClassWiseBook>) {
-        try {
-            val handler = CoroutineExceptionHandler { _, exception ->
-                exception.printStackTrace()
-            }
-
-            viewModelScope.launch(handler) {
-                bookChapterDao.updateBooks(books)
-            }
-        } catch (e: SQLiteException) {
-            e.printStackTrace()
-        }
-    }
+//    private fun updateClassesInDB(classes: List<AcademicClass>) {
+//        try {
+//            val handler = CoroutineExceptionHandler { _, exception ->
+//                exception.printStackTrace()
+//            }
+//
+//            viewModelScope.launch(handler) {
+//                academicClassDao.updateAllAcademicClasses(classes)
+//            }
+//        } catch (e: SQLiteException) {
+//            e.printStackTrace()
+//        }
+//    }
+//
+//    fun updateBooksInDB(books: List<ClassWiseBook>) {
+//        try {
+//            val handler = CoroutineExceptionHandler { _, exception ->
+//                exception.printStackTrace()
+//            }
+//
+//            viewModelScope.launch(handler) {
+//                bookChapterDao.updateBooks(books)
+//            }
+//        } catch (e: SQLiteException) {
+//            e.printStackTrace()
+//        }
+//    }
 
     fun saveBooksInDB(books: List<ClassWiseBook>) {
         try {
@@ -255,25 +252,25 @@ class FreeBooksViewModel @Inject constructor(
 //        }
 //    }
 
-    fun getAcademicClass() {
-        if (checkNetworkStatus(true)) {
-            val handler = CoroutineExceptionHandler { _, exception ->
-                exception.printStackTrace()
-                toastError.postValue(AppConstants.serverConnectionErrorMessage)
-            }
-
-            viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(registrationRepository.getAcademicClassRepo())) {
-                    is ApiSuccessResponse -> {
-                        updateClassesInDB(apiResponse.body.data?.classes ?: ArrayList())
-                    }
-                    is ApiEmptyResponse -> {
-                    }
-                    is ApiErrorResponse -> {
-                        checkForValidSession(apiResponse.errorMessage)
-                    }
-                }
-            }
-        }
-    }
+//    fun getAcademicClass() {
+//        if (checkNetworkStatus(true)) {
+//            val handler = CoroutineExceptionHandler { _, exception ->
+//                exception.printStackTrace()
+//                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+//            }
+//
+//            viewModelScope.launch(handler) {
+//                when (val apiResponse = ApiResponse.create(registrationRepository.getAcademicClassRepo())) {
+//                    is ApiSuccessResponse -> {
+//                        updateClassesInDB(apiResponse.body.data?.classes ?: ArrayList())
+//                    }
+//                    is ApiEmptyResponse -> {
+//                    }
+//                    is ApiErrorResponse -> {
+//                        checkForValidSession(apiResponse.errorMessage)
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

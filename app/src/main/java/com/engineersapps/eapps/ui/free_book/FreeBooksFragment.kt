@@ -47,9 +47,10 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
     override fun onResume() {
         super.onResume()
         userData = preferencesHelper.getUser()
-        viewModel.getAcademicClass()
+        //viewModel.getAcademicClass()
 
         viewModel.getAllAcademicClassesFromDB().observe(viewLifecycleOwner, Observer {
+            viewModel.selectedClassId = userData.class_id ?: 0
             prepareClassData(it)
         })
     }
@@ -130,7 +131,7 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
 //            }
         })
 
-        prepareClassData(allClass)
+        //prepareClassData(allClass)
 
         viewDataBinding.spClass.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
@@ -143,7 +144,7 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
                 if (position > 0) {
                     try {
                         if (allClass.isNotEmpty()) {
-                            viewModel.selectedClassId = allClass[position - 1].id?.toInt() ?: 0
+                            viewModel.selectedClassId = allClass[position - 1].id.toInt()
                         }
                     } catch (e: IndexOutOfBoundsException) {
                         e.printStackTrace()
@@ -165,9 +166,9 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
 //        }
 //        viewDataBinding.spClass.setSelection(academicClassIndex, true)
 
-        viewModel.allAcademicClass.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            prepareClassData(it)
-        })
+//        viewModel.allAcademicClass.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+//            prepareClassData(it)
+//        })
 
         if (adBanners.isEmpty()) {
             viewModel.getAds()
@@ -195,6 +196,5 @@ class FreeBooksFragment : BaseFragment<FreeBooksFragmentBinding, FreeBooksViewMo
             }
         }
         viewDataBinding.spClass.setSelection(academicClassIndex, true)
-        viewModel.selectedClassId = viewModel.selectedClassId
     }
 }
