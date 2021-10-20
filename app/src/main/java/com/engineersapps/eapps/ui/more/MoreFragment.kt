@@ -298,7 +298,7 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
         }
 
         viewDataBinding.tvName.text = "${user.first_name}"
-        viewDataBinding.tvClass.text = user.ClassName
+        viewDataBinding.tvClass.text = if (user.ClassName == null || user.ClassName == "????? ??????") "" else user.ClassName
         viewDataBinding.tvSID.text = user.mobile
         viewDataBinding.version.text = "Version ${BuildConfig.VERSION_NAME}"
     }

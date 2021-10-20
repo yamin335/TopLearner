@@ -19,6 +19,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.MainActivityBinding
+import com.engineersapps.eapps.models.registration.AcademicClass
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.prefs.PreferencesHelper
 import com.engineersapps.eapps.ui.common.ClassSelectionDialogFragment
@@ -103,7 +104,11 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
             IntentFilter(AppConstants.INTENT_TOKEN_EXPIRED)
         )
 
-        checkForUserClass()
+        if (userData.class_id == null || userData.class_id ?: 0 <= 0) {
+            viewModel.getAllAcademicClassesFromDB().observe(this, Observer {
+                showUserClassSelectionDialog(it)
+            })
+        }
     }
 
     override fun onPause() {
@@ -115,7 +120,9 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
         super.onCreate(savedInstanceState)
 
         viewModel.allAcademicClass.observe(this, Observer {
-            checkForUserClass()
+            if (userData.class_id == null || userData.class_id ?: 0 <= 0) {
+                showUserClassSelectionDialog(it)
+            }
         })
 
         viewModel.getAcademicClass()
@@ -235,15 +242,11 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
         })
     }
 
-    private fun checkForUserClass() {
-        if (userData.class_id == null || userData.class_id ?: 0 <= 0) {
-            viewModel.getAllAcademicClassesFromDB().observe(this, Observer {
-                if (it.isNotEmpty() && !classSelectionDialogFragment.isVisible && !classSelectionDialogFragment.isAdded) {
-                    classSelectionDialogFragment.submitClassData(it)
-                    classSelectionDialogFragment.isCancelable = false
-                    classSelectionDialogFragment.show(supportFragmentManager, "#ClassSelectionDialogFragment")
-                }
-            })
+    private fun showUserClassSelectionDialog(classList: List<AcademicClass>) {
+        if (classList.isNotEmpty() && !classSelectionDialogFragment.isVisible && !classSelectionDialogFragment.isAdded) {
+            classSelectionDialogFragment.submitClassData(classList)
+            classSelectionDialogFragment.isCancelable = false
+            classSelectionDialogFragment.show(supportFragmentManager, "#ClassSelectionDialogFragment")
         }
     }
 
