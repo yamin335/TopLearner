@@ -28,6 +28,23 @@ import kotlin.math.abs
 private const val ANIMATION = "animation"
 private const val PDF = "pdf"
 class LoadWebViewViewModel @Inject constructor(private val application: Application, private val historyDao: HistoryDao) : BaseViewModel(application) {
+//    override fun onCleared() {
+//        super.onCleared()
+//        eraseAllUnzippedFiles(application)
+//    }
+
+//    var webViewPlayerState: Bundle? = null
+    var webViewPlayerUrl = ""
+//    var webChromeClient: WebChromeClient? = null
+//    var webViewClient: WebViewClient? = null
+
+    // Save Youtube Player Data
+    var playWhenReady = true
+    var currentWindow = 0
+    var playbackPosition: Long = 0
+    var isPlayingYoutubeVideo = false
+    var youtubePlayerUrl = ""
+    var youtubeVideoLink = ""
 
     val historyItems: LiveData<List<HistoryItem>> = liveData {
         historyDao.getHistoryItems().collect { list ->
@@ -189,4 +206,8 @@ class LoadWebViewViewModel @Inject constructor(private val application: Applicat
             }
         }
     }
+//
+//    private fun eraseAllUnzippedFiles(context: Context) {
+//        FileUtils.deleteFolderWithAllFilesFromExternalStorage(context, unzippedFolder)
+//    }
 }

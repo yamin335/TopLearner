@@ -47,9 +47,6 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
     override val viewModel: CourseDetailsViewModel by viewModels { viewModelFactory }
 
     private var player: SimpleExoPlayer? = null
-    private var playWhenReady = true
-    private var currentWindow = 0
-    private var playbackPosition: Long = 0
     private lateinit var teachersAdapter: TeachersListAdapter
     private lateinit var contentsAdapter: CourseContentListAdapter
     private lateinit var faqsAdapter: FaqListAdapter
@@ -185,39 +182,54 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         ).createMediaSource(uri)
     }
 
-    @SuppressLint("StaticFieldLeak")
     private fun initializePlayer() {
-//        val videoUrl = args.course?.vediolink
         val videoUrl = course?.vediolink
         val trackSelector = DefaultTrackSelector(requireContext())
         trackSelector.setParameters(
             trackSelector.buildUponParameters().setMaxVideoSizeSd()
         )
-
         player = SimpleExoPlayer.Builder(requireContext()).setTrackSelector(trackSelector).build()
         viewDataBinding.videoView.player = player
+        if (viewModel.youtubePlayerUrl.isNotBlank()) {
+            playYoutubeVideo()
+//            if (viewModel.youtubeVideoLink == videoUrl && player != null) {
+//                player?.play()
+//            } else {
+//                playYoutubeVideo()
+//            }
+        } else {
+            extractYoutubeVideoLink(videoUrl)
+        }
+    }
 
+    @SuppressLint("StaticFieldLeak")
+    private fun extractYoutubeVideoLink(videoLink: String?) {
+        viewModel.youtubeVideoLink = videoLink ?: ""
         object : YouTubeExtractor(requireContext()) {
             override fun onExtractionComplete(ytFiles: SparseArray<YtFile>?, vMeta: VideoMeta?) {
                 if (ytFiles == null) return
-                val downloadUrl = ytFiles[18]?.url
-                try {
-                    player?.addMediaSource(mediaSource(Uri.parse(downloadUrl)))
-                    player?.playWhenReady = playWhenReady
-                    player?.seekTo(currentWindow, playbackPosition)
-                    player?.prepare()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+                viewModel.youtubePlayerUrl = ytFiles[18]?.url ?: ""
+                playYoutubeVideo()
             }
-        }.extract(videoUrl, true, true)
+        }.extract(videoLink, true, true)
+    }
+
+    private fun playYoutubeVideo() {
+        try {
+            player?.addMediaSource(mediaSource(Uri.parse(viewModel.youtubePlayerUrl)))
+            player?.playWhenReady = viewModel.playWhenReady
+            player?.seekTo(viewModel.currentWindow, viewModel.playbackPosition)
+            player?.prepare()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun releasePlayer() {
         player?.let {
-            playWhenReady = it.playWhenReady
-            playbackPosition = it.currentPosition
-            currentWindow = it.currentWindowIndex
+            viewModel.playWhenReady = it.playWhenReady
+            viewModel.playbackPosition = it.currentPosition
+            viewModel.currentWindow = it.currentWindowIndex
             it.release()
             player = null
         }

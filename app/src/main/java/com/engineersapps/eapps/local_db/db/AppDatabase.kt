@@ -15,7 +15,7 @@ import com.engineersapps.eapps.models.my_course.MyCourseBook
 import com.engineersapps.eapps.models.registration.AcademicClass
 
 
-private const val DATABASE = "app_db"
+private const val DATABASE = "app_db_1"
 private const val DATABASE_VERSION = 1
 
 /**

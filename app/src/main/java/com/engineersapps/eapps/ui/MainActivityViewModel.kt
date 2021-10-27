@@ -38,6 +38,10 @@ class MainActivityViewModel @Inject constructor(
     private val historyDao: HistoryDao
 ) : BaseViewModel(application) {
 
+    val showHideBottomNavBar: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
+
     val isPendingCoursePurchaseSuccess: MutableLiveData<Boolean?> by lazy {
         MutableLiveData<Boolean?>()
     }

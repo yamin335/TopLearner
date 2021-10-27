@@ -11,12 +11,14 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.net.Uri
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Bundle
 import android.transition.Transition
 import android.transition.TransitionInflater
 import android.transition.TransitionManager
+import android.util.SparseArray
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -30,11 +32,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.viewpager2.widget.ViewPager2
-import com.engineersapps.eapps.AppGlobalValues
+import at.huber.youtubeExtractor.VideoMeta
+import at.huber.youtubeExtractor.YouTubeExtractor
+import at.huber.youtubeExtractor.YtFile
 import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.api.ApiCallStatus
@@ -50,15 +53,19 @@ import com.engineersapps.eapps.ui.common.BaseFragment
 import com.engineersapps.eapps.ui.common.CommonMessageBottomSheetDialog
 import com.engineersapps.eapps.ui.common.DownloadOrEraseMessageBottomSheetDialog
 import com.engineersapps.eapps.ui.home.*
-import com.engineersapps.eapps.util.AppConstants
+import com.engineersapps.eapps.util.*
 import com.engineersapps.eapps.util.AppConstants.PDF_FILE_PATH
 import com.engineersapps.eapps.util.AppConstants.downloadFolder
 import com.engineersapps.eapps.util.AppConstants.unzippedFolder
-import com.engineersapps.eapps.util.FLAGS_FULLSCREEN
-import com.engineersapps.eapps.util.FileUtils
-import com.engineersapps.eapps.util.showErrorToast
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.exception.ZipException
@@ -129,6 +136,8 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
     var systemUiVisibility: Int = 0
 
+    private var player: SimpleExoPlayer? = null
+
     private val usbDetectionReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == Intent.ACTION_POWER_CONNECTED) {
@@ -147,6 +156,16 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
     override fun onResume() {
         super.onResume()
         detectUSB()
+        if ((Build.VERSION.SDK_INT < 24 || player == null)) {
+            initializePlayer()
+        }
+
+//        if (viewDataBinding.webViewPlayer != null) {
+//            viewDataBinding.webViewPlayer.onResume()
+//            viewDataBinding.webViewPlayer.resumeTimers()
+//            Log.e("WEB_PLAYER: ", "VIEW RESUMED")
+//        }
+
         //viewDataBinding.webView.loadUrl("https://filedn.com/lknC2WxBGrLhvR1B4TaXzbQ/MATH7_3Q8KA/MATH7_3Q8KA_player.html")
         // get notified when download is complete
 //        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
@@ -173,9 +192,15 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
         super.onPause()
         FileUtils.deleteFolderWithAllFilesFromExternalStorage(requireContext(), unzippedFolder)
         requireActivity().unregisterReceiver(usbDetectionReceiver)
+        if (Build.VERSION.SDK_INT < 24) {
+            releasePlayer()
+        }
 
-
-
+//        if (viewDataBinding.webViewPlayer != null) {
+//            viewDataBinding.webViewPlayer.onPause()
+//            viewDataBinding.webViewPlayer.pauseTimers()
+//            Log.e("WEB_PLAYER: ", "VIEW PAUSED")
+//        }
         //LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(downloadCompleteReceiver)
 
 //        if (viewDataBinding.webView != null ) {
@@ -185,6 +210,20 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
 //        AppGlobalValues.videoWebViewBundle = Bundle()
 //        viewDataBinding.webView.saveState(AppGlobalValues.videoWebViewBundle)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (Build.VERSION.SDK_INT >= 24) {
+            initializePlayer()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (Build.VERSION.SDK_INT >= 24) {
+            releasePlayer()
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -208,10 +247,6 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
     override fun onDestroy() {
         super.onDestroy()
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        tab1Title = ""
-        tab2Title = ""
-        tab3Title = ""
-        tab4Title = ""
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -268,31 +303,76 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
     private fun expand() {
         toggle.duration = 150L
-        TransitionManager.beginDelayedTransition(viewDataBinding.webView as ViewGroup, toggle)
-        viewDataBinding.webView.onResume()
-        viewDataBinding.webView.visibility = View.VISIBLE
+        TransitionManager.beginDelayedTransition(viewDataBinding.videoView as ViewGroup, toggle)
+        if (viewModel.isPlayingYoutubeVideo) {
+            if (isUSBPluggedIn) {
+                showErrorToast(requireContext(), "Please unplug your USB then try again!")
+            } else {
+                player?.play()
+            }
+            viewDataBinding.videoPlayer.visibility = View.VISIBLE
+            viewDataBinding.webViewPlayer.visibility = View.GONE
+        } else {
+            viewDataBinding.webViewPlayer.onResume()
+            viewDataBinding.webViewPlayer.visibility = View.VISIBLE
+            viewDataBinding.videoPlayer.visibility = View.GONE
+        }
+        viewDataBinding.videoView.visibility = View.VISIBLE
         expanded = true
     }
 
     private fun collapse() {
         toggle.duration = 200L
-        TransitionManager.beginDelayedTransition(viewDataBinding.webView as ViewGroup, toggle)
-        viewDataBinding.webView.onPause()
-        viewDataBinding.webView.visibility = View.GONE
+        TransitionManager.beginDelayedTransition(viewDataBinding.videoView as ViewGroup, toggle)
+        if (viewModel.isPlayingYoutubeVideo) {
+            player?.pause()
+            viewDataBinding.videoPlayer.visibility = View.GONE
+        } else {
+            viewDataBinding.webViewPlayer.onPause()
+            viewDataBinding.webViewPlayer.visibility = View.GONE
+        }
+        viewDataBinding.videoView.visibility = View.GONE
         expanded = true
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        viewDataBinding.webView.saveState(outState)
-        AppGlobalValues.videoWebViewBundle = outState
+        viewDataBinding.webViewPlayer.saveState(outState)
+//        AppGlobalValues.videoWebViewBundle = outState
+//
+//        if (viewModel.webViewPlayerState == null) {
+//            viewDataBinding.webViewPlayer.saveState(outState)
+//            viewDataBinding.webViewPlayer.saveState(viewModel.webViewPlayerState)
+//            viewModel.webViewPlayerState = outState
+//            Log.e("WEB_PLAYER: ", "STATE SAVED")
+//        }
     }
 
     @SuppressLint("SetJavaScriptEnabled", "ObsoleteSdkInt")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewDataBinding.webView.visibility = if (isAnimationListEmpty) View.GONE else View.VISIBLE
+        viewDataBinding.videoView.visibility = if (isAnimationListEmpty) View.GONE else View.VISIBLE
+        if (viewModel.isPlayingYoutubeVideo) {
+            viewDataBinding.videoPlayer.visibility = View.VISIBLE
+            viewDataBinding.webViewPlayer.visibility = View.GONE
+        } else {
+            viewDataBinding.webViewPlayer.visibility = View.VISIBLE
+            viewDataBinding.videoPlayer.visibility = View.GONE
+        }
+
+        CoroutineScope(Dispatchers.Main.immediate).launch {
+            delay(700)
+            val orientation = requireActivity().resources.configuration.orientation
+
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                restoreSystemUI()
+                bottomNavShowHideCallback?.showOrHideBottomNav(true)
+            } else {
+                hideSystemUI()
+                bottomNavShowHideCallback?.showOrHideBottomNav(false)
+            }
+        }
 
         //activity?.title = title
         detectUSB()
@@ -308,7 +388,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
         commonMessageBottomSheetDialog = CommonMessageBottomSheetDialog(null)
 
-        viewModel.showHideProgress.observe(viewLifecycleOwner, Observer { value ->
+        viewModel.showHideProgress.observe(viewLifecycleOwner, { value ->
             value?.let {
                 childFragmentManager.setFragmentResult(
                     "showHideProgress",
@@ -317,7 +397,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
             }
         })
 
-        viewModel.videoFileDownloadResponse.observe(viewLifecycleOwner, Observer { value ->
+        viewModel.videoFileDownloadResponse.observe(viewLifecycleOwner, { value ->
             value?.let {
                 val file = File(it.first, it.second)
                 if (file.exists()) {
@@ -368,7 +448,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
         //viewDataBinding.webView.setInitialScale(1)
 
-        val webSettings = viewDataBinding.webView.settings
+        val webSettings = viewDataBinding.webViewPlayer.settings
         webSettings.javaScriptEnabled = true
         webSettings.allowContentAccess = true
         webSettings.domStorageEnabled = true
@@ -394,7 +474,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
         viewModel.doesItemExists(chapter.book_id ?: 0, chapter.id ?: 0).observe(
             viewLifecycleOwner,
-            Observer {
+            {
                 it?.let { list ->
                     if (list.isNotEmpty()) {
                         viewModel.updateToHistory(list[0].id)
@@ -413,7 +493,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
                 }
             })
 
-        viewDataBinding.webView.webChromeClient = object : WebChromeClient() {
+        viewDataBinding.webViewPlayer.webChromeClient = object : WebChromeClient() {
             private var mCustomView: View? = null
             private var mCustomViewCallback: CustomViewCallback? = null
             var mFullscreenContainer: FrameLayout? = null
@@ -468,7 +548,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
         }
 
 
-        viewDataBinding.webView.webViewClient = object : WebViewClient() {
+        viewDataBinding.webViewPlayer.webViewClient = object : WebViewClient() {
 
             override fun shouldOverrideKeyEvent(view: WebView?, event: KeyEvent?): Boolean {
                 return super.shouldOverrideKeyEvent(view, event)
@@ -525,50 +605,68 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
             viewLifecycleOwner, FragmentResultListener { key, bundle ->
                 val videoItem = bundle.getSerializable("VideoItem") as ChapterField?
                 videoItem?.let {
-                    try {
-                        val filepath = FileUtils.getLocalStorageFilePath(
-                            requireContext(),
-                            downloadFolder
-                        )
-                        val unzipFilepath = FileUtils.getLocalStorageFilePath(
-                            requireContext(),
-                            unzippedFolder
-                        )
-                        val fileName = videoItem.video_filename
-                        if (fileName.isNullOrBlank()) {
-                            commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
-                            commonMessageBottomSheetDialog.show(
-                                childFragmentManager,
-                                "#Common_Message_Dialog"
-                            )
-                            //showWarningToast(requireContext(), "This video is not available now")
-                            return@FragmentResultListener
+                    if (videoItem.video_filename.isNullOrBlank()) {
+                        viewDataBinding.webViewPlayer.onPause()
+                        viewModel.isPlayingYoutubeVideo = true
+                        viewDataBinding.videoPlayer.visibility = View.VISIBLE
+                        viewDataBinding.webViewPlayer.visibility = View.GONE
+                        when {
+                            videoItem.url.isNullOrBlank() -> {
+                                viewModel.youtubePlayerUrl = ""
+                                showWarningToast(requireContext(), getString(R.string.animation_not_found_text))
+                            }
+                            isUSBPluggedIn -> {
+                                showErrorToast(requireContext(), "Please unplug your USB then try again!")
+                            }
+                            else -> {
+                                extractYoutubeVideoLink(videoItem.url)
+                            }
                         }
-                        val videoFile = File(filepath, fileName)
-                        if (videoFile.exists()) {
-                            val videoFolderName = fileName.substring(0, fileName.lastIndexOf("."))
-
-                            val videoFolder = File(unzipFilepath, videoFolderName)
-                            if (videoFolder.exists() && videoFolder.isDirectory) {
-                                lifecycleScope.launch {
-                                    playVideo("$unzipFilepath/$videoFolderName")
+                    } else {
+                        player?.pause()
+                        viewDataBinding.webViewPlayer.onResume()
+                        viewModel.isPlayingYoutubeVideo = false
+                        viewDataBinding.videoPlayer.visibility = View.GONE
+                        viewDataBinding.webViewPlayer.visibility = View.VISIBLE
+                        try {
+                            val filepath = FileUtils.getLocalStorageFilePath(
+                                requireContext(),
+                                downloadFolder
+                            )
+                            val unzipFilepath = FileUtils.getLocalStorageFilePath(
+                                requireContext(),
+                                unzippedFolder
+                            )
+                            val fileName = videoItem.video_filename
+                            if (fileName.isNullOrBlank()) {
+                                commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
+                                commonMessageBottomSheetDialog.show(
+                                    childFragmentManager,
+                                    "#Common_Message_Dialog"
+                                )
+                                return@FragmentResultListener
+                            }
+                            val videoFile = File(filepath, fileName)
+                            if (videoFile.exists()) {
+                                val videoFolderName = fileName.substring(0, fileName.lastIndexOf("."))
+                                val videoFolder = File(unzipFilepath, videoFolderName)
+                                if (videoFolder.exists() && videoFolder.isDirectory) {
+                                    lifecycleScope.launch {
+                                        playVideo("$unzipFilepath/$videoFolderName")
+                                    }
+                                } else {
+                                    lifecycleScope.launch {
+                                        unZipFile(File(filepath, fileName), videoFolderName)
+                                    }
                                 }
                             } else {
-                                lifecycleScope.launch {
-                                    unZipFile(File(filepath, fileName), videoFolderName)
-                                }
+                                val downloadUrl = "$VIDEOS/$fileName"
+                                viewModel.downloadVideoFile(downloadUrl, filepath, fileName)
+                                downloadingFile = File(filepath, fileName)
                             }
-                        } else {
-                            //showErrorToast(requireContext(), "ভিডিও বা এনিমেশনটি দেখতে পাশের মেনু বাটনে ক্লিক করে ডাউনলোড করে নিন")
-                            val downloadUrl = "$VIDEOS/$fileName"
-                            viewModel.downloadVideoFile(downloadUrl, filepath, fileName)
-                            downloadingFile = File(filepath, fileName)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
-//                    lifecycleScope.launch {
-//                        playVideo()
-//                    }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
                     }
                 }
             }
@@ -579,54 +677,75 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
             viewLifecycleOwner, FragmentResultListener { key, bundle ->
                 val videoItem = bundle.getSerializable("VideoItem") as ChapterField?
                 videoItem?.let {
-                    try {
-                        val filepath = FileUtils.getLocalStorageFilePath(
-                            requireContext(),
-                            downloadFolder
-                        )
-                        val unzipFilepath = FileUtils.getLocalStorageFilePath(
-                            requireContext(),
-                            unzippedFolder
-                        )
-                        val fileName = videoItem.video_filename
-                        if (fileName.isNullOrBlank()) {
-                            commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
-                            commonMessageBottomSheetDialog.show(
-                                childFragmentManager,
-                                "#Common_Message_Dialog"
-                            )
-                            //showWarningToast(requireContext(), "This video is not available now")
-                            return@FragmentResultListener
-                        }
-                        val videoFile = File(filepath, fileName)
-                        if (videoFile.exists()) {
-                            val downloadOrEraseMessageBottomSheetDialog = DownloadOrEraseMessageBottomSheetDialog({
-                                viewModel.showHideProgress.postValue(Pair(true, 0))
-                                FileUtils.deleteFileFromExternalStorage(videoFile)
-                                val videoFolderName = fileName.substring(0, fileName.lastIndexOf("."))
 
-                                val videoFolder = File(unzipFilepath, videoFolderName)
-                                if (videoFolder.exists() && videoFolder.isDirectory) {
-                                    FileUtils.deleteFileFromExternalStorage(videoFolder)
-                                }
-                                viewModel.showHideProgress.postValue(Pair(false, 100))
-                            })
-                            downloadOrEraseMessageBottomSheetDialog.isCancelable = true
-                            downloadOrEraseMessageBottomSheetDialog.showNow(parentFragmentManager, "#AnimationDeleteDialog")
-                        } else {
-                            val downloadOrEraseMessageBottomSheetDialog = DownloadOrEraseMessageBottomSheetDialog({
-                                val downloadUrl = "$VIDEOS/$fileName"
-                                viewModel.downloadVideoFile(downloadUrl, filepath, fileName)
-                                downloadingFile = File(filepath, fileName)
-                            }, true)
-                            downloadOrEraseMessageBottomSheetDialog.isCancelable = true
-                            downloadOrEraseMessageBottomSheetDialog.showNow(parentFragmentManager, "#AnimationDownloadDialog")
+                    if (videoItem.video_filename.isNullOrBlank()) {
+                        viewDataBinding.webViewPlayer.onPause()
+                        viewModel.isPlayingYoutubeVideo = true
+                        viewDataBinding.videoPlayer.visibility = View.VISIBLE
+                        viewDataBinding.webViewPlayer.visibility = View.GONE
+                        when {
+                            videoItem.url.isNullOrBlank() -> {
+                                viewModel.youtubePlayerUrl = ""
+                                showWarningToast(requireContext(), getString(R.string.animation_not_found_text))
+                            }
+                            isUSBPluggedIn -> {
+                                showErrorToast(requireContext(), "Please unplug your USB then try again!")
+                            }
+                            else -> {
+                                extractYoutubeVideoLink(videoItem.url)
+                            }
                         }
-//                    lifecycleScope.launch {
-//                        playVideo()
-//                    }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                    } else {
+                        player?.pause()
+                        viewDataBinding.webViewPlayer.onResume()
+                        viewModel.isPlayingYoutubeVideo = false
+                        viewDataBinding.videoPlayer.visibility = View.GONE
+                        viewDataBinding.webViewPlayer.visibility = View.VISIBLE
+                        try {
+                            val filepath = FileUtils.getLocalStorageFilePath(
+                                requireContext(),
+                                downloadFolder
+                            )
+                            val unzipFilepath = FileUtils.getLocalStorageFilePath(
+                                requireContext(),
+                                unzippedFolder
+                            )
+                            val fileName = videoItem.video_filename
+                            if (fileName.isNullOrBlank()) {
+                                commonMessageBottomSheetDialog.message = getString(R.string.animation_not_found_text)
+                                commonMessageBottomSheetDialog.show(
+                                    childFragmentManager,
+                                    "#Common_Message_Dialog"
+                                )
+                                return@FragmentResultListener
+                            }
+                            val videoFile = File(filepath, fileName)
+                            if (videoFile.exists()) {
+                                val downloadOrEraseMessageBottomSheetDialog = DownloadOrEraseMessageBottomSheetDialog({
+                                    viewModel.showHideProgress.postValue(Pair(true, 0))
+                                    FileUtils.deleteFileFromExternalStorage(videoFile)
+                                    val videoFolderName = fileName.substring(0, fileName.lastIndexOf("."))
+
+                                    val videoFolder = File(unzipFilepath, videoFolderName)
+                                    if (videoFolder.exists() && videoFolder.isDirectory) {
+                                        FileUtils.deleteFileFromExternalStorage(videoFolder)
+                                    }
+                                    viewModel.showHideProgress.postValue(Pair(false, 100))
+                                })
+                                downloadOrEraseMessageBottomSheetDialog.isCancelable = true
+                                downloadOrEraseMessageBottomSheetDialog.showNow(parentFragmentManager, "#AnimationDeleteDialog")
+                            } else {
+                                val downloadOrEraseMessageBottomSheetDialog = DownloadOrEraseMessageBottomSheetDialog({
+                                    val downloadUrl = "$VIDEOS/$fileName"
+                                    viewModel.downloadVideoFile(downloadUrl, filepath, fileName)
+                                    downloadingFile = File(filepath, fileName)
+                                }, true)
+                                downloadOrEraseMessageBottomSheetDialog.isCancelable = true
+                                downloadOrEraseMessageBottomSheetDialog.showNow(parentFragmentManager, "#AnimationDownloadDialog")
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
                 }
             }
@@ -640,7 +759,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 //            }
 //        }
 
-        viewModel.pdfFileDownloadResponse.observe(viewLifecycleOwner, Observer { value ->
+        viewModel.pdfFileDownloadResponse.observe(viewLifecycleOwner, { value ->
             value?.let {
                 when(it.requestedFragment) {
                     Tab1Fragment.TAG -> {
@@ -691,7 +810,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
             }
         )
 
-        viewModel.solutionPdfFileDownloadResponse.observe(viewLifecycleOwner, Observer { value ->
+        viewModel.solutionPdfFileDownloadResponse.observe(viewLifecycleOwner, { value ->
             value?.let {
                 childFragmentManager.setFragmentResult(
                     "loadSolutionPdf",
@@ -789,8 +908,17 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
                 }
             }
         } else {
-            viewDataBinding.webView.restoreState(savedInstanceState)
+            viewDataBinding.webViewPlayer.restoreState(savedInstanceState)
         }
+
+//        if (viewModel.webViewPlayerState != null) {
+//            CoroutineScope(Dispatchers.Main.immediate).launch {
+//                delay(1000)
+//                viewDataBinding.webViewPlayer.restoreState(viewModel.webViewPlayerState)
+//                //viewModel.webViewPlayerState = null
+//                Log.e("WEB_PLAYER: ", "STATE LOADED")
+//            }
+//        }
     }
 
 //    inner class JavaScriptWebViewInterface(context: Context) {
@@ -823,6 +951,74 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 //            requireContext().startService(intent)
 //        }
 //    }
+
+    @SuppressLint("StaticFieldLeak")
+    private fun extractYoutubeVideoLink(videoLink: String) {
+        if (isUSBPluggedIn) {
+            showErrorToast(requireContext(), "Please unplug your USB then try again!")
+        } else {
+            if (viewModel.youtubeVideoLink == videoLink && viewModel.youtubePlayerUrl.isNotBlank() && player != null) {
+                player?.play()
+            } else {
+                viewModel.youtubeVideoLink = videoLink
+                object : YouTubeExtractor(requireContext()) {
+                    override fun onExtractionComplete(ytFiles: SparseArray<YtFile>?, vMeta: VideoMeta?) {
+                        if (ytFiles == null) return
+                        viewModel.youtubePlayerUrl = ytFiles[18]?.url ?: ""
+                        playYoutubeVideo()
+                    }
+                }.extract(videoLink, true, true)
+            }
+        }
+    }
+
+    private fun playYoutubeVideo() {
+        if (isUSBPluggedIn) {
+            showErrorToast(requireContext(), "Please unplug your USB then try again!")
+        } else {
+            try {
+                player?.addMediaSource(mediaSource(Uri.parse(viewModel.youtubePlayerUrl)))
+                player?.playWhenReady = viewModel.playWhenReady
+                player?.seekTo(viewModel.currentWindow, viewModel.playbackPosition)
+                player?.prepare()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun mediaSource(uri: Uri): MediaSource {
+        return ProgressiveMediaSource.Factory(
+            DefaultHttpDataSourceFactory("exoplayer")
+        ).createMediaSource(uri)
+    }
+
+    private fun initializePlayer() {
+        val trackSelector = DefaultTrackSelector(requireContext())
+        trackSelector.setParameters(
+            trackSelector.buildUponParameters().setMaxVideoSizeSd()
+        )
+
+        player = SimpleExoPlayer.Builder(requireContext()).setTrackSelector(trackSelector).build()
+        viewDataBinding.videoPlayer.player = player
+        if (viewModel.isPlayingYoutubeVideo && viewModel.youtubePlayerUrl.isNotBlank()) {
+            if (isUSBPluggedIn)  {
+                showErrorToast(requireContext(), "Please unplug your USB then try again!")
+            } else {
+                playYoutubeVideo()
+            }
+        }
+    }
+
+    private fun releasePlayer() {
+        player?.let {
+            viewModel.playWhenReady = it.playWhenReady
+            viewModel.playbackPosition = it.currentPosition
+            viewModel.currentWindow = it.currentWindowIndex
+            it.release()
+            player = null
+        }
+    }
 
     private fun unZipFile(inputFile: File, outputFolderName: String) {
         if (isUSBPluggedIn) {
@@ -910,7 +1106,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
         }
     }
 
-    fun playVideo(videoFolderPath: String) {
+    private fun playVideo(videoFolderPath: String) {
         if (isUSBPluggedIn) {
             showErrorToast(requireContext(), "Please unplug your USB then try again!")
         } else {
@@ -946,7 +1142,13 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
             }
 
             if (File("$videoFolderPath/$middleFolderName/$videoFileName").exists()) {
-                viewDataBinding.webView.post { viewDataBinding.webView.loadUrl("file:///$videoFolderPath/$middleFolderName/$videoFileName") }
+                val animationUrl = "file:///$videoFolderPath/$middleFolderName/$videoFileName"
+                if (animationUrl == viewModel.webViewPlayerUrl) {
+                    viewDataBinding.webViewPlayer.onResume()
+                } else {
+                    viewModel.webViewPlayerUrl = animationUrl
+                    viewDataBinding.webViewPlayer.post { viewDataBinding.webViewPlayer.loadUrl(viewModel.webViewPlayerUrl) }
+                }
             }
 
 //            val path = Paths.get("$videoFolderPath/")
@@ -1017,6 +1219,14 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
             hideSystemUI()
             bottomNavShowHideCallback?.showOrHideBottomNav(false)
         }
+
+//        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+//            restoreSystemUI()
+//            bottomNavShowHideCallback?.showOrHideBottomNav(true)
+//        } else {
+//            hideSystemUI()
+//            bottomNavShowHideCallback?.showOrHideBottomNav(false)
+//        }
     }
 
     private fun hideSystemUI() {

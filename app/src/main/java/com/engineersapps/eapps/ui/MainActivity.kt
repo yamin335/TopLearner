@@ -10,13 +10,14 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.MainActivityBinding
 import com.engineersapps.eapps.models.registration.AcademicClass
@@ -24,6 +25,7 @@ import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.prefs.PreferencesHelper
 import com.engineersapps.eapps.ui.common.ClassSelectionDialogFragment
 import com.engineersapps.eapps.util.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.CoroutineScope
@@ -74,9 +76,9 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
 
     lateinit var binding: MainActivityBinding
 
-    private var currentNavController: LiveData<NavController>? = null
-
-    private var currentNavHostFragment: LiveData<NavHostFragment>? = null
+//    private var currentNavController: LiveData<NavController>? = null
+//
+//    private var currentNavHostFragment: LiveData<NavHostFragment>? = null
 
     private val fragmentWithoutBottomNav = setOf(
         R.id.splashFragment,
@@ -97,6 +99,9 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
 
     private lateinit var classSelectionDialogFragment: ClassSelectionDialogFragment
 
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
+
     override fun onResume() {
         super.onResume()
         LocalBroadcastManager.getInstance(this).registerReceiver(
@@ -105,7 +110,7 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
         )
 
         if (userData.class_id == null || userData.class_id ?: 0 <= 0) {
-            viewModel.getAllAcademicClassesFromDB().observe(this, Observer {
+            viewModel.getAllAcademicClassesFromDB().observe(this, {
                 showUserClassSelectionDialog(it)
             })
         }
@@ -119,7 +124,13 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.allAcademicClass.observe(this, Observer {
+        viewModel.showHideBottomNavBar.observe(this, {
+            binding.mainContainer.showBottomNav = it
+        })
+
+        //configurationChangeCallback?.onNewConfiguration(resources.configuration.orientation)
+
+        viewModel.allAcademicClass.observe(this, {
             if (userData.class_id == null || userData.class_id ?: 0 <= 0) {
                 showUserClassSelectionDialog(it)
             }
@@ -133,7 +144,7 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
             viewModel.updateUserProfile(userData)
         }
 
-        viewModel.profileUpdateResponse.observe(this, androidx.lifecycle.Observer {
+        viewModel.profileUpdateResponse.observe(this, {
             it?.let { data ->
                 data.Account?.let { account ->
                     classSelectionDialogFragment.dismiss()
@@ -153,7 +164,7 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
             }
         }
 
-        viewModel.loginResponse.observe(this, androidx.lifecycle.Observer {
+        viewModel.loginResponse.observe(this, {
             it?.let { data ->
                 data.Account?.let { account ->
                     if (account.isRegistered == true) {
@@ -178,12 +189,27 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        binding.mainContainer.showBottomNav = true
+        viewModel.showHideBottomNavBar.postValue(true)
         binding.drawerNavigation.setNavigationItemSelectedListener(this)
 
         binding.mainContainer.bottomNav.itemIconTintList = null
 
         binding.navDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+
+        val navHostFragment = supportFragmentManager.findFragmentById(
+            R.id.nav_host_container
+        ) as NavHostFragment
+        navController = navHostFragment.navController
+
+        // Setup the bottom navigation view with navController
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav)
+        bottomNavigationView.setupWithNavController(navController)
+
+        // Setup the ActionBar with navController and 3 top level destinations
+        appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.home2Fragment, R.id.freeBooksFragment,  R.id.liveFragment, R.id.myCourseFragment,  R.id.moreFragment)
+        )
+        //setupActionBarWithNavController(navController, appBarConfiguration)
 
 //        viewModel.userProfileInfo.observe(this, androidx.lifecycle.Observer { userInfo ->
 //            userInfo?.let {
@@ -208,11 +234,12 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
 //        }
 
         // Setup multi-backStack supported bottomNav
-        if (savedInstanceState == null) {
-            setupBottomNavigationBar()
-        } // Else, need to wait for onRestoreInstanceState
+//        if (savedInstanceState == null) {
+//            setupBottomNavigationBar()
+//        }
+        // Else, need to wait for onRestoreInstanceState
 
-        viewModel.getMyCourseItemCount().observe(this, Observer {
+        viewModel.getMyCourseItemCount().observe(this, {
             it?.let { count ->
                 if (count > 0) {
                     binding.mainContainer.bottomNav.selectedItemId = R.id.my_course_nav
@@ -220,7 +247,7 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
             }
         })
 
-        viewModel.internetStatus.observe(this, Observer {
+        viewModel.internetStatus.observe(this, {
             if (it) {
                 preferencesHelper.pendingCoursePurchase?.let { pendingPurchase ->
                     if (pendingPurchase.coursePaymentRequest == null) {
@@ -234,12 +261,27 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
             }
         })
 
-        viewModel.isPendingCoursePurchaseSuccess.observe(this, Observer {
+        viewModel.isPendingCoursePurchaseSuccess.observe(this, {
             if (it == true) {
                 preferencesHelper.pendingCoursePurchase = null
                 viewModel.isPendingCoursePurchaseSuccess.postValue(null)
             }
         })
+
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            hideKeyboard()
+            viewModel.showHideBottomNavBar.postValue(destination.id !in fragmentWithoutBottomNav)
+
+            if (controller.graph.startDestinationId == R.id.home2Fragment && preferencesHelper.shouldClearBackStackOfHomeNav) {
+                CoroutineScope(Dispatchers.Main.immediate).launch {
+                    delay(700)
+                    controller.popBackStack(
+                        controller.graph.startDestinationId, false
+                    )
+                }
+                preferencesHelper.shouldClearBackStackOfHomeNav = false
+            }
+        }
     }
 
     private fun showUserClassSelectionDialog(classList: List<AcademicClass>) {
@@ -255,68 +297,68 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
         configurationChangeCallback?.onNewConfiguration(newConfig)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        // Now that BottomNavigationBar has restored its instance state
-        // and its selectedItemId, we can proceed with setting up the
-        // BottomNavigationBar with Navigation
-        setupBottomNavigationBar()
-    }
+//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+//        super.onRestoreInstanceState(savedInstanceState)
+//        // Now that BottomNavigationBar has restored its instance state
+//        // and its selectedItemId, we can proceed with setting up the
+//        // BottomNavigationBar with Navigation
+//        setupBottomNavigationBar()
+//    }
 
     /**
      * Called on first creation and when restoring state.
      */
-    private fun setupBottomNavigationBar() {
-
-        val navGraphIds = listOf(
-            R.navigation.home_nav_graph,
-            R.navigation.free_book_nav_graph,
-            R.navigation.live_nav_graph,
-            R.navigation.my_course_nav_graph,
-            R.navigation.more_nav_graph
-        )
-
-        // Setup the bottom navigation view with a payment_graph of navigation graphs
-        val (controller, navHost) = binding.mainContainer.bottomNav.setupWithNavController(
-            navGraphIds = navGraphIds,
-            fragmentManager = supportFragmentManager,
-            containerId = R.id.nav_host_container,
-            intent = intent
-        )
-
-        // Whenever the selected controller changes, setup the action bar.
-        controller.observe(this, Observer { navController ->
-//            appBarConfiguration = AppBarConfiguration(
-//                navGraph = navController.graph,
-//                drawerLayout = drawer_layout
-//            )
-            // Set up ActionBar
-//            setSupportActionBar(toolbar)
-//            setupActionBarWithNavController(navController)
-
-            navController.addOnDestinationChangedListener { _, destination, _ ->
-                hideKeyboard()
-                binding.mainContainer.showBottomNav = destination.id !in fragmentWithoutBottomNav
-            }
-
-//            setupActionBarWithNavController(navController)
-        })
-
-        currentNavController = controller
-        currentNavHostFragment = navHost
-
-        currentNavController?.observe(this, Observer { homeController ->
-            if (homeController.graph.startDestination == R.id.home2Fragment && preferencesHelper.shouldClearBackStackOfHomeNav) {
-                CoroutineScope(Dispatchers.Main.immediate).launch {
-                    delay(700)
-                    homeController.popBackStack(
-                        homeController.graph.startDestination, false
-                    )
-                }
-                preferencesHelper.shouldClearBackStackOfHomeNav = false
-            }
-        })
-    }
+//    private fun setupBottomNavigationBar() {
+//
+//        val navGraphIds = listOf(
+//            R.navigation.home_nav_graph,
+//            R.navigation.free_book_nav_graph,
+//            R.navigation.live_nav_graph,
+//            R.navigation.my_course_nav_graph,
+//            R.navigation.more_nav_graph
+//        )
+//
+//        // Setup the bottom navigation view with a payment_graph of navigation graphs
+//        val (controller, navHost) = binding.mainContainer.bottomNav.setupWithNavController(
+//            navGraphIds = navGraphIds,
+//            fragmentManager = supportFragmentManager,
+//            containerId = R.id.nav_host_container,
+//            intent = intent
+//        )
+//
+//        // Whenever the selected controller changes, setup the action bar.
+//        controller.observe(this, Observer { navController ->
+////            appBarConfiguration = AppBarConfiguration(
+////                navGraph = navController.graph,
+////                drawerLayout = drawer_layout
+////            )
+//            // Set up ActionBar
+////            setSupportActionBar(toolbar)
+////            setupActionBarWithNavController(navController)
+//
+//            navController.addOnDestinationChangedListener { _, destination, _ ->
+//                hideKeyboard()
+//                binding.mainContainer.showBottomNav = destination.id !in fragmentWithoutBottomNav
+//            }
+//
+////            setupActionBarWithNavController(navController)
+//        })
+//
+//        currentNavController = controller
+//        currentNavHostFragment = navHost
+//
+//        currentNavController?.observe(this, Observer { homeController ->
+//            if (homeController.graph.startDestination == R.id.home2Fragment && preferencesHelper.shouldClearBackStackOfHomeNav) {
+//                CoroutineScope(Dispatchers.Main.immediate).launch {
+//                    delay(700)
+//                    homeController.popBackStack(
+//                        homeController.graph.startDestination, false
+//                    )
+//                }
+//                preferencesHelper.shouldClearBackStackOfHomeNav = false
+//            }
+//        })
+//    }
 
     override fun onBackPressed() {
         /**
@@ -340,11 +382,12 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return currentNavController?.value?.navigateUp() ?: false || super.onSupportNavigateUp()
+        //return currentNavController?.value?.navigateUp() ?: false || super.onSupportNavigateUp()
+        return navController.navigateUp(appBarConfiguration)
     }
 
     override fun onLoggedOut() {
-        viewModel.clearAllData().observe(this, Observer {
+        viewModel.clearAllData().observe(this, {
             if (it) {
                 viewModel.onLogOut(preferencesHelper)
                 startActivity(Intent(this@MainActivity, LoginActivity::class.java))
@@ -356,9 +399,10 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
 
     override fun registerToolbarWithNavigation(toolbar: Toolbar) {
         setSupportActionBar(toolbar)
-        currentNavController?.value?.let {
-            setupActionBarWithNavController(it)
-        }
+        setupActionBarWithNavController(navController)
+//        currentNavController?.value?.let {
+//            setupActionBarWithNavController(it)
+//        }
     }
 
     companion object {
@@ -381,11 +425,9 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
 
         when (item.itemId) {
             R.id.nav_exams -> {
-                currentNavController?.value?.let { navController ->
-                    when (navController.graph.id) {
-                        R.id.home_nav -> {
-                            //navController.navigate(Home2FragmentDirections.actionHome2FragmentToExamsNavGraph())
-                        }
+                when (navController.graph.id) {
+                    R.id.home_nav -> {
+                        //navController.navigate(Home2FragmentDirections.actionHome2FragmentToExamsNavGraph())
                     }
                 }
             }
@@ -398,12 +440,12 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
         }
 
         //close navigation drawer
-        binding.navDrawer.closeDrawer(GravityCompat.START);
+        binding.navDrawer.closeDrawer(GravityCompat.START)
         return true
     }
 
     override fun showOrHideBottomNav(showHide: Boolean) {
-        binding.mainContainer.showBottomNav = showHide
+        viewModel.showHideBottomNavBar.postValue(showHide)
     }
 
     override fun selectMyCourseTab() {

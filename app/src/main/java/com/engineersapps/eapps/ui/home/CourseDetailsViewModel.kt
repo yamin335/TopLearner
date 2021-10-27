@@ -22,6 +22,12 @@ class CourseDetailsViewModel @Inject constructor(
     private val bookChapterDao: BookChapterDao
     ) : BaseViewModel(application) {
 
+    var playWhenReady = true
+    var currentWindow = 0
+    var playbackPosition: Long = 0
+    var youtubePlayerUrl = ""
+    var youtubeVideoLink = ""
+
     val allFaqList: MutableLiveData<List<Faq>> by lazy {
         MutableLiveData<List<Faq>>()
     }

@@ -9,7 +9,7 @@ versions.kotlin = "1.3.72"
 versions.constraint_layout = '2.0.0-beta4'
 versions.junit = '4.13'
 versions.android_gradle_plugin = '7.0.3'
-versions.navigation = '2.3.0-alpha06'
+versions.navigation = '2.4.0-alpha02'
 versions.androidx_core_ktx = '1.3.0-rc01'
 versions.dagger = '2.25.4'
 versions.room = '2.2.3'
@@ -64,8 +64,9 @@ deps.junit = "junit:junit:$versions.junit"
 deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
 
 def navigation = [:]
-navigation.ui = "androidx.navigation:navigation-ui-ktx:$versions.navigation"
+navigation.runtime_ktx = "androidx.navigation:navigation-runtime-ktx:$versions.navigation"
 navigation.fragment_ktx = "androidx.navigation:navigation-fragment-ktx:$versions.navigation"
+navigation.ui_ktx = "androidx.navigation:navigation-ui-ktx:$versions.navigation"
 navigation.safe_args_plugin = "androidx.navigation:navigation-safe-args-gradle-plugin:$versions.navigation"
 deps.navigation = navigation
 

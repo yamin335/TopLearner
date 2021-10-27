@@ -36,8 +36,9 @@
                 app:titleTextColor="@color/accent" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <WebView
-            android:id="@+id/webView"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/videoView"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constrainedWidth="true"
@@ -46,17 +47,47 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appbar"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0">
+
+            <WebView
+                android:id="@+id/webViewPlayer"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <com.google.android.exoplayer2.ui.PlayerView
+                android:id="@+id/videoPlayer"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:show_timeout="1000"
+                app:fastforward_increment="2000"
+                app:rewind_increment="2000"
+                app:controller_layout_id="@layout/custom_exo_player_control_view"
+                android:visibility="gone"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/webView"
+            app:layout_constraintBottom_toBottomOf="@+id/videoView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/webView"
+            app:layout_constraintTop_toTopOf="@+id/videoView"
             app:layout_constraintVertical_bias="0.0" />
 
         <com.google.android.material.tabs.TabLayout
@@ -69,7 +100,7 @@
             android:theme="@style/AppTheme.AppBarOverlay"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/webView"
+            app:layout_constraintTop_toBottomOf="@+id/videoView"
             app:tabBackground="@color/colorWhite"
             app:tabGravity="fill"
             app:tabIconTint="@color/tab_state_colors"

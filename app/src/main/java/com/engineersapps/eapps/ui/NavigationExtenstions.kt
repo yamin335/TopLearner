@@ -9,15 +9,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.engineersapps.eapps.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 /**
  * Manages the various graphs needed for a [BottomNavigationView].
  *
  * This sample is a workaround until the Navigation Component supports multiple back stacks.
  */
-fun BottomNavigationView.setupWithNavController(
+fun BottomNavigationView.customSetupWithNavController(
     navGraphIds: List<Int>,
     fragmentManager: FragmentManager,
     containerId: Int,
@@ -178,9 +178,9 @@ private fun BottomNavigationView.setupItemReselected(
                 as NavHostFragment
         val navController = selectedFragment.navController
         // Pop the back stack to the start destination of the current navController graph
-        navController.popBackStack(
-            navController.graph.startDestination, false
-        )
+//        navController.popBackStack(
+//            navController.graph.startDestination, false
+//        )
     }
 }
 

@@ -35,14 +35,14 @@ import androidx.transition.Transition
 import androidx.transition.TransitionManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestListener
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.textfield.TextInputLayout
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.api.ApiCallStatus
 import com.engineersapps.eapps.util.BitmapUtilss
 import com.engineersapps.eapps.util.Validator
 import com.engineersapps.eapps.util.afterTextChanged
 import com.engineersapps.eapps.util.isValid
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.textfield.TextInputLayout
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
 
@@ -51,6 +51,11 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation
  */
 
 class FragmentBindingAdapters {
+
+    @BindingAdapter("showHideBottomNavBar")
+    fun showHideBottomNavBar(view: View, visible: Boolean?) {
+        view.visibility = if (visible == true) View.VISIBLE else View.GONE
+    }
 
     @BindingAdapter("showLoader")
     fun showLoader(view: View, apiCallStatus: Int?) {
