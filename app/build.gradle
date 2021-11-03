@@ -22,7 +22,7 @@ android {
     defaultConfig {
         applicationId "com.engineersapps.eapps"
         minSdkVersion build_versions.min_sdk
-        targetSdkVersion build_versions.target_sdk
+        targetSdkVersion 30
         versionCode 24
         versionName "1.1.4"
 
