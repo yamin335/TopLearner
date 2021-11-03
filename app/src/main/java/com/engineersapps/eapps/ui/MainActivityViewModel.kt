@@ -242,7 +242,10 @@ class MainActivityViewModel @Inject constructor(
             viewModelScope.launch(handler) {
                 when (val apiResponse = ApiResponse.create(transactionRepository.purchaseCourseRepo(coursePaymentRequest))) {
                     is ApiSuccessResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        if (createOrderBody == null) {
+                            apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                            isPendingCoursePurchaseSuccess.postValue(true)
+                        }
                         createOrderBody?.let {
                             preferencesHelper.pendingCoursePurchase?.let { pendingPurchase ->
                                 preferencesHelper.pendingCoursePurchase = MyCoursePurchasePayload(pendingPurchase.createOrderBody, null)

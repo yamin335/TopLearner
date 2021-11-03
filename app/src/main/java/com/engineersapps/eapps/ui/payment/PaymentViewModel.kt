@@ -148,7 +148,7 @@ class PaymentViewModel @Inject constructor(private val application: Application,
 //        }
 //    }
 
-    fun createOrder(createOrderBody: CreateOrderBody) {
+    private fun createOrder(createOrderBody: CreateOrderBody) {
         if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()

@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.engineersapps.eapps.BR
@@ -140,7 +139,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        viewModel.packagePrice.observe(viewLifecycleOwner, Observer {
+        viewModel.packagePrice.observe(viewLifecycleOwner, {
             val promoDiscount = (it * viewModel.promoDiscountPercentage)/100
             viewModel.promoDiscount.postValue(promoDiscount)
 
@@ -148,7 +147,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             viewModel.profileDiscount.postValue(profileDiscount)
         })
 
-        viewModel.profileDiscount.observe(viewLifecycleOwner, Observer {
+        viewModel.profileDiscount.observe(viewLifecycleOwner, {
             //val cityDiscount = viewModel.cityDiscount.value ?: 0
             val promoDiscount = viewModel.promoDiscount.value ?: 0
             val totalDiscount = promoDiscount + it //+ cityDiscount
@@ -162,20 +161,20 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 //            viewModel.totalDiscount.postValue(totalDiscount)
 //        })
 
-        viewModel.promoDiscount.observe(viewLifecycleOwner, Observer {
+        viewModel.promoDiscount.observe(viewLifecycleOwner, {
             val profileDiscount = viewModel.profileDiscount.value ?: 0
             //val cityDiscount = viewModel.cityDiscount.value ?: 0
             val totalDiscount = profileDiscount + it //+ cityDiscount
             viewModel.totalDiscount.postValue(totalDiscount)
         })
 
-        viewModel.totalDiscount.observe(viewLifecycleOwner, Observer {
+        viewModel.totalDiscount.observe(viewLifecycleOwner, {
             val totalDiscount = it ?: 0
             val selectedPackagePrice = viewModel.packagePrice.value ?: 0
             viewModel.amount.postValue(selectedPackagePrice - totalDiscount)
         })
 
-        viewModel.coursePurchaseSuccess.observe(viewLifecycleOwner, Observer { isSuccess ->
+        viewModel.coursePurchaseSuccess.observe(viewLifecycleOwner, { isSuccess ->
             isSuccess?.let {
                 if (it) {
                     preferencesHelper.pendingCoursePurchase = null
@@ -188,7 +187,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             }
         })
 
-        viewModel.salesInvoice.observe(viewLifecycleOwner, Observer { invoice ->
+        viewModel.salesInvoice.observe(viewLifecycleOwner, { invoice ->
             invoice?.let {
                 preferencesHelper.pendingCoursePurchase = null
                 hideKeyboard()
@@ -198,7 +197,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             }
         })
 
-        viewModel.isValidPromoCode.observe(viewLifecycleOwner, Observer {
+        viewModel.isValidPromoCode.observe(viewLifecycleOwner, {
             it?.let { isValid ->
                 if (isValid) {
                     showSuccessToast(requireContext(), "Discount from code is applied")
@@ -209,13 +208,13 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             }
         })
 
-        viewModel.promoCodeText.observe(viewLifecycleOwner, Observer { code ->
+        viewModel.promoCodeText.observe(viewLifecycleOwner, { code ->
             code?.let {
                 viewDataBinding.btnApply.isEnabled = it.isNotBlank()
             }
         })
 
-        viewModel.promoCode.observe(viewLifecycleOwner, Observer { promoCode ->
+        viewModel.promoCode.observe(viewLifecycleOwner, { promoCode ->
             promoCode?.let {
                 viewModel.promoDiscountPercentage = promoCode.discount ?: 0
                 val packagePrice = viewModel.packagePrice.value ?: 0
@@ -230,7 +229,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewModel.userProfileInfo.observe(
             viewLifecycleOwner,
-            androidx.lifecycle.Observer { userInfo ->
+            { userInfo ->
                 userInfo?.let {
                     userData = it
                     preferencesHelper.saveUser(it)
@@ -265,7 +264,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             navigateTo(PaymentFragmentDirections.actionPaymentFragmentToTermsNavGraph())
         }
 
-        viewModel.amount.observe(viewLifecycleOwner, Observer {
+        viewModel.amount.observe(viewLifecycleOwner, {
             it?.let {
                 if ((viewModel.profileDiscountPercentage + viewModel.promoDiscountPercentage) >= 100) {
                     if (it < 0) viewModel.amount.postValue(0)
@@ -413,7 +412,9 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             viewModel.packagePrice.value, response.amount.toDouble().toInt(), courseDuration, args.remainDays
         )
 
-        preferencesHelper.pendingCoursePurchase = MyCoursePurchasePayload(createOrderBody, coursePaymentRequest)
+        if (!checkNetworkStatus(false)) {
+            preferencesHelper.pendingCoursePurchase = MyCoursePurchasePayload(createOrderBody, coursePaymentRequest)
+        }
 
         viewModel.purchaseCourse(preferencesHelper, createOrderBody, coursePaymentRequest)
     }
@@ -429,8 +430,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
     private fun callPayment() {
         val amount = viewModel.amount.value?.toDouble() ?: return
-        //val sslCommerzInitialization = SSLCommerzInitialization ("testbox","qwerty",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.TESTBOX)
-        val sslCommerzInitialization = SSLCommerzInitialization ("engineersappslive","61149E9C3398383671",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.LIVE)
+        val sslCommerzInitialization = SSLCommerzInitialization ("testbox","qwerty",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.TESTBOX)
+        //val sslCommerzInitialization = SSLCommerzInitialization ("engineersappslive","61149E9C3398383671",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.LIVE)
         IntegrateSSLCommerz
             .getInstance(requireContext())
             .addSSLCommerzInitialization(sslCommerzInitialization)
