@@ -22,8 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        android:versionCode="23"
-        android:versionName="1.1.3"
+        android:versionCode="24"
+        android:versionName="1.1.4"
         tools:ignore="AllowBackup"
         tools:targetApi="m">
         <activity
