@@ -458,6 +458,8 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             webSettings.allowFileAccessFromFileURLs = true
             webSettings.allowUniversalAccessFromFileURLs = true
+            webSettings.allowFileAccess = true
+            webSettings.allowContentAccess = true
         }
 
         webSettings.builtInZoomControls = true
@@ -1141,8 +1143,10 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
                 if (it.contains("player")) videoFileName = it
             }
 
-            if (File("$videoFolderPath/$middleFolderName/$videoFileName").exists()) {
-                val animationUrl = "file:///$videoFolderPath/$middleFolderName/$videoFileName"
+            val animationFilePath = "$videoFolderPath/$middleFolderName/$videoFileName"
+            val videoFile = File(animationFilePath)
+            if (videoFile.exists()) {
+                val animationUrl = "file:///$animationFilePath"
                 if (animationUrl == viewModel.webViewPlayerUrl) {
                     viewDataBinding.webViewPlayer.onResume()
                 } else {

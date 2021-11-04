@@ -26,6 +26,7 @@
         <entry key="app/src/main/res/layout/fragment_video_list.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_video_play.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/list_item_common.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/list_item_course.xml" value="0.3548717948717949" />
       </map>
     </option>
   </component>

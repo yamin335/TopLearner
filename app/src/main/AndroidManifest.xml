@@ -25,6 +25,7 @@
         android:versionCode="24"
         android:versionName="1.1.4"
         tools:ignore="AllowBackup"
+        android:requestLegacyExternalStorage="true"
         tools:targetApi="m">
         <activity
             android:name=".ui.AppUpdateCheckingActivity"
