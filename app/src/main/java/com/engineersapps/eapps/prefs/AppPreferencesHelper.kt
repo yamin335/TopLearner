@@ -11,7 +11,7 @@ import com.engineersapps.eapps.api.TokenInformation
 import com.engineersapps.eapps.di.PreferenceInfo
 import com.engineersapps.eapps.models.home.PaidBook
 import com.engineersapps.eapps.models.registration.InquiryAccount
-import com.engineersapps.eapps.models.transactions.MyCoursePurchasePayload
+import com.engineersapps.eapps.models.transactions.CreateOrderBody
 import com.engineersapps.eapps.worker.TokenRefreshWorker
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -58,11 +58,11 @@ class AppPreferencesHelper @Inject constructor(
 
     override var accessTokenExpiresIn by LongPreference(prefs, PREF_KEY_ACCESS_TOKEN_EXPIRES_IN, 0)
 
-    override var pendingCoursePurchase: MyCoursePurchasePayload?
+    override var pendingCoursePurchase: CreateOrderBody?
         get() {
             val pendingPurchase = prefs.value.getString(KEY_PENDING_COURSE_PURCHASE, null)
             return pendingPurchase?.let {
-                Gson().fromJson(pendingPurchase, MyCoursePurchasePayload::class.java)
+                Gson().fromJson(pendingPurchase, CreateOrderBody::class.java)
             }
         }
         set(value) {

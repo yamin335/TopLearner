@@ -9,12 +9,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.room.Transaction
 import com.engineersapps.eapps.api.*
 import com.engineersapps.eapps.local_db.dao.*
-import com.engineersapps.eapps.models.payment.CoursePaymentRequest
 import com.engineersapps.eapps.models.registration.AcademicClass
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.registration.UserRegistrationData
 import com.engineersapps.eapps.models.transactions.CreateOrderBody
-import com.engineersapps.eapps.models.transactions.MyCoursePurchasePayload
 import com.engineersapps.eapps.prefs.PreferencesHelper
 import com.engineersapps.eapps.repos.RegistrationRepository
 import com.engineersapps.eapps.repos.TransactionRepository
@@ -37,6 +35,10 @@ class MainActivityViewModel @Inject constructor(
     private val academicClassDao: AcademicClassDao,
     private val historyDao: HistoryDao
 ) : BaseViewModel(application) {
+
+    val dismissClassSelectionDialog: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
 
     val showHideBottomNavBar: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
@@ -158,6 +160,7 @@ class MainActivityViewModel @Inject constructor(
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
                 profileUpdateResponse.postValue(null)
+                dismissClassSelectionDialog.postValue(true)
             }
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
@@ -170,11 +173,13 @@ class MainActivityViewModel @Inject constructor(
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
                         profileUpdateResponse.postValue(null)
+                        dismissClassSelectionDialog.postValue(true)
                     }
                     is ApiErrorResponse -> {
                         checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
                         profileUpdateResponse.postValue(null)
+                        dismissClassSelectionDialog.postValue(true)
                     }
                 }
             }
@@ -202,12 +207,13 @@ class MainActivityViewModel @Inject constructor(
         return task
     }
 
-    fun createOrder(createOrderBody: CreateOrderBody) {
+    fun createOrder(preferencesHelper: PreferencesHelper, createOrderBody: CreateOrderBody) {
         if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
                 toastError.postValue(AppConstants.serverConnectionErrorMessage)
+                preferencesHelper.pendingCoursePurchase = createOrderBody
             }
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
@@ -219,49 +225,78 @@ class MainActivityViewModel @Inject constructor(
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                        preferencesHelper.pendingCoursePurchase = createOrderBody
                     }
                     is ApiErrorResponse -> {
                         checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
+                        preferencesHelper.pendingCoursePurchase = createOrderBody
                     }
                 }
             }
         }
     }
 
-    fun purchaseCourse(preferencesHelper: PreferencesHelper, createOrderBody: CreateOrderBody?,
-                       coursePaymentRequest: CoursePaymentRequest) {
-        if (checkNetworkStatus(true)) {
-            val handler = CoroutineExceptionHandler { _, exception ->
-                exception.printStackTrace()
-                apiCallStatus.postValue(ApiCallStatus.ERROR)
-                toastError.postValue(AppConstants.serverConnectionErrorMessage)
-            }
+//    fun createOrder(createOrderBody: CreateOrderBody) {
+//        if (checkNetworkStatus(true)) {
+//            val handler = CoroutineExceptionHandler { _, exception ->
+//                exception.printStackTrace()
+//                apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+//            }
+//
+//            apiCallStatus.postValue(ApiCallStatus.LOADING)
+//            viewModelScope.launch(handler) {
+//                when (val apiResponse = ApiResponse.create(transactionRepository.createOrderRepo(createOrderBody))) {
+//                    is ApiSuccessResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+//                        isPendingCoursePurchaseSuccess.postValue(true)
+//                    }
+//                    is ApiEmptyResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+//                    }
+//                    is ApiErrorResponse -> {
+//                        checkForValidSession(apiResponse.errorMessage)
+//                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-            apiCallStatus.postValue(ApiCallStatus.LOADING)
-            viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(transactionRepository.purchaseCourseRepo(coursePaymentRequest))) {
-                    is ApiSuccessResponse -> {
-                        if (createOrderBody == null) {
-                            apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                            isPendingCoursePurchaseSuccess.postValue(true)
-                        }
-                        createOrderBody?.let {
-                            preferencesHelper.pendingCoursePurchase?.let { pendingPurchase ->
-                                preferencesHelper.pendingCoursePurchase = MyCoursePurchasePayload(pendingPurchase.createOrderBody, null)
-                            }
-                            createOrder(it)
-                        }
-                    }
-                    is ApiEmptyResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
-                    }
-                    is ApiErrorResponse -> {
-                        checkForValidSession(apiResponse.errorMessage)
-                        apiCallStatus.postValue(ApiCallStatus.ERROR)
-                    }
-                }
-            }
-        }
-    }
+//    fun purchaseCourse(preferencesHelper: PreferencesHelper, createOrderBody: CreateOrderBody?,
+//                       coursePaymentRequest: CoursePaymentRequest) {
+//        if (checkNetworkStatus(true)) {
+//            val handler = CoroutineExceptionHandler { _, exception ->
+//                exception.printStackTrace()
+//                apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+//            }
+//
+//            apiCallStatus.postValue(ApiCallStatus.LOADING)
+//            viewModelScope.launch(handler) {
+//                when (val apiResponse = ApiResponse.create(transactionRepository.purchaseCourseRepo(coursePaymentRequest))) {
+//                    is ApiSuccessResponse -> {
+//                        if (createOrderBody == null) {
+//                            apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+//                            isPendingCoursePurchaseSuccess.postValue(true)
+//                        }
+//                        createOrderBody?.let {
+//                            preferencesHelper.pendingCoursePurchase?.let { pendingPurchase ->
+//                                preferencesHelper.pendingCoursePurchase = MyCoursePurchasePayload(pendingPurchase.createOrderBody, null)
+//                            }
+//                            createOrder(it)
+//                        }
+//                    }
+//                    is ApiEmptyResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+//                    }
+//                    is ApiErrorResponse -> {
+//                        checkForValidSession(apiResponse.errorMessage)
+//                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

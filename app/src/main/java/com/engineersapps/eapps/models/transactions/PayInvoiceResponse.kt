@@ -1,6 +1,5 @@
 package com.engineersapps.eapps.models.transactions
 
-import com.engineersapps.eapps.models.payment.CoursePaymentRequest
 import java.io.Serializable
 
 data class PayInvoiceResponse(val code: Int?, val data: PayInvoiceData?, val msg: String?)
@@ -28,6 +27,7 @@ data class CreateOrderBody(var StudentID: Int = 0, var StudentMobile: String = "
                            var StudentName: String = "", var bookname: String = "",
                            var TransactionID: String = "", var coursename: String = "",
                            var bookthumb: String = "", var promo_code: String = "",
-                           var PartnerID: Int = 0, val duration: Int? = 0): Serializable
-
-data class MyCoursePurchasePayload(val createOrderBody: CreateOrderBody?, val coursePaymentRequest: CoursePaymentRequest?): Serializable
+                           var PartnerID: Int = 0, val duration: Int? = 0,
+                           val course_id: Int?, val total_amount: Int?,
+                           val paid_amount: Int?,
+                           val remaindays: Int?): Serializable

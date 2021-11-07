@@ -22,8 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        android:versionCode="24"
-        android:versionName="1.1.4"
+        android:versionCode="26"
+        android:versionName="1.1.6"
         tools:ignore="AllowBackup"
         android:requestLegacyExternalStorage="true"
         tools:targetApi="m">

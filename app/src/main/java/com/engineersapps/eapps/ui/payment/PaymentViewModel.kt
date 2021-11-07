@@ -4,11 +4,9 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.engineersapps.eapps.api.*
-import com.engineersapps.eapps.models.payment.CoursePaymentRequest
 import com.engineersapps.eapps.models.payment.PromoCode
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.transactions.CreateOrderBody
-import com.engineersapps.eapps.models.transactions.MyCoursePurchasePayload
 import com.engineersapps.eapps.models.transactions.SalesInvoice
 import com.engineersapps.eapps.prefs.PreferencesHelper
 import com.engineersapps.eapps.repos.RegistrationRepository
@@ -148,12 +146,13 @@ class PaymentViewModel @Inject constructor(private val application: Application,
 //        }
 //    }
 
-    private fun createOrder(createOrderBody: CreateOrderBody) {
+    fun createOrder(preferencesHelper: PreferencesHelper, createOrderBody: CreateOrderBody) {
         if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
                 toastError.postValue(serverConnectionErrorMessage)
+                preferencesHelper.pendingCoursePurchase = createOrderBody
             }
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
@@ -165,50 +164,52 @@ class PaymentViewModel @Inject constructor(private val application: Application,
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                        preferencesHelper.pendingCoursePurchase = createOrderBody
                     }
                     is ApiErrorResponse -> {
                         checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
+                        preferencesHelper.pendingCoursePurchase = createOrderBody
                     }
                 }
             }
         }
     }
 
-    fun purchaseCourse(preferencesHelper: PreferencesHelper, createOrderBody: CreateOrderBody?, coursePaymentRequest: CoursePaymentRequest) {
-        if (checkNetworkStatus(true)) {
-            val handler = CoroutineExceptionHandler { _, exception ->
-                exception.printStackTrace()
-                apiCallStatus.postValue(ApiCallStatus.ERROR)
-                toastError.postValue(serverConnectionErrorMessage)
-            }
-
-            apiCallStatus.postValue(ApiCallStatus.LOADING)
-            viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(repository.purchaseCourseRepo(coursePaymentRequest))) {
-                    is ApiSuccessResponse -> {
-                        if (createOrderBody == null) {
-                            apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                            coursePurchaseSuccess.postValue(true)
-                        }
-                        createOrderBody?.let {
-                            preferencesHelper.pendingCoursePurchase?.let { pendingPurchase ->
-                                preferencesHelper.pendingCoursePurchase = MyCoursePurchasePayload(pendingPurchase.createOrderBody, null)
-                            }
-                            createOrder(it)
-                        }
-                    }
-                    is ApiEmptyResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
-                    }
-                    is ApiErrorResponse -> {
-                        checkForValidSession(apiResponse.errorMessage)
-                        apiCallStatus.postValue(ApiCallStatus.ERROR)
-                    }
-                }
-            }
-        }
-    }
+//    fun purchaseCourse(preferencesHelper: PreferencesHelper, createOrderBody: CreateOrderBody?, coursePaymentRequest: CoursePaymentRequest) {
+//        if (checkNetworkStatus(true)) {
+//            val handler = CoroutineExceptionHandler { _, exception ->
+//                exception.printStackTrace()
+//                apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                toastError.postValue(serverConnectionErrorMessage)
+//            }
+//
+//            apiCallStatus.postValue(ApiCallStatus.LOADING)
+//            viewModelScope.launch(handler) {
+//                when (val apiResponse = ApiResponse.create(repository.purchaseCourseRepo(coursePaymentRequest))) {
+//                    is ApiSuccessResponse -> {
+//                        if (createOrderBody == null) {
+//                            apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+//                            coursePurchaseSuccess.postValue(true)
+//                        }
+//                        createOrderBody?.let {
+//                            preferencesHelper.pendingCoursePurchase?.let { pendingPurchase ->
+//                                preferencesHelper.pendingCoursePurchase = MyCoursePurchasePayload(pendingPurchase.createOrderBody, null)
+//                            }
+//                            createOrder(it)
+//                        }
+//                    }
+//                    is ApiEmptyResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+//                    }
+//                    is ApiErrorResponse -> {
+//                        checkForValidSession(apiResponse.errorMessage)
+//                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     fun verifyPromoCode() {
         if (checkNetworkStatus(true)) {

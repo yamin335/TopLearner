@@ -70,9 +70,10 @@ class TransactionListAdapter(
 
             try {
                 val duration = item.duration ?: 0
+                val remainDays = item.remaindays ?: 0
                 val date = Calendar.getInstance()
                 date.time = paymentDate
-                date[Calendar.DATE] = date[Calendar.DATE] + duration
+                date[Calendar.DATE] = date[Calendar.DATE] + duration + remainDays
                 binding.validDate = dateFormat.format(date.time)
             } catch (e: ParseException) {
                 e.printStackTrace()

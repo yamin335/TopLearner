@@ -144,6 +144,13 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
             viewModel.updateUserProfile(userData)
         }
 
+        viewModel.dismissClassSelectionDialog.observe(this, {
+            if (it) {
+                classSelectionDialogFragment.dismiss()
+                viewModel.dismissClassSelectionDialog.postValue(false)
+            }
+        })
+
         viewModel.profileUpdateResponse.observe(this, {
             it?.let { data ->
                 data.Account?.let { account ->
@@ -249,14 +256,8 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
 
         viewModel.internetStatus.observe(this, {
             if (it) {
-                preferencesHelper.pendingCoursePurchase?.let { pendingPurchase ->
-                    if (pendingPurchase.coursePaymentRequest == null) {
-                        pendingPurchase.createOrderBody?.let { createOrderBody ->
-                            viewModel.createOrder(createOrderBody)
-                        }
-                    } else {
-                        viewModel.purchaseCourse(preferencesHelper, pendingPurchase.createOrderBody, pendingPurchase.coursePaymentRequest)
-                    }
+                preferencesHelper.pendingCoursePurchase?.let { createOrderBody ->
+                    viewModel.createOrder(preferencesHelper, createOrderBody)
                 }
             }
         })
@@ -287,7 +288,7 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
     private fun showUserClassSelectionDialog(classList: List<AcademicClass>) {
         if (classList.isNotEmpty() && !classSelectionDialogFragment.isVisible && !classSelectionDialogFragment.isAdded) {
             classSelectionDialogFragment.submitClassData(classList)
-            classSelectionDialogFragment.isCancelable = false
+            classSelectionDialogFragment.isCancelable = true
             classSelectionDialogFragment.show(supportFragmentManager, "#ClassSelectionDialogFragment")
         }
     }

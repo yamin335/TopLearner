@@ -11,10 +11,8 @@ import androidx.navigation.fragment.navArgs
 import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.PaymentFragmentBinding
-import com.engineersapps.eapps.models.payment.CoursePaymentRequest
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.transactions.CreateOrderBody
-import com.engineersapps.eapps.models.transactions.MyCoursePurchasePayload
 import com.engineersapps.eapps.ui.MyCourseTabSelection
 import com.engineersapps.eapps.ui.bkash.BKashDialogFragment
 import com.engineersapps.eapps.ui.common.BaseFragment
@@ -404,28 +402,37 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
             "$firstName $lastName", args.bookName ?: "", response.tranId ?: "N/A",
             "", "", viewModel.promoCode.value?.code ?: "",
-            viewModel.promoCode.value?.partner_id ?: 0, courseDuration + args.remainDays
-        )
-
-        val coursePaymentRequest = CoursePaymentRequest(
-            userData.mobile, invoiceNumber,userData.id, args.courseId,
-            viewModel.packagePrice.value, response.amount.toDouble().toInt(), courseDuration, args.remainDays
+            viewModel.promoCode.value?.partner_id ?: 0, courseDuration, args.courseId,
+            viewModel.packagePrice.value, response.amount.toDouble().toInt(), args.remainDays
         )
 
         if (!checkNetworkStatus(false)) {
-            preferencesHelper.pendingCoursePurchase = MyCoursePurchasePayload(createOrderBody, coursePaymentRequest)
+            preferencesHelper.pendingCoursePurchase = createOrderBody
         }
 
-        viewModel.purchaseCourse(preferencesHelper, createOrderBody, coursePaymentRequest)
+        viewModel.createOrder(preferencesHelper, createOrderBody)
     }
 
     private fun callPartnerPayment() {
-        val payLoad = CoursePaymentRequest(
-            userData.mobile, invoiceNumber, userData.id, args.courseId,
-            args.coursePrice.toInt(), 0, courseDuration, args.remainDays
+
+        val firstName = userData.first_name ?: ""
+        val lastName = userData.last_name ?: ""
+
+        val promoter = viewModel.promoPartner.value
+
+        val createOrderBody = CreateOrderBody(
+            userData.id ?: 0, userData.mobile ?: "",
+            0, 0, 0,
+            0, "", promoter?.upazila ?: "", promoter?.city ?: "",
+            promoter?.UpazilaID ?: 0, promoter?.CityID ?: 0, invoiceNumber,
+            "", "", args.bookId, userData.class_id ?: 0,
+            "$firstName $lastName", args.bookName ?: "", "",
+            "", "", viewModel.promoCode.value?.code ?: "",
+            viewModel.promoCode.value?.partner_id ?: 0, courseDuration, args.courseId, viewModel.packagePrice.value,
+            0, args.remainDays
         )
 
-        viewModel.purchaseCourse(preferencesHelper, null, payLoad)
+        viewModel.createOrder(preferencesHelper, createOrderBody)
     }
 
     private fun callPayment() {
