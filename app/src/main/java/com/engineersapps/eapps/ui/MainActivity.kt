@@ -124,6 +124,11 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
+
         viewModel.showHideBottomNavBar.observe(this, {
             binding.mainContainer.showBottomNav = it
         })
@@ -184,11 +189,6 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
                 }
             }
         })
-
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_SECURE,
-            WindowManager.LayoutParams.FLAG_SECURE
-        )
 
         userData = preferencesHelper.getUser()
 

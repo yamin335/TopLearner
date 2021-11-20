@@ -613,15 +613,25 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
                         viewDataBinding.videoPlayer.visibility = View.VISIBLE
                         viewDataBinding.webViewPlayer.visibility = View.GONE
                         when {
-                            videoItem.url.isNullOrBlank() -> {
+                            videoItem.link.isNullOrBlank() -> {
+                                player?.pause()
+                                viewDataBinding.videoPlayer.visibility = View.GONE
+                                viewModel.youtubePlayerUrl = ""
+                                showWarningToast(requireContext(), getString(R.string.animation_not_found_text))
+                            }
+                            videoItem.link == "undefined" -> {
+                                player?.pause()
+                                viewDataBinding.videoPlayer.visibility = View.GONE
                                 viewModel.youtubePlayerUrl = ""
                                 showWarningToast(requireContext(), getString(R.string.animation_not_found_text))
                             }
                             isUSBPluggedIn -> {
+                                player?.pause()
+                                viewDataBinding.videoPlayer.visibility = View.GONE
                                 showErrorToast(requireContext(), "Please unplug your USB then try again!")
                             }
                             else -> {
-                                extractYoutubeVideoLink(videoItem.url)
+                                extractYoutubeVideoLink(videoItem.link)
                             }
                         }
                     } else {
@@ -686,15 +696,25 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
                         viewDataBinding.videoPlayer.visibility = View.VISIBLE
                         viewDataBinding.webViewPlayer.visibility = View.GONE
                         when {
-                            videoItem.url.isNullOrBlank() -> {
+                            videoItem.link.isNullOrBlank() -> {
+                                player?.pause()
+                                viewDataBinding.videoPlayer.visibility = View.GONE
+                                viewModel.youtubePlayerUrl = ""
+                                showWarningToast(requireContext(), getString(R.string.animation_not_found_text))
+                            }
+                            videoItem.link == "undefined" -> {
+                                player?.pause()
+                                viewDataBinding.videoPlayer.visibility = View.GONE
                                 viewModel.youtubePlayerUrl = ""
                                 showWarningToast(requireContext(), getString(R.string.animation_not_found_text))
                             }
                             isUSBPluggedIn -> {
+                                player?.pause()
+                                viewDataBinding.videoPlayer.visibility = View.GONE
                                 showErrorToast(requireContext(), "Please unplug your USB then try again!")
                             }
                             else -> {
-                                extractYoutubeVideoLink(videoItem.url)
+                                extractYoutubeVideoLink(videoItem.link)
                             }
                         }
                     } else {
