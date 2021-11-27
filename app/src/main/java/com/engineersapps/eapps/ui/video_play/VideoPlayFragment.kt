@@ -19,11 +19,13 @@ import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.VideoPlayFragmentBinding
 import com.engineersapps.eapps.ui.common.BaseFragment
 import com.engineersapps.eapps.util.FLAGS_FULLSCREEN
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 
 private const val IMMERSIVE_FLAG_TIMEOUT = 1000L
 class VideoPlayFragment : BaseFragment<VideoPlayFragmentBinding, VideoPlayViewModel>() {
@@ -41,7 +43,7 @@ class VideoPlayFragment : BaseFragment<VideoPlayFragmentBinding, VideoPlayViewMo
 
     var videoUrl = ""
 
-    private var player: SimpleExoPlayer? = null
+    private var player: ExoPlayer? = null
     private var playWhenReady = true
     private var currentWindow = 0
     private var playbackPosition: Long = 0
@@ -116,9 +118,11 @@ class VideoPlayFragment : BaseFragment<VideoPlayFragmentBinding, VideoPlayViewMo
     }
 
     private fun mediaSource(uri: Uri): MediaSource {
-        return ProgressiveMediaSource.Factory(
-            DefaultHttpDataSourceFactory("exoplayer")
-        ).createMediaSource(uri)
+        // Create a data source factory.
+        val dataSourceFactory: DataSource.Factory = DefaultHttpDataSource.Factory()
+        // Create a SmoothStreaming media source pointing to a manifest uri.
+        return ProgressiveMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(MediaItem.fromUri(uri))
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -128,7 +132,10 @@ class VideoPlayFragment : BaseFragment<VideoPlayFragmentBinding, VideoPlayViewMo
             trackSelector.buildUponParameters().setMaxVideoSizeSd()
         )
 
-        player = SimpleExoPlayer.Builder(requireContext()).setTrackSelector(trackSelector).build()
+        val builder = ExoPlayer.Builder(requireContext()).setTrackSelector(trackSelector)
+        builder.setSeekBackIncrementMs(10000)
+        builder.setSeekForwardIncrementMs(10000)
+        player = builder.build()
         viewDataBinding.videoView.player = player
 
         object : YouTubeExtractor(requireContext()) {
@@ -144,14 +151,14 @@ class VideoPlayFragment : BaseFragment<VideoPlayFragmentBinding, VideoPlayViewMo
                     e.printStackTrace()
                 }
             }
-        }.extract(videoUrl, true, true)
+        }.extract(videoUrl)
     }
 
     private fun releasePlayer() {
         player?.let {
             playWhenReady = it.playWhenReady
             playbackPosition = it.currentPosition
-            currentWindow = it.currentWindowIndex
+            currentWindow = it.currentMediaItemIndex
             it.release()
             player = null
         }

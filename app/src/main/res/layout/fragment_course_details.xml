@@ -27,8 +27,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     app:show_timeout="1000"
-                    app:fastforward_increment="2000"
-                    app:rewind_increment="2000"
                     app:controller_layout_id="@layout/custom_exo_player_control_view"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="16:9"

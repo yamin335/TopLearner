@@ -48,11 +48,11 @@ object NetworkUtils {
 
         private val networkCallback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network?) {
+            override fun onAvailable(network: Network) {
                 postValue(true)
             }
 
-            override fun onLost(network: Network?) {
+            override fun onLost(network: Network) {
                 postValue(false)
             }
         }

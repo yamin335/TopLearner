@@ -128,7 +128,7 @@ class BKashDialogFragment internal constructor(
         }
 
 //        binding.webView.loadUrl("file:///android_asset/www/checkout_120.html")
-        binding.webView.loadUrl(bkashData.bkashURL)
+        binding.webView.loadUrl(bkashData.bkashURL ?: "")
     }
 
     inner class JavaScriptWebViewInterface(context: Context) {

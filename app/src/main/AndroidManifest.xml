@@ -29,7 +29,8 @@
         tools:targetApi="m">
         <activity
             android:name=".ui.AppUpdateCheckingActivity"
-            android:theme="@style/AppUpdateActivityTheme">
+            android:theme="@style/AppUpdateActivityTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -62,7 +63,8 @@
             android:rotationAnimation="seamless"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme"
-            tools:targetApi="O">
+            tools:targetApi="O"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>

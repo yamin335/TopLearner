@@ -23,11 +23,13 @@ import com.engineersapps.eapps.models.home.Course
 import com.engineersapps.eapps.ui.common.BaseFragment
 import com.engineersapps.eapps.ui.payment.PaymentFragment
 import com.engineersapps.eapps.util.showErrorToast
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.material.chip.Chip
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,7 +48,7 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         get() = R.layout.fragment_course_details
     override val viewModel: CourseDetailsViewModel by viewModels { viewModelFactory }
 
-    private var player: SimpleExoPlayer? = null
+    private var player: ExoPlayer? = null
     private lateinit var teachersAdapter: TeachersListAdapter
     private lateinit var contentsAdapter: CourseContentListAdapter
     private lateinit var faqsAdapter: FaqListAdapter
@@ -152,7 +154,7 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         viewDataBinding.faqRecycler.itemAnimator = DefaultItemAnimator()
         viewDataBinding.faqRecycler.adapter = faqsAdapter
 
-        viewModel.allFaqList.observe(viewLifecycleOwner, Observer {
+        viewModel.allFaqList.observe(viewLifecycleOwner, {
             faqsAdapter.submitList(it)
         })
 
@@ -177,9 +179,11 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
     }
 
     private fun mediaSource(uri: Uri): MediaSource {
-        return ProgressiveMediaSource.Factory(
-            DefaultHttpDataSourceFactory("exoplayer")
-        ).createMediaSource(uri)
+        // Create a data source factory.
+        val dataSourceFactory: DataSource.Factory = DefaultHttpDataSource.Factory()
+        // Create a SmoothStreaming media source pointing to a manifest uri.
+        return ProgressiveMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(MediaItem.fromUri(uri))
     }
 
     private fun initializePlayer() {
@@ -188,7 +192,10 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         trackSelector.setParameters(
             trackSelector.buildUponParameters().setMaxVideoSizeSd()
         )
-        player = SimpleExoPlayer.Builder(requireContext()).setTrackSelector(trackSelector).build()
+        val builder = ExoPlayer.Builder(requireContext()).setTrackSelector(trackSelector)
+        builder.setSeekBackIncrementMs(10000)
+        builder.setSeekForwardIncrementMs(10000)
+        player = builder.build()
         viewDataBinding.videoView.player = player
         if (viewModel.youtubePlayerUrl.isNotBlank()) {
             playYoutubeVideo()
@@ -211,7 +218,7 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
                 viewModel.youtubePlayerUrl = ytFiles[18]?.url ?: ""
                 playYoutubeVideo()
             }
-        }.extract(videoLink, true, true)
+        }.extract(videoLink)
     }
 
     private fun playYoutubeVideo() {
@@ -229,7 +236,7 @@ class CourseDetailsFragment : BaseFragment<CourseDetailsFragmentBinding, CourseD
         player?.let {
             viewModel.playWhenReady = it.playWhenReady
             viewModel.playbackPosition = it.currentPosition
-            viewModel.currentWindow = it.currentWindowIndex
+            viewModel.currentWindow = it.currentMediaItemIndex
             it.release()
             player = null
         }

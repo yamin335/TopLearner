@@ -28,7 +28,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import androidx.activity.addCallback
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.viewModels
@@ -57,11 +56,13 @@ import com.engineersapps.eapps.util.*
 import com.engineersapps.eapps.util.AppConstants.PDF_FILE_PATH
 import com.engineersapps.eapps.util.AppConstants.downloadFolder
 import com.engineersapps.eapps.util.AppConstants.unzippedFolder
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -87,14 +88,14 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
     @Inject
     lateinit var applicationContext: Application
 
-    private val url by lazy {
-        //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).url }
+//    private val url by lazy {
+//        //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).url }
+////        "file:///android_asset/math_8_4_1_q_1_ka/MATH8_4.1Q1KA_player.html"
 //        "file:///android_asset/math_8_4_1_q_1_ka/MATH8_4.1Q1KA_player.html"
-        "file:///android_asset/math_8_4_1_q_1_ka/MATH8_4.1Q1KA_player.html"
-    }
-    private val title by lazy {
-        //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).title }
-    }
+//    }
+//    private val title by lazy {
+//        //arguments?.let { LoadWebViewFragmentArgs.fromBundle(it).title }
+//    }
 
 //    private val viewPagerPageTitles = arrayOf(if (tab4Title.isEmpty()) "অ্যানিমেশন" else tab4Title, tab1Title, tab2Title, tab3Title)
 //    private val viewPagerPageTitles = arrayOf("Video List", "Questions")
@@ -107,16 +108,16 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
     private lateinit var viewPager2PageChangeCallback: ViewPager2PageChangeCallback
 
-    private var isVideoStartedPlaying = false
+//    private var isVideoStartedPlaying = false
 
     private var expanded = false
     private lateinit var toggle: Transition
 
-    private val primaryExternalStorageAbsolutePath: String get() {
-        val externalStorageVolumes: Array<out File> =
-            ContextCompat.getExternalFilesDirs(requireContext(), null)
-        return externalStorageVolumes[0].absolutePath
-    }
+//    private val primaryExternalStorageAbsolutePath: String get() {
+//        val externalStorageVolumes: Array<out File> =
+//            ContextCompat.getExternalFilesDirs(requireContext(), null)
+//        return externalStorageVolumes[0].absolutePath
+//    }
 
 //    private lateinit var source: String
 //    private lateinit var destination: String
@@ -132,11 +133,11 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
     private var downloadingFile: File? = null
 
-    lateinit var commonMessageBottomSheetDialog: CommonMessageBottomSheetDialog
+    private lateinit var commonMessageBottomSheetDialog: CommonMessageBottomSheetDialog
 
-    var systemUiVisibility: Int = 0
+    private var systemUiVisibility: Int = 0
 
-    private var player: SimpleExoPlayer? = null
+    private var player: ExoPlayer? = null
 
     private val usbDetectionReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -305,11 +306,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
         toggle.duration = 150L
         TransitionManager.beginDelayedTransition(viewDataBinding.videoView as ViewGroup, toggle)
         if (viewModel.isPlayingYoutubeVideo) {
-            if (isUSBPluggedIn) {
-                showErrorToast(requireContext(), "Please unplug your USB then try again!")
-            } else {
-                player?.play()
-            }
+            player?.play()
             viewDataBinding.videoPlayer.visibility = View.VISIBLE
             viewDataBinding.webViewPlayer.visibility = View.GONE
         } else {
@@ -498,7 +495,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
         viewDataBinding.webViewPlayer.webChromeClient = object : WebChromeClient() {
             private var mCustomView: View? = null
             private var mCustomViewCallback: CustomViewCallback? = null
-            var mFullscreenContainer: FrameLayout? = null
+            //var mFullscreenContainer: FrameLayout? = null
             private var mOriginalOrientation = 0
             private var mOriginalSystemUiVisibility = 0
 
@@ -554,7 +551,6 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
             override fun shouldOverrideKeyEvent(view: WebView?, event: KeyEvent?): Boolean {
                 return super.shouldOverrideKeyEvent(view, event)
-                var tt = "S"
             }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -604,7 +600,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
         childFragmentManager.setFragmentResultListener(
             "playVideo",
-            viewLifecycleOwner, FragmentResultListener { key, bundle ->
+            viewLifecycleOwner, FragmentResultListener { _, bundle ->
                 val videoItem = bundle.getSerializable("VideoItem") as ChapterField?
                 videoItem?.let {
                     if (videoItem.video_filename.isNullOrBlank()) {
@@ -686,7 +682,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
         childFragmentManager.setFragmentResultListener(
             "downloadVideo",
-            viewLifecycleOwner, FragmentResultListener { key, bundle ->
+            viewLifecycleOwner, FragmentResultListener { _, bundle ->
                 val videoItem = bundle.getSerializable("VideoItem") as ChapterField?
                 videoItem?.let {
 
@@ -815,7 +811,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
         childFragmentManager.setFragmentResultListener(
             "downloadPDF",
-            viewLifecycleOwner, FragmentResultListener { key, bundle ->
+            viewLifecycleOwner, FragmentResultListener { _, bundle ->
                 val fragment = bundle.getString("fragment") ?: return@FragmentResultListener
                 val url = bundle.getString("url") ?: return@FragmentResultListener
                 val filepath = FileUtils.getLocalStorageFilePath(
@@ -976,29 +972,45 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
 
     @SuppressLint("StaticFieldLeak")
     private fun extractYoutubeVideoLink(videoLink: String) {
-        if (isUSBPluggedIn) {
-            showErrorToast(requireContext(), "Please unplug your USB then try again!")
+        if (viewModel.youtubeVideoLink == videoLink && viewModel.youtubePlayerUrl.isNotBlank() && player != null) {
+            player?.play()
         } else {
-            if (viewModel.youtubeVideoLink == videoLink && viewModel.youtubePlayerUrl.isNotBlank() && player != null) {
-                player?.play()
-            } else {
-                viewModel.youtubeVideoLink = videoLink
-                object : YouTubeExtractor(requireContext()) {
-                    override fun onExtractionComplete(ytFiles: SparseArray<YtFile>?, vMeta: VideoMeta?) {
-                        if (ytFiles == null) return
-                        viewModel.youtubePlayerUrl = ytFiles[18]?.url ?: ""
-                        playYoutubeVideo()
-                    }
-                }.extract(videoLink, true, true)
-            }
+            viewModel.youtubeVideoLink = videoLink
+            object : YouTubeExtractor(requireContext()) {
+                public override fun onExtractionComplete(
+                    ytFiles: SparseArray<YtFile>?,
+                    vMeta: VideoMeta?
+                ) {
+                    if (ytFiles == null) return
+                    val url = ytFiles[18]?.url ?: ""
+                    playYoutubeVideo(url)
+                }
+            }.extract(videoLink)
         }
     }
 
-    private fun playYoutubeVideo() {
-        if (isUSBPluggedIn) {
-            showErrorToast(requireContext(), "Please unplug your USB then try again!")
+    private fun playYoutubeVideo(url: String) {
+        if (viewModel.youtubePlayerUrl.isNotBlank() && url.isNotBlank() && viewModel.youtubePlayerUrl != url) {
+            try {
+                player?.let {
+                    it.stop()
+                    it.release()
+                    player = null
+                    viewModel.currentWindow = 0
+                    viewModel.playbackPosition = 0
+                }
+                initPlayer()
+                viewModel.youtubePlayerUrl = url
+                player?.addMediaSource(mediaSource(Uri.parse(viewModel.youtubePlayerUrl)))
+                player?.playWhenReady = true
+                player?.seekTo(viewModel.currentWindow, viewModel.playbackPosition)
+                player?.prepare()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         } else {
             try {
+                viewModel.youtubePlayerUrl = url
                 player?.addMediaSource(mediaSource(Uri.parse(viewModel.youtubePlayerUrl)))
                 player?.playWhenReady = viewModel.playWhenReady
                 player?.seekTo(viewModel.currentWindow, viewModel.playbackPosition)
@@ -1010,25 +1022,30 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
     }
 
     private fun mediaSource(uri: Uri): MediaSource {
-        return ProgressiveMediaSource.Factory(
-            DefaultHttpDataSourceFactory("exoplayer")
-        ).createMediaSource(uri)
+        // Create a data source factory.
+        val dataSourceFactory: DataSource.Factory = DefaultHttpDataSource.Factory()
+        // Create a SmoothStreaming media source pointing to a manifest uri.
+        return ProgressiveMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(MediaItem.fromUri(uri))
     }
 
-    private fun initializePlayer() {
+    private fun initPlayer() {
         val trackSelector = DefaultTrackSelector(requireContext())
         trackSelector.setParameters(
             trackSelector.buildUponParameters().setMaxVideoSizeSd()
         )
 
-        player = SimpleExoPlayer.Builder(requireContext()).setTrackSelector(trackSelector).build()
+        val builder = ExoPlayer.Builder(requireContext()).setTrackSelector(trackSelector)
+        builder.setSeekBackIncrementMs(10000)
+        builder.setSeekForwardIncrementMs(10000)
+        player = builder.build()
         viewDataBinding.videoPlayer.player = player
+    }
+
+    private fun initializePlayer() {
+        initPlayer()
         if (viewModel.isPlayingYoutubeVideo && viewModel.youtubePlayerUrl.isNotBlank()) {
-            if (isUSBPluggedIn)  {
-                showErrorToast(requireContext(), "Please unplug your USB then try again!")
-            } else {
-                playYoutubeVideo()
-            }
+            playYoutubeVideo("")
         }
     }
 
@@ -1036,7 +1053,7 @@ class LoadWebViewFragment: BaseFragment<FragmentLoadWebViewBinding, LoadWebViewV
         player?.let {
             viewModel.playWhenReady = it.playWhenReady
             viewModel.playbackPosition = it.currentPosition
-            viewModel.currentWindow = it.currentWindowIndex
+            viewModel.currentWindow = it.currentMediaItemIndex
             it.release()
             player = null
         }

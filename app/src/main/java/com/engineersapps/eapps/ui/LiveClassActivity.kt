@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
-import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import at.huber.youtubeExtractor.VideoMeta
@@ -15,11 +14,13 @@ import at.huber.youtubeExtractor.YtFile
 import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.LiveClassActivityBinding
 import com.engineersapps.eapps.prefs.PreferencesHelper
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -35,14 +36,14 @@ class LiveClassActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var preferencesHelper: PreferencesHelper
 
-    private val viewModel: LiveClassActivityViewModel by viewModels {
-        // Get the ViewModel.
-        viewModelFactory
-    }
+//    private val viewModel: LiveClassActivityViewModel by viewModels {
+//        // Get the ViewModel.
+//        viewModelFactory
+//    }
 
     lateinit var binding: LiveClassActivityBinding
 
-    private var player: SimpleExoPlayer? = null
+    private var player: ExoPlayer? = null
     private var playWhenReady = true
     private var currentWindow = 0
     private var playbackPosition: Long = 0
@@ -71,7 +72,7 @@ class LiveClassActivity : DaggerAppCompatActivity() {
             trackSelector.buildUponParameters().setMaxVideoSizeSd()
         )
 
-        player = SimpleExoPlayer.Builder(this).setTrackSelector(trackSelector).build()
+        player = ExoPlayer.Builder(this).setTrackSelector(trackSelector).build()
         binding.videoView.player = player
 
         object : YouTubeExtractor(this) {
@@ -90,20 +91,22 @@ class LiveClassActivity : DaggerAppCompatActivity() {
                     e.printStackTrace()
                 }
             }
-        }.extract(videoUrl, true, true)
+        }.extract(videoUrl)
     }
 
     private fun mediaSource(uri: Uri): MediaSource {
-        return ProgressiveMediaSource.Factory(
-            DefaultHttpDataSourceFactory("exoplayer")
-        ).createMediaSource(uri)
+        // Create a data source factory.
+        val dataSourceFactory: DataSource.Factory = DefaultHttpDataSource.Factory()
+        // Create a SmoothStreaming media source pointing to a manifest uri.
+        return ProgressiveMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(MediaItem.fromUri(uri))
     }
 
     private fun releasePlayer() {
         player?.let {
             playWhenReady = it.playWhenReady
             playbackPosition = it.currentPosition
-            currentWindow = it.currentWindowIndex
+            currentWindow = it.currentMediaItemIndex
             it.release()
             player = null
         }
