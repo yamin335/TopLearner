@@ -282,7 +282,6 @@ class MoreFragment : BaseFragment<MoreFragmentBinding, MoreViewModel>() {
     }
 
     private fun init(user: InquiryAccount) {
-
         if (user.customer_type_id == 2) {
             Glide.with(requireContext())
                 .load("${ApiEndPoint.PARTNER_PROFILE_IMAGE}/${user.profilePic}")

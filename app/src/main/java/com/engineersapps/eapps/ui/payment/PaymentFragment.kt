@@ -287,7 +287,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             if (userData.customer_type_id == 2) {
                 callPartnerPayment()
             } else {
-                if ((viewModel.profileDiscountPercentage + viewModel.promoDiscountPercentage) >= 100) {
+                val totalDiscount = viewModel.profileDiscountPercentage + viewModel.promoDiscountPercentage
+                if (totalDiscount >= 100) {
                     callPartnerPayment()
                 } else {
                     callPayment()
@@ -444,12 +445,13 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             .addSSLCommerzInitialization(sslCommerzInitialization)
             .buildApiCall(object : SSLCTransactionResponseListener {
                 override fun transactionSuccess(p0: SSLCTransactionInfoModel?) {
-                    if (p0?.riskLevel == "0") {
-                        //Timber.d("Transaction Successfully completed")
-                        saveSSLPayment(p0)
-                    } else {
-                        //Timber.d("Transaction in risk.")
-                    }
+                    saveSSLPayment(p0)
+//                    if (p0?.riskLevel == "0") {
+//                        //Timber.d("Transaction Successfully completed")
+//
+//                    } else {
+//                        //Timber.d("Transaction in risk.")
+//                    }
                 }
 
                 override fun transactionFail(p0: String?) {
