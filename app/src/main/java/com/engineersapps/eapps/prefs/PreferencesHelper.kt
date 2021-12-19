@@ -5,7 +5,6 @@ import com.engineersapps.eapps.api.ProfileInfo
 import com.engineersapps.eapps.api.TokenInformation
 import com.engineersapps.eapps.models.home.PaidBook
 import com.engineersapps.eapps.models.registration.InquiryAccount
-import com.engineersapps.eapps.models.transactions.CreateOrderBody
 
 
 interface PreferencesHelper {
@@ -50,7 +49,7 @@ interface PreferencesHelper {
 
     val isAccessTokenExpired: Boolean
 
-    var pendingCoursePurchase: CreateOrderBody?
+    //var pendingCoursePurchase: CreateOrderBody?
 
     fun getAccessTokenHeader(): String
 

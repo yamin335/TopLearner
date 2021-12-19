@@ -12,8 +12,6 @@ import com.engineersapps.eapps.local_db.dao.*
 import com.engineersapps.eapps.models.registration.AcademicClass
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.registration.UserRegistrationData
-import com.engineersapps.eapps.models.transactions.CreateOrderBody
-import com.engineersapps.eapps.prefs.PreferencesHelper
 import com.engineersapps.eapps.repos.RegistrationRepository
 import com.engineersapps.eapps.repos.TransactionRepository
 import com.engineersapps.eapps.ui.common.BaseViewModel
@@ -44,9 +42,9 @@ class MainActivityViewModel @Inject constructor(
         MutableLiveData<Boolean>()
     }
 
-    val isPendingCoursePurchaseSuccess: MutableLiveData<Boolean?> by lazy {
-        MutableLiveData<Boolean?>()
-    }
+//    val isPendingCoursePurchaseSuccess: MutableLiveData<Boolean?> by lazy {
+//        MutableLiveData<Boolean?>()
+//    }
 
     val internetStatus: ConnectivityLiveData by lazy {
         ConnectivityLiveData(application)
@@ -207,35 +205,35 @@ class MainActivityViewModel @Inject constructor(
         return task
     }
 
-    fun createOrder(preferencesHelper: PreferencesHelper, createOrderBody: CreateOrderBody) {
-        if (checkNetworkStatus(true)) {
-            val handler = CoroutineExceptionHandler { _, exception ->
-                exception.printStackTrace()
-                apiCallStatus.postValue(ApiCallStatus.ERROR)
-                toastError.postValue(AppConstants.serverConnectionErrorMessage)
-                preferencesHelper.pendingCoursePurchase = createOrderBody
-            }
-
-            apiCallStatus.postValue(ApiCallStatus.LOADING)
-            viewModelScope.launch(handler) {
-                when (val apiResponse = ApiResponse.create(transactionRepository.createOrderRepo(createOrderBody))) {
-                    is ApiSuccessResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
-                        isPendingCoursePurchaseSuccess.postValue(true)
-                    }
-                    is ApiEmptyResponse -> {
-                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
-                        preferencesHelper.pendingCoursePurchase = createOrderBody
-                    }
-                    is ApiErrorResponse -> {
-                        checkForValidSession(apiResponse.errorMessage)
-                        apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        preferencesHelper.pendingCoursePurchase = createOrderBody
-                    }
-                }
-            }
-        }
-    }
+//    fun createOrder(preferencesHelper: PreferencesHelper, createOrderBody: CreateOrderBody) {
+//        if (checkNetworkStatus(true)) {
+//            val handler = CoroutineExceptionHandler { _, exception ->
+//                exception.printStackTrace()
+//                apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                toastError.postValue(AppConstants.serverConnectionErrorMessage)
+//                preferencesHelper.pendingCoursePurchase = createOrderBody
+//            }
+//
+//            apiCallStatus.postValue(ApiCallStatus.LOADING)
+//            viewModelScope.launch(handler) {
+//                when (val apiResponse = ApiResponse.create(transactionRepository.createOrderRepo(createOrderBody))) {
+//                    is ApiSuccessResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+//                        isPendingCoursePurchaseSuccess.postValue(true)
+//                    }
+//                    is ApiEmptyResponse -> {
+//                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+//                        preferencesHelper.pendingCoursePurchase = createOrderBody
+//                    }
+//                    is ApiErrorResponse -> {
+//                        checkForValidSession(apiResponse.errorMessage)
+//                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+//                        preferencesHelper.pendingCoursePurchase = createOrderBody
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 //    fun createOrder(createOrderBody: CreateOrderBody) {
 //        if (checkNetworkStatus(true)) {

@@ -1,6 +1,5 @@
 package com.engineersapps.eapps.api
 
-import com.google.gson.JsonObject
 import com.engineersapps.eapps.api.Api.ContentType
 import com.engineersapps.eapps.models.AdSliderResponse
 import com.engineersapps.eapps.models.LiveClassScheduleResponse
@@ -19,10 +18,8 @@ import com.engineersapps.eapps.models.payment.PromoCodeResponse
 import com.engineersapps.eapps.models.payment_account_models.AddCardOrBankResponse
 import com.engineersapps.eapps.models.payment_account_models.BankOrCardListResponse
 import com.engineersapps.eapps.models.registration.*
-import com.engineersapps.eapps.models.transactions.PartnerTransactionResponse
-import com.engineersapps.eapps.models.transactions.PayInvoiceResponse
-import com.engineersapps.eapps.models.transactions.PaymentStatusResponse
-import com.engineersapps.eapps.models.transactions.TransactionHistoryResponse
+import com.engineersapps.eapps.models.transactions.*
+import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -187,4 +184,9 @@ interface ApiService {
         @Header("Authorization") token: String
     ): Response<MyAccountListResponse>
 
+    @Headers(ContentType)
+    @POST(ApiEndPoint.MAKE_PAYMENT)
+    suspend fun getPaymentUrl(
+        @Body jsonObject: String
+    ): Response<PaymentStoreResponse>
 }

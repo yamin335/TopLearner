@@ -254,20 +254,20 @@ class MainActivity : DaggerAppCompatActivity(), LogoutHandlerCallback,
             }
         })
 
-        viewModel.internetStatus.observe(this, {
-            if (it) {
-                preferencesHelper.pendingCoursePurchase?.let { createOrderBody ->
-                    viewModel.createOrder(preferencesHelper, createOrderBody)
-                }
-            }
-        })
-
-        viewModel.isPendingCoursePurchaseSuccess.observe(this, {
-            if (it == true) {
-                preferencesHelper.pendingCoursePurchase = null
-                viewModel.isPendingCoursePurchaseSuccess.postValue(null)
-            }
-        })
+//        viewModel.internetStatus.observe(this, {
+//            if (it) {
+//                preferencesHelper.pendingCoursePurchase?.let { createOrderBody ->
+//                    viewModel.createOrder(preferencesHelper, createOrderBody)
+//                }
+//            }
+//        })
+//
+//        viewModel.isPendingCoursePurchaseSuccess.observe(this, {
+//            if (it == true) {
+//                preferencesHelper.pendingCoursePurchase = null
+//                viewModel.isPendingCoursePurchaseSuccess.postValue(null)
+//            }
+//        })
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             hideKeyboard()

@@ -23,6 +23,7 @@ import com.engineersapps.eapps.ui.notice_board.NoticeBoardViewModel
 import com.engineersapps.eapps.ui.offer.OfferViewModel
 import com.engineersapps.eapps.ui.otp_signin.OtpSignInViewModel
 import com.engineersapps.eapps.ui.payment.PaymentViewModel
+import com.engineersapps.eapps.ui.payment.SSLPaymentViewModel
 import com.engineersapps.eapps.ui.pin_number.PinNumberViewModel
 import com.engineersapps.eapps.ui.profile_signin.ClassEditViewModel
 import com.engineersapps.eapps.ui.profile_signin.DistrictEditViewModel
@@ -236,4 +237,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(VideoPlayViewModel::class)
     abstract fun bindVideoPlayViewModel(viewModel: VideoPlayViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SSLPaymentViewModel::class)
+    abstract fun bindSSLPaymentViewModel(viewModel: SSLPaymentViewModel): ViewModel
 }

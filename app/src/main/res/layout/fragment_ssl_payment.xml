@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data class="OfferFragmentBinding">
+    <data class="SSLPaymentFragmentBinding">
         <variable
             name="viewModel"
-            type="com.engineersapps.eapps.ui.offer.OfferViewModel" />
+            type="com.engineersapps.eapps.ui.payment.SSLPaymentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,53 +32,43 @@
                 android:textAlignment="center"
                 app:contentInsetStartWithNavigation="0dp"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:title="Engineers"
+                app:title="Payment"
                 app:titleTextColor="@color/accent" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvOfferList"
+        <WebView
+            android:id="@+id/webView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:paddingBottom="32dp"
-            android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appbar"
-            tools:listitem="@layout/list_item_offer" />
+            tools:listitem="@layout/item_chapter_list" />
 
-        <TextView
-            android:id="@+id/emptyView"
+        <LinearLayout
+            android:id="@+id/progressView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="No Offer Found"
-            android:textAlignment="center"
-            android:textSize="24sp"
+            android:layout_height="0dp"
+            android:background="#80FFFFFF"
+            android:clickable="true"
+            android:elevation="1dp"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <RelativeLayout
-            android:id="@+id/relativeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/appbar">
+            app:layout_constraintTop_toBottomOf="@+id/appbar"
+            app:showLoader="@{viewModel.apiCallStatus}">
 
             <ProgressBar
                 android:id="@+id/loader"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="-6dp"
-                android:indeterminate="true"
-                android:indeterminateTint="@color/themeButtonColor"
-                app:showLoader="@{viewModel.apiCallStatus}" />
-        </RelativeLayout>
+                android:elevation="2dp" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

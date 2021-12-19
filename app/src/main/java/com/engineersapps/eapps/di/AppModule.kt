@@ -55,6 +55,12 @@ class AppModule {
         return db.academicClassDao()
     }
 
+    @Singleton
+    @Provides
+    fun providePendingMyCourseDao(db: AppDatabase): PendingMyCourseDao {
+        return db.pendingMyCourseDao()
+    }
+
     //    @Singleton
     //    @Provides
     //    fun providePicasso(app: Application, okHttpClient: OkHttpClient) = Picasso.Builder(app)

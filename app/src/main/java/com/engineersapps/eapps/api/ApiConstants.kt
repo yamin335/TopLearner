@@ -153,6 +153,7 @@ object ApiEndPoint {
     const val ADD_CARD = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_CARD}"
     const val MY_ACCOUNT_LIST = "/$AUTH_REPO/$API_VERSION/${DIRECTORY_PROFILE}/accounts"
     const val BKASH_PAY = "/$API_VERSION/$SALES_REPO/bkashpay"
+    const val MAKE_PAYMENT = "/$API_VERSION/$SALES_REPO/makepayment"
 }
 
 object ResponseCodes {

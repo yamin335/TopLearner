@@ -1512,6 +1512,11 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_paymentFragment_to_ssl_nav">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_paymentFragment_to_terms_nav_graph">
                               <value>
                                 <LayoutPositions />
@@ -1522,13 +1527,25 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="ssl_nav_graph">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="195" />
+                            <option name="y" value="256" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="terms_nav_graph">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="231" />
-                            <option name="y" value="104" />
+                            <option name="x" value="196" />
+                            <option name="y" value="23" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -1573,6 +1590,28 @@
                           <Point>
                             <option name="x" value="12" />
                             <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </LayoutPositions>
+          </value>
+        </entry>
+        <entry key="ssl_nav_graph.xml">
+          <value>
+            <LayoutPositions>
+              <option name="myPositions">
+                <map>
+                  <entry key="SSLPaymentFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="40" />
+                            <option name="y" value="40" />
                           </Point>
                         </option>
                       </LayoutPositions>

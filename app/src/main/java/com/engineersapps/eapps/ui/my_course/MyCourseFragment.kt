@@ -7,7 +7,6 @@ import android.view.View
 import android.view.WindowManager
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.R
@@ -153,7 +152,7 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
                 val books = myCourse.books
                 if (books.isNullOrBlank()) {
                     val bookId = myCourse.book_id ?: return@MyCourseSliderAdapter
-                    viewModel.getMyCourseBookFromDB(bookId).observe(viewLifecycleOwner, Observer {
+                    viewModel.getMyCourseBookFromDB(bookId).observe(viewLifecycleOwner, {
                         val book = ClassWiseBook(it.id, it.udid,
                             it.name, it.title, it.author, it.isPaid,
                             it.book_type_id, it.price, it.status, it.logo)
@@ -164,7 +163,7 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
                 } else {
                     val ids = books.trim().removeSuffix(",").trim().split(",")
                     val bookIds = ids.map { it.toInt() }
-                    viewModel.getMyCourseBookListFromDB(bookIds).observe(viewLifecycleOwner, Observer {
+                    viewModel.getMyCourseBookListFromDB(bookIds).observe(viewLifecycleOwner, {
                         for (item in it) {
                             bookList.add(ClassWiseBook(item.id, item.udid,
                                 item.name, item.title, item.author, item.isPaid,
@@ -280,7 +279,14 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             }
         }
 
-        viewModel.allMyCourseBooksFromDB.observe(viewLifecycleOwner, Observer { books ->
+        viewModel.salesInvoice.observe(viewLifecycleOwner, { invoice ->
+            invoice?.let {
+                viewModel.getMyCourses(userData.mobile)
+                viewModel.salesInvoice.postValue(null)
+            }
+        })
+
+        viewModel.allMyCourseBooksFromDB.observe(viewLifecycleOwner, { books ->
             books?.let {
                 if (it.isNotEmpty()) {
                     allMyCourseBookIds.clear()
@@ -291,7 +297,7 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
             }
         })
 
-        viewModel.allMyCoursesFromDB.observe(viewLifecycleOwner, Observer { myCourseList ->
+        viewModel.allMyCoursesFromDB.observe(viewLifecycleOwner, { myCourseList ->
             myCourseList?.let { myCourses ->
                 val courses = ArrayList<MyCourse>()
                 for (course in myCourses) {
@@ -332,7 +338,9 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
 //                allBookList = temp as ArrayList<ClassWiseBook>
 
                 val allPaidBooksIds = ArrayList<Int?>()
+                val allCourseTransactionIds = ArrayList<String?>()
                 for (paidCourse in courses) {
+                    allCourseTransactionIds.add(paidCourse.TransactionID)
                     if (allCourseList.containsKey(paidCourse.course_id)) {
                         val books = paidCourse.books
                         if (books.isNullOrBlank()) {
@@ -356,6 +364,14 @@ class MyCourseFragment : BaseFragment<MyCourseFragmentBinding, MyCourseViewModel
 
                 viewDataBinding.emptyView.visibility = if (courses.isEmpty()) View.VISIBLE else View.GONE
                 viewDataBinding.footer.visibility = if (courses.isNotEmpty()) View.VISIBLE else View.GONE
+
+                viewModel.getPendingMyCourses().observe(viewLifecycleOwner, { pendingCourses ->
+                    pendingCourses.forEach { item ->
+                        if(item.TransactionID.isNotBlank() && allCourseTransactionIds.contains(item.TransactionID)) {
+                            viewModel.createOrder(item)
+                        }
+                    }
+                })
             }
         })
     }

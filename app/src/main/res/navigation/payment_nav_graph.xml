@@ -40,6 +40,18 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_paymentFragment_to_ssl_nav"
+            app:destination="@id/ssl_nav"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="paymentUrl"
+                app:argType="string" />
+        </action>
     </fragment>
     <include app:graph="@navigation/terms_nav_graph" />
+    <include app:graph="@navigation/ssl_nav_graph" />
 </navigation>

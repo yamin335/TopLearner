@@ -1,13 +1,13 @@
 package com.engineersapps.eapps.repos
 
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.engineersapps.eapps.api.ApiService
 import com.engineersapps.eapps.models.bkash.BKashPaymentUrlResponse
 import com.engineersapps.eapps.models.payment.CoursePaymentRequest
 import com.engineersapps.eapps.models.payment.CoursePaymentResponse
 import com.engineersapps.eapps.models.payment.PromoCodeResponse
 import com.engineersapps.eapps.models.transactions.*
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
@@ -17,6 +17,14 @@ import javax.inject.Singleton
 
 @Singleton
 class TransactionRepository @Inject constructor(@Named("auth") private val authApiService: ApiService) {
+
+    suspend fun getPaymentUrl(paymentStoreBody: PaymentStoreBody): Response<PaymentStoreResponse> {
+        val jsonObject = Gson().toJson(paymentStoreBody) ?: ""
+
+        return withContext(Dispatchers.IO) {
+            authApiService.getPaymentUrl(jsonObject)
+        }
+    }
 
     suspend fun createOrderRepo(createOrderBody: CreateOrderBody): Response<PayInvoiceResponse> {
         val jsonObject = Gson().toJson(createOrderBody) ?: ""

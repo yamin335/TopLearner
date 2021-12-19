@@ -13,16 +13,12 @@ import com.engineersapps.eapps.R
 import com.engineersapps.eapps.databinding.PaymentFragmentBinding
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.transactions.CreateOrderBody
+import com.engineersapps.eapps.models.transactions.PaymentStoreBody
 import com.engineersapps.eapps.ui.MyCourseTabSelection
 import com.engineersapps.eapps.ui.bkash.BKashDialogFragment
 import com.engineersapps.eapps.ui.common.BaseFragment
 import com.engineersapps.eapps.util.*
-import com.sslwireless.sslcommerzlibrary.model.initializer.SSLCommerzInitialization
 import com.sslwireless.sslcommerzlibrary.model.response.SSLCTransactionInfoModel
-import com.sslwireless.sslcommerzlibrary.model.util.SSLCCurrencyType
-import com.sslwireless.sslcommerzlibrary.model.util.SSLCSdkType
-import com.sslwireless.sslcommerzlibrary.view.singleton.IntegrateSSLCommerz
-import com.sslwireless.sslcommerzlibrary.viewmodel.listener.SSLCTransactionResponseListener
 import java.security.SecureRandom
 
 class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>() {
@@ -39,6 +35,8 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         var first_duration = 0
         var second_duration = 0
         var third_duration = 0
+
+        var isPaymentSuccessful = false
     }
 
     override val bindingVariable: Int
@@ -82,6 +80,14 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         super.onResume()
         viewDataBinding.spPackages.setSelection(1, true)
         viewModel.getUserProfileInfo(userData.mobile ?: "")
+
+        if (isPaymentSuccessful) {
+            isPaymentSuccessful = false
+            hideKeyboard()
+            findNavController().popBackStack()
+            showSuccessToast(requireContext(), "Payment Successful")
+            myCourseTabSelectionListener?.selectMyCourseTab()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -175,7 +181,6 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         viewModel.coursePurchaseSuccess.observe(viewLifecycleOwner, { isSuccess ->
             isSuccess?.let {
                 if (it) {
-                    preferencesHelper.pendingCoursePurchase = null
                     hideKeyboard()
                     findNavController().popBackStack()
                     showSuccessToast(requireContext(), "Payment Successful")
@@ -187,7 +192,6 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewModel.salesInvoice.observe(viewLifecycleOwner, { invoice ->
             invoice?.let {
-                preferencesHelper.pendingCoursePurchase = null
                 hideKeyboard()
                 findNavController().popBackStack()
                 showSuccessToast(requireContext(), "Payment Successful")
@@ -282,8 +286,18 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             }
         }
 
-        viewDataBinding.btnPayNow.setOnClickListener {
+        viewModel.paymentStoreUrlResponse.observe(viewLifecycleOwner, { response ->
+            response?.let {
+                if (it.status == "SUCCESS" && !it.GatewayPageURL.isNullOrBlank()) {
+                    navigateTo(PaymentFragmentDirections.actionPaymentFragmentToSslNav(it.GatewayPageURL))
+                } else {
+                    showErrorToast(requireContext(), it.failedreason ?: "Something went wrong! Please try again later.")
+                }
+                viewModel.paymentStoreUrlResponse.postValue(null)
+            }
+        })
 
+        viewDataBinding.btnPayNow.setOnClickListener {
             if (userData.customer_type_id == 2) {
                 callPartnerPayment()
             } else {
@@ -291,7 +305,21 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                 if (totalDiscount >= 100) {
                     callPartnerPayment()
                 } else {
-                    callPayment()
+                    val amount = viewModel.amount.value ?: return@setOnClickListener
+                    val firstName = userData.first_name ?: ""
+                    val lastName = userData.last_name ?: ""
+
+                    val promoter = viewModel.promoPartner.value
+                    val discount = viewModel.totalDiscount.value ?: 0
+                    val paymentStoreBody = PaymentStoreBody(userData.mobile ?: "", amount,
+                        args.courseId, "", courseDuration, userData.class_id ?: 0,
+                        userData.id ?: 0, viewModel.promoCode.value?.partner_id ?: 0,
+                        promoter?.mobile, discount, promoter?.upazila ?: "",
+                        promoter?.UpazilaID ?: 0, promoter?.CityID ?: 0,
+                        promoter?.city ?: "", "$firstName $lastName",
+                        viewModel.promoCode.value?.code ?: "", invoiceNumber)
+
+                    viewModel.getPaymentUrl(paymentStoreBody)
                 }
             }
 
@@ -407,11 +435,12 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             viewModel.packagePrice.value, response.amount.toDouble().toInt(), args.remainDays
         )
 
-        if (!checkNetworkStatus(false)) {
-            preferencesHelper.pendingCoursePurchase = createOrderBody
-        }
+//        if (!checkNetworkStatus(false)) {
+//            preferencesHelper.pendingCoursePurchase = createOrderBody
+//        }
 
-        viewModel.createOrder(preferencesHelper, createOrderBody)
+        //viewModel.addPendingMyCourse(createOrderBody)
+        viewModel.createOrder(createOrderBody)
     }
 
     private fun callPartnerPayment() {
@@ -433,88 +462,88 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
             0, args.remainDays
         )
 
-        viewModel.createOrder(preferencesHelper, createOrderBody)
+        viewModel.createOrder(createOrderBody)
     }
 
-    private fun callPayment() {
-        val amount = viewModel.amount.value?.toDouble() ?: return
-        //val sslCommerzInitialization = SSLCommerzInitialization ("testbox","qwerty",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.TESTBOX)
-        val sslCommerzInitialization = SSLCommerzInitialization ("engineersappslive","61149E9C3398383671",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.LIVE)
-        IntegrateSSLCommerz
-            .getInstance(requireContext())
-            .addSSLCommerzInitialization(sslCommerzInitialization)
-            .buildApiCall(object : SSLCTransactionResponseListener {
-                override fun transactionSuccess(p0: SSLCTransactionInfoModel?) {
-                    saveSSLPayment(p0)
-//                    if (p0?.riskLevel == "0") {
-//                        //Timber.d("Transaction Successfully completed")
-//
-//                    } else {
-//                        //Timber.d("Transaction in risk.")
-//                    }
-                }
-
-                override fun transactionFail(p0: String?) {
-                    p0?.let {
-                        showWarningToast(requireContext(), it)
-                    }
-                }
-
-                override fun merchantValidationError(p0: String?) {
-                    p0?.let {
-                        showWarningToast(requireContext(), it)
-                    }
-                    val ss = ""
-                    when (p0) {
-//                        ErrorKeys.USER_INPUT_ERROR -> Timber.e("User Input Error")
-//                        ErrorKeys.INTERNET_CONNECTION_ERROR -> Timber.e("INTERNET_CONNECTION_ERROR")
-//                        ErrorKeys.DATA_PARSING_ERROR -> Timber.e("DATA_PARSING_ERROR")
-//                        ErrorKeys.CANCEL_TRANSACTION_ERROR -> Timber.e("CANCEL_TRANSACTION_ERROR")
-//                        ErrorKeys.SERVER_ERROR -> Timber.e("SERVER_ERROR")
-//                        ErrorKeys.NETWORK_ERROR -> Timber.e("NETWORK_ERROR")
-                    }
-                }
-            })
-
-
-        //final SSLCommerzInitialization sslCommerzInitialization = new SSLCommerzInitialization ("yourStoreID","yourPassword", amount, SSLCCurrencyType.BDT,"123456789098765", "yourProductType", SSLCSdkType.TESTBOX);
-
-//        Also, users can add optional field like below:
-//        final SSLCommerzInitialization sslCommerzInitialization = new SSLCommerzInitialization ("yourStoreID","yourPassword", amount, SSLCCurrencyType.BDT,"123456789098765", "yourProductType", SSLCSdkType.TESTBOX).addMultiCardName(“”).addIpnUrl(“”);
-//
-//        Afterwards, user need to call below class to connect with SSLCommerz:
+//    private fun callPayment() {
+//        val amount = viewModel.amount.value?.toDouble() ?: return
+//        //val sslCommerzInitialization = SSLCommerzInitialization ("testbox","qwerty",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.TESTBOX)
+//        val sslCommerzInitialization = SSLCommerzInitialization ("engineersappslive","61149E9C3398383671",  amount, SSLCCurrencyType.BDT,invoiceNumber, "Book", SSLCSdkType.LIVE)
 //        IntegrateSSLCommerz
-//            .getInstance(context)
+//            .getInstance(requireContext())
 //            .addSSLCommerzInitialization(sslCommerzInitialization)
-//            .buildApiCall(this);
-
-//        val mandatoryFieldModel = MandatoryFieldModel("testbox", "qwerty", viewModel.amount.value ?: "0", invoiceNumber ?: generateInvoiceID(), CurrencyType.BDT, SdkType.TESTBOX, SdkCategory.BANK_LIST)
-//
-//        PayUsingSSLCommerz.getInstance().setData(requireActivity(), mandatoryFieldModel, null, null, null, object :
-//            OnPaymentResultListener {
-//            override fun transactionSuccess(transactionInfo: TransactionInfo) {
-//                if (transactionInfo.riskLevel == "0") {
-//                    Timber.d("Transaction Successfully completed")
-//                    saveSSLPayment(transactionInfo)
-//                } else {
-//                    Timber.d("Transaction in risk.")
+//            .buildApiCall(object : SSLCTransactionResponseListener {
+//                override fun transactionSuccess(p0: SSLCTransactionInfoModel?) {
+//                    saveSSLPayment(p0)
+////                    if (p0?.riskLevel == "0") {
+////                        //Timber.d("Transaction Successfully completed")
+////
+////                    } else {
+////                        //Timber.d("Transaction in risk.")
+////                    }
 //                }
-//            }
 //
-//            override fun transactionFail(transactionInfo: TransactionInfo) {
-//                Timber.d("Transaction Fail")
-//            }
-//
-//            override fun error(i: Int) {
-//                when (i) {
-//                    ErrorKeys.USER_INPUT_ERROR -> Timber.e("User Input Error")
-//                    ErrorKeys.INTERNET_CONNECTION_ERROR -> Timber.e("INTERNET_CONNECTION_ERROR")
-//                    ErrorKeys.DATA_PARSING_ERROR -> Timber.e("DATA_PARSING_ERROR")
-//                    ErrorKeys.CANCEL_TRANSACTION_ERROR -> Timber.e("CANCEL_TRANSACTION_ERROR")
-//                    ErrorKeys.SERVER_ERROR -> Timber.e("SERVER_ERROR")
-//                    ErrorKeys.NETWORK_ERROR -> Timber.e("NETWORK_ERROR")
+//                override fun transactionFail(p0: String?) {
+//                    p0?.let {
+//                        showWarningToast(requireContext(), it)
+//                    }
 //                }
-//            }
-//        })
-    }
+//
+//                override fun merchantValidationError(p0: String?) {
+//                    p0?.let {
+//                        showWarningToast(requireContext(), it)
+//                    }
+//                    val ss = ""
+//                    when (p0) {
+////                        ErrorKeys.USER_INPUT_ERROR -> Timber.e("User Input Error")
+////                        ErrorKeys.INTERNET_CONNECTION_ERROR -> Timber.e("INTERNET_CONNECTION_ERROR")
+////                        ErrorKeys.DATA_PARSING_ERROR -> Timber.e("DATA_PARSING_ERROR")
+////                        ErrorKeys.CANCEL_TRANSACTION_ERROR -> Timber.e("CANCEL_TRANSACTION_ERROR")
+////                        ErrorKeys.SERVER_ERROR -> Timber.e("SERVER_ERROR")
+////                        ErrorKeys.NETWORK_ERROR -> Timber.e("NETWORK_ERROR")
+//                    }
+//                }
+//            })
+//
+//
+//        //final SSLCommerzInitialization sslCommerzInitialization = new SSLCommerzInitialization ("yourStoreID","yourPassword", amount, SSLCCurrencyType.BDT,"123456789098765", "yourProductType", SSLCSdkType.TESTBOX);
+//
+////        Also, users can add optional field like below:
+////        final SSLCommerzInitialization sslCommerzInitialization = new SSLCommerzInitialization ("yourStoreID","yourPassword", amount, SSLCCurrencyType.BDT,"123456789098765", "yourProductType", SSLCSdkType.TESTBOX).addMultiCardName(“”).addIpnUrl(“”);
+////
+////        Afterwards, user need to call below class to connect with SSLCommerz:
+////        IntegrateSSLCommerz
+////            .getInstance(context)
+////            .addSSLCommerzInitialization(sslCommerzInitialization)
+////            .buildApiCall(this);
+//
+////        val mandatoryFieldModel = MandatoryFieldModel("testbox", "qwerty", viewModel.amount.value ?: "0", invoiceNumber ?: generateInvoiceID(), CurrencyType.BDT, SdkType.TESTBOX, SdkCategory.BANK_LIST)
+////
+////        PayUsingSSLCommerz.getInstance().setData(requireActivity(), mandatoryFieldModel, null, null, null, object :
+////            OnPaymentResultListener {
+////            override fun transactionSuccess(transactionInfo: TransactionInfo) {
+////                if (transactionInfo.riskLevel == "0") {
+////                    Timber.d("Transaction Successfully completed")
+////                    saveSSLPayment(transactionInfo)
+////                } else {
+////                    Timber.d("Transaction in risk.")
+////                }
+////            }
+////
+////            override fun transactionFail(transactionInfo: TransactionInfo) {
+////                Timber.d("Transaction Fail")
+////            }
+////
+////            override fun error(i: Int) {
+////                when (i) {
+////                    ErrorKeys.USER_INPUT_ERROR -> Timber.e("User Input Error")
+////                    ErrorKeys.INTERNET_CONNECTION_ERROR -> Timber.e("INTERNET_CONNECTION_ERROR")
+////                    ErrorKeys.DATA_PARSING_ERROR -> Timber.e("DATA_PARSING_ERROR")
+////                    ErrorKeys.CANCEL_TRANSACTION_ERROR -> Timber.e("CANCEL_TRANSACTION_ERROR")
+////                    ErrorKeys.SERVER_ERROR -> Timber.e("SERVER_ERROR")
+////                    ErrorKeys.NETWORK_ERROR -> Timber.e("NETWORK_ERROR")
+////                }
+////            }
+////        })
+//    }
 }

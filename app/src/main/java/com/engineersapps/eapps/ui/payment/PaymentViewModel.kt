@@ -4,11 +4,13 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.engineersapps.eapps.api.*
+import com.engineersapps.eapps.local_db.dao.PendingMyCourseDao
 import com.engineersapps.eapps.models.payment.PromoCode
 import com.engineersapps.eapps.models.registration.InquiryAccount
 import com.engineersapps.eapps.models.transactions.CreateOrderBody
+import com.engineersapps.eapps.models.transactions.PaymentStoreBody
+import com.engineersapps.eapps.models.transactions.PaymentStoreValue
 import com.engineersapps.eapps.models.transactions.SalesInvoice
-import com.engineersapps.eapps.prefs.PreferencesHelper
 import com.engineersapps.eapps.repos.RegistrationRepository
 import com.engineersapps.eapps.repos.TransactionRepository
 import com.engineersapps.eapps.ui.common.BaseViewModel
@@ -17,9 +19,11 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class PaymentViewModel @Inject constructor(private val application: Application,
-                                           private val repository: TransactionRepository,
-                                           private val regRepository: RegistrationRepository
+class PaymentViewModel @Inject constructor(
+    private val application: Application,
+    private val repository: TransactionRepository,
+    private val regRepository: RegistrationRepository,
+    private val pendingMyCourseDao: PendingMyCourseDao
 ) : BaseViewModel(application) {
 
     var promoDiscountPercentage = 0
@@ -83,9 +87,27 @@ class PaymentViewModel @Inject constructor(private val application: Application,
 //        MutableLiveData<BKashCreateResponse>()
 //    }
 
+    val paymentStoreUrlResponse: MutableLiveData<PaymentStoreValue> by lazy {
+        MutableLiveData<PaymentStoreValue>()
+    }
+
     val coursePurchaseSuccess: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
     }
+
+//    fun addPendingMyCourse(pendingCourse: CreateOrderBody) {
+//        try {
+//            val handler = CoroutineExceptionHandler { _, exception ->
+//                exception.printStackTrace()
+//            }
+//
+//            viewModelScope.launch(handler) {
+//                pendingMyCourseDao.addPendingCourse(pendingCourse)
+//            }
+//        } catch (e: SQLiteException) {
+//            e.printStackTrace()
+//        }
+//    }
 
 //    fun getBkashPaymentUrl(mobile: String?, amount: String?, invoiceNumber: String?): MutableLiveData<BKashCreateResponse> {
 //        if (checkNetworkStatus(true)) {
@@ -146,13 +168,39 @@ class PaymentViewModel @Inject constructor(private val application: Application,
 //        }
 //    }
 
-    fun createOrder(preferencesHelper: PreferencesHelper, createOrderBody: CreateOrderBody) {
+    fun getPaymentUrl(paymentStoreBody: PaymentStoreBody) {
         if (checkNetworkStatus(true)) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 exception.printStackTrace()
                 apiCallStatus.postValue(ApiCallStatus.ERROR)
                 toastError.postValue(serverConnectionErrorMessage)
-                preferencesHelper.pendingCoursePurchase = createOrderBody
+            }
+
+            apiCallStatus.postValue(ApiCallStatus.LOADING)
+            viewModelScope.launch(handler) {
+                when (val apiResponse = ApiResponse.create(repository.getPaymentUrl(paymentStoreBody))) {
+                    is ApiSuccessResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.SUCCESS)
+                        paymentStoreUrlResponse.postValue(apiResponse.body.data?.createresponse)
+                    }
+                    is ApiEmptyResponse -> {
+                        apiCallStatus.postValue(ApiCallStatus.EMPTY)
+                    }
+                    is ApiErrorResponse -> {
+                        checkForValidSession(apiResponse.errorMessage)
+                        apiCallStatus.postValue(ApiCallStatus.ERROR)
+                    }
+                }
+            }
+        }
+    }
+
+    fun createOrder(createOrderBody: CreateOrderBody) {
+        if (checkNetworkStatus(true)) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                exception.printStackTrace()
+                apiCallStatus.postValue(ApiCallStatus.ERROR)
+                toastError.postValue(serverConnectionErrorMessage)
             }
 
             apiCallStatus.postValue(ApiCallStatus.LOADING)
@@ -164,12 +212,10 @@ class PaymentViewModel @Inject constructor(private val application: Application,
                     }
                     is ApiEmptyResponse -> {
                         apiCallStatus.postValue(ApiCallStatus.EMPTY)
-                        preferencesHelper.pendingCoursePurchase = createOrderBody
                     }
                     is ApiErrorResponse -> {
                         checkForValidSession(apiResponse.errorMessage)
                         apiCallStatus.postValue(ApiCallStatus.ERROR)
-                        preferencesHelper.pendingCoursePurchase = createOrderBody
                     }
                 }
             }
