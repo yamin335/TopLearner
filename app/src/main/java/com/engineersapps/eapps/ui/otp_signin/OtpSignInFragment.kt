@@ -7,7 +7,6 @@ import android.os.CountDownTimer
 import android.view.View
 import android.view.WindowManager
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.engineersapps.eapps.BR
 import com.engineersapps.eapps.R
@@ -109,7 +108,7 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
             viewModel.verifyOTPCode(registrationRemoteHelper)
         }
 
-        viewModel.registeredOTP.observe(viewLifecycleOwner, Observer { inquiryResponse ->
+        viewModel.registeredOTP.observe(viewLifecycleOwner, { inquiryResponse ->
             inquiryResponse?.data?.Account?.let {
                 registrationRemoteHelper = it
 //                viewDataBinding.tvOtpTextDescription.text =
@@ -134,17 +133,17 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
             //showWarningToast(mContext, "Please wait 5 minutes before you request a new OTP!")
         }
 
-        viewModel.otp.observe(viewLifecycleOwner, Observer { otp ->
+        viewModel.otp.observe(viewLifecycleOwner, { otp ->
             otp?.let {
                 viewDataBinding.btnSubmit.isEnabled = it.length == 4 && viewModel.apiCallStatus.value != ApiCallStatus.LOADING
             }
         })
 
-        viewModel.apiCallStatus.observe(viewLifecycleOwner, Observer {
+        viewModel.apiCallStatus.observe(viewLifecycleOwner, {
             viewDataBinding.btnSubmit.isEnabled = it != ApiCallStatus.LOADING
         })
 
-        viewModel.verifiedOTP.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.verifiedOTP.observe(viewLifecycleOwner, { response ->
             val account = response?.data?.Account
             if (account == null) {
                 preferencesHelper.falseOTPCounter++
@@ -172,7 +171,7 @@ class OtpSignInFragment : BaseFragment<OtpSignInBinding, OtpSignInViewModel>() {
             }
         })
 
-        viewModel.registeredOTP.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.registeredOTP.observe(viewLifecycleOwner, { response ->
 //            response?.let {
 //                when {
 //                    it.isSuccess == true -> {

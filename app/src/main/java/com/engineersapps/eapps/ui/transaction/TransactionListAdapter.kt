@@ -50,7 +50,7 @@ class TransactionListAdapter(
     override fun bind(binding: TransactionItemBinding, position: Int) {
         val item = getItem(position)
         binding.serial = (position + 1).toString()
-        binding.packageName = if (item.BookName.isNullOrBlank()) "Unknown Package" else item.BookName
+        binding.packageName = if (item.BookName.isNullOrBlank()) "Unknown Course" else item.BookName
         binding.paymentAmount = "${item.GrandTotal} ৳"
         binding.root.setOnClickListener {
             itemCallback?.invoke(item)

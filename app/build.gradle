@@ -23,8 +23,8 @@ android {
         applicationId "com.engineersapps.eapps"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion 31
-        versionCode 26
-        versionName "1.1.6"
+        versionCode 29
+        versionName "1.1.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

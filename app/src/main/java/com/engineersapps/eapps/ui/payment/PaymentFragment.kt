@@ -312,7 +312,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                     val promoter = viewModel.promoPartner.value
                     val discount = viewModel.totalDiscount.value ?: 0
                     val paymentStoreBody = PaymentStoreBody(userData.mobile ?: "", amount,
-                        args.courseId, "", courseDuration, userData.class_id ?: 0,
+                        args.courseId, "", courseDuration, args.remainDays, userData.class_id ?: 0,
                         userData.id ?: 0, viewModel.promoCode.value?.partner_id ?: 0,
                         promoter?.mobile, discount, promoter?.upazila ?: "",
                         promoter?.UpazilaID ?: 0, promoter?.CityID ?: 0,

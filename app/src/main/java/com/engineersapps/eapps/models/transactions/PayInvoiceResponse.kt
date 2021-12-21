@@ -35,11 +35,11 @@ data class CreateOrderBody(var StudentID: Int = 0, var StudentMobile: String = "
                            val paid_amount: Int?, val remaindays: Int?): Serializable
 
 data class PaymentStoreBody(val mobile: String?, val amount: Int?, val course_id: Int?,
-                            val coursename: String?, val duration : Int?, val class_id : Int?,
-                            val StudentID: Int?, val PartnerID: Int?, val partnerMobile: String?,
-                            val discount: Int?, val upazila: String?, val UpazilaID: Int?,
-                            val CityID: Int?, val City: String?, val StudentName: String?,
-                            val promo_code: String?, val InvoiceID: String?)
+                            val coursename: String?, val duration : Int?, val remaindays: Int?,
+                            val class_id : Int?, val StudentID: Int?, val PartnerID: Int?,
+                            val partnerMobile: String?, val discount: Int?, val upazila: String?,
+                            val UpazilaID: Int?, val CityID: Int?, val City: String?,
+                            val StudentName: String?, val promo_code: String?, val InvoiceID: String?)
 
 data class PaymentStoreResponse(val code: Int?, val data: PaymentStoreResponseData?, val msg: String?)
 
