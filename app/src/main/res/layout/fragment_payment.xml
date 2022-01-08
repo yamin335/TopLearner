@@ -290,7 +290,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="8dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/albumColorPrimaryBlack"
                     android:textSize="16sp" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -400,7 +400,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:text="@string/payment_terms_and_conditions"
-                        android:textColor="@color/black"
+                        android:textColor="@color/albumColorPrimaryBlack"
                         android:layout_marginBottom="12dp"/>
                 </LinearLayout>
 

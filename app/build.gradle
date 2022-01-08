@@ -23,8 +23,8 @@ android {
         applicationId "com.engineersapps.eapps"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion 31
-        versionCode 29
-        versionName "1.1.9"
+        versionCode 30
+        versionName "1.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -188,7 +188,7 @@ dependencies {
 
     implementation 'com.google.guava:guava:27.0.1-android'
     implementation 'com.github.cachapa:ExpandableLayout:2.9.2'
-    implementation project(':ssl-payment-sdk-v4')
+    //implementation project(':ssl-payment-sdk-v4')
     //implementation 'com.android.support:design:28.0.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.android.gms:play-services-location:18.0.0'

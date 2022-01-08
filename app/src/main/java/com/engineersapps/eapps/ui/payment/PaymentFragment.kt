@@ -18,7 +18,6 @@ import com.engineersapps.eapps.ui.MyCourseTabSelection
 import com.engineersapps.eapps.ui.bkash.BKashDialogFragment
 import com.engineersapps.eapps.ui.common.BaseFragment
 import com.engineersapps.eapps.util.*
-import com.sslwireless.sslcommerzlibrary.model.response.SSLCTransactionInfoModel
 import java.security.SecureRandom
 
 class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>() {
@@ -154,7 +153,9 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         viewModel.profileDiscount.observe(viewLifecycleOwner, {
             //val cityDiscount = viewModel.cityDiscount.value ?: 0
             val promoDiscount = viewModel.promoDiscount.value ?: 0
-            val totalDiscount = promoDiscount + it //+ cityDiscount
+            val selectedPackagePrice = viewModel.packagePrice.value ?: 0
+            var totalDiscount = promoDiscount + it //+ cityDiscount
+            totalDiscount = if (selectedPackagePrice < totalDiscount) selectedPackagePrice else totalDiscount
             viewModel.totalDiscount.postValue(totalDiscount)
         })
 
@@ -168,7 +169,9 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         viewModel.promoDiscount.observe(viewLifecycleOwner, {
             val profileDiscount = viewModel.profileDiscount.value ?: 0
             //val cityDiscount = viewModel.cityDiscount.value ?: 0
-            val totalDiscount = profileDiscount + it //+ cityDiscount
+            var totalDiscount = profileDiscount + it //+ cityDiscount
+            val selectedPackagePrice = viewModel.packagePrice.value ?: 0
+            totalDiscount = if (selectedPackagePrice < totalDiscount) selectedPackagePrice else totalDiscount
             viewModel.totalDiscount.postValue(totalDiscount)
         })
 
@@ -272,7 +275,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
                     if (it < 0) viewModel.amount.postValue(0)
                     viewDataBinding.btnPayNow.isEnabled = viewDataBinding.cbTerms.isChecked
                 } else {
-                    viewDataBinding.btnPayNow.isEnabled = it > 0 && viewDataBinding.cbTerms.isChecked
+                    viewDataBinding.btnPayNow.isEnabled = it >= 0 && viewDataBinding.cbTerms.isChecked
                 }
             }
         })
@@ -288,7 +291,7 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
 
         viewModel.paymentStoreUrlResponse.observe(viewLifecycleOwner, { response ->
             response?.let {
-                if (it.status == "SUCCESS" && !it.GatewayPageURL.isNullOrBlank()) {
+                if (!it.GatewayPageURL.isNullOrBlank()) {
                     navigateTo(PaymentFragmentDirections.actionPaymentFragmentToSslNav(it.GatewayPageURL))
                 } else {
                     showErrorToast(requireContext(), it.failedreason ?: "Something went wrong! Please try again later.")
@@ -298,30 +301,32 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         })
 
         viewDataBinding.btnPayNow.setOnClickListener {
-            if (userData.customer_type_id == 2) {
-                callPartnerPayment()
-            } else {
-                val totalDiscount = viewModel.profileDiscountPercentage + viewModel.promoDiscountPercentage
-                if (totalDiscount >= 100) {
-                    callPartnerPayment()
-                } else {
-                    val amount = viewModel.amount.value ?: return@setOnClickListener
-                    val firstName = userData.first_name ?: ""
-                    val lastName = userData.last_name ?: ""
+            val amount = viewModel.packagePrice.value ?: return@setOnClickListener
+            val firstName = userData.first_name ?: ""
+            val lastName = userData.last_name ?: ""
 
-                    val promoter = viewModel.promoPartner.value
-                    val discount = viewModel.totalDiscount.value ?: 0
-                    val paymentStoreBody = PaymentStoreBody(userData.mobile ?: "", amount,
-                        args.courseId, "", courseDuration, args.remainDays, userData.class_id ?: 0,
-                        userData.id ?: 0, viewModel.promoCode.value?.partner_id ?: 0,
-                        promoter?.mobile, discount, promoter?.upazila ?: "",
-                        promoter?.UpazilaID ?: 0, promoter?.CityID ?: 0,
-                        promoter?.city ?: "", "$firstName $lastName",
-                        viewModel.promoCode.value?.code ?: "", invoiceNumber)
+            val promoter = viewModel.promoPartner.value
+            val discount = viewModel.totalDiscount.value ?: 0
+            val paymentStoreBody = PaymentStoreBody(userData.mobile ?: "", amount,
+                args.courseId, "", courseDuration, args.remainDays, userData.class_id ?: 0,
+                userData.id ?: 0, viewModel.promoCode.value?.partner_id ?: 0,
+                promoter?.mobile, discount, promoter?.upazila ?: "",
+                promoter?.UpazilaID ?: 0, promoter?.CityID ?: 0,
+                promoter?.city ?: "", "$firstName $lastName",
+                viewModel.promoCode.value?.code ?: "", invoiceNumber)
 
-                    viewModel.getPaymentUrl(paymentStoreBody)
-                }
-            }
+            viewModel.getPaymentUrl(paymentStoreBody)
+
+//            if (userData.customer_type_id == 2) {
+//                callPartnerPayment()
+//            } else {
+//                val totalDiscount = viewModel.profileDiscountPercentage + viewModel.promoDiscountPercentage
+//                if (totalDiscount >= 100) {
+//                    callPartnerPayment()
+//                } else {
+//
+//                }
+//            }
 
 //            viewModel.getBkashPaymentUrl(userData.mobile ?: "",
 //                viewModel.mount.value ?: "0",
@@ -414,34 +419,34 @@ class PaymentFragment : BaseFragment<PaymentFragmentBinding, PaymentViewModel>()
         return "${random1}${random2}"
     }
 
-    private fun saveSSLPayment(p0: SSLCTransactionInfoModel?) {
-        val response = p0 ?: return
-
-        val firstName = userData.first_name ?: ""
-        val lastName = userData.last_name ?: ""
-
-        val promoter = viewModel.promoPartner.value
-        val discount = viewModel.totalDiscount.value ?: 0
-
-        val createOrderBody = CreateOrderBody(
-            userData.id ?: 0, userData.mobile ?: "",
-            response.amount.toDouble().toInt(), response.amount.toDouble().toInt(), 0,
-            discount, "", promoter?.upazila ?: "", promoter?.city ?: "",
-            promoter?.UpazilaID ?: 0, promoter?.CityID ?: 0, invoiceNumber,
-            "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
-            "$firstName $lastName", args.bookName ?: "", response.tranId ?: "N/A",
-            "", "", viewModel.promoCode.value?.code ?: "",
-            viewModel.promoCode.value?.partner_id ?: 0, courseDuration, args.courseId,
-            viewModel.packagePrice.value, response.amount.toDouble().toInt(), args.remainDays
-        )
-
-//        if (!checkNetworkStatus(false)) {
-//            preferencesHelper.pendingCoursePurchase = createOrderBody
-//        }
-
-        //viewModel.addPendingMyCourse(createOrderBody)
-        viewModel.createOrder(createOrderBody)
-    }
+//    private fun saveSSLPayment(p0: SSLCTransactionInfoModel?) {
+//        val response = p0 ?: return
+//
+//        val firstName = userData.first_name ?: ""
+//        val lastName = userData.last_name ?: ""
+//
+//        val promoter = viewModel.promoPartner.value
+//        val discount = viewModel.totalDiscount.value ?: 0
+//
+//        val createOrderBody = CreateOrderBody(
+//            userData.id ?: 0, userData.mobile ?: "",
+//            response.amount.toDouble().toInt(), response.amount.toDouble().toInt(), 0,
+//            discount, "", promoter?.upazila ?: "", promoter?.city ?: "",
+//            promoter?.UpazilaID ?: 0, promoter?.CityID ?: 0, invoiceNumber,
+//            "", response.bankTranId ?: "N/A", args.bookId, userData.class_id ?: 0,
+//            "$firstName $lastName", args.bookName ?: "", response.tranId ?: "N/A",
+//            "", "", viewModel.promoCode.value?.code ?: "",
+//            viewModel.promoCode.value?.partner_id ?: 0, courseDuration, args.courseId,
+//            viewModel.packagePrice.value, response.amount.toDouble().toInt(), args.remainDays
+//        )
+//
+////        if (!checkNetworkStatus(false)) {
+////            preferencesHelper.pendingCoursePurchase = createOrderBody
+////        }
+//
+//        //viewModel.addPendingMyCourse(createOrderBody)
+//        viewModel.createOrder(createOrderBody)
+//    }
 
     private fun callPartnerPayment() {
 
